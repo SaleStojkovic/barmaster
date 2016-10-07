@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>src/rmaster/DBBroker/FXMLDocumentController.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>215</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/PocetniEkranController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/assets/DBBroker.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/PromenaKonobaraController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/assets/FXMLDocumentController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/SalaController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/assets/items/ItemGroupsController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/pocetniEkran.fxml</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/style/style.css</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/promenaKonobara.fxml</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/RMaster.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/PorudzbinaController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/assets/items/ItemGroup.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/RacuniZaNaplatuController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/models/Konobar.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/prikazSala.fxml</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/racuniZaNaplatu.fxml</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/porudzbina.fxml</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/assets/items/ItemSubGroupsController.java</file>
+        </group>
+    </open-files>
+</project-private>

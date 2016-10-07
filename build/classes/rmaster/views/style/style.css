@@ -1,0 +1,46 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Sep 18, 2016, 4:10:43 PM
+    Author     : Saša Stojković
+*/
+
+/*#AnchorPane {
+    -fx-background-image: url("img/start_screen.jpg");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 1024 768;
+}*/
+
+#SelectHall {
+    -fx-background-color: red;
+    -fx-background-repeat: stretch;
+    -fx-background-size: 1024 768; 
+}
+
+.button {
+    -fx-background-color: yellow;
+    -fx-background-insets: 0;
+    
+}
+
+#backButton {
+    -fx-background-image: url("img/backButtonMainScreen.jpg");
+    -fx-background-repeat: stretch;
+}
+
+.button.dugme {
+   -fx-background-color: red; 
+}
+
+.button.stoZauzet {
+    -fx-background-color: red;
+}
+
+
+.button.stoSlobodan {
+    -fx-background-color: green;
+}
+

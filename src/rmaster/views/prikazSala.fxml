@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.SalaController">
+   <children>
+      <BorderPane prefHeight="768.0" prefWidth="1024.0">
+         <top>
+            <VBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="1024.0">
+                     <children>
+                        <ImageView fitHeight="80.0" fitWidth="256.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../rmaster/views/style/img/logo.png" />
+                           </image>
+                        </ImageView>
+                        <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#odjava" prefHeight="50.0" prefWidth="133.0" text="Odjava" />
+                     </children></HBox>
+               </children>
+            </VBox>
+         </top>
+         <bottom>
+            <VBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="100.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="1024.0">
+                     <children>
+                        <HBox fx:id="hBoxDugmiciSaSalama" prefHeight="50.0" prefWidth="200.0" />
+                        <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="prikaziDodatneSale" mnemonicParsing="false" prefHeight="50.0" prefWidth="128.0" text="&gt;&gt;" />
+                     </children></HBox>
+                  <HBox prefHeight="1.0" prefWidth="1024.0">
+                     <children>
+                        <Line endX="1022.0" fill="#9a8f8f" startX="1.0" stroke="#4d4a4a" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="1024.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#prikaziRacuneZaStampu" prefHeight="50.0" prefWidth="128.0" text="Računi" />
+                        <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="128.0" text="Rezervacije" />
+                        <Region prefHeight="200.0" prefWidth="128.0" />
+                        <Line endY="50.0" fill="#9a8f8f" layoutX="777.0" layoutY="11.0" stroke="#4d4a4a" />
+                        <Region prefHeight="200.0" prefWidth="128.0" />
+                        <Button layoutX="143.0" layoutY="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="128.0" text=" Sastavljanje/ Rastavljanje " textAlignment="CENTER" wrapText="true" />
+                        <Button layoutX="521.0" layoutY="10.0" mnemonicParsing="false" onAction="#promeniKonobara" prefHeight="50.0" prefWidth="128.0" text="Promena konobara" textAlignment="CENTER" wrapText="true">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Button>
+                        <Region prefHeight="200.0" prefWidth="128.0" />
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="128.0" text="Brza naplata" />
+                     </children></HBox>
+               </children>
+            </VBox>
+         </bottom>
+         <center>
+         </center>
+         <center>
+            <AnchorPane fx:id="salaPrikazPane" prefHeight="568.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
+               <children>
+                  <StackPane fx:id="imageViewSala" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>
