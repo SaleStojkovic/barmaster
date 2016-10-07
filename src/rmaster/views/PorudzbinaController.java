@@ -799,9 +799,9 @@ public class PorudzbinaController extends FXMLDocumentController {
                 
                 int cenaArtikla = Integer.parseInt(novaStavka.get("cena"));
                 
-                int novaCena = stavka.kolicina * cenaArtikla;
+                double novaCena = stavka.kolicina * cenaArtikla;
                         
-                stavka.setCena(novaCena);
+                stavka.cena = novaCena;
                 
                 listNovaTuraGosta.add(i, stavka);
                 return;
@@ -828,11 +828,11 @@ public class PorudzbinaController extends FXMLDocumentController {
             if (stavka.imeArtikla.equals(imeArtikla)) {
                 listNovaTuraGosta.remove(i);
                 
-                int novaCena = (stavka.cena / stavka.kolicina) * novaKolicina;
+                double novaCena = (stavka.cena / stavka.kolicina) * novaKolicina;
                 
                 stavka.promeniKolicinu(novaKolicina);
                 if (stavka.kolicina != 0) {
-                    stavka.setCena(novaCena);
+                    stavka.cena = novaCena;
 
                     listNovaTuraGosta.add(i, stavka);
                 }
