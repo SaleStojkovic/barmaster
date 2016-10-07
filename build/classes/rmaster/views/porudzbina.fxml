@@ -1,161 +1,165 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.image.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 
-<AnchorPane id="AnchorPane" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.PorudzbinaController">
+<AnchorPane id="AnchorPane" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.PorudzbinaController">
    <children>
-      <BorderPane layoutX="46.0" layoutY="234.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: lightslategray;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <top>
-            <HBox style="-fx-background-color: black;" BorderPane.alignment="CENTER">
-               <children>
-                  <ImageView fitHeight="41.0" fitWidth="255.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                     <image>
-                        <Image url="@../../rmaster/views/style/img/logo.png" />
-                     </image>
-                  </ImageView>
-                  <Button contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnAddButton_Action" style="-fx-background-color: rgb(80,80,80,0); -fx-background-radius: 0;" text="Dragan" textFill="#a19999" HBox.hgrow="NEVER">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0">
-                           <image>
-                              <Image url="@../../rmaster/views/style/img/Person.png" />
-                           </image>
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Region maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <Button contentDisplay="RIGHT" layoutX="270.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnExit_Action" style="-fx-background-color: rgb(80,80,80,0); -fx-background-radius: 0; -fx-border-width: 1; -fx-border-color: rgb(80,80,80,0.3);" text="Odjava" textFill="#a19999">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0">
-                           <image>
-                              <Image url="@../../rmaster/views/style/img/Person.png" />
-                           </image>
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                     </graphic>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                  </Button>
-               </children>
-               <BorderPane.margin>
-                  <Insets />
-               </BorderPane.margin>
-               <padding>
-                  <Insets left="5.0" top="5.0" />
-               </padding>
+      <BorderPane layoutX="46.0" layoutY="234.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         
+          <top>
+           
+              <HBox prefHeight="46.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
+               
+                  <children>
+                  <Pane fx:id="porudzbinaHeader" prefHeight="46.0" prefWidth="1025.0">
+                     <children>
+                        
+                            <ImageView fitHeight="41.0" fitWidth="255.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@../../rmaster/views/style/img/logo.png" />
+                              </image>
+                          </ImageView>
+                        
+                         <Pane layoutX="291.0" layoutY="-2.0" prefHeight="50.0" prefWidth="536.0">
+                            <children>
+                                
+                                <ImageView fitHeight="30.0" fitWidth="35.0" layoutX="268.0" layoutY="10.0">
+                                     <image>
+                                        <Image url="@../../rmaster/views/style/img/Person.png" />
+                                    </image>
+                                </ImageView>
+                              
+                                <Label fx:id="imeKonobara" layoutX="303.0" layoutY="11.0" prefHeight="29.0" prefWidth="127.0" />
+                              
+                                <Label fx:id="izabraniSto" layoutX="20.0" layoutY="5.0" prefHeight="42.0" prefWidth="184.0" />
+                        
+                            </children>
+                       
+                         </Pane>
+                         <Button fx:id="favorites" layoutX="830.0" layoutY="0.0" mnemonicParsing="false" onAction="#prikaziArtikleFavorite" text="❤" />
+                         <Button fx:id="odjava" layoutX="899.0" mnemonicParsing="false" onAction="#odjava" prefHeight="46.0" prefWidth="126.0" text="Odjava" />
+                        
+                     </children>
+                  </Pane>
+
+                  </children>
+                  
             </HBox>
          </top>
+         
          <left>
-            <VBox minWidth="-Infinity" prefWidth="256.0" style="-fx-background-color: red;" BorderPane.alignment="CENTER">
-               <children>
-                  <HBox prefWidth="200.0" style="-fx-background-color: rgb(194,231,245,1);" VBox.vgrow="NEVER">
+            <VBox fx:id="sekcijaPorudzbina" minWidth="-Infinity" prefHeight="622.0" prefWidth="287.0" BorderPane.alignment="CENTER">
+               
+                <children>
+                  <Pane fx:id="sekcijaDodavanjeGostiju" prefHeight="52.0" prefWidth="256.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#prikaziSalu" prefWidth="80.0" style="-fx-background-color: rgb(80,80,80); -fx-background-radius: 0; " text="+" textFill="#a19999" HBox.hgrow="NEVER">
-                           <font>
-                              <Font name="System Bold" size="24.0" />
-                           </font>
-                           <graphic>
-                              <ImageView fitHeight="20.0" fitWidth="20.0">
-                                 <image>
-                                    <Image url="@../../rmaster/views/style/img/Person.png" />
-                                 </image>
-                                 <viewport>
-                                    <Rectangle2D />
-                                 </viewport>
-                              </ImageView>
-                           </graphic>
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                        </Button>
+                        <ScrollPane fx:id="prikazGostijuScrollPane" hbarPolicy="NEVER" layoutX="63.0" prefHeight="50.0" prefWidth="155.0" vbarPolicy="NEVER" />
+                           
+                        
+                        <Button layoutX="222.0" layoutY="-1.0" mnemonicParsing="false" onAction="#toggleDodavanjeGostiju" prefHeight="52.0" prefWidth="65.0" text="« »" />
+                        
+                                        <Button mnemonicParsing="false" onAction="#dodajNovogGosta" prefHeight="50.0" prefWidth="60.0" text="+">
+                           
+                                            <graphic>
+                                   <ImageView fitHeight="20.0" fitWidth="20.0">
+                                      <image>
+                                         <Image url="@../../rmaster/views/style/img/Person.png" />
+                                      </image>
+                                      <viewport>
+                                         <Rectangle2D />
+                                      </viewport>
+                                   </ImageView>
+                                </graphic>
+
+                                            <opaqueInsets>
+                                   <Insets />
+                                </opaqueInsets>
+
+                                    
+                                  </Button>
                      </children>
-                  </HBox>
+                  </Pane>
+                  <Pane prefHeight="26.0" prefWidth="256.0">
+                     <children>
+                        <Label fx:id="turaHeader" prefHeight="28.0" prefWidth="256.0" text="  Artikal&#9;&#9;&#9;&#9;&#9;&#9;  |  kol |  Cena" />
+                     </children>
+                  </Pane>
+                  
+                  <ScrollPane fx:id="prikazRacunaGosta" prefHeight="367.0" prefWidth="287.0" />
+                  <Line endX="125.0" startX="-100.0" stroke="#4f5460">
+                     <VBox.margin>
+                        <Insets bottom="3.0" left="25.0" right="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Line>
+                  <Pane fx:id="scrollArea" prefHeight="56.0" prefWidth="256.0">
+                     <children>
+                        <Button layoutX="14.0" layoutY="4.0" mnemonicParsing="false" onAction="#pomeriScrollUp" prefHeight="48.0" prefWidth="116.0" text="▲" />
+                        <Button layoutX="144.0" layoutY="4.0" mnemonicParsing="false" onAction="#pomeriScrollDown" prefHeight="47.0" prefWidth="123.0" text="▼" />
+                     </children>
+                  </Pane>
+                  <Line endX="125.0" startX="-100.0" stroke="#4f5460">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="25.0" right="10.0" top="3.0" />
+                     </VBox.margin>
+                  </Line>
+                  <Pane fx:id="sekcijaNaplata" prefHeight="91.0" prefWidth="256.0">
+                     <children>
+                        <Label layoutX="14.0" layoutY="32.0" text="Popust" />
+                        <Label layoutX="14.0" layoutY="6.0" text="Total" />
+                        <Label layoutX="14.0" layoutY="60.0" text="Naplata" />
+                        <Label fx:id="total" layoutX="197.0" layoutY="6.0" />
+                        <Label fx:id="popust" layoutX="197.0" layoutY="32.0" />
+                        <Label fx:id="naplata" layoutX="197.0" layoutY="60.0" />
+                     </children>
+                  </Pane>
+               
                </children>
+               
             </VBox>
+            
          </left>
+         
+         
          <bottom>
-            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: yellow;" BorderPane.alignment="CENTER" />
-         </bottom>
-         <center>
-            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <HBox fx:id="porudzbinaFooter" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <Pane prefHeight="100.0" prefWidth="1024.0">
                      <children>
-                        <HBox fx:id="idGrupeArtikala" alignment="CENTER" maxHeight="64.0" prefHeight="64.0" />
-                        <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Button maxHeight="1.7976931348623157E308" mnemonicParsing="false" prefHeight="64.0" prefWidth="96.0" text="Favorites" />
-                        <Button fx:id="idGrupeArtikalaNext" maxHeight="1.7976931348623157E308" mnemonicParsing="false" prefHeight="100.0" prefWidth="96.0" text="&gt;" textAlignment="CENTER">
-                           <font>
-                              <Font name="System Bold" size="36.0" />
-                           </font>
-                        </Button>
+                        
+                        <Button layoutX="738.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="141.0" text="Među zbir ★" />
+                        
+                                    <Button layoutX="880.0" mnemonicParsing="false" prefHeight="99.0" prefWidth="143.0" text="Potvrdi ✓" />
+                        
+                         <Button fx:id="porudzbinaOdustani" mnemonicParsing="false" onAction="#prikaziSalu" prefHeight="100.0" prefWidth="135.0" text="Odustani X" />
+                        <Button layoutX="137.0" mnemonicParsing="false" onAction="#setKolicinaStavkeTure" prefHeight="50.0" prefWidth="147.0" text="Količina" />
+                        <Button layoutX="137.0" layoutY="52.0" mnemonicParsing="false" onAction="#izbrisiStavkuNoveTure" prefHeight="48.0" prefWidth="147.0" text="Izbriši" />
+                        <Button layoutX="288.0" onAction="#otvoriLojalnost"  layoutY="-1.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="140.0" text="Lojalnost" />
                      </children>
-                  </HBox>
-                  <HBox fx:id="idPodgrupeArtikala" prefHeight="64.0" prefWidth="200.0" />
-                  <FlowPane fx:id="ArtikalPodgrupeTable" prefHeight="200.0" prefWidth="200.0" />
-                  <GridPane maxHeight="-Infinity" prefHeight="192.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="0.0" prefHeight="64.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="0.0" prefHeight="64.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="0.0" prefHeight="64.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Button fx:id="idPodGrupeArtikalaNext" maxHeight="1.7976931348623157E308" mnemonicParsing="false" prefHeight="64.0" prefWidth="192.0" text="&gt;" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="2">
-                           <font>
-                              <Font name="System Bold" size="36.0" />
-                           </font>
-                        </Button>
-                     </children>
-                  </GridPane>
-                  <GridPane fx:id="idArtikli" prefHeight="320.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="-Infinity" minHeight="0.0" prefHeight="64.0" vgrow="NEVER" />
-                      <RowConstraints maxHeight="-Infinity" minHeight="0.0" prefHeight="64.0" vgrow="NEVER" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="64.0" vgrow="NEVER" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="64.0" vgrow="NEVER" />
-                      <RowConstraints maxHeight="-Infinity" minHeight="0.0" prefHeight="64.0" vgrow="NEVER" />
-                    </rowConstraints>
-                  </GridPane>
+                  </Pane>
+               
+               </children>
+            </HBox>
+         </bottom>
+         
+         <center>
+            <VBox fx:id="porudzbinaArtikli" prefHeight="200.0" prefWidth="768.0" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox fx:id="ArtikalGrupe" alignment="CENTER" maxHeight="64.0" prefHeight="64.0" prefWidth="768.0" />
+                  <FlowPane fx:id="ArtikalPodgrupe" prefHeight="192.0" prefWidth="768.0" />
+                  <FlowPane fx:id="Artikal" maxHeight="1.7976931348623157E308" prefHeight="320.0" prefWidth="768.0" />
                </children>
                <opaqueInsets>
                   <Insets />
@@ -165,6 +169,8 @@
                </BorderPane.margin>
             </VBox>
          </center>
+         
+         
       </BorderPane>
    </children>
 </AnchorPane>

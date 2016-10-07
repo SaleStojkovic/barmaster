@@ -5,21 +5,24 @@
  */
 package rmaster.views;
 
-import rmaster.assets.FXMLDocumentController;
+import java.awt.Font;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.PasswordField;
-
+import javafx.scene.control.Label;
+import javafx.util.Duration;
 /**
  *
  * @author Arbor
  */
-public class PocetniEkranController extends FXMLDocumentController {
+public class PocetniEkranController extends NumberKeypadController {
     
     @FXML 
     private Label response;
@@ -27,65 +30,39 @@ public class PocetniEkranController extends FXMLDocumentController {
     @FXML
     private PasswordField lozinka;
     
+    @FXML
+    private Label clock;
+    
+    @FXML
+    private Button test;
+    
+    private final NumberKeypadController keypad = new NumberKeypadController();
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+//        clock.setFont(klavikaBold);
+        keypad.sledecaForma = "prikazSala";
+        Timeline timeline = this.prikaziCasovnik(clock);
+        timeline.play();
         
+//        Timeline timeline1 = new Timeline(
+//            new KeyFrame(Duration.seconds(0.5), new EventHandler<ActionEvent>() {
+//                @Override public void handle(ActionEvent actionEvent) {
+//                    test.setStyle("-fx-background-color: black;");
+//                }
+//            }
+//            ),
+//            new KeyFrame(Duration.seconds(1),new EventHandler<ActionEvent>() {
+//                @Override public void handle(ActionEvent actionEvent) {
+//                    test.setStyle("-fx-background-color: grey;");
+//                }
+//            }
+//            )
+//          );
+//          timeline1.setCycleCount(Animation.INDEFINITE);
+//        
+//          timeline1.play();
     }
     
-    public void backButton(ActionEvent event) {
-        response.setText("");
-        String lozinkaText = this.lozinka.getText();
-        
-        if (lozinkaText.length() != 0) {
-            lozinkaText = lozinkaText.substring(0, lozinkaText.length()-1);
-            this.lozinka.setText(lozinkaText);
-        }
-    }
-   
-    public void numberKeyPressed(ActionEvent event) throws Exception {
-        
-        Button pritisnutTaster = (Button)event.getSource();
-        
-        String lozinkaText = this.lozinka.getText();
-        
-        if (lozinkaText.length() < 4) {
-           response.setText(""); 
-           lozinkaText += pritisnutTaster.getText();
-           this.lozinka.setText(lozinkaText);
-        } 
-        
-    }  
-    
-    public void passwordCheck(ActionEvent event) throws Exception {
-        response.setText("");
-        String lozinkaText = this.lozinka.getText();
-        
-        String[] uslovneKolone = {"pin"};
-        String[] uslovneVrednosti = {lozinkaText};
-        
-        List rezultat = vratiKoloneIzTabele(
-                "konobar", 
-                uslovneKolone, 
-                uslovneVrednosti
-        );
-        
-        if (!rezultat.isEmpty()) {
-            Map<String,String>  konobar = (Map<String, String>)rezultat.get(0);
-            
-            //zapamti KonobarID
-            setUlogovaniKonobar(konobar);
-            
-            //sledeca stranica 
-            prikaziFormu(
-                    "prikazSala", 
-                    true, 
-                    response
-            );
-        }
-        
-        response.setText("Neuspelo logovanje!");
-        lozinka.setText("");
-    }
    
 }
