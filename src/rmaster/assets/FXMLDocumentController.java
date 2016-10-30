@@ -427,7 +427,7 @@ public class FXMLDocumentController implements Initializable {
             //sledeca stranica 
             prikaziFormu(
                     newData,
-                    "pocetniEkran", 
+                    ScreenMap.POCETNI_EKRAN, 
                     true, 
                     (Node)event.getSource()
             );

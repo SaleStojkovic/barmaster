@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.ScreenMap;
 
 /**
  *
@@ -78,7 +79,7 @@ public class NumberKeypadController extends FXMLDocumentController{
             //sledeca stranica 
             prikaziFormu(
                     newData,
-                    "prikazSala", 
+                    ScreenMap.PRIKAZ_SALA, 
                     true, 
                     response
             );

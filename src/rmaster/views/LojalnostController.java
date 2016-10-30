@@ -6,19 +6,16 @@
 package rmaster.views;
 
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import rmaster.assets.FXMLDocumentController;
-import rmaster.assets.Utils;
 
 /**
  * FXML Controller class
@@ -66,19 +63,6 @@ public class LojalnostController extends FXMLDocumentController {
     public void initData(Map<String, String> data)
     {
         
-    }
-    
-    public void odjava(ActionEvent event)
-    {
-            Map<String, String> newData = new HashMap<>();
-            
-            //sledeca stranica 
-            prikaziFormu(
-                    newData,
-                    "pocetniEkran", 
-                    true, 
-                    (Node)event.getSource()
-            );
     }
     
 }

@@ -12,7 +12,22 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/PocetniEkranController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/PromenaKonobaraController.java</file>
             <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/assets/FXMLDocumentController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/ConfirmFormController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/RMaster.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/PrikazSalaController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/NumberKeypadController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/PorudzbinaController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/assets/TastaturaController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/assets/TastaturaVrsta.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/RacuniZaNaplatuController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/models/Tura.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/RezervacijeController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/assets/ScreenMap.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/LojalnostController.java</file>
+            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/AdministracijaController.java</file>
         </group>
     </open-files>
 </project-private>

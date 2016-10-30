@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.ScreenMap;
 
 /**
  * FXML Controller class
@@ -46,7 +47,7 @@ public class RezervacijeController extends FXMLDocumentController {
             //sledeca stranica 
             prikaziFormu(
                     newData,
-                    "prikazSala", 
+                    ScreenMap.PRIKAZ_SALA, 
                     true, 
                     (Node)event.getSource()
             );

@@ -36,6 +36,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.ScreenMap;
 
 /**
  * FXML Controller class
@@ -195,7 +196,7 @@ public class PrikazSalaController extends FXMLDocumentController {
             //sledeca stranica 
             prikaziFormu(
                     newData,
-                    "pocetniEkran", 
+                    ScreenMap.POCETNI_EKRAN, 
                     true, 
                     (Node)event.getSource()
             );
@@ -205,7 +206,7 @@ public class PrikazSalaController extends FXMLDocumentController {
         Map<String, String> newData = new HashMap<>();
         prikaziFormuModalno(
                 newData,
-                "racuniZaNaplatu", 
+                ScreenMap.RACUNI_ZA_NAPLATU, 
                 (Node)(event.getSource())
         );
     }
@@ -215,7 +216,7 @@ public class PrikazSalaController extends FXMLDocumentController {
 
         prikaziFormuModalno(
                 newData,
-                "promenaKonobara",
+                ScreenMap.PROMENA_KONOBARA,
                 (Node)(event.getSource())
         );
         prikaziStolove();
@@ -386,7 +387,7 @@ public class PrikazSalaController extends FXMLDocumentController {
         RMaster.izabraniSto = "0";
         prikaziFormu(
                 newData,
-                "porudzbina", 
+                ScreenMap.PORUDZBINA, 
                 true, 
                 (Node)event.getSource());
 
@@ -397,7 +398,7 @@ public class PrikazSalaController extends FXMLDocumentController {
 
         prikaziFormu(
             newData,
-            "administracija", 
+            ScreenMap.ADMINISTRACIJA, 
             true, 
             (Node)event.getSource()); 
     }
@@ -408,7 +409,7 @@ public class PrikazSalaController extends FXMLDocumentController {
 
         prikaziFormu(
             newData,
-            "rezervacije", 
+            ScreenMap.REZERVACIJE, 
             true, 
             (Node)event.getSource()); 
     }

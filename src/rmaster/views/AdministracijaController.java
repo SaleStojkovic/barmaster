@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.ScreenMap;
 
 /**
  * FXML Controller class
@@ -33,7 +34,7 @@ public class AdministracijaController extends FXMLDocumentController{
 
         prikaziFormu(
             newData,
-            "prikazSala", 
+            ScreenMap.PRIKAZ_SALA, 
             true, 
             (Node)event.getSource());
     }

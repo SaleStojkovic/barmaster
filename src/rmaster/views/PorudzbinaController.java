@@ -33,6 +33,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import rmaster.assets.DBBroker;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.ScreenMap;
 import rmaster.assets.Utils;
 import rmaster.assets.items.ArtikalButton;
 import rmaster.assets.items.VrsteGrupaIliArtikal;
@@ -374,7 +375,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         Map<String, String> newData = new HashMap<>();
         prikaziFormu(
                 newData,
-                "prikazSala",
+                ScreenMap.PRIKAZ_SALA,
                 true, 
                 (Node)event.getSource()
         );
@@ -414,19 +415,6 @@ public class PorudzbinaController extends FXMLDocumentController {
         izabraniSto.setText("Sto: " + imeStola);
        
     }    
-    
-    public void odjava(ActionEvent event)
-    {
-            Map<String, String> newData = new HashMap<>();
-            
-            //sledeca stranica 
-            prikaziFormu(
-                    newData,
-                    "pocetniEkran", 
-                    true, 
-                    (Node)event.getSource()
-            );
-    }
     
     protected void refreshGrupeIliArtikla(Pane gdePrikazati, VrsteGrupaIliArtikal staSePrikazuje) {
         String imeStoreProcedure = "";
@@ -1030,7 +1018,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         Map<String, String> newData = new HashMap<>();
         prikaziFormu(
                 newData,
-                "lojalnost",
+                ScreenMap.LOJALNOST,
                 true, 
                 (Node)event.getSource()
         );
