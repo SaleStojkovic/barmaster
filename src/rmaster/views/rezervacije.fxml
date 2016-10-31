@@ -37,7 +37,7 @@
       </Pane>
       <Pane layoutY="51.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="608.0" prefWidth="1024.0">
          <children>
-            <ScrollPane hbarPolicy="NEVER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="608.0" prefWidth="434.0" vbarPolicy="NEVER" />
+            <ScrollPane fx:id="scrollPaneRezervacije" hbarPolicy="NEVER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="608.0" prefWidth="434.0" vbarPolicy="NEVER" />
             <Pane layoutX="434.0" prefHeight="608.0" prefWidth="59.0">
                <children>
                   <Button layoutY="544.0" mnemonicParsing="false" onAction="#pomeriScrollDownRezervacije" prefHeight="64.0" prefWidth="59.0" text="▼" />

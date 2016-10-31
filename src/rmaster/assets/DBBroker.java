@@ -305,11 +305,10 @@ public final class DBBroker {
      * 
      * @param imeTabele
      * @return
-     * @throws Exception 
      */
     public List vratiSveIzTabele(
             String imeTabele
-    ) throws Exception {
+    ) {
         Connection dbConnection = null;
         Statement selectStatement = null;
         ResultSet setRezultata = null;
@@ -359,18 +358,23 @@ public final class DBBroker {
      */
     private List prebaciUListu(
             ResultSet resultSet
-    ) throws Exception
+    ) 
     {    
-        ResultSetMetaData md = resultSet.getMetaData();
-        int columns = md.getColumnCount();
-        ArrayList listaRezultata = new ArrayList();
-            
-        while (resultSet.next()){
-            HashMap row = new HashMap(columns);
-            for(int i = 1; i<= columns; ++i){           
-                row.put(md.getColumnLabel(i),resultSet.getString(i));
+        ArrayList listaRezultata = new ArrayList();       
+        try {
+            ResultSetMetaData md = resultSet.getMetaData();
+            int columns = md.getColumnCount();
+        
+            while (resultSet.next()){
+                HashMap row = new HashMap(columns);
+                for(int i = 1; i<= columns; ++i){           
+                    row.put(md.getColumnLabel(i),resultSet.getString(i));
+                }
+                listaRezultata.add(row);
             }
-            listaRezultata.add(row);
+        
+        } catch (Exception e) {
+            System.out.println(e);
         }
         
         return listaRezultata;

@@ -5,6 +5,7 @@
  */
 package rmaster.views;
 
+import rmaster.assets.TastaturaVrsta;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
