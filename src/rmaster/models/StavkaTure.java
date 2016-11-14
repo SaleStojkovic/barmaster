@@ -76,7 +76,7 @@ public class StavkaTure {
         for (StavkaTure opArtikal: opisniArtikli) {
             if (opArtikal.artikalId == opisniArtikal.artikalId) {
                 opArtikal.smanjiKolicinuZa(opisniArtikal.kolicina);
-                if (opArtikal.kolicina == 0)
+                if (opArtikal.kolicina <= 0)
                     opisniArtikli.remove(opArtikal);
             }
         }
@@ -107,7 +107,7 @@ public class StavkaTure {
         for (StavkaTure dodArtikal: dodatniArtikli) {
             if (dodArtikal.artikalId == dodatniArtikal.artikalId) {
                 dodArtikal.smanjiKolicinuZa(dodatniArtikal.kolicina);
-                if (dodArtikal.kolicina == 0)
+                if (dodArtikal.kolicina <= 0)
                     dodatniArtikli.remove(dodArtikal);
             }
         }
