@@ -95,7 +95,7 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     private static int counter = 0;
     
-    private List<Button> c = new ArrayList<>();
+//    private List<Button> c = new ArrayList<>();
     
     public String idTrenutnoIzabranogGosta;
    
@@ -371,12 +371,12 @@ public class PorudzbinaController extends FXMLDocumentController {
         return novaTabela;
     }
 
-    private void hboxGrupeArtikalaRefresh(HBox hbox) {
-        hbox.getChildren().clear();
-        for (Button next : c) {
-            hbox.getChildren().add(next);
-        }
-    } 
+//    private void hboxGrupeArtikalaRefresh(HBox hbox) {
+//        hbox.getChildren().clear();
+//        for (Button next : c) {
+//            hbox.getChildren().add(next);
+//        }
+//    } 
 
     public void prikaziSalu(ActionEvent event) {
         Map<String, String> newData = new HashMap<>();

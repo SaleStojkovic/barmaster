@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="2">
         <file>
             <url>src/rmaster/DBBroker/FXMLDocumentController.java</url>
             <bookmark id="1">
@@ -11,22 +11,6 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/PocetniEkranController.java</file>
-            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/PromenaKonobaraController.java</file>
-            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/assets/FXMLDocumentController.java</file>
-            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/ConfirmFormController.java</file>
-            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/TastaturaVrsta.java</file>
-            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/RMaster.java</file>
-            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/PrikazSalaController.java</file>
-            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/NumberKeypadController.java</file>
-            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/PorudzbinaController.java</file>
-            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/TastaturaController.java</file>
-            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/RacuniZaNaplatuController.java</file>
-            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/models/Tura.java</file>
-            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/RezervacijeController.java</file>
-            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/LojalnostController.java</file>
-            <file>file:/Users/Arbor/NetBeansProjects/RMaster/src/rmaster/views/AdministracijaController.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
