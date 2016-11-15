@@ -38,7 +38,7 @@ public class StavkaTure {
         this.imeArtikla = stavkaTure.get("naziv");
         this.kolicina = Double.parseDouble(novaKolicina);
         //this.cena = Double.parseDouble(stavkaTure.get("cena"));
-        setCenaJedinicna(Double.parseDouble(stavkaTure.get("cenaJedinicna")));
+        setCenaJedinicna(Double.parseDouble(stavkaTure.get("cena")));
     }
     
     public Map<String, String> dajStavkuTure() {

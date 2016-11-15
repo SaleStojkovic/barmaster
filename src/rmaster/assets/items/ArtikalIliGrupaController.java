@@ -93,7 +93,9 @@ public class ArtikalIliGrupaController {
                                 red.get("skrNaziv"),
                                 red.get("GRUPA_ID"),
                                 red.get("tip"),
-                                VrsteGrupaIliArtikal.GLAVNA_GRUPA);
+                                VrsteGrupaIliArtikal.GLAVNA_GRUPA,
+                                Double.parseDouble(red.get("cena"))
+                        );
                 if ((brojac%brojPrikazanihUJednomRedu)==0) {
                     sirina = roditeljSirina - (brojPrikazanihUJednomRedu-1)*artikalPodgrupaSirina;
                     buttonArtikalIliGrupa.setPrefSize(sirina, defaultVisinaDugmeta);
