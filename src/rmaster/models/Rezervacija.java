@@ -47,4 +47,20 @@ public final class Rezervacija {
         
         this.vreme = vremeString.substring(11, Math.min(vremeString.length(), 16));
     }
+    
+    public HashMap<String, String> toHashMap()
+    {
+        HashMap<String, String> rezervacijaMap = new HashMap();
+        
+        rezervacijaMap.put("brOsoba", this.brOsoba);
+        rezervacijaMap.put("brStola", this.brStola);
+        rezervacijaMap.put("ime", this.ime);
+        rezervacijaMap.put("napomena", this.napomena);
+        rezervacijaMap.put("tel", this.tel);
+        rezervacijaMap.put("vreme", this.vreme);
+        rezervacijaMap.put("datum", this.datum);
+
+        
+        return rezervacijaMap;
+    }
 }

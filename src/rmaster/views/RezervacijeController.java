@@ -42,6 +42,8 @@ public class RezervacijeController extends FXMLDocumentController {
     
     public List<Rezervacija> listaRezervacija = new ArrayList();
     
+    public List<Map<String, String>> listaZaPrikaz = new ArrayList();
+    
     /**
      * Initializes the controller class.
      */
@@ -50,16 +52,12 @@ public class RezervacijeController extends FXMLDocumentController {
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
         
-        List listaRezervacija = DBBroker.vratiSveIzTabele("rezervacija");
-        tabelaRezervacija = popuniTabelu(tabelaRezervacija, listaRezervacija);
+        getRezervacije();
         
-        
-        System.out.println(listaRezervacija);
+        tabelaRezervacija = popuniTabelu(tabelaRezervacija, listaZaPrikaz);
         
         scrollPaneRezervacije.setContent(tabelaRezervacija);
-        getRezervacije();
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
-        
         
     }    
     
@@ -86,6 +84,7 @@ public class RezervacijeController extends FXMLDocumentController {
         for(HashMap<String, String> rezervacijaMapa : listaRezervacija) {
             Rezervacija novaRezervacija = new Rezervacija(rezervacijaMapa);
             
+            this.listaZaPrikaz.add(novaRezervacija.toHashMap());
             this.listaRezervacija.add(novaRezervacija);
         }
         
