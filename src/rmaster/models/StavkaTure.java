@@ -46,9 +46,10 @@ public class StavkaTure {
 
         stavkaTure.put("artikalId", this.artikalId);
         stavkaTure.put("naziv", this.imeArtikla);
-        stavkaTure.put("kolicina", "x" + this.kolicina);
-        stavkaTure.put("cenaJedinicna", this.cenaJedinicna + "");
-        stavkaTure.put("cena", this.cena + "");
+        //stavkaTure.put("kolicina", "x" + String.format("%1$,.2f", this.kolicina));
+        stavkaTure.put("kolicina", "x" + String.format("%1$,.0f", this.kolicina));
+        stavkaTure.put("cenaJedinicna", String.format("%1$,.2f", this.cenaJedinicna));
+        stavkaTure.put("cena", String.format("%1$,.2f", this.cena));
         
         return stavkaTure;
     } 

@@ -16,7 +16,7 @@ import rmaster.assets.DBBroker;
  */
 public class Tura {
     
-    public List<StavkaTure> listTura = new ArrayList<>();
+    public List<StavkaTure> listStavkeTure = new ArrayList<>();
     
     
     public Tura (
@@ -36,19 +36,26 @@ public class Tura {
         
         for (Map<String, String> noviRed : listaRezultata) {
             StavkaTure novaStavka = new StavkaTure(noviRed);
-            listTura.add(novaStavka);
+            listStavkeTure.add(novaStavka);
         }
     }
     
     
     public List<Map<String, String>> dajTuru() {
-        List<Map<String, String>> listaTura = new ArrayList<>();
+        List<Map<String, String>> list_StavkeTure = new ArrayList<>();
         
-        for (StavkaTure novaStavka : this.listTura) {
-            listaTura.add(novaStavka.dajStavkuTure());
+        for (StavkaTure novaStavka : this.listStavkeTure) {
+            list_StavkeTure.add(novaStavka.dajStavkuTure());
         }
         
-        return listaTura;
+        return list_StavkeTure;
     }
     
+    public StavkaTure getStavkuTureByID(long artikalID) {
+        for (StavkaTure novaStavka : this.listStavkeTure) {
+            if (novaStavka.getArtikalId().equals("" + artikalID))
+                return novaStavka;
+        }
+        return null;
+    }
 }

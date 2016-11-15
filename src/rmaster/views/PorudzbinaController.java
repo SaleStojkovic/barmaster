@@ -164,6 +164,8 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     List<Tura> listTure = new ArrayList<>();
     
+    ArtikalButton selektovani = null;
+    
     @Override
     public void initData(Map<String, String> data) {
 
@@ -320,11 +322,11 @@ public class PorudzbinaController extends FXMLDocumentController {
                        
         Tura turaModel = new Tura(zeljenaTura);
 
-        listNovaTuraGosta = turaModel.listTura;
+        listNovaTuraGosta = turaModel.listStavkeTure;
         
         List<Map<String, String>> ponovljenaTura = new ArrayList<>();
         
-        for (StavkaTure novaStavka : turaModel.listTura) {
+        for (StavkaTure novaStavka : turaModel.listStavkeTure) {
             ponovljenaTura.add(novaStavka.dajStavkuTure());
         }
         
@@ -353,12 +355,16 @@ public class PorudzbinaController extends FXMLDocumentController {
         novaTabela = popuniTabelu(novaTabela, lista);
 
         List<TableColumn<Map<String,String>, ?>> listaKolona = novaTabela.getColumns();
-        TableColumn<Map<String,String>, ?> kolonaArtikal = listaKolona.get(0);
-        kolonaArtikal.setPrefWidth(200);
-        TableColumn<Map<String,String>, ?> kolonaKolicina = listaKolona.get(1);
-        kolonaKolicina.setPrefWidth(30);
-        TableColumn<Map<String,String>, ?> kolonaCena = listaKolona.get(2);
-        kolonaCena.setPrefWidth(51);
+        TableColumn<Map<String,String>, ?> kolonaCenaJedinicna = listaKolona.get(0);
+        kolonaCenaJedinicna.setPrefWidth(0);
+        TableColumn<Map<String,String>, ?> kolonaArtikal = listaKolona.get(1);
+        kolonaArtikal.setPrefWidth(190);
+        TableColumn<Map<String,String>, ?> kolonaKolicina = listaKolona.get(2);
+        kolonaKolicina.setPrefWidth(25);
+        TableColumn<Map<String,String>, ?> kolonaCena = listaKolona.get(3);
+        kolonaCena.setPrefWidth(66);
+        TableColumn<Map<String,String>, ?> kolonaArtikalID = listaKolona.get(4);
+        kolonaArtikalID.setPrefWidth(0);
 
         novaTabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         
@@ -540,6 +546,11 @@ public class PorudzbinaController extends FXMLDocumentController {
                 Map<String, String> red = (Map<String, String>) r;
                 //long id = Long.parseLong(red.get("id"));
                 //String naziv = red.get("naziv");
+                double cena = 0;
+                try {
+                    cena = Double.parseDouble(red.get("cena"));
+                }catch (Exception e) {
+                }
                 ArtikalButton buttonArtikalIliGrupa = 
                         new ArtikalButton(
                                 red.get("naziv"),
@@ -549,7 +560,9 @@ public class PorudzbinaController extends FXMLDocumentController {
                                 red.get("skrNaziv"),
                                 red.get("GRUPA_ID"),
                                 red.get("tip"),
-                                staSePrikazuje);
+                                staSePrikazuje,
+                                cena
+                        );
                 
                 if ((brojac%prikazBrojArtikalaUJednomRedu)==0) {
                     sirina = roditeljSirina - (prikazBrojArtikalaUJednomRedu-1)*artikalPodgrupaSirina;
@@ -665,17 +678,20 @@ public class PorudzbinaController extends FXMLDocumentController {
     }
     
     protected void onButtonArtikalIliGrupa_click(ActionEvent izabraniArtikalIliGrupa, Pane gdePrikazati) {
-        ArtikalButton selektovani = null;
         VrsteGrupaIliArtikal vrstaZaPrikaz;
-        //Button selektovaniFavorite = null;
+        ArtikalButton noviArtikal = null;
         
         try {
-            selektovani = (ArtikalButton)izabraniArtikalIliGrupa.getSource();
-            vrstaZaPrikaz = selektovani.getVrstaGrupaIliArtikal();
+            noviArtikal = (ArtikalButton)izabraniArtikalIliGrupa.getSource();
+            vrstaZaPrikaz = noviArtikal.getVrstaGrupaIliArtikal();
+            if (!(vrstaZaPrikaz == ARTIKAL_DODATNI || vrstaZaPrikaz == ARTIKAL_OPISNI))
+                selektovani = noviArtikal;
         } catch (Exception e) {
             //selektovaniFavorite = (Button)izabraniArtikalIliGrupa.getSource();
             vrstaZaPrikaz = ARTIKAL_FAVORITE;
+            selektovani = null;
         }
+
         //VrsteGrupaIliArtikal staSePrikazuje = ARTIKAL_GLAVNI;
         /**********************************************
          * Ovde obraditi promenu prikaza nakon klika za svakog pojedinacno
@@ -701,7 +717,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                 if (selektovani.getDaLiJeArtikalSlozen()) {
                     // TODO : Mora da zapamti koji je da bi njemu dodao opisne i dodatne artikle
                     selektovanArtikalID = selektovani.getId();
-                prikazPodgrupaRedniBrojPrvog = 1;
+                    prikazPodgrupaRedniBrojPrvog = 1;
                     prikazArtikalRedniBrojPrvog = 1;
                     refreshGrupeIliArtikla(this.ArtikalPodgrupe, ARTIKAL_OPISNI);
                     refreshGrupeIliArtikla(this.Artikal, ARTIKAL_DODATNI);                    
@@ -710,7 +726,8 @@ public class PorudzbinaController extends FXMLDocumentController {
             case ARTIKAL_OPISNI:
             case ARTIKAL_DODATNI:
                 // TODO : Mora da pronadje koji je artikal zadnji dodat da bi njemu dodao opisne i dodatne artikle
-                dodajArtikalUNovuTuru(selektovani);
+                //dodajArtikalUNovuTuru(selektovani);
+                dodajOpisniDodatniArtikalUNovuTuru(selektovani, noviArtikal);
                 break;
             case ARTIKAL_FAVORITE:
                 if (selektovani != null) {
@@ -732,6 +749,42 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
     }
     
+    public void dodajOpisniDodatniArtikalUNovuTuru(ArtikalButton artikalGlavni, ArtikalButton artikalOpisniDodatni) {
+        prikazRacunaGosta.setContent(null);
+        
+        String idArtikalGlavni = artikalGlavni.getId();
+        
+        Map<String, String> novaStavkaTure = new HashMap<>();
+        novaStavkaTure.put("ARTIKAL_ID", artikalOpisniDodatni.getId());
+        novaStavkaTure.put("kolicina", "1");
+        if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI) {
+            novaStavkaTure.put("naziv", "--> " + artikalOpisniDodatni.getText());
+            novaStavkaTure.put("cena", "0");
+            novaStavkaTure.put("cenaJedinicna", "0");
+        } else if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI) {
+            novaStavkaTure.put("naziv", "-> " + artikalOpisniDodatni.getText());
+            novaStavkaTure.put("cena", String.format("%1$,.2f", artikalOpisniDodatni.getCenaJedinicna()));
+            novaStavkaTure.put("cenaJedinicna", String.format("%1$,.2f", artikalOpisniDodatni.getCenaJedinicna()));
+        }
+        
+        StavkaTure st = new StavkaTure(novaStavkaTure);
+        for (StavkaTure stavkaTure : listNovaTuraGosta) {
+            if (stavkaTure.artikalId.equals("" + idArtikalGlavni)) {
+                if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI)
+                    stavkaTure.addArtikalOpisni(st);
+                else if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI)
+                    stavkaTure.addArtikalOpisni(st);
+                break;
+            }         
+        }
+        
+        //this.dodajUNovuTuruList(novaStavkaTure);
+
+        this.tableRefresh();
+        this.prikaziTotalPopustNaplata();
+
+    }
+            
     public void dodajArtikalUNovuTuru(ArtikalButton artikal) {
         prikazRacunaGosta.setContent(null);
         
@@ -741,16 +794,10 @@ public class PorudzbinaController extends FXMLDocumentController {
         String[] imenaArgumenata = {"id"};
         String[] vrednostiArgumenata = {idArtikla};
                 
-        List<Map<String, String>> listaRezultata = vratiKoloneIzTabele(
-                "artikal", 
-                imenaArgumenata, 
-                vrednostiArgumenata
-        );
-        
-        String cena = listaRezultata.get(0).get("cena");
+        String cena = String.format("%1$,.2f", artikal.getCenaJedinicna());
         
         if (artikal.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI) {
-            idArtikla = "-" + idArtikla;
+            idArtikla = "-> " + idArtikla;
             cena = "0";
         }
 
@@ -758,6 +805,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         novaStavkaTure.put("ARTIKAL_ID", idArtikla);
         novaStavkaTure.put("naziv", nazivArtikla);
         novaStavkaTure.put("cena", cena);
+        novaStavkaTure.put("cenaJedinicna", cena);
         
         
         this.dodajUNovuTuruList(novaStavkaTure);
@@ -786,7 +834,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                 
                 stavka.povecajKolicinu();
                 
-                int cenaArtikla = Integer.parseInt(novaStavka.get("cena"));
+                double cenaArtikla = Double.parseDouble(novaStavka.get("cena"));
                 
                 double novaCena = stavka.kolicina * cenaArtikla;
                         
@@ -896,6 +944,12 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         for (StavkaTure novaStavka : this.listNovaTuraGosta) {
             listaTura.add(novaStavka.dajStavkuTure());
+            for (StavkaTure stavkaDodatni : novaStavka.getArtikliDodatni()) {
+                listaTura.add(stavkaDodatni.dajStavkuTure());
+            }
+            for (StavkaTure stavkaOpisni : novaStavka.getArtikliOpisni()) {
+                listaTura.add(stavkaOpisni.dajStavkuTure());
+            }
         }
                 
         TableView<Map<String, String>> novaTabela = new TableView<>();
@@ -950,14 +1004,14 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
         
         if (!totalPopustNaplata.isEmpty()) {
-            int total = 0;
+            double total = 0;
 
             for(Map<String, String> red : totalPopustNaplata) {
-                total += Integer.parseInt(red.get("cena"));
+                total += Double.parseDouble(red.get("cena"));
             }
             
-            int naplata = total * (1 - this.popustTrenutnogGosta);
-            int popust = this.popustTrenutnogGosta * 100;
+            double naplata = total * (1 - this.popustTrenutnogGosta);
+            double popust = this.popustTrenutnogGosta * 100;
             
             this.total.setText(total + "");
             this.popust.setText(popust + "%");
