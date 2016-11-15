@@ -5,10 +5,12 @@
  */
 package rmaster.models;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import rmaster.assets.Utils;
 
 /**
  *
@@ -36,9 +38,8 @@ public class StavkaTure {
         }
         this.artikalId = stavkaTure.get("ARTIKAL_ID");
         this.imeArtikla = stavkaTure.get("naziv");
-        this.kolicina = Double.parseDouble(novaKolicina);
-        //this.cena = Double.parseDouble(stavkaTure.get("cena"));
-        setCenaJedinicna(Double.parseDouble(stavkaTure.get("cena")));
+        this.kolicina = Utils.getDoubleFromString(novaKolicina);
+        this.setCenaJedinicna(Utils.getDoubleFromString(stavkaTure.get("cenaJedinicna")));  
     }
     
     public Map<String, String> dajStavkuTure() {
@@ -46,10 +47,14 @@ public class StavkaTure {
 
         stavkaTure.put("artikalId", this.artikalId);
         stavkaTure.put("naziv", this.imeArtikla);
-        //stavkaTure.put("kolicina", "x" + String.format("%1$,.2f", this.kolicina));
-        stavkaTure.put("kolicina", "x" + String.format("%1$,.0f", this.kolicina));
-        stavkaTure.put("cenaJedinicna", String.format("%1$,.2f", this.cenaJedinicna));
-        stavkaTure.put("cena", String.format("%1$,.2f", this.cena));
+        int intKolicina = (int)this.kolicina;
+        if (this.kolicina == intKolicina) {
+            stavkaTure.put("kolicina", "x" + intKolicina);
+        } else {
+            stavkaTure.put("kolicina", "x" + Utils.getStringFromDouble(this.kolicina));
+        }
+        stavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(this.cenaJedinicna));
+        stavkaTure.put("cena", Utils.getStringFromDouble(this.cena));
         
         return stavkaTure;
     } 

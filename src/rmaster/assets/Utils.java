@@ -5,6 +5,7 @@
  */
 package rmaster.assets;
 
+import java.text.DecimalFormat;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -35,4 +36,35 @@ public class Utils {
         
     }
     
+    /**
+     * Description: Vraca double iz String-a koji je formata 1,234.56
+     * Created: 15.11.2016.
+     * @author Bosko
+     * @param stringVrednost
+     * @return resultDouble
+     */
+    public static double getDoubleFromString(String stringVrednost) {
+        double resultDouble = 0;
+        DecimalFormat df = new DecimalFormat();
+        df.applyPattern("#,##0.00");
+        
+        try {
+            resultDouble = df.parse(stringVrednost).doubleValue();  
+        } catch(Exception e) { 
+            resultDouble = 0; 
+        }
+        return resultDouble;
+   }
+
+    /**
+     * Description: Vraca String iz double-a koji je formata 1,234.56
+     * Created: 15.11.2016.
+     * @author Bosko
+     * @param doubleVrednost
+     * @return resultString
+     */
+    public static String getStringFromDouble(double doubleVrednost) {
+        return String.format("%1$,.2f", doubleVrednost);
+    }
+
 }

@@ -95,7 +95,7 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     private static int counter = 0;
     
-    private List<Button> c = new ArrayList<>();
+//    private List<Button> c = new ArrayList<>();
     
     public String idTrenutnoIzabranogGosta;
    
@@ -371,12 +371,12 @@ public class PorudzbinaController extends FXMLDocumentController {
         return novaTabela;
     }
 
-    private void hboxGrupeArtikalaRefresh(HBox hbox) {
-        hbox.getChildren().clear();
-        for (Button next : c) {
-            hbox.getChildren().add(next);
-        }
-    } 
+//    private void hboxGrupeArtikalaRefresh(HBox hbox) {
+//        hbox.getChildren().clear();
+//        for (Button next : c) {
+//            hbox.getChildren().add(next);
+//        }
+//    } 
 
     public void prikaziSalu(ActionEvent event) {
         Map<String, String> newData = new HashMap<>();
@@ -763,8 +763,8 @@ public class PorudzbinaController extends FXMLDocumentController {
             novaStavkaTure.put("cenaJedinicna", "0");
         } else if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI) {
             novaStavkaTure.put("naziv", "-> " + artikalOpisniDodatni.getText());
-            novaStavkaTure.put("cena", String.format("%1$,.2f", artikalOpisniDodatni.getCenaJedinicna()));
-            novaStavkaTure.put("cenaJedinicna", String.format("%1$,.2f", artikalOpisniDodatni.getCenaJedinicna()));
+            novaStavkaTure.put("cena", Utils.getStringFromDouble(artikalOpisniDodatni.getCenaJedinicna()));
+            novaStavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(artikalOpisniDodatni.getCenaJedinicna()));
         }
         
         StavkaTure st = new StavkaTure(novaStavkaTure);
@@ -773,7 +773,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                 if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI)
                     stavkaTure.addArtikalOpisni(st);
                 else if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI)
-                    stavkaTure.addArtikalOpisni(st);
+                    stavkaTure.addArtikalDodatni(st);
                 break;
             }         
         }
@@ -834,11 +834,11 @@ public class PorudzbinaController extends FXMLDocumentController {
                 
                 stavka.povecajKolicinu();
                 
-                double cenaArtikla = Double.parseDouble(novaStavka.get("cena"));
+                //double cenaArtikla = Double.parseDouble(novaStavka.get("cena"));
                 
-                double novaCena = stavka.kolicina * cenaArtikla;
+                //double novaCena = stavka.kolicina * cenaArtikla;
                         
-                stavka.cena = novaCena;
+                //stavka.cena = novaCena;
                 
                 listNovaTuraGosta.add(i, stavka);
                 return;
@@ -1007,7 +1007,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             double total = 0;
 
             for(Map<String, String> red : totalPopustNaplata) {
-                total += Double.parseDouble(red.get("cena"));
+                total += Utils.getDoubleFromString(red.get("cena"));
             }
             
             double naplata = total * (1 - this.popustTrenutnogGosta);
