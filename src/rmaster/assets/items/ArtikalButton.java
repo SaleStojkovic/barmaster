@@ -20,7 +20,7 @@ public class ArtikalButton extends Button{
     private String NadredjenaGrupaID;
     private String tip;
     private VrsteGrupaIliArtikal vrstaZaPrikaz;
-    private double cena;
+    private double cenaJedinicna;
     
     public ArtikalButton(
             String name, 
@@ -31,7 +31,7 @@ public class ArtikalButton extends Button{
             String NadredjenaGrupaID,
             String tip,
             VrsteGrupaIliArtikal vrstaZaPrikaz,
-            double cena
+            double cenaJedinicna
     )
     {
         this.idProperty().set(id);
@@ -50,6 +50,7 @@ public class ArtikalButton extends Button{
         this.NadredjenaGrupaID = NadredjenaGrupaID;
         this.tip = tip;
         this.vrstaZaPrikaz = vrstaZaPrikaz;
+        this.cenaJedinicna = cenaJedinicna;
     }
     
     //public String getVrstaArtikalSlozenIliProd() {
@@ -64,8 +65,7 @@ public class ArtikalButton extends Button{
         return this.tip.equals("SLOZ");
     } 
     
-    public double getCenaJedinicna()
-    {
-        return this.cena;
+    public double getCenaJedinicna() {
+        return this.cenaJedinicna;
     }
 }
