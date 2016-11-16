@@ -381,7 +381,7 @@ public final class DBBroker {
     }
     
     
-    public List runStoredProcedure(
+    public static List runStoredProcedure(
             String imeProcedure,
             String[] imenaArgumenata,
             String[] vrednostiArgumenata

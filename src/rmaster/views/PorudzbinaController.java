@@ -239,10 +239,12 @@ public class PorudzbinaController extends FXMLDocumentController {
             
                 Map<String, String> red = (Map<String, String>) racun;
                 
-                Porudzbina porudzbina = new Porudzbina(new Gost(red.get("gost")), red.get("id"));
+                String brojNovogGosta = red.get("gost");
+                Porudzbina porudzbina = new Porudzbina(new Gost(brojNovogGosta), red.get("id"));
+                porudzbineStola.add(porudzbina);
 
-/*                String brojNovogGosta = red.get("gost");
-                racuniStolaPoGostima.put(
+                
+                /*racuniStolaPoGostima.put(
                         brojNovogGosta, 
                         DBBroker.getRecordSetIzStoreProcedureZaParametar(
                                 "getStavkeRacuna", 
@@ -250,7 +252,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                                 red.get("id")
                         )
                 ); 
-
+*/
                 Button b = new Button(brojNovogGosta);
                 b.setId(brojNovogGosta);
                 // BOSKO: Sale, ovo nije bilo 05.10.2016. Da li treba da se odkomentarise?
@@ -260,16 +262,55 @@ public class PorudzbinaController extends FXMLDocumentController {
                                     @Override public void handle(ActionEvent e) {
                                         String gost = ((Button)e.getSource()).getId();
                                         Utils.postaviStil_ObrisiZaOstaleKontroleRoditelja(e, stilButtonGrupeSelektovana);
-                                        prikaziTureZaGosta(gost);
+                                        //prikaziTureZaGosta(gost);
+                                        for (Porudzbina porudzbina1 : porudzbineStola) {
+                                            if (porudzbina1.getGost().getGostID() == Long.parseLong(gost)) {
+                                                prikaziPorudzbinu(porudzbina1);
+                                                break;
+                                            }
+                                        }
                                     }
                                 });
 
                 this.prikazGostiju.getChildren().add(b);
-*/        }
-            //prikazGostijuScrollPane.setContent(prikazGostiju);
+        }
+        prikazGostijuScrollPane.setContent(prikazGostiju);
     
     }
-    
+    public void prikaziPorudzbinu(Porudzbina porudzbina) {
+        prikazRacunaGosta.setContent(null);  
+        prikazRacunaGosta.setFitToWidth(true);
+        listNovaTuraGosta.clear();
+                                                
+        VBox sveTure = new VBox();
+        VBox paneTura = new VBox();
+        paneTura.setPadding(new Insets(0, 0, 0, 0));
+
+        for (Tura tura : porudzbina.getTure()) {
+            TableView<Map<String, String>> tabelaNoveTure = new TableView<>();
+            tabelaNoveTure.setSelectionModel(null);
+            tabelaNoveTure = this.formatirajTabelu(
+                    tabelaNoveTure,
+                    tura.dajTuru()
+            );
+            Button ponoviTuru = new Button();
+            ponoviTuru.setPrefSize(287, 40);
+            ponoviTuru.setText("Ponovi Turu");
+            ponoviTuru.setId("" + tura.getTuraID());
+            ponoviTuru.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override public void handle(ActionEvent e) {
+                                String turaId = ((Button)e.getSource()).getId();
+                                ponoviTuru(turaId);
+                            }
+                        }); 
+            paneTura.getChildren().add(tabelaNoveTure);
+            paneTura.getChildren().add(ponoviTuru);
+        }
+        sveTure.getChildren().add(paneTura);
+        this.prikaziTotalPopustNaplata();
+        this.prikazRacunaGosta.setContent(sveTure);
+    }
+
     public void prikaziTureZaGosta(
             String gost
     ) {

@@ -27,13 +27,10 @@ public class Tura {
     ) { 
         this.turaID = Integer.parseInt(idTure);
         
-        DBBroker dbBroker = new DBBroker();
-                
         String[] imenaArgumenata = {"idTure"};
-        
         String[] vrednostiArgumenata = {idTure};
         
-        List<Map<String, String>> listaRezultata = dbBroker.runStoredProcedure(
+        List<Map<String, String>> listaRezultata = DBBroker.runStoredProcedure(
                 "getPorudzbinaTuraStavke", 
                 imenaArgumenata, 
                 vrednostiArgumenata
@@ -54,6 +51,10 @@ public class Tura {
         }
         
         return list_StavkeTure;
+    }
+    
+    public long getTuraID() {
+        return this.turaID;
     }
     
     public StavkaTure getStavkaTureByID(long artikalID) {

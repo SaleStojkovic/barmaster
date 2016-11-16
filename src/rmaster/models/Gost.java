@@ -11,6 +11,7 @@ package rmaster.models;
  */
 public class Gost {
     private long gostID = 0;
+    private double procenatPopusta = 0;
     
     public Gost(long ID) {
         gostID = ID;
@@ -20,7 +21,19 @@ public class Gost {
         gostID = Long.parseLong(ID);
     }
 
+    public void setGostID(long gostID) {
+        this.gostID = gostID;
+    }
+
     public long getGostID() {
         return this.gostID;
+    }
+
+    public void setProcenatPopusta(double procenatPopusta) {
+        this.procenatPopusta = procenatPopusta;
+    }
+
+    public double getProcenatPopusta() {
+        return this.procenatPopusta;
     }
 }

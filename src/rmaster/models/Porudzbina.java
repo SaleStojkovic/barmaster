@@ -7,6 +7,7 @@ package rmaster.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import rmaster.assets.DBBroker;
 
 /**
@@ -32,15 +33,30 @@ public class Porudzbina {
     }
     
     private void popuniPorudzbinuIzBaze() {
-        List listStavkePorudzbine = DBBroker.getRecordSetIzStoreProcedureZaParametar(
-                                "getStavkeRacuna", 
-                                "racunID", 
-                                "" + this.racunID
-                        );
-        
+        String[] imenaArgumenata = {"idRacuna"};
+        String[] vrednostiArgumenata = {"" + this.racunID};
+        List<Map<String, String>> tureJednogGosta = DBBroker.runStoredProcedure(
+                "getPorudzbinaTure", 
+                imenaArgumenata, 
+                vrednostiArgumenata
+        );
+        for (Map<String, String> tura : tureJednogGosta) {
+                String turaId = tura.get("id");
+                Tura turaModel = new Tura(turaId);
+                this.turePorudzbine.add(turaModel);
+        }
+
         // TODO: Pokupi stavke racuna, treba voditi racuna u kojoj je turi, za svaku novu kreirati novu Tura, i dodati StavkaTure u Tura
     }
     
+    public List<Tura> getTure() {
+        return this.turePorudzbine;
+    }
+    
+    public Gost getGost() {
+        return this.gost;
+    }
+
     public void setGost(Gost gost) {
         this.gost = gost;
     }
