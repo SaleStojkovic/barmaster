@@ -380,7 +380,13 @@ public final class DBBroker {
         return listaRezultata;
     }
     
-    
+    /**
+     * 
+     * @param imeProcedure
+     * @param imenaArgumenata
+     * @param vrednostiArgumenata
+     * @return 
+     */
     public static List runStoredProcedure(
             String imeProcedure,
             String[] imenaArgumenata,
