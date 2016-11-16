@@ -39,6 +39,8 @@ import rmaster.assets.Utils;
 import rmaster.assets.items.ArtikalButton;
 import rmaster.assets.items.VrsteGrupaIliArtikal;
 import static rmaster.assets.items.VrsteGrupaIliArtikal.*;
+import rmaster.models.Gost;
+import rmaster.models.Porudzbina;
 import rmaster.models.StavkaTure;
 import rmaster.models.Tura;
 
@@ -91,7 +93,9 @@ public class PorudzbinaController extends FXMLDocumentController {
     @FXML
     public ScrollPane prikazGostijuScrollPane;
     
-    public List<StavkaTure> listaTura = new ArrayList<>();
+    private List<Porudzbina> porudzbineStola = new ArrayList<Porudzbina>();
+    
+//    public List<StavkaTure> listaTura = new ArrayList<>();
     
     private static int counter = 0;
     
@@ -176,6 +180,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             
             //if (!racuniStola.isEmpty()) {
 
+            //porudzbineStola.add(e)
                 prikaziPorudzbinu();
                 
                 Button dugme = (Button)prikazGostiju.getChildren().get(0);
@@ -190,6 +195,39 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
     }
     
+    public void popuniPorudzbineStola() {
+        List racuniStola = DBBroker.get_PorudzbineStolaIKonobara();
+        for (Object racun : racuniStola) {
+
+            Map<String, String> red = (Map<String, String>) racun;
+
+            String brojNovogGosta = red.get("gost");
+            
+            racuniStolaPoGostima.put(
+                    brojNovogGosta, 
+                    DBBroker.getRecordSetIzStoreProcedureZaParametar(
+                            "getStavkeRacuna", 
+                            "racunID", 
+                            red.get("id")
+                    )
+            ); 
+            Button b = new Button(brojNovogGosta);
+            b.setId(brojNovogGosta);
+            // BOSKO: Sale, ovo nije bilo 05.10.2016. Da li treba da se odkomentarise?
+            //b.getStyleClass().add(klasaCSS);
+            b.setPrefSize(50, 50);
+            b.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override public void handle(ActionEvent e) {
+                                    String gost = ((Button)e.getSource()).getId();
+                                    Utils.postaviStil_ObrisiZaOstaleKontroleRoditelja(e, stilButtonGrupeSelektovana);
+                                    prikaziTureZaGosta(gost);
+                                }
+                            });
+
+            this.prikazGostiju.getChildren().add(b);
+        }
+    }
+
     public void prikaziPorudzbinu() {
            
             prikazRacunaGosta.setHbarPolicy(ScrollBarPolicy.NEVER);
@@ -200,8 +238,10 @@ public class PorudzbinaController extends FXMLDocumentController {
             for (Object racun : racuniStola) {
             
                 Map<String, String> red = (Map<String, String>) racun;
+                
+                Porudzbina porudzbina = new Porudzbina(new Gost(red.get("gost")), red.get("id"));
 
-                String brojNovogGosta = red.get("gost");
+/*                String brojNovogGosta = red.get("gost");
                 racuniStolaPoGostima.put(
                         brojNovogGosta, 
                         DBBroker.getRecordSetIzStoreProcedureZaParametar(
@@ -225,8 +265,8 @@ public class PorudzbinaController extends FXMLDocumentController {
                                 });
 
                 this.prikazGostiju.getChildren().add(b);
-        }
-            prikazGostijuScrollPane.setContent(prikazGostiju);
+*/        }
+            //prikazGostijuScrollPane.setContent(prikazGostiju);
     
     }
     
@@ -234,77 +274,55 @@ public class PorudzbinaController extends FXMLDocumentController {
             String gost
     ) {
         idTrenutnoIzabranogGosta = gost;
-        
-        prikazRacunaGosta.setContent(null);
-                
+        prikazRacunaGosta.setContent(null);  
         prikazRacunaGosta.setFitToWidth(true);
-        
         listNovaTuraGosta.clear();
                                                 
         VBox sveTure = new VBox();
-        
-        List<Map<String, String>> racuniJednogGosta = racuniStolaPoGostima.get(gost);
-
         VBox paneTura = new VBox();
-        
         paneTura.setPadding(new Insets(0, 0, 0, 0));
 
-         String racunId = racuniJednogGosta.get(0).get("RACUN_ID");
+        List<Map<String, String>> racuniJednogGosta = racuniStolaPoGostima.get(gost);
+        String racunId = racuniJednogGosta.get(0).get("RACUN_ID");
 
         String[] imenaArgumenata = {"idRacuna"};
         String[] vrednostiArgumenata = {racunId};
-
         List<Map<String, String>> tureJednogGosta = runStoredProcedure(
                 "getPorudzbinaTure", 
                 imenaArgumenata, 
                 vrednostiArgumenata
         );
-        
         tureTrenutnoIzabranogGosta = tureJednogGosta;
         
         for (Map<String, String> tura : tureJednogGosta) {
-                
                 String turaId = tura.get("id");
-                
                 Tura turaModel = new Tura(turaId);
-                
                 this.listTure.add(turaModel);
                 
                 TableView<Map<String, String>> tabelaNoveTure = new TableView<>();
-                                
                 tabelaNoveTure.setSelectionModel(null);
-                        
                 tabelaNoveTure = this.formatirajTabelu(
                         tabelaNoveTure,
                         turaModel.dajTuru()
                 );
                 
-                paneTura.getChildren().add(tabelaNoveTure);
-                
                 Button ponoviTuru = new Button();
-                
                 ponoviTuru.setPrefSize(287, 40);
-                
                 ponoviTuru.setText("Ponovi Turu");
-                
                 ponoviTuru.setId(turaId);
-                    
                 ponoviTuru.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override public void handle(ActionEvent e) {
                                     String turaId = ((Button)e.getSource()).getId();
                                     ponoviTuru(turaId);
                                 }
                             }); 
-                
+                paneTura.getChildren().add(tabelaNoveTure);
                 paneTura.getChildren().add(ponoviTuru);
-               
             }
             sveTure.getChildren().add(paneTura);
-            
             this.prikaziTotalPopustNaplata();
-			
             this.prikazRacunaGosta.setContent(sveTure);
-    }
+    }    
     
     public void ponoviTuru(String izabranaTuraId) {
         //OVDE SE SADA PONAVLJA TURA

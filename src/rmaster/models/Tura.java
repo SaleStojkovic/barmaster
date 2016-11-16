@@ -17,11 +17,16 @@ import rmaster.assets.DBBroker;
 public class Tura {
     
     public List<StavkaTure> listStavkeTure = new ArrayList<>();
+    public long turaID = 0;
+    private long gostID = 0;
     
-    
+    public Tura () {
+    }
     public Tura (
             String idTure
-    ) {        
+    ) { 
+        this.turaID = Integer.parseInt(idTure);
+        
         DBBroker dbBroker = new DBBroker();
                 
         String[] imenaArgumenata = {"idTure"};
@@ -51,11 +56,26 @@ public class Tura {
         return list_StavkeTure;
     }
     
-    public StavkaTure getStavkuTureByID(long artikalID) {
+    public StavkaTure getStavkaTureByID(long artikalID) {
         for (StavkaTure novaStavka : this.listStavkeTure) {
             if (novaStavka.getArtikalId().equals("" + artikalID))
                 return novaStavka;
         }
         return null;
     }
+    
+    public void addStavkaTure(StavkaTure novaStavka) {
+        for (StavkaTure stavka : this.listStavkeTure) {
+            if (novaStavka.getArtikalId().equals(stavka.getArtikalId())) {
+                // Ukoliko postoji taj artikal u turi, dodaje na njega kolicinu
+                // ukoliko taj vec nema dodatne ili opisne artikle
+                if (!stavka.getImaDodatneIliOpisneArtikle()) {
+                    stavka.povecajKolicinuZa(novaStavka.getKolicina());
+                    return;
+                }
+            }
+        }
+        this.listStavkeTure.add(novaStavka);
+    }
+
 }

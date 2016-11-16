@@ -17,7 +17,7 @@ import rmaster.assets.Utils;
  * @author Arbor
  */
 public class StavkaTure {
-    
+    public long stavkaTureID = 0;
     public String artikalId;
     public String imeArtikla;
     public double kolicina = 0;
@@ -29,6 +29,10 @@ public class StavkaTure {
 
     public String getArtikalId(){
         return this.artikalId;
+    }
+
+    public double getKolicina(){
+        return this.kolicina;
     }
 
     public StavkaTure(Map<String, String> stavkaTure) {
@@ -177,4 +181,8 @@ public class StavkaTure {
 /************************************************************************************/
 /************************* Rad sa kolicinama - KRAJ *********************************/
 /************************************************************************************/
+    
+    public boolean getImaDodatneIliOpisneArtikle () {
+        return (this.dodatniArtikli.size() + this.opisniArtikli.size() > 0);
+    }
 }

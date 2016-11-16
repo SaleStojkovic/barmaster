@@ -33,7 +33,7 @@ public final class DBBroker {
      * 
      * @return Connection
      */
-    public Connection poveziSaBazom() {
+    public static Connection poveziSaBazom() {
         
         Connection dbConnection = null;
  
@@ -356,7 +356,7 @@ public final class DBBroker {
      * @return
      * @throws Exception 
      */
-    private List prebaciUListu(
+    private static List prebaciUListu(
             ResultSet resultSet
     ) 
     {    
@@ -494,7 +494,7 @@ public final class DBBroker {
      * @param vrednostArgumentaSP
      * @return 
      */
-    public List getRecordSetIzStoreProcedureZaParametar(
+    public static List getRecordSetIzStoreProcedureZaParametar(
             String imeStoreProcedure, 
             String imeArgumentaSP,
             String vrednostArgumentaSP) 
