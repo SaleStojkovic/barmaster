@@ -24,11 +24,16 @@ public class StavkaTure {
     public double cenaJedinicna = 0;
     public double cena = 0;
     public List<StavkaTure> dodatniArtikli = new ArrayList(); 
-    public List<StavkaTure> opisniArtikli = new ArrayList(); 
+    public List<StavkaTure> opisniArtikli = new ArrayList();
+    private long glavnaStavkaID = 0;
     
 
     public String getArtikalId(){
         return this.artikalId;
+    }
+
+    public long getStavkaTureId(){
+        return this.stavkaTureID;
     }
 
     public double getKolicina(){
@@ -36,6 +41,7 @@ public class StavkaTure {
     }
 
     public StavkaTure(Map<String, String> stavkaTure) {
+        this.stavkaTureID = Long.parseLong(stavkaTure.get("id"));
         String novaKolicina = stavkaTure.get("kolicina");
         if (novaKolicina.contains("x")) {
             novaKolicina.substring(1);
@@ -43,7 +49,9 @@ public class StavkaTure {
         this.artikalId = stavkaTure.get("ARTIKAL_ID");
         this.imeArtikla = stavkaTure.get("naziv");
         this.kolicina = Utils.getDoubleFromString(novaKolicina);
-        this.setCenaJedinicna(Utils.getDoubleFromString(stavkaTure.get("cenaJedinicna")));  
+        this.setCenaJedinicna(Utils.getDoubleFromString(stavkaTure.get("cena"))); 
+        if (stavkaTure.get("GLAVNASTAVKA_ID") != null)
+            this.glavnaStavkaID = Long.parseLong(stavkaTure.get("GLAVNASTAVKA_ID"));
     }
     
     public Map<String, String> dajStavkuTure() {
@@ -184,5 +192,9 @@ public class StavkaTure {
     
     public boolean getImaDodatneIliOpisneArtikle () {
         return (this.dodatniArtikli.size() + this.opisniArtikli.size() > 0);
+    }
+    
+    public long getGlavnaStavkaID() {
+        return this.glavnaStavkaID;
     }
 }

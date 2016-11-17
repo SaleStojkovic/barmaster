@@ -169,6 +169,7 @@ public class PorudzbinaController extends FXMLDocumentController {
     List<Tura> listTure = new ArrayList<>();
     
     ArtikalButton selektovani = null;
+    StavkaTure selektovana = null;
     
     @Override
     public void initData(Map<String, String> data) {
@@ -739,6 +740,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             //selektovaniFavorite = (Button)izabraniArtikalIliGrupa.getSource();
             vrstaZaPrikaz = ARTIKAL_FAVORITE;
             selektovani = null;
+            selektovana = null;
         }
 
         //VrsteGrupaIliArtikal staSePrikazuje = ARTIKAL_GLAVNI;
@@ -776,7 +778,8 @@ public class PorudzbinaController extends FXMLDocumentController {
             case ARTIKAL_DODATNI:
                 // TODO : Mora da pronadje koji je artikal zadnji dodat da bi njemu dodao opisne i dodatne artikle
                 //dodajArtikalUNovuTuru(selektovani);
-                dodajOpisniDodatniArtikalUNovuTuru(selektovani, noviArtikal);
+//                dodajOpisniDodatniArtikalUNovuTuru(selektovani, noviArtikal);
+                dodajOpisniDodatniArtikalUStavkuTure(selektovana, noviArtikal);
                 break;
             case ARTIKAL_FAVORITE:
                 if (selektovani != null) {
@@ -798,12 +801,73 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
     }
     
+    public void dodajOpisniDodatniArtikalUStavkuTure(StavkaTure poslednjaDodataStavka, ArtikalButton artikalOpisniDodatni) {
+        prikazRacunaGosta.setContent(null);
+        Map<String, String> novaGlavnaStavka = null;
+        StavkaTure nova = null;
+        //long idArtikalGlavni = poslednjaDodataStavka.getStavkaTureId();
+        
+        Map<String, String> novaStavkaTure = new HashMap<>();
+        novaStavkaTure.put("id", artikalOpisniDodatni.getId());
+        novaStavkaTure.put("ARTIKAL_ID", artikalOpisniDodatni.getId());
+        novaStavkaTure.put("kolicina", "1");
+        if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI) {
+            novaStavkaTure.put("naziv", "--> " + artikalOpisniDodatni.getText());
+            novaStavkaTure.put("cena", "0");
+            novaStavkaTure.put("cenaJedinicna", "0");
+        } else if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI) {
+            novaStavkaTure.put("naziv", "-> " + artikalOpisniDodatni.getText());
+            novaStavkaTure.put("cena", Utils.getStringFromDouble(artikalOpisniDodatni.getCenaJedinicna()));
+            novaStavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(artikalOpisniDodatni.getCenaJedinicna()));
+        }
+        
+        if (poslednjaDodataStavka.getKolicina()>1) {
+            novaGlavnaStavka = new HashMap<>();
+            novaGlavnaStavka.put("id", "" + poslednjaDodataStavka.stavkaTureID);
+            novaGlavnaStavka.put("ARTIKAL_ID", poslednjaDodataStavka.artikalId);
+            novaGlavnaStavka.put("kolicina", "1");
+            novaGlavnaStavka.put("naziv", "" + poslednjaDodataStavka.imeArtikla);
+            novaGlavnaStavka.put("cena", "" + poslednjaDodataStavka.cena);
+            novaGlavnaStavka.put("cenaJedinicna", "" + poslednjaDodataStavka.cenaJedinicna);
+            
+            poslednjaDodataStavka.smanjiKolicinu();
+            nova = new StavkaTure(novaGlavnaStavka);
+            
+            listNovaTuraGosta.add(nova);
+            poslednjaDodataStavka = nova;
+            selektovana = nova;
+        }
+        
+        StavkaTure st = new StavkaTure(novaStavkaTure);
+        if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI) {
+            poslednjaDodataStavka.addArtikalOpisni(st);
+        } else if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI) {
+            poslednjaDodataStavka.addArtikalDodatni(st);
+        }
+/*        for (StavkaTure stavkaTure : listNovaTuraGosta) {
+            if (stavkaTure.artikalId.equals("" + idArtikalGlavni)) {
+                if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI)
+                    stavkaTure.addArtikalOpisni(st);
+                else if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI)
+                    stavkaTure.addArtikalDodatni(st);
+                break;
+            }         
+        }
+*/        
+        //this.dodajUNovuTuruList(novaStavkaTure);
+
+        this.tableRefresh();
+        this.prikaziTotalPopustNaplata();
+
+    }
+
     public void dodajOpisniDodatniArtikalUNovuTuru(ArtikalButton artikalGlavni, ArtikalButton artikalOpisniDodatni) {
         prikazRacunaGosta.setContent(null);
         
         String idArtikalGlavni = artikalGlavni.getId();
         
         Map<String, String> novaStavkaTure = new HashMap<>();
+        novaStavkaTure.put("id", artikalOpisniDodatni.getId());
         novaStavkaTure.put("ARTIKAL_ID", artikalOpisniDodatni.getId());
         novaStavkaTure.put("kolicina", "1");
         if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI) {
@@ -851,6 +915,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
 
         Map<String, String> novaStavkaTure = new HashMap<>();
+        novaStavkaTure.put("id", artikal.getId());
         novaStavkaTure.put("ARTIKAL_ID", idArtikla);
         novaStavkaTure.put("naziv", nazivArtikla);
         novaStavkaTure.put("cena", cena);
@@ -870,6 +935,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             novaStavka.put("kolicina", "1");
             StavkaTure novaStavkaModel = new StavkaTure(novaStavka);
             listNovaTuraGosta.add(novaStavkaModel);
+            selektovana = novaStavkaModel;
             return;
         }
         
@@ -879,23 +945,17 @@ public class PorudzbinaController extends FXMLDocumentController {
             String novaStavkaId = novaStavka.get("ARTIKAL_ID");
             
             if (stavkaId.equals(novaStavkaId)) {
-                listNovaTuraGosta.remove(i);
-                
-                stavka.povecajKolicinu();
-                
-                //double cenaArtikla = Double.parseDouble(novaStavka.get("cena"));
-                
-                //double novaCena = stavka.kolicina * cenaArtikla;
-                        
-                //stavka.cena = novaCena;
-                
-                listNovaTuraGosta.add(i, stavka);
-                return;
+                if (!stavka.getImaDodatneIliOpisneArtikle()) {
+                    stavka.povecajKolicinu();
+                    selektovana = stavka;
+                    return;
+                }
             }
         }
         novaStavka.put("kolicina", "1");
         StavkaTure novaStavkaModel = new StavkaTure(novaStavka);
         listNovaTuraGosta.add(novaStavkaModel);
+        selektovana = novaStavkaModel;
 
     }
     
