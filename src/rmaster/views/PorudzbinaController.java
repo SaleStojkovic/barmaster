@@ -166,19 +166,15 @@ public class PorudzbinaController extends FXMLDocumentController {
         try {
             refreshGrupeIliArtikla(this.ArtikalGrupe, GLAVNA_GRUPA);
             refreshGrupeIliArtikla(this.Artikal, ARTIKAL_FAVORITE);
-            //List<Map<String, String>> racuniStola = DBBroker.get_PorudzbineStolaIKonobara();
-            
-            //if (!racuniStola.isEmpty()) {
 
-            //porudzbineStola.add(e)
-                prikaziPorudzbinu();
-                
-                Button dugme = (Button)prikazGostiju.getChildren().get(0);
-                
-                IntStream.range(0, 1).forEach(
-                    i -> dugme.fire()
-                );
-            //}
+            prikaziPorudzbinu();
+
+            Button dugme = (Button)prikazGostiju.getChildren().get(0);
+
+            IntStream.range(0, 1).forEach(
+                i -> dugme.fire()
+            );
+
             
         } catch (Exception e) {
             System.out.println("Greska u pozivu SP get_racuniKonobaraKojiNisuZatvoreni! - " + e.toString());
@@ -203,8 +199,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             ); 
             Button b = new Button(brojNovogGosta);
             b.setId(brojNovogGosta);
-            // BOSKO: Sale, ovo nije bilo 05.10.2016. Da li treba da se odkomentarise?
-            //b.getStyleClass().add(klasaCSS);
+            
             b.setPrefSize(50, 50);
             b.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override public void handle(ActionEvent e) {
@@ -406,13 +401,6 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         return novaTabela;
     }
-
-//    private void hboxGrupeArtikalaRefresh(HBox hbox) {
-//        hbox.getChildren().clear();
-//        for (Button next : c) {
-//            hbox.getChildren().add(next);
-//        }
-//    } 
 
     public void prikaziSalu(ActionEvent event) {
         Map<String, String> newData = new HashMap<>();
