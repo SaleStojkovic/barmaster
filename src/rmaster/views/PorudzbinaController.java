@@ -368,18 +368,8 @@ public class PorudzbinaController extends FXMLDocumentController {
     public void ponoviTuru(String izabranaTuraId) {
         //OVDE SE SADA PONAVLJA TURA
         prikazRacunaGosta.setContent(null);
-        
-        String zeljenaTura = null;
-        
-        for (Map<String, String> tura : tureTrenutnoIzabranogGosta) {
-             
-                String turaId = tura.get("id");
-                if (turaId.equals(izabranaTuraId)) {
-                     zeljenaTura = turaId;
-                }
-        }
-                       
-        Tura turaModel = new Tura(zeljenaTura);
+                              
+        Tura turaModel = new Tura(izabranaTuraId);
 
         listNovaTuraGosta = turaModel.listStavkeTure;
         
@@ -417,11 +407,11 @@ public class PorudzbinaController extends FXMLDocumentController {
         TableColumn<Map<String,String>, ?> kolonaCenaJedinicna = listaKolona.get(0);
         kolonaCenaJedinicna.setPrefWidth(0);
         TableColumn<Map<String,String>, ?> kolonaArtikal = listaKolona.get(1);
-        kolonaArtikal.setPrefWidth(190);
+        kolonaArtikal.setPrefWidth(180);
         TableColumn<Map<String,String>, ?> kolonaKolicina = listaKolona.get(2);
-        kolonaKolicina.setPrefWidth(25);
+        kolonaKolicina.setPrefWidth(30);
         TableColumn<Map<String,String>, ?> kolonaCena = listaKolona.get(3);
-        kolonaCena.setPrefWidth(66);
+        kolonaCena.setPrefWidth(51);
         TableColumn<Map<String,String>, ?> kolonaArtikalID = listaKolona.get(4);
         kolonaArtikalID.setPrefWidth(0);
 
