@@ -156,7 +156,8 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     private List<Porudzbina> porudzbineStola = new ArrayList<Porudzbina>();
   
-    
+    int[] sirinaKolonaTabele = {0, 180, 30, 51, 0};
+
     ArtikalButton selektovani = null;
     StavkaTure selektovana = null;
     
@@ -263,10 +264,12 @@ public class PorudzbinaController extends FXMLDocumentController {
         for (Tura tura : porudzbina.getTure()) {
             TableView<Map<String, String>> tabelaNoveTure = new TableView<>();
             tabelaNoveTure.setSelectionModel(null);
-            tabelaNoveTure = this.formatirajTabelu(
-                    tabelaNoveTure,
-                    tura.dajTuru()
+            
+            tabelaNoveTure = tableHelper.formatirajTabelu(tabelaNoveTure,
+                    tura.dajTuru(),
+                    sirinaKolonaTabele
             );
+            
             Button ponoviTuru = new Button();
             ponoviTuru.setPrefSize(287, 40);
             ponoviTuru.setText("Ponovi Turu");
@@ -321,9 +324,10 @@ public class PorudzbinaController extends FXMLDocumentController {
                 
                 TableView<Map<String, String>> tabelaNoveTure = new TableView<>();
                 tabelaNoveTure.setSelectionModel(null);
-                tabelaNoveTure = this.formatirajTabelu(
-                        tabelaNoveTure,
-                        turaModel.dajTuru()
+                
+                tabelaNoveTure = tableHelper.formatirajTabelu(tabelaNoveTure,
+                        turaModel.dajTuru(),
+                        sirinaKolonaTabele
                 );
                 
                 Button ponoviTuru = new Button();
@@ -364,11 +368,10 @@ public class PorudzbinaController extends FXMLDocumentController {
         TableView<Map<String, String>> novaTabela = new TableView<>();
         
         tabelaNovaTuraGosta.getItems().clear();
-       
             
-        tabelaNovaTuraGosta = this.formatirajTabelu(
-                    novaTabela,
-                    ponovljenaTura
+        tabelaNovaTuraGosta = tableHelper.formatirajTabelu(novaTabela,
+                    ponovljenaTura,
+                    sirinaKolonaTabele
             );
 
         tabelaNovaTuraGosta.getSelectionModel().select(listNovaTuraGosta.size() - 1);
@@ -378,29 +381,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         prikazRacunaGosta.setContent(tabelaNovaTuraGosta);
     }
 
-    private  TableView<Map<String, String>> formatirajTabelu(
-            TableView<Map<String, String>> novaTabela,
-            List<Map<String, String>> lista
-        ) 
-    {
-        novaTabela = popuniTabelu(novaTabela, lista);
-
-        List<TableColumn<Map<String,String>, ?>> listaKolona = novaTabela.getColumns();
-        TableColumn<Map<String,String>, ?> kolonaCenaJedinicna = listaKolona.get(0);
-        kolonaCenaJedinicna.setPrefWidth(0);
-        TableColumn<Map<String,String>, ?> kolonaArtikal = listaKolona.get(1);
-        kolonaArtikal.setPrefWidth(180);
-        TableColumn<Map<String,String>, ?> kolonaKolicina = listaKolona.get(2);
-        kolonaKolicina.setPrefWidth(30);
-        TableColumn<Map<String,String>, ?> kolonaCena = listaKolona.get(3);
-        kolonaCena.setPrefWidth(51);
-        TableColumn<Map<String,String>, ?> kolonaArtikalID = listaKolona.get(4);
-        kolonaArtikalID.setPrefWidth(0);
-
-        novaTabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        
-        return novaTabela;
-    }
+    
 
     public void prikaziSalu(ActionEvent event) {
         Map<String, String> newData = new HashMap<>();
@@ -1039,9 +1020,9 @@ public class PorudzbinaController extends FXMLDocumentController {
             return;
         }
             
-        tabelaNovaTuraGosta = this.formatirajTabelu(
-                    novaTabela,
-                    listaTura
+        tabelaNovaTuraGosta = tableHelper.formatirajTabelu(novaTabela,
+                    listaTura,
+                    sirinaKolonaTabele
             );
 
         tabelaNovaTuraGosta.getSelectionModel().select(listaTura.size() - 1);

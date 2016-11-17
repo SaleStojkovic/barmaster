@@ -9,7 +9,9 @@ import javafx.util.converter.DateTimeStringConverter;
 
 
 public final class Rezervacija {
-   
+    
+    public String idRezervacije;
+    
     public String brOsoba;
     
     public String brStola;
@@ -27,6 +29,8 @@ public final class Rezervacija {
     
     public Rezervacija(HashMap<String, String> RezervacijaMap) 
     {
+        this.idRezervacije = RezervacijaMap.get("id");
+        
         this.brOsoba = RezervacijaMap.get("brOsoba");
         
         this.brStola = RezervacijaMap.get("brStola");
@@ -51,16 +55,15 @@ public final class Rezervacija {
     public HashMap<String, String> toHashMap()
     {
         HashMap<String, String> rezervacijaMap = new HashMap();
-        
-        rezervacijaMap.put("brOsoba", this.brOsoba);
-        rezervacijaMap.put("brStola", this.brStola);
         rezervacijaMap.put("ime", this.ime);
-        rezervacijaMap.put("napomena", this.napomena);
-        rezervacijaMap.put("tel", this.tel);
-        rezervacijaMap.put("vreme", this.vreme);
         rezervacijaMap.put("datum", this.datum);
+        rezervacijaMap.put("vreme", this.vreme);
+        rezervacijaMap.put("brStola", this.brStola);
+        rezervacijaMap.put("brOsoba", this.brOsoba);
+        rezervacijaMap.put("tel", this.tel);
+        rezervacijaMap.put("napomena", this.napomena);
+        rezervacijaMap.put("id", this.idRezervacije);
 
-        
         return rezervacijaMap;
     }
 }

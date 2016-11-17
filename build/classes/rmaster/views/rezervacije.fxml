@@ -37,19 +37,14 @@
       </Pane>
       <Pane layoutY="51.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="608.0" prefWidth="1024.0">
          <children>
-            <ScrollPane fx:id="scrollPaneRezervacije" hbarPolicy="NEVER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="608.0" prefWidth="434.0" vbarPolicy="NEVER" />
-            <Pane layoutX="434.0" prefHeight="608.0" prefWidth="59.0">
-               <children>
-                  <Button layoutY="544.0" mnemonicParsing="false" onAction="#pomeriScrollDownRezervacije" prefHeight="64.0" prefWidth="59.0" text="▼" />
-                  <Button mnemonicParsing="false" onAction="#pomeriScrollUpRezervacije" prefHeight="64.0" prefWidth="59.0" text="▲" />
-               </children>
-            </Pane>
-            <Pane layoutX="493.0" prefHeight="608.0" prefWidth="531.0" />
+            <ScrollPane fx:id="scrollPaneRezervacije" hbarPolicy="NEVER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="608.0" prefWidth="952.0" vbarPolicy="NEVER" />
+            <Button layoutX="952.0" mnemonicParsing="false" onAction="#pomeriScrollUpRezervacije" prefHeight="78.0" prefWidth="71.0" text="▲" />
+            <Button layoutX="953.0" layoutY="529.0" mnemonicParsing="false" onAction="#pomeriScrollDownRezervacije" prefHeight="78.0" prefWidth="71.0" text="▼" />
          </children>
       </Pane>
       <Pane fx:id="rezervacijeFooter" layoutY="659.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="109.0" prefWidth="1024.0">
          <children>
-            <Button onAction="#nazadNaPrikazSale" layoutY="1.0" mnemonicParsing="false" prefHeight="109.0" prefWidth="168.0" text=" « Nazad " />
+            <Button layoutY="1.0" mnemonicParsing="false" onAction="#nazadNaPrikazSale" prefHeight="109.0" prefWidth="168.0" text=" « Nazad " />
          </children>
       </Pane>
    </children>
