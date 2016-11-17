@@ -156,7 +156,7 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     private List<Porudzbina> porudzbineStola = new ArrayList<Porudzbina>();
   
-    int[] sirinaKolonaTabele = {0, 180, 30, 51, 0};
+    int[] sirinaKolonaTabele = {0, 170, 30, 61, 0};
 
     ArtikalButton selektovani = null;
     StavkaTure selektovana = null;
@@ -265,7 +265,8 @@ public class PorudzbinaController extends FXMLDocumentController {
             TableView<Map<String, String>> tabelaNoveTure = new TableView<>();
             tabelaNoveTure.setSelectionModel(null);
             
-            tabelaNoveTure = tableHelper.formatirajTabelu(tabelaNoveTure,
+            tabelaNoveTure = tableHelper.formatirajTabelu(
+                    tabelaNoveTure,
                     tura.dajTuru(),
                     sirinaKolonaTabele
             );
