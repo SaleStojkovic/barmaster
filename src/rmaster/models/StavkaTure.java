@@ -18,7 +18,7 @@ import rmaster.assets.Utils;
  */
 public class StavkaTure {
     public long stavkaTureID = 0;
-    public String artikalId;
+    public long artikalId;
     public String imeArtikla;
     public double kolicina = 0;
     public double cenaJedinicna = 0;
@@ -28,7 +28,10 @@ public class StavkaTure {
     private long glavnaStavkaID = 0;
     
 
-    public String getArtikalId(){
+    public String getArtikalIDString(){
+        return "" + this.artikalId;
+    }
+    public Long getArtikalID(){
         return this.artikalId;
     }
 
@@ -46,7 +49,7 @@ public class StavkaTure {
         if (novaKolicina.contains("x")) {
             novaKolicina.substring(1);
         }
-        this.artikalId = stavkaTure.get("ARTIKAL_ID");
+        this.artikalId = Long.parseLong(stavkaTure.get("ARTIKAL_ID"));
         this.imeArtikla = stavkaTure.get("naziv");
         this.kolicina = Utils.getDoubleFromString(novaKolicina);
         this.setCenaJedinicna(Utils.getDoubleFromString(stavkaTure.get("cena"))); 
@@ -57,7 +60,7 @@ public class StavkaTure {
     public Map<String, String> dajStavkuTure() {
         Map<String, String> stavkaTure = new HashMap<>();
 
-        stavkaTure.put("artikalId", this.artikalId);
+        stavkaTure.put("artikalId", this.getArtikalIDString());
         stavkaTure.put("naziv", this.imeArtikla);
         int intKolicina = (int)this.kolicina;
         if (this.kolicina == intKolicina) {

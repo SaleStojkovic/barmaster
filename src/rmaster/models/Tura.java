@@ -39,10 +39,14 @@ public class Tura {
         for (Map<String, String> noviRed : listaRezultata) {
             StavkaTure novaStavka = new StavkaTure(noviRed);
             if (novaStavka.getGlavnaStavkaID()!=0) {
-                if (novaStavka.cena == 0)
+                if (novaStavka.cena == 0) {
+                    novaStavka.imeArtikla = "--> " + novaStavka.imeArtikla;
                     this.getStavkaTureByStavkaID(novaStavka.getGlavnaStavkaID()).addArtikalOpisni(novaStavka);
-                else
+                }
+                else {
+                    novaStavka.imeArtikla = "-> " + novaStavka.imeArtikla;
                     this.getStavkaTureByStavkaID(novaStavka.getGlavnaStavkaID()).addArtikalDodatni(novaStavka);
+                }
             }
             else
                 listStavkeTure.add(novaStavka);
@@ -72,25 +76,25 @@ public class Tura {
         return this.turaID;
     }
     
-    public StavkaTure getStavkaTureByID(long artikalID) {
-        for (StavkaTure novaStavka : this.listStavkeTure) {
-            if (novaStavka.getArtikalId().equals("" + artikalID))
-                return novaStavka;
+    public StavkaTure getStavkaTureByArtikalID(long artikalID) {
+        for (StavkaTure stavka : this.listStavkeTure) {
+            if (stavka.getArtikalID() == artikalID)
+                return stavka;
         }
         return null;
     }
 
     public StavkaTure getStavkaTureByStavkaID(long stavkaTureID) {
-        for (StavkaTure novaStavka : this.listStavkeTure) {
-            if (novaStavka.getStavkaTureId() == stavkaTureID)
-                return novaStavka;
+        for (StavkaTure stavka : this.listStavkeTure) {
+            if (stavka.getStavkaTureId() == stavkaTureID)
+                return stavka;
         }
         return null;
     }
     
     public void addStavkaTure(StavkaTure novaStavka) {
         for (StavkaTure stavka : this.listStavkeTure) {
-            if (novaStavka.getArtikalId().equals(stavka.getArtikalId())) {
+            if (novaStavka.getArtikalID() == stavka.getArtikalID()) {
                 // Ukoliko postoji taj artikal u turi, dodaje na njega kolicinu
                 // ukoliko taj vec nema dodatne ili opisne artikle
                 if (!stavka.getImaDodatneIliOpisneArtikle()) {
