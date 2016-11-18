@@ -101,5 +101,11 @@ public class Tura {
         }
         this.listStavkeTure.add(novaStavka);
     }
+    
+    public Tura getClone(long turaID) {
+        Tura novaTura = new Tura("" + turaID);
+        novaTura.turaID = 0;
+        return novaTura;
+    }
 
 }

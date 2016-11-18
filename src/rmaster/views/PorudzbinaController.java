@@ -167,6 +167,7 @@ public class PorudzbinaController extends FXMLDocumentController {
     List<Map<String, String>> tureTrenutnoIzabranogGosta = new ArrayList<>();
     
     List<Tura> listTure = new ArrayList<>();
+    Tura novaTura = new Tura();
     
     ArtikalButton selektovani = null;
     StavkaTure selektovana = null;
@@ -366,35 +367,50 @@ public class PorudzbinaController extends FXMLDocumentController {
             this.prikazRacunaGosta.setContent(sveTure);
     }    
     
-    public void ponoviTuru(String izabranaTuraId) {
+    public void ponoviTuru(String izabranaTuraIdString) {
         //OVDE SE SADA PONAVLJA TURA
+        long izabranaTuraID = Long.parseLong(izabranaTuraIdString);
+        novaTura = null;
         prikazRacunaGosta.setContent(null);
-                              
-        Tura turaModel = new Tura(izabranaTuraId);
-
-        listNovaTuraGosta = turaModel.listStavkeTure;
         
-        List<Map<String, String>> ponovljenaTura = new ArrayList<>();
-        
-        for (StavkaTure novaStavka : turaModel.listStavkeTure) {
-            ponovljenaTura.add(novaStavka.dajStavkuTure());
+        for (Porudzbina porudzbina : porudzbineStola) {
+            for (Tura tura : porudzbina.getTure()) {
+                if (tura.turaID == izabranaTuraID) {
+                    novaTura = tura.getClone(izabranaTuraID);
+                    porudzbina.getTure().add(novaTura);
+                }
+            }
+            
         }
         
-        TableView<Map<String, String>> novaTabela = new TableView<>();
-        
-        tabelaNovaTuraGosta.getItems().clear();
-       
-            
-        tabelaNovaTuraGosta = this.formatirajTabelu(
-                    novaTabela,
-                    ponovljenaTura
-            );
+//        Tura turaModel = new Tura(izabranaTuraId);
 
-        tabelaNovaTuraGosta.getSelectionModel().select(listNovaTuraGosta.size() - 1);
+  //      listNovaTuraGosta = turaModel.listStavkeTure;
+        if (novaTura != null) {
+            listNovaTuraGosta = novaTura.listStavkeTure;
 
-        this.prikaziTotalPopustNaplata();
+            List<Map<String, String>> ponovljenaTura = new ArrayList<>();
 
-        prikazRacunaGosta.setContent(tabelaNovaTuraGosta);
+            for (StavkaTure novaStavka : novaTura.listStavkeTure) {
+                ponovljenaTura.add(novaStavka.dajStavkuTure());
+            }
+
+            TableView<Map<String, String>> novaTabela = new TableView<>();
+
+            tabelaNovaTuraGosta.getItems().clear();
+
+
+            tabelaNovaTuraGosta = this.formatirajTabelu(
+                        novaTabela,
+                        ponovljenaTura
+                );
+
+            tabelaNovaTuraGosta.getSelectionModel().select(listNovaTuraGosta.size() - 1);
+
+            this.prikaziTotalPopustNaplata();
+
+            prikazRacunaGosta.setContent(tabelaNovaTuraGosta);
+        }
     }
 
     private  TableView<Map<String, String>> formatirajTabelu(
