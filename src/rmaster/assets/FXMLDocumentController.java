@@ -14,15 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -30,8 +26,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -39,8 +33,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import rmaster.RMaster;
 import rmaster.models.Konobar;
- 
- 
+
 /**
  *
  * @author Arbor
@@ -49,6 +42,8 @@ public class FXMLDocumentController implements Initializable {
     
     public DBBroker DBBroker;
     public RMaster RMaster;
+    public TableHelper tableHelper;
+    
     public Konobar ulogovaniKonobar;
     public Map<String, String> data = new HashMap<>();
      
@@ -56,6 +51,7 @@ public class FXMLDocumentController implements Initializable {
         
         try {
             DBBroker = new DBBroker();
+            tableHelper = new TableHelper();
         } catch (Exception ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -354,51 +350,6 @@ public class FXMLDocumentController implements Initializable {
     }
     
     
-     
-    public TableView<Map<String,String>> popuniTabelu(
-            TableView<Map<String,String>> tabela,
-            List<Map<String, String>> listaPodataka
-    ) {
-        ObservableList<Map<String, String>> tableList = FXCollections.observableArrayList(listaPodataka);            
-        
-        if (!listaPodataka.isEmpty()) {
-            
-            Map<String, String> row = listaPodataka.get(0);
-            
-            Set<String> keys = row.keySet();
-            
-            String[] kolone = keys.toArray(new String[keys.size()]);
-            
-            for (int i = 0; i < keys.size(); i++) {
-                 
-                TableColumn<Map<String, String>, String> column = new TableColumn<>();
-                
-                column.setResizable(false);
-                
-                final String colIndex = kolone[i];
-                column.setCellValueFactory(data -> {
-                    Map<String, String> rowValues = data.getValue();
-                    String cellValue;
-                    cellValue = rowValues.get(colIndex);
-                    return new ReadOnlyStringWrapper(cellValue);
-            });
-                
-               tabela.getColumns().add(column);
-               
-            }
-            
-            for (int j = 0; j < listaPodataka.size(); j++) {
-                tabela.getItems().add(tableList.get(j));
-            }
-            
-            tabela.setFixedCellSize(35);
-            int brojRedova = listaPodataka.size();
-            tabela.setPrefHeight(brojRedova * tabela.getFixedCellSize() + 3);
-            tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        }
-        return tabela;
-    }  
-
    public Timeline prikaziCasovnik(
            Label casovnik
    ) {

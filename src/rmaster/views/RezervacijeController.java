@@ -22,11 +22,7 @@ import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
 import rmaster.models.Rezervacija;
 
-/**
- * FXML Controller class
- *
- * @author Arbor
- */
+
 public class RezervacijeController extends FXMLDocumentController {
 
     @FXML
@@ -44,6 +40,8 @@ public class RezervacijeController extends FXMLDocumentController {
     
     public List<Map<String, String>> listaZaPrikaz = new ArrayList();
     
+    public int[] sirinaKolonaTabele = {140, 100, 100, 100, 100, 100, 242, 0};
+    
     /**
      * Initializes the controller class.
      */
@@ -54,7 +52,11 @@ public class RezervacijeController extends FXMLDocumentController {
         
         getRezervacije();
         
-        tabelaRezervacija = popuniTabelu(tabelaRezervacija, listaZaPrikaz);
+        tabelaRezervacija = tableHelper.formatirajTabelu(
+                tabelaRezervacija, 
+                listaZaPrikaz,
+                sirinaKolonaTabele
+        );
         
         scrollPaneRezervacije.setContent(tabelaRezervacija);
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
@@ -84,7 +86,7 @@ public class RezervacijeController extends FXMLDocumentController {
         for(HashMap<String, String> rezervacijaMapa : listaRezervacija) {
             Rezervacija novaRezervacija = new Rezervacija(rezervacijaMapa);
             
-            this.listaZaPrikaz.add(novaRezervacija.toHashMap());
+            this.listaZaPrikaz.add((Map<String, String>)novaRezervacija.toHashMap());
             this.listaRezervacija.add(novaRezervacija);
         }
         

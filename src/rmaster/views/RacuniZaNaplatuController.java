@@ -64,7 +64,7 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
     
     public void prikaziRacune() {
         tabelaSaRacunimaZaNaplatu.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        tabelaSaRacunimaZaNaplatu = this.popuniTabelu(
+        tabelaSaRacunimaZaNaplatu = tableHelper.popuniTabelu(
                 tabelaSaRacunimaZaNaplatu,
                 listRacuni
         );

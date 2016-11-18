@@ -1,15 +1,14 @@
 
 package rmaster.models;
 
-import java.sql.Time;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
-import javafx.util.converter.DateTimeStringConverter;
+import java.util.LinkedHashMap;
 
 
 public final class Rezervacija {
-   
+    
+    public String idRezervacije;
+    
     public String brOsoba;
     
     public String brStola;
@@ -27,17 +26,20 @@ public final class Rezervacija {
     
     public Rezervacija(HashMap<String, String> RezervacijaMap) 
     {
-        this.brOsoba = RezervacijaMap.get("brOsoba");
-        
-        this.brStola = RezervacijaMap.get("brStola");
-        
         this.ime = RezervacijaMap.get("ime");
-       
-        this.napomena = RezervacijaMap.get("napomena");
-        
+
+        setDatumIVreme(RezervacijaMap.get("vreme"));
+
+        this.brStola = RezervacijaMap.get("brStola");
+
+        this.brOsoba = RezervacijaMap.get("brOsoba");
+               
         this.tel = RezervacijaMap.get("tel");
         
-        setDatumIVreme(RezervacijaMap.get("vreme"));
+        this.napomena = RezervacijaMap.get("napomena");
+
+        this.idRezervacije = RezervacijaMap.get("id");
+
     }
     
     
@@ -48,19 +50,18 @@ public final class Rezervacija {
         this.vreme = vremeString.substring(11, Math.min(vremeString.length(), 16));
     }
     
-    public HashMap<String, String> toHashMap()
+    public LinkedHashMap<String, String> toHashMap()
     {
-        HashMap<String, String> rezervacijaMap = new HashMap();
-        
-        rezervacijaMap.put("brOsoba", this.brOsoba);
-        rezervacijaMap.put("brStola", this.brStola);
+        LinkedHashMap<String, String> rezervacijaMap = new LinkedHashMap();
         rezervacijaMap.put("ime", this.ime);
-        rezervacijaMap.put("napomena", this.napomena);
-        rezervacijaMap.put("tel", this.tel);
-        rezervacijaMap.put("vreme", this.vreme);
         rezervacijaMap.put("datum", this.datum);
+        rezervacijaMap.put("vreme", this.vreme);
+        rezervacijaMap.put("brStola", this.brStola);
+        rezervacijaMap.put("brOsoba", this.brOsoba);
+        rezervacijaMap.put("tel", this.tel);
+        rezervacijaMap.put("napomena", this.napomena);
+        rezervacijaMap.put("id", this.idRezervacije);
 
-        
         return rezervacijaMap;
     }
 }
