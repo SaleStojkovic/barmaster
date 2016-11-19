@@ -10,16 +10,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
+import rmaster.assets.TastaturaVrsta;
 import rmaster.models.Rezervacija;
 
 
@@ -33,6 +38,14 @@ public class RezervacijeController extends FXMLDocumentController {
     
     @FXML
     private ScrollPane scrollPaneRezervacije;
+    
+    @FXML
+    private TextField ime;
+    
+    @FXML 
+    private TextField vreme;
+    
+    
     
     public TableView<Map<String, String>> tabelaRezervacija = new TableView<>();
     
@@ -61,6 +74,19 @@ public class RezervacijeController extends FXMLDocumentController {
         scrollPaneRezervacije.setContent(tabelaRezervacija);
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
+        
+//        ime.focusedProperty().addListener(new ChangeListener<Boolean>()
+//        {
+//            @Override
+//            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
+//            {
+//                if (newPropertyValue)
+//                {
+//                    pozivanjeAlfaNumerickeTastature();
+//                }
+//               
+//            }
+//        });
     }    
     
     public void nazadNaPrikazSale(ActionEvent event) {
@@ -93,5 +119,24 @@ public class RezervacijeController extends FXMLDocumentController {
         
     }
     
-    
+    public void pozivanjeAlfaNumerickeTastature(MouseEvent event) {
+        TastaturaController tastatura = new TastaturaController(TastaturaVrsta.ALFA_NUMERICKA_TASTATURA);
+        Optional<String> result = tastatura.showAndWait();
+        
+        if (result.isPresent()){
+            
+            String noviTekst = result.get();
+            
+            if (!noviTekst.isEmpty()) {
+                ime.setText(noviTekst);
+                return;
+            } 
+            
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Greška!");
+            alert.setHeaderText("Neispravna količina!");
+            alert.setContentText("Unesite novu količinu.");
+            alert.showAndWait();
+        }
+    }
 }

@@ -97,11 +97,15 @@ public class TastaturaController extends Dialog {
                 unetiTekst.setPromptText("Broj fiskalnog isečka");
                 redSaTekstom.getChildren().add(unetiTekst);
                 break;
+            case ALFA_NUMERICKA_TASTATURA:
+                this.setHeaderText("Unesite tekst");
+                unetiTekst = new TextField();
+                unetiTekst.setPromptText("Unesite tekst");
+                redSaTekstom.getChildren().add(unetiTekst);
             default:
         }
 
         unetiTekst.setPrefSize(140, 60);
-        
         
         Button bBack = new Button("«");
         
@@ -117,26 +121,78 @@ public class TastaturaController extends Dialog {
                         });
         redSaTekstom.getChildren().add(bBack);        
         
-        vBoxTastatura.getChildren().add(redSaTekstom);
         
-        for(int i=1; i<4; i++) {
-            HBox redSaBrojevima = new HBox();
-
-            for (int j=1; j<4; j++) {
-                Button bBroj = new Button("" + ((i-1)*3 + j));
-                bBroj.setPrefSize(70,70);
-                bBroj.setOnAction(new EventHandler<ActionEvent>() {
-                                    @Override public void handle(ActionEvent e) {
-                                        try {
-                                            numberKeyPressed(e);
-                                        } catch (Exception ex) {
+        if(vrstaTastature == TastaturaVrsta.ALFA_NUMERICKA_TASTATURA) {
+            
+                for (int j=0; j<10; j++) {
+                    Button bBroj = new Button("" + j);
+                    bBroj.setPrefSize(70,70);
+                    bBroj.setOnAction(new EventHandler<ActionEvent>() {
+                                        @Override public void handle(ActionEvent e) {
+                                            try {
+                                                numberKeyPressed(e);
+                                            } catch (Exception ex) {
+                                            }
                                         }
-                                    }
-                                });
+                                    });
 
-                redSaBrojevima.getChildren().add(bBroj);
+                    redSaTekstom.getChildren().add(bBroj);
+                }
+                
+            vBoxTastatura.getChildren().add(redSaTekstom);
+                
+            
+            char ch = 'a';
+            
+            while (ch <= 'z') {
+                HBox redSaSlovima = new HBox();
+
+                for(int i=1; i<15; i++) {
+                
+                    Button bSlovo = new Button(ch + "");
+                    bSlovo.setPrefSize(70,70);
+                    bSlovo.setOnAction(new EventHandler<ActionEvent>() {
+                                        @Override public void handle(ActionEvent e) {
+                                            try {
+                                                numberKeyPressed(e);
+                                            } catch (Exception ex) {
+                                            }
+                                        }
+                                    });
+
+                    redSaSlovima.getChildren().add(bSlovo);
+                    ch++;
+                }
+                
+                vBoxTastatura.getChildren().add(redSaSlovima);
+
             }
-            vBoxTastatura.getChildren().add(redSaBrojevima);
+
+        }
+        
+        if (vrstaTastature != TastaturaVrsta.ALFA_NUMERICKA_TASTATURA) {
+            
+            vBoxTastatura.getChildren().add(redSaTekstom);
+
+            
+            for(int i=1; i<4; i++) {
+                HBox redSaBrojevima = new HBox();
+
+                for (int j=1; j<4; j++) {
+                    Button bBroj = new Button("" + ((i-1)*3 + j));
+                    bBroj.setPrefSize(70,70);
+                    bBroj.setOnAction(new EventHandler<ActionEvent>() {
+                                        @Override public void handle(ActionEvent e) {
+                                            try {
+                                                numberKeyPressed(e);
+                                            } catch (Exception ex) {
+                                            }
+                                        }
+                                    });
+
+                    redSaBrojevima.getChildren().add(bBroj);
+                }
+                vBoxTastatura.getChildren().add(redSaBrojevima);
             
         }
         
@@ -152,6 +208,9 @@ public class TastaturaController extends Dialog {
                                 });
         vBoxTastatura.getChildren().add(nula);
 
+        }
+
+        
         // Enable/Disable login button depending on whether a unetiTekst was entered.
         Node loginButton = this.getDialogPane().lookupButton(potvrdiButtonType);
         loginButton.setDisable(true);
