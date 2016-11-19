@@ -17,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
@@ -44,8 +45,9 @@ public class RezervacijeController extends FXMLDocumentController {
     
     @FXML 
     private TextField vreme;
-    
-    
+//    
+//    @FXML 
+//    private DatePicker
     
     public TableView<Map<String, String>> tabelaRezervacija = new TableView<>();
     
@@ -120,7 +122,12 @@ public class RezervacijeController extends FXMLDocumentController {
     }
     
     public void pozivanjeAlfaNumerickeTastature(MouseEvent event) {
-        TastaturaController tastatura = new TastaturaController(TastaturaVrsta.ALFA_NUMERICKA_TASTATURA);
+        
+        TextField polje = (TextField)event.getSource();
+        
+        TastaturaController tastatura = new TastaturaController(
+                TastaturaVrsta.ALFA_NUMERICKA_TASTATURA, polje.getText());
+        
         Optional<String> result = tastatura.showAndWait();
         
         if (result.isPresent()){

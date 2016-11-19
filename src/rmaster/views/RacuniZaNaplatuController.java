@@ -88,7 +88,7 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
                 brojFiskalnogIsecka = this.tabelaSaRacunimaZaNaplatu.getSelectionModel().getSelectedItem().get("brojFiskalnogIsecka");
             
                 if (brojFiskalnogIsecka == null || brojFiskalnogIsecka.equals("")){
-                    TastaturaController tastatura = new TastaturaController(TastaturaVrsta.BROJ_FISKALNOG_ISECKA);
+                    TastaturaController tastatura = new TastaturaController(TastaturaVrsta.BROJ_FISKALNOG_ISECKA, null);
                     Optional<String> result = tastatura.showAndWait();
 
                     if (result.isPresent()){

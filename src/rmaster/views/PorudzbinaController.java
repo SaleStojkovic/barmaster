@@ -917,7 +917,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         Map<String, String> izabraniRed = tabelaNovaTuraGosta.getSelectionModel().getSelectedItem();
 
-        TastaturaController tastatura = new TastaturaController(TastaturaVrsta.UNOS_IZNOSA);
+        TastaturaController tastatura = new TastaturaController(TastaturaVrsta.UNOS_IZNOSA, null);
         Optional<String> result = tastatura.showAndWait();
         
         if (result.isPresent()){
