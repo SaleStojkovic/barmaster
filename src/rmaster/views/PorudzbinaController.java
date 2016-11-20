@@ -156,7 +156,7 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     private List<Porudzbina> porudzbineStola = new ArrayList<Porudzbina>();
   
-    int[] sirinaKolonaTabele = {0, 170, 30, 61, 0};
+    int[] sirinaKolonaTabele = {0, 170, 30, 0, 61, 0, 0, 0};
     
     List<Map<String, String>> tureTrenutnoIzabranogGosta = new ArrayList<>();
     
@@ -784,7 +784,6 @@ public class PorudzbinaController extends FXMLDocumentController {
             novaStavkaTure.put("naziv", "--> " + artikalOpisniDodatni.getText());
             novaStavkaTure.put("cena", "0");
             novaStavkaTure.put("cenaJedinicna", "0");
-            
         } else if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI) {
             
             novaStavkaTure.put("naziv", "-> " + artikalOpisniDodatni.getText());
@@ -800,21 +799,23 @@ public class PorudzbinaController extends FXMLDocumentController {
             novaGlavnaStavka.put("naziv", "" + poslednjaDodataStavka.imeArtikla);
             novaGlavnaStavka.put("cena", "" + poslednjaDodataStavka.cena);
             novaGlavnaStavka.put("cenaJedinicna", "" + poslednjaDodataStavka.cenaJedinicna);
-            
             poslednjaDodataStavka.smanjiKolicinu();
+            
             nova = new StavkaTure(novaGlavnaStavka);
+            nova.setRedniBroj(novaTura.getRedniBrojStavkeSledeci());
             
             novaTura.listStavkeTure.add(nova);
-            //listNovaTuraGosta.add(nova);
+            
             poslednjaDodataStavka = nova;
             selektovana = nova;
         }
         
         StavkaTure st = new StavkaTure(novaStavkaTure);
+        st.setRedniBrojGlavneStavke(poslednjaDodataStavka.getRedniBroj());
         if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI) {
-            poslednjaDodataStavka.addArtikalOpisni(st);
+            poslednjaDodataStavka.dodajKolicinuArtikalOpisni(st);
         } else if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI) {
-            poslednjaDodataStavka.addArtikalDodatni(st);
+            poslednjaDodataStavka.dodajKolicinuArtikalDodatni(st);
         }
 
         this.tableRefresh();
@@ -833,10 +834,10 @@ public class PorudzbinaController extends FXMLDocumentController {
                 
         String cena = String.format("%1$,.2f", artikal.getCenaJedinicna());
         
-        if (artikal.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI) {
-            idArtikla = "-> " + idArtikla;
-            cena = "0";
-        }
+//        if (artikal.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI) {
+//            //idArtikla = "-> " + idArtikla;
+//            cena = "0";
+//        }
 
         Map<String, String> novaStavkaTure = new HashMap<>();
         novaStavkaTure.put("id", artikal.getId());
@@ -861,50 +862,56 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
         novaStavka.put("kolicina", "1");
         StavkaTure novaStavkaModel = new StavkaTure(novaStavka);
-        
-        StavkaTure stavka = novaTura.getStavkaTureByArtikalID(novaStavkaModel.getArtikalID());
-        if ((stavka != null) && (stavka.getArtikalID() == novaStavkaModel.getArtikalID())) {
-            if (!stavka.getImaDodatneIliOpisneArtikle()) {
-                stavka.povecajKolicinu();
-                selektovana = stavka;
-                return;
-            }
-        }
 
-        novaTura.listStavkeTure.add(novaStavkaModel);
-        selektovana = novaStavkaModel;
-    }
-    
-    
-    private void promeniKolicinuStavkeTure(
-            Map<String, String> izabranaStavkaTure,
-            int novaKolicina
-    ) {
-        prikazRacunaGosta.setContent(null);
-        
-        String imeArtikla = izabranaStavkaTure.get("naziv");
-        
-        for (int i = 0; i < novaTura.listStavkeTure.size(); i++) {
-            StavkaTure stavka = novaTura.listStavkeTure.get(i);
-            
-            if (stavka.imeArtikla.equals(imeArtikla)) {
-                novaTura.listStavkeTure.remove(i);
-                
-                double novaCena = (stavka.cena / stavka.kolicina) * novaKolicina;
-                
-                stavka.promeniKolicinu(novaKolicina);
-                if (stavka.kolicina != 0) {
-                    stavka.cena = novaCena;
-
-                    novaTura.listStavkeTure.add(i, stavka);
+        for (StavkaTure stavka : novaTura.listStavkeTure) {
+            if (novaStavkaModel.getArtikalID() == stavka.getArtikalID()) {
+                // Ukoliko postoji taj artikal u turi, dodaje na njega kolicinu
+                // ukoliko taj vec nema dodatne ili opisne artikle
+                if (!stavka.getImaDodatneIliOpisneArtikle()) {
+                    stavka.povecajKolicinuZa(novaStavkaModel.getKolicina());
+                    selektovana = stavka;
+                    return;
                 }
             }
         }
-        
-        this.tableRefresh();
-        this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
 
+        novaStavkaModel.setRedniBroj(++novaTura.redniBrojStavke);
+        novaTura.listStavkeTure.add(novaStavkaModel);
+        selektovana = novaStavkaModel;
+        //novaTura.addStavkaTure(novaStavkaModel);
+        
     }
+    
+    
+//    private void promeniKolicinuStavkeTure(
+//            Map<String, String> izabranaStavkaTure,
+//            int novaKolicina
+//    ) {
+//        prikazRacunaGosta.setContent(null);
+//        
+//        String imeArtikla = izabranaStavkaTure.get("naziv");
+//        
+//        for (int i = 0; i < novaTura.listStavkeTure.size(); i++) {
+//            StavkaTure stavka = novaTura.listStavkeTure.get(i);
+//            
+//            if (stavka.imeArtikla.equals(imeArtikla)) {
+//                novaTura.listStavkeTure.remove(i);
+//                
+//                double novaCena = (stavka.cena / stavka.kolicina) * novaKolicina;
+//                
+//                stavka.promeniKolicinu(novaKolicina);
+//                if (stavka.kolicina != 0) {
+//                    stavka.cena = novaCena;
+//
+//                    novaTura.listStavkeTure.add(i, stavka);
+//                }
+//            }
+//        }
+//        
+//        this.tableRefresh();
+//        this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
+//
+//    }
     
     
     
@@ -921,19 +928,48 @@ public class PorudzbinaController extends FXMLDocumentController {
         Optional<String> result = tastatura.showAndWait();
         
         if (result.isPresent()){
-            
+            int redniBroj = Integer.parseInt(izabraniRed.get("redniBroj"));
             Double novaKolicina = Double.parseDouble(result.get());
-            
-            if (novaKolicina != 0) {
-                novaTura.getStavkaTureByStavkaID(Long.parseLong(izabraniRed.get("id")));
-                return;
-            } 
-            
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Greška!");
-            alert.setHeaderText("Neispravna količina!");
-            alert.setContentText("Unesite novu količinu.");
-            alert.showAndWait();
+            int redniBrojGlavnaStavka = Integer.parseInt(izabraniRed.get("redniBrojGlavnaStavka"));
+            long artikalID = Long.parseLong(izabraniRed.get("artikalId"));
+
+            if (redniBrojGlavnaStavka != -1) {
+                // Menjanje kolicine ili brisanje ako je odabran dodatni ili opisni artikal
+                StavkaTure stavkaTure = null;
+                StavkaTure glavnaStavka = novaTura.getStavkaTureByRedniBroj(redniBrojGlavnaStavka);
+                if (glavnaStavka != null) {
+                    // Menjanje kolicine ili brisanje ako je odabran dodatni artikal
+                    stavkaTure = glavnaStavka.getDodatniArtikalByRedniBrojDodatnog(redniBroj);
+                    if ((stavkaTure != null) && (artikalID == stavkaTure.getArtikalID())) {
+                        if (novaKolicina == 0)
+                            glavnaStavka.getArtikliDodatni().remove(stavkaTure);
+                        else
+                            stavkaTure.promeniKolicinu(novaKolicina);
+                    } else {
+                        // Menjanje kolicine ili brisanje ako je odabran opisni artikal
+                        stavkaTure = glavnaStavka.getOpisniArtikalByRedniBrojOpisnog(redniBroj);
+                        if ((stavkaTure != null) && (artikalID == stavkaTure.getArtikalID())) {
+                            if (novaKolicina == 0)
+                                glavnaStavka.getArtikliOpisni().remove(stavkaTure);
+                            else
+                                stavkaTure.promeniKolicinu(novaKolicina);
+                        }
+                    }
+                }
+            } else {
+                StavkaTure stavkaTure = novaTura.getStavkaTureByRedniBroj(redniBroj);
+                if (stavkaTure != null) {
+                    if (novaKolicina == 0) {
+                        novaTura.listStavkeTure.remove(stavkaTure);
+                    }
+                    else {
+                        stavkaTure.promeniKolicinu(novaKolicina);
+                    }
+                }
+            }
+
+            this.tableRefresh();
+            this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
         }
     }
     
@@ -942,13 +978,35 @@ public class PorudzbinaController extends FXMLDocumentController {
             return;
         }
         
-        novaTura.listStavkeTure
-                .remove(
-                        novaTura.getStavkaTureByStavkaID(
-                                        Long.parseLong(
-                                                tabelaNovaTuraGosta.getSelectionModel()
-                                                           .getSelectedItem()
-                                                           .get("naziv"))));
+        Map<String, String> izabraniRed = tabelaNovaTuraGosta.getSelectionModel().getSelectedItem();
+
+        int redniBroj = Integer.parseInt(izabraniRed.get("redniBroj"));
+        int redniBrojGlavnaStavka = Integer.parseInt(izabraniRed.get("redniBrojGlavnaStavka"));
+        long artikalID = Long.parseLong(izabraniRed.get("artikalId"));
+
+        if (redniBrojGlavnaStavka != -1) {
+            // Menjanje kolicine ili brisanje ako je odabran dodatni ili opisni artikal
+            StavkaTure stavkaTure = null;
+            StavkaTure glavnaStavka = novaTura.getStavkaTureByRedniBroj(redniBrojGlavnaStavka);
+            if (glavnaStavka != null) {
+                // Menjanje kolicine ili brisanje ako je odabran dodatni artikal
+                stavkaTure = glavnaStavka.getDodatniArtikalByRedniBrojDodatnog(redniBroj);
+                if ((stavkaTure != null) && (artikalID == stavkaTure.getArtikalID())) {
+                    glavnaStavka.getArtikliDodatni().remove(stavkaTure);
+                } else {
+                    // Menjanje kolicine ili brisanje ako je odabran opisni artikal
+                    stavkaTure = glavnaStavka.getOpisniArtikalByRedniBrojOpisnog(redniBroj);
+                    if ((stavkaTure != null) && (artikalID == stavkaTure.getArtikalID())) {
+                        glavnaStavka.getArtikliOpisni().remove(stavkaTure);
+                    }
+                }
+            }
+        } else {
+            StavkaTure stavkaTure = novaTura.getStavkaTureByRedniBroj(redniBroj);
+            if (stavkaTure != null) {
+                novaTura.listStavkeTure.remove(stavkaTure);
+            }
+        }
 
         this.tableRefresh();
         this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);

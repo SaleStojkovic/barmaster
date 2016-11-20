@@ -17,6 +17,8 @@ import rmaster.assets.Utils;
  * @author Arbor
  */
 public class StavkaTure {
+    private int redniBroj = -1;
+    private int redniBrojGlavneStavke = -1;
     public long stavkaTureID = 0;
     public long artikalId;
     public String imeArtikla;
@@ -27,11 +29,29 @@ public class StavkaTure {
     public List<StavkaTure> opisniArtikli = new ArrayList();
     private long glavnaStavkaID = 0;
     
+    private int redniBrojStavkeOpisni = 0;
+    private int redniBrojStavkeDodatni = 0;
 
+    public void setRedniBroj(int rb) {
+        this.redniBroj = rb;
+    }
+    
+    public int getRedniBroj() {
+        return this.redniBroj;
+    }
+    
+    public void setRedniBrojGlavneStavke(int rb) {
+        this.redniBrojGlavneStavke = rb;
+    }
+    
+    public int getRedniBrojGlavneStavke() {
+        return this.redniBrojGlavneStavke;
+    }
+    
     public String getArtikalIDString(){
         return "" + this.artikalId;
     }
-    public Long getArtikalID(){
+    public long getArtikalID(){
         return this.artikalId;
     }
 
@@ -56,10 +76,28 @@ public class StavkaTure {
         if (stavkaTure.get("GLAVNASTAVKA_ID") != null)
             this.glavnaStavkaID = Long.parseLong(stavkaTure.get("GLAVNASTAVKA_ID"));
     }
+
+    public StavkaTure getOpisniArtikalByRedniBrojOpisnog(int redniBrojOpisnogArtikla) {
+        for (StavkaTure stavkaTure : this.opisniArtikli) {
+            if (stavkaTure.getRedniBroj() == redniBrojOpisnogArtikla)
+                return stavkaTure;
+        }
+        return null;
+    }
+    
+    public StavkaTure getDodatniArtikalByRedniBrojDodatnog(int redniBrojDodatnogArtikla) {
+        for (StavkaTure stavkaTure : this.dodatniArtikli) {
+            if (stavkaTure.getRedniBroj() == redniBrojDodatnogArtikla)
+                return stavkaTure;
+        }
+        return null;
+    }
     
     public Map<String, String> dajStavkuTure() {
         Map<String, String> stavkaTure = new HashMap<>();
 
+        stavkaTure.put("redniBroj", "" + this.getRedniBroj());
+        stavkaTure.put("id", "" + this.getStavkaTureId());
         stavkaTure.put("artikalId", this.getArtikalIDString());
         stavkaTure.put("naziv", this.imeArtikla);
         int intKolicina = (int)this.kolicina;
@@ -70,6 +108,8 @@ public class StavkaTure {
         }
         stavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(this.cenaJedinicna));
         stavkaTure.put("cena", Utils.getStringFromDouble(this.cena));
+        //stavkaTure.put("GlavnaStavkaID", "" + this.getGlavnaStavkaID());
+        stavkaTure.put("redniBrojGlavnaStavka", "" + this.getRedniBrojGlavneStavke());
         
         return stavkaTure;
     } 
@@ -81,19 +121,20 @@ public class StavkaTure {
         return opisniArtikli;
     }
     /*** Dodavanje opisnog artikla za kolicinu koja je prosledjena kroz StavkaTure ***/
-    public void addArtikalOpisni(StavkaTure opisniArtikal){
+    public void dodajKolicinuArtikalOpisni(StavkaTure opisniArtikal){
         for (StavkaTure opArtikal: opisniArtikli) {
             if (opArtikal.artikalId == opisniArtikal.artikalId) {
                 opArtikal.povecajKolicinuZa(opisniArtikal.kolicina);
                 return;
             }
         }
+        opisniArtikal.setRedniBroj(++this.redniBrojStavkeOpisni);
         opisniArtikli.add(opisniArtikal);
     }
     /*** Oduzimanje opisnog artikla 
      *   za kolicinu koja je prosledjena kroz StavkaTure,
      *   brisanje ako je nova kolicina = 0 ***/
-    public void removeArtikalOpisni(StavkaTure opisniArtikal){
+    public void smanjiKolicinuArtikalOpisni(StavkaTure opisniArtikal){
         for (StavkaTure opArtikal: opisniArtikli) {
             if (opArtikal.artikalId == opisniArtikal.artikalId) {
                 opArtikal.smanjiKolicinuZa(opisniArtikal.kolicina);
@@ -114,17 +155,18 @@ public class StavkaTure {
         return dodatniArtikli;
     }
     /*** Dodavanje dodatnog artikla za kolicinu koja je prosledjena kroz StavkaTure ***/
-    public void addArtikalDodatni(StavkaTure dodatniArtikal){
+    public void dodajKolicinuArtikalDodatni(StavkaTure dodatniArtikal){
         for (StavkaTure dodArtikal: dodatniArtikli) {
             if (dodArtikal.artikalId == dodatniArtikal.artikalId) {
                 dodArtikal.povecajKolicinuZa(dodatniArtikal.kolicina);
                 return;
             }
         }
+        dodatniArtikal.setRedniBroj(++this.redniBrojStavkeDodatni);
         dodatniArtikli.add(dodatniArtikal);
     }
     /*** Oduzimanje dodatnog artikla za kolicinu koja je prosledjena kroz StavkaTure, brisanje ako je nova kolicina = 0 ***/
-    public void removeArtikalDodatni(StavkaTure dodatniArtikal){
+    public void smanjiKolicinuArtikalDodatni(StavkaTure dodatniArtikal){
         for (StavkaTure dodArtikal: dodatniArtikli) {
             if (dodArtikal.artikalId == dodatniArtikal.artikalId) {
                 dodArtikal.smanjiKolicinuZa(dodatniArtikal.kolicina);
