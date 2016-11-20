@@ -12,6 +12,5 @@ package rmaster.assets;
 public enum TastaturaVrsta {
     LOGOVANJE,
     UNOS_IZNOSA,
-    BROJ_FISKALNOG_ISECKA,
-    ALFA_NUMERICKA_TASTATURA
+    BROJ_FISKALNOG_ISECKA
 }

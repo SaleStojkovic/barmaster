@@ -156,7 +156,7 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     private List<Porudzbina> porudzbineStola = new ArrayList<Porudzbina>();
   
-    int[] sirinaKolonaTabele = {0, 170, 30, 0, 61, 0, 0, 0};
+    int[] sirinaKolonaTabele = {0, 180, 40, 0, 61, 0, 0, 0};
     
     List<Map<String, String>> tureTrenutnoIzabranogGosta = new ArrayList<>();
     
@@ -924,7 +924,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         Map<String, String> izabraniRed = tabelaNovaTuraGosta.getSelectionModel().getSelectedItem();
 
-        TastaturaController tastatura = new TastaturaController(TastaturaVrsta.UNOS_IZNOSA, null);
+        NumerickaTastaturaController tastatura = new NumerickaTastaturaController(TastaturaVrsta.UNOS_IZNOSA, null);
         Optional<String> result = tastatura.showAndWait();
         
         if (result.isPresent()){

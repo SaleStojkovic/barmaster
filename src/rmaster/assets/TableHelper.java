@@ -38,7 +38,14 @@ public class TableHelper {
         
         for(TableColumn<Map<String, String>, ?> novaKolona : listaKolona) {
             
+            int sirina = sirineKolone[brojac];
+            
             novaKolona.setPrefWidth(sirineKolone[brojac]);
+
+            if (sirina == 0) {
+                novaKolona.setVisible(false);
+            }
+            
             brojac++;
             
         }

@@ -7,6 +7,8 @@ package rmaster.views;
 
 import rmaster.assets.TastaturaVrsta;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -29,8 +31,9 @@ import javafx.stage.StageStyle;
  *
  * @author Bosko
  */
-public class TastaturaController extends Dialog {
+public class NumerickaTastaturaController extends Dialog {
 
+       
     @FXML
     private Label response2;
     
@@ -44,7 +47,7 @@ public class TastaturaController extends Dialog {
     /**
      * Initializes the controller class.
      */
-    public TastaturaController(
+    public NumerickaTastaturaController(
             TastaturaVrsta vrstaTastature,
             String prethodniTekst
             ) {
@@ -103,101 +106,9 @@ public class TastaturaController extends Dialog {
                 unetiTekst.setPromptText("Broj fiskalnog isečka");
                 redSaTekstom.getChildren().add(unetiTekst);
                 break;
-            case ALFA_NUMERICKA_TASTATURA:
-                this.setHeaderText("Unesite tekst");
-                unetiTekst = new TextField();
-                unetiTekst.setPromptText("Unesite tekst");
-                redSaTekstom.getChildren().add(unetiTekst);
             default:
         }
 
-        if(vrstaTastature == TastaturaVrsta.ALFA_NUMERICKA_TASTATURA) {
-            
-            unetiTekst.setPrefSize(700, 60);
-            
-            unetiTekst.setText(prethodniTekst);
-            
-            unetiTekst.setFocusTraversable(false);
-            
-            Button bBack = new Button("«");
-
-            bBack.setPrefSize(210,60);
-
-            bBack.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override public void handle(ActionEvent e) {
-                                    try {
-                                        backButton(e);
-                                    } catch (Exception ex) {
-                                    }
-                                }
-                            });
-            redSaTekstom.getChildren().add(bBack);
-            
-            vBoxTastatura.getChildren().add(redSaTekstom);
-            
-            char ch = 'a';
-            
-            while (ch <= 'z') {
-                HBox redSaSlovima = new HBox();
-
-                for(int i=1; i<14; i++) {
-                
-                    Button bSlovo = new Button(ch + "");
-                    bSlovo.setPrefSize(70,70);
-                    bSlovo.setOnAction(new EventHandler<ActionEvent>() {
-                                        @Override public void handle(ActionEvent e) {
-                                            try {
-                                                numberKeyPressed(e);
-                                            } catch (Exception ex) {
-                                            }
-                                        }
-                                    });
-
-                    redSaSlovima.getChildren().add(bSlovo);
-                    ch++;
-                }
-                
-                vBoxTastatura.getChildren().add(redSaSlovima);
-
-            }
-
-            HBox redSaBrojevima = new HBox();
-
-                for (int j=0; j<10; j++) {
-                
-                        
-                    Button bBroj = new Button("" + j);
-                    bBroj.setPrefSize(70,70);
-                    bBroj.setOnAction(new EventHandler<ActionEvent>() {
-                                        @Override public void handle(ActionEvent e) {
-                                            try {
-                                                numberKeyPressed(e);
-                                            } catch (Exception ex) {
-                                            }
-                                        }
-                                    });
-
-                    redSaBrojevima.getChildren().add(bBroj);
-                }
-              
-            Button bSpace = new Button("space");
-            bSpace.setPrefSize(210,70);
-            bSpace.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override public void handle(ActionEvent e) {
-                                    try {
-                                        spaceButtonPressed();
-                                    } catch (Exception ex) {
-                                    }
-                                }
-                            });
-
-            redSaBrojevima.getChildren().add(bSpace);
-                    
-            vBoxTastatura.getChildren().add(redSaBrojevima);
-
-        }
-        
-        if (vrstaTastature != TastaturaVrsta.ALFA_NUMERICKA_TASTATURA) {
             
             unetiTekst.setPrefSize(140, 60);
 
@@ -249,8 +160,6 @@ public class TastaturaController extends Dialog {
                                     }
                                 });
         vBoxTastatura.getChildren().add(nula);
-
-        }
 
         
         // Enable/Disable login button depending on whether a unetiTekst was entered.
@@ -317,12 +226,6 @@ public class TastaturaController extends Dialog {
         }
     }
     
-    
-    public void spaceButtonPressed()
-    {
-        String lozinkaText = this.unetiTekst.getText();
-        response2.setText(""); 
-        lozinkaText += " ";
-        this.unetiTekst.setText(lozinkaText);
-    }
 }
+    
+    

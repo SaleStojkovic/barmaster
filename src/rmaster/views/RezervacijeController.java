@@ -6,7 +6,9 @@
 package rmaster.views;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +23,10 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import static javax.management.Query.value;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.TastaturaVrsta;
@@ -45,9 +49,15 @@ public class RezervacijeController extends FXMLDocumentController {
     
     @FXML 
     private TextField vreme;
-//    
-//    @FXML 
-//    private DatePicker
+    
+    @FXML 
+    private DatePicker datumPicker;
+    
+    @FXML
+    private TextField timePicker;
+    
+    @FXML
+    private TextField izabraniSto;
     
     public TableView<Map<String, String>> tabelaRezervacija = new TableView<>();
     
@@ -76,19 +86,10 @@ public class RezervacijeController extends FXMLDocumentController {
         scrollPaneRezervacije.setContent(tabelaRezervacija);
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
+        datumPicker.setPromptText("Izaberite datum");
+        ime.setPromptText("Unesite ime");
         
-//        ime.focusedProperty().addListener(new ChangeListener<Boolean>()
-//        {
-//            @Override
-//            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
-//            {
-//                if (newPropertyValue)
-//                {
-//                    pozivanjeAlfaNumerickeTastature();
-//                }
-//               
-//            }
-//        });
+        timePicker.setText("00:00");
     }    
     
     public void nazadNaPrikazSale(ActionEvent event) {
@@ -122,11 +123,50 @@ public class RezervacijeController extends FXMLDocumentController {
     }
     
     public void pozivanjeAlfaNumerickeTastature(MouseEvent event) {
+        String prethodniTekst = "";
         
+        if (event.getSource() instanceof TextField) {
+            TextField polje = (TextField)event.getSource();
+            prethodniTekst = polje.getText();
+        }
+        
+        if (event.getSource() instanceof TextArea) {
+            TextArea polje = (TextArea)event.getSource();
+            prethodniTekst = polje.getText();
+        }
+        AlfaNumerickaTastaturaController tastatura = new AlfaNumerickaTastaturaController(prethodniTekst);
+        
+        Optional<String> result = tastatura.showAndWait();
+                
+        if (result.isPresent()){
+            
+            String noviTekst = result.get();
+            
+            if (event.getSource() instanceof TextField) {
+                TextField textPolje = (TextField)event.getSource();
+                textPolje.setText("");
+                
+                if (!noviTekst.isEmpty()) {
+                    textPolje.setText(noviTekst);
+                } 
+            }
+            
+            if (event.getSource() instanceof TextArea) {
+                TextArea textPolje = (TextArea)event.getSource();
+                textPolje.setText("");
+                
+                if (!noviTekst.isEmpty()) {
+                    textPolje.setText(noviTekst);
+                }
+            }
+            
+        }
+    }
+    
+    public void pozivanjeTimePicker(MouseEvent event) {
         TextField polje = (TextField)event.getSource();
         
-        TastaturaController tastatura = new TastaturaController(
-                TastaturaVrsta.ALFA_NUMERICKA_TASTATURA, polje.getText());
+        TimePickerController tastatura = new TimePickerController(polje.getText());
         
         Optional<String> result = tastatura.showAndWait();
         
@@ -135,15 +175,32 @@ public class RezervacijeController extends FXMLDocumentController {
             String noviTekst = result.get();
             
             if (!noviTekst.isEmpty()) {
-                ime.setText(noviTekst);
+                timePicker.setText(noviTekst);
                 return;
             } 
             
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Greška!");
-            alert.setHeaderText("Neispravna količina!");
-            alert.setContentText("Unesite novu količinu.");
+            alert.setHeaderText("Neispravna vreme!");
+            alert.setContentText("Unesite novo vreme.");
             alert.showAndWait();
+        }
+    
+    }
+    
+    public void pozivanjePrikazSalePopup(ActionEvent event) {
+        
+        SalePopupController tastatura = new SalePopupController();
+        
+        Optional<String> result = tastatura.showAndWait();
+        
+        if (result.isPresent()){
+            String noviTekst = result.get();
+            
+            if (!noviTekst.isEmpty()) {
+                izabraniSto.setText(noviTekst);
+               
+            }
         }
     }
 }
