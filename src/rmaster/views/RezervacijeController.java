@@ -6,9 +6,9 @@
 package rmaster.views;
 
 import java.net.URL;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +26,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import static javax.management.Query.value;
+import javafx.util.StringConverter;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.TastaturaVrsta;
@@ -50,6 +50,9 @@ public class RezervacijeController extends FXMLDocumentController {
     @FXML 
     private TextField vreme;
     
+    @FXML
+    private TextField brOsoba;
+    
     @FXML 
     private DatePicker datumPicker;
     
@@ -58,6 +61,15 @@ public class RezervacijeController extends FXMLDocumentController {
     
     @FXML
     private TextField izabraniSto;
+    
+    @FXML
+    private TextField idRezervacije;
+    
+    @FXML
+    private TextField telefon;
+    
+    @FXML
+    private TextArea napomena;
     
     public TableView<Map<String, String>> tabelaRezervacija = new TableView<>();
     
@@ -90,6 +102,28 @@ public class RezervacijeController extends FXMLDocumentController {
         ime.setPromptText("Unesite ime");
         
         timePicker.setText("00:00");
+        datumPicker.setConverter(new StringConverter<LocalDate>()
+            {
+            private DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+            @Override
+            public String toString(LocalDate localDate)
+            {
+                if(localDate == null)
+                    return "";
+                return dateTimeFormatter.format(localDate);
+            }
+
+            @Override
+            public LocalDate fromString(String dateString)
+            {
+                if(dateString == null || dateString.trim().isEmpty())
+                {
+                    return null;
+                }
+                return LocalDate.parse(dateString,dateTimeFormatter);
+            }
+        });    
     }    
     
     public void nazadNaPrikazSale(ActionEvent event) {
@@ -113,9 +147,10 @@ public class RezervacijeController extends FXMLDocumentController {
         List<HashMap<String,String>> listaRezervacija = DBBroker.vratiSveIzTabele("rezervacija"); 
         
         for(HashMap<String, String> rezervacijaMapa : listaRezervacija) {
-            Rezervacija novaRezervacija = new Rezervacija(rezervacijaMapa);
+            Rezervacija novaRezervacija = new Rezervacija();
+            novaRezervacija.napraviRezervacija(rezervacijaMapa);
             
-            this.listaZaPrikaz.add((Map<String, String>)novaRezervacija.toHashMap());
+            this.listaZaPrikaz.add((Map<String, String>)novaRezervacija.toHashMap(true));
             this.listaRezervacija.add(novaRezervacija);
         }
         
@@ -188,8 +223,10 @@ public class RezervacijeController extends FXMLDocumentController {
     
     }
     
-    public void pozivanjePrikazSalePopup(ActionEvent event) {
+    public void pozivanjePrikazSalePopup(MouseEvent event) {
         
+        izabraniSto.setText("");
+
         SalePopupController tastatura = new SalePopupController();
         
         Optional<String> result = tastatura.showAndWait();
@@ -203,4 +240,45 @@ public class RezervacijeController extends FXMLDocumentController {
             }
         }
     }
+    
+    public void pozivanjeNumerickeTastature(MouseEvent event) {
+        
+        TextField polje = (TextField)event.getSource();
+        
+        String prethodniTekst = polje.getText();
+        
+        NumerickaTastaturaController tastatura = new NumerickaTastaturaController(
+                TastaturaVrsta.UNOS_IZNOSA, prethodniTekst);
+        
+        Optional<String> result = tastatura.showAndWait();
+                
+        if (result.isPresent()){
+            String noviTekst = result.get();
+            
+            if (!noviTekst.isEmpty()) {
+                polje.setText(noviTekst);
+            }        
+        }
+    }
+    
+    public void sacuvajRezervaciju(ActionEvent event) {
+        
+        Rezervacija novaRezervacija = new Rezervacija();
+        
+        novaRezervacija.ime = ime.getText();
+        novaRezervacija.datum = "" + datumPicker.getValue();
+        novaRezervacija.brOsoba = brOsoba.getText();
+        novaRezervacija.brStola = izabraniSto.getText();
+        novaRezervacija.tel = telefon.getText();
+        novaRezervacija.napomena = napomena.getText();
+        novaRezervacija.vreme = timePicker.getText();
+        
+        novaRezervacija.save(true);
+        
+        if (idRezervacije.getText().isEmpty()) {
+            
+        }
+    }
+    
+    
 }

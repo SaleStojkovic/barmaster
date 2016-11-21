@@ -109,8 +109,9 @@ public class NumerickaTastaturaController extends Dialog {
             default:
         }
 
-            
             unetiTekst.setPrefSize(140, 60);
+            
+            unetiTekst.setText(prethodniTekst);
 
             Button bBack = new Button("«");
 

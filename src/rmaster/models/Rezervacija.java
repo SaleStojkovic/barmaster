@@ -3,28 +3,31 @@ package rmaster.models;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import rmaster.assets.ModelBase;
 
 
-public final class Rezervacija {
+public final class Rezervacija extends ModelBase {
+    
+    public static String TableName = "rezervacija";
     
     public String idRezervacije;
-    
+
     public String brOsoba;
     
     public String brStola;
     
     public String ime;
     
-    public String napomena;
+    public  String napomena;
     
-    public String tel;
+    public  String tel;
     
-    public String datum;
+    public  String datum;
     
-    public String vreme;
+    public  String vreme;
     
     
-    public Rezervacija(HashMap<String, String> RezervacijaMap) 
+    public void napraviRezervacija(HashMap<String, String> RezervacijaMap) 
     {
         this.ime = RezervacijaMap.get("ime");
 
@@ -50,17 +53,20 @@ public final class Rezervacija {
         this.vreme = vremeString.substring(11, Math.min(vremeString.length(), 16));
     }
     
-    public LinkedHashMap<String, String> toHashMap()
+    @Override
+    public LinkedHashMap<String, String> toHashMap(boolean addId)
     {
         LinkedHashMap<String, String> rezervacijaMap = new LinkedHashMap();
         rezervacijaMap.put("ime", this.ime);
-        rezervacijaMap.put("datum", this.datum);
-        rezervacijaMap.put("vreme", this.vreme);
+        rezervacijaMap.put("datum", this.datum + " " + this.vreme + ":00");
+        rezervacijaMap.put("vreme", this.datum + " " + this.vreme + ":00");
         rezervacijaMap.put("brStola", this.brStola);
         rezervacijaMap.put("brOsoba", this.brOsoba);
         rezervacijaMap.put("tel", this.tel);
         rezervacijaMap.put("napomena", this.napomena);
-        rezervacijaMap.put("id", this.idRezervacije);
+        if (addId) {
+            rezervacijaMap.put("id", this.idRezervacije);
+        }
 
         return rezervacijaMap;
     }

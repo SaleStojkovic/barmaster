@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -32,6 +32,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import rmaster.RMaster;
 import rmaster.assets.FXMLDocumentController;
 import static rmaster.views.PrikazSalaController.HALF_HOUR;
@@ -173,7 +174,8 @@ public class SalePopupController extends Dialog {
     
     public void zatvoriOvuFormu(){
         try {
-        cancelButton.getScene().getWindow().hide();
+        this.setResult(null);
+        this.close();
         } catch (Exception e){
             System.out.println("Neuspelo zatvaranje forme - PrikazSalePopupController" + e);
         }
