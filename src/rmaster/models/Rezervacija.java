@@ -1,6 +1,8 @@
 
 package rmaster.models;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import rmaster.assets.ModelBase;
@@ -8,7 +10,15 @@ import rmaster.assets.ModelBase;
 
 public final class Rezervacija extends ModelBase {
     
-    public static String TableName = "rezervacija";
+    public static String TABLE_NAME = "rezervacija";
+    public static String PRIMARY_KEY = "id";
+    public static String BROJ_OSOBA = "brOsoba";
+    public static String DATUM = "datum";
+    public static String IME = "ime";
+    public static String NAPOMENA = "napomena";
+    public static String TELEFON = "tel";
+    public static String VREME = "vreme";
+    public static String BROJ_STOLA = "brStola";
     
     public String idRezervacije;
 
@@ -26,47 +36,83 @@ public final class Rezervacija extends ModelBase {
     
     public  String vreme;
     
-    
-    public void napraviRezervacija(HashMap<String, String> RezervacijaMap) 
+    @Override
+    public String getTableName()
     {
-        this.ime = RezervacijaMap.get("ime");
+        return TABLE_NAME;
+    }    
+    
+    @Override
+    public String getPrimaryKeyName()
+    {
+        return PRIMARY_KEY;
+    }
 
-        setDatumIVreme(RezervacijaMap.get("vreme"));
+    @Override
+    public void makeFromHashMap(HashMap<String, String> RezervacijaMap) 
+    {
+        this.ime = RezervacijaMap.get(IME);
 
-        this.brStola = RezervacijaMap.get("brStola");
+        setDatumIVreme(RezervacijaMap.get(VREME));
 
-        this.brOsoba = RezervacijaMap.get("brOsoba");
+        this.brStola = RezervacijaMap.get(BROJ_STOLA);
+
+        this.brOsoba = RezervacijaMap.get(BROJ_OSOBA);
                
-        this.tel = RezervacijaMap.get("tel");
+        this.tel = RezervacijaMap.get(TELEFON);
         
-        this.napomena = RezervacijaMap.get("napomena");
+        this.napomena = RezervacijaMap.get(NAPOMENA);
 
-        this.idRezervacije = RezervacijaMap.get("id");
+        this.idRezervacije = RezervacijaMap.get(PRIMARY_KEY);
 
     }
     
     
     public void setDatumIVreme(String vremeString) 
     {
-        this.datum = vremeString.substring(0, Math.min(vremeString.length(), 10));
+        String datumString = vremeString.substring(0, Math.min(vremeString.length(), 10));
+        
+        SimpleDateFormat  myFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat fromUser = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            this.datum = myFormat.format(fromUser.parse(datumString));
+        } catch (Exception e) {
+            System.err.println(e);
+        }
         
         this.vreme = vremeString.substring(11, Math.min(vremeString.length(), 16));
     }
     
+    
     @Override
-    public LinkedHashMap<String, String> toHashMap(boolean addId)
+    public LinkedHashMap<String, String> toHashMap(boolean includeId)
     {
         LinkedHashMap<String, String> rezervacijaMap = new LinkedHashMap();
-        rezervacijaMap.put("ime", this.ime);
-        rezervacijaMap.put("datum", this.datum + " " + this.vreme + ":00");
-        rezervacijaMap.put("vreme", this.datum + " " + this.vreme + ":00");
-        rezervacijaMap.put("brStola", this.brStola);
-        rezervacijaMap.put("brOsoba", this.brOsoba);
-        rezervacijaMap.put("tel", this.tel);
-        rezervacijaMap.put("napomena", this.napomena);
-        if (addId) {
-            rezervacijaMap.put("id", this.idRezervacije);
+        rezervacijaMap.put(IME, this.ime);
+        rezervacijaMap.put(DATUM, this.datum + " " + this.vreme + ":00");
+        rezervacijaMap.put(VREME, this.datum + " " + this.vreme + ":00");
+        rezervacijaMap.put(BROJ_STOLA, this.brStola);
+        rezervacijaMap.put(BROJ_OSOBA, this.brOsoba);
+        rezervacijaMap.put(TELEFON, this.tel);
+        rezervacijaMap.put(NAPOMENA, this.napomena);
+        if (includeId) {
+            rezervacijaMap.put(PRIMARY_KEY, this.idRezervacije);
         }
+
+        return rezervacijaMap;
+    }
+    
+    public LinkedHashMap<String, String> makeMapForTableOutput() {
+        LinkedHashMap<String, String> rezervacijaMap = new LinkedHashMap();
+        rezervacijaMap.put(IME, this.ime);
+        rezervacijaMap.put(DATUM, this.datum);
+        rezervacijaMap.put(VREME, this.vreme);
+        rezervacijaMap.put(BROJ_STOLA, this.brStola);
+        rezervacijaMap.put(BROJ_OSOBA, this.brOsoba);
+        rezervacijaMap.put(TELEFON, this.tel);
+        rezervacijaMap.put(NAPOMENA, this.napomena);
+        rezervacijaMap.put(PRIMARY_KEY, this.idRezervacije);
 
         return rezervacijaMap;
     }

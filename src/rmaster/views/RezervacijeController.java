@@ -47,9 +47,6 @@ public class RezervacijeController extends FXMLDocumentController {
     @FXML
     private TextField ime;
     
-    @FXML 
-    private TextField vreme;
-    
     @FXML
     private TextField brOsoba;
     
@@ -89,6 +86,8 @@ public class RezervacijeController extends FXMLDocumentController {
         
         getRezervacije();
         
+        tabelaRezervacija.getColumns().clear();
+        
         tabelaRezervacija = tableHelper.formatirajTabelu(
                 tabelaRezervacija, 
                 listaZaPrikaz,
@@ -99,18 +98,26 @@ public class RezervacijeController extends FXMLDocumentController {
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
         datumPicker.setPromptText("Izaberite datum");
-        ime.setPromptText("Unesite ime");
         
+        datumPicker.setValue(null);
+        napomena.setText("");
+        telefon.setText("");
+        brOsoba.setText("");
+        izabraniSto.setText("");
+        ime.setPromptText("Unesite ime");
         timePicker.setText("00:00");
+        
+        
         datumPicker.setConverter(new StringConverter<LocalDate>()
             {
-            private DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
             @Override
             public String toString(LocalDate localDate)
             {
-                if(localDate == null)
+                if(localDate == null) {
                     return "";
+                }
                 return dateTimeFormatter.format(localDate);
             }
 
@@ -121,7 +128,7 @@ public class RezervacijeController extends FXMLDocumentController {
                 {
                     return null;
                 }
-                return LocalDate.parse(dateString,dateTimeFormatter);
+                return LocalDate.parse(dateString, dateTimeFormatter);
             }
         });    
     }    
@@ -148,9 +155,9 @@ public class RezervacijeController extends FXMLDocumentController {
         
         for(HashMap<String, String> rezervacijaMapa : listaRezervacija) {
             Rezervacija novaRezervacija = new Rezervacija();
-            novaRezervacija.napraviRezervacija(rezervacijaMapa);
+            novaRezervacija.makeFromHashMap(rezervacijaMapa);
             
-            this.listaZaPrikaz.add((Map<String, String>)novaRezervacija.toHashMap(true));
+            this.listaZaPrikaz.add(novaRezervacija.makeMapForTableOutput());
             this.listaRezervacija.add(novaRezervacija);
         }
         
@@ -264,7 +271,6 @@ public class RezervacijeController extends FXMLDocumentController {
     public void sacuvajRezervaciju(ActionEvent event) {
         
         Rezervacija novaRezervacija = new Rezervacija();
-        
         novaRezervacija.ime = ime.getText();
         novaRezervacija.datum = "" + datumPicker.getValue();
         novaRezervacija.brOsoba = brOsoba.getText();
@@ -273,12 +279,33 @@ public class RezervacijeController extends FXMLDocumentController {
         novaRezervacija.napomena = napomena.getText();
         novaRezervacija.vreme = timePicker.getText();
         
-        novaRezervacija.save(true);
-        
         if (idRezervacije.getText().isEmpty()) {
+            novaRezervacija.save(true);
             
+            this.initialize(null, null);
+            return;
         }
+        
+        novaRezervacija.idRezervacije = idRezervacije.getText();
+        novaRezervacija.saveChanges();
+        
+        tabelaRezervacija.getColumns().clear();
+        
+        this.initialize(null, null);
+
     }
     
-    
+    public void promeniRezervaciju(ActionEvent event) {
+        Map<String, String> odabranaRezervacija =  tabelaRezervacija.getSelectionModel().getSelectedItem();
+        
+        ime.setText(odabranaRezervacija.get(Rezervacija.IME));
+        brOsoba.setText(odabranaRezervacija.get(Rezervacija.BROJ_OSOBA));
+        izabraniSto.setText(odabranaRezervacija.get(Rezervacija.BROJ_STOLA));
+        napomena.setText(odabranaRezervacija.get(Rezervacija.NAPOMENA));
+        telefon.setText(odabranaRezervacija.get(Rezervacija.TELEFON));
+        datumPicker.setValue(datumPicker.getConverter().fromString(odabranaRezervacija.get(Rezervacija.DATUM)));
+        timePicker.setText(odabranaRezervacija.get(Rezervacija.VREME));
+        
+        idRezervacije.setText(odabranaRezervacija.get(Rezervacija.PRIMARY_KEY));
+    }
 }

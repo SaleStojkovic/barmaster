@@ -483,7 +483,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                     break;
                 default:
             };
-            rs = new DBBroker().runStoredProcedure(imeStoreProcedure, imenaArgumenata, vrednostiArgumenata);
+            rs = runStoredProcedure(imeStoreProcedure, imenaArgumenata, vrednostiArgumenata);
             switch(staSePrikazuje) {
                 case GLAVNA_GRUPA:
                     rsGrupe = rs;

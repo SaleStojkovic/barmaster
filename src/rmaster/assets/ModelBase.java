@@ -5,7 +5,7 @@
  */
 package rmaster.assets;
 
-import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
@@ -15,48 +15,63 @@ import java.util.Set;
  */
 public abstract class ModelBase extends Object {
     
-    public abstract LinkedHashMap<String, String> toHashMap(boolean addId);
-    
     LinkedHashMap<String, String> columnValues = new LinkedHashMap<>();
 
     DBBroker dbBroker = new DBBroker();
     
     public Class<?> clazz = this.getClass();
 
-    public String tableName;
-    
     String[] columnNames; 
     
-    public void construct(boolean includeId) {
+    
+    public abstract LinkedHashMap<String, String> toHashMap(boolean includeId);
+    
+    public abstract void makeFromHashMap(HashMap<String, String> HashMap);
+
+    
+    //Vraca ime tabele
+    public abstract String getTableName();
+    
+    //Vraca ime PK
+    public abstract String getPrimaryKeyName();
+    
+    
+    public void getColumnNames(boolean includeId) {
         
         columnValues = this.toHashMap(includeId);
         
         Set<String> keys = columnValues.keySet();
         
         columnNames = keys.toArray(new String[keys.size()]);
-        
-        for (Field field : clazz.getDeclaredFields()) {
-            if (field.getName().equals("TableName")) {
-                try {
-                    Object fieldValue = field.get(clazz);
-                    tableName = fieldValue + "";    
-                } catch (Exception e) {
-                    System.err.println(e);
-                }
-            }
-        }
     }
     
+    
     public void save(boolean closeConnection) {
-        construct(false);
         try {
                 dbBroker.ubaci(
-                        tableName, 
-                        columnValues,
+                        this.getTableName(), 
+                        this.toHashMap(false),
                         closeConnection
                 );
         } catch (Exception e) {
             System.err.println(e);
         }
     }
+    
+    public void saveChanges() 
+    {
+        try {
+            dbBroker.izmeni(
+                 this.getTableName(), 
+                 this.getPrimaryKeyName(), 
+                 this.toHashMap(true).get(this.getPrimaryKeyName()), 
+                 this.toHashMap(false),
+                 true
+         );
+            } catch (Exception e) {
+                System.err.println(e);
+        }
+    }
+    
+    
 }

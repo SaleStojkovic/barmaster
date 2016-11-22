@@ -23,6 +23,7 @@ public final class DBBroker {
      * This class would perform basic CRUD 
      */
     private static final String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
+    private static final String DB_NAME = "barmaster";
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/barmaster";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "";
@@ -54,7 +55,9 @@ public final class DBBroker {
                     USERNAME,
                     PASSWORD
             );
- 
+            
+            dbConnection.setAutoCommit(false);
+
         } catch (SQLException e) {
  
                 System.out.println(e.getMessage());
@@ -160,23 +163,29 @@ public final class DBBroker {
         Connection dbConnection = null;
         PreparedStatement updateStatement = null;
          
-        String updateTableSQL = "UPDATE " + imeTabele + " SET ";
+        String updateTableSQL = "UPDATE " + DB_NAME + ".`" + imeTabele + "` SET ";
          
         for (HashMap.Entry<String, String> element : elementi.entrySet()) {
-            updateTableSQL += element.getKey() + " = " + element.getValue() + ",";
+            updateTableSQL +=  "`" + element.getKey() + "` = ?,";
         }
  
         updateTableSQL = updateTableSQL.substring(0, updateTableSQL.length()-1);
-        updateTableSQL += " WHERE " + uslovnaKolona + " = " + uslovnaVrednost + ";";
+        updateTableSQL += " WHERE `" + uslovnaKolona + "` = ?;";
          
              
         try {
                 dbConnection = poveziSaBazom();
                 
                 updateStatement = dbConnection.prepareStatement(updateTableSQL);
-                 
-                updateStatement.executeUpdate();
- 
+                int brojac = 1;
+                for (HashMap.Entry<String, String> element : elementi.entrySet()) {
+                    updateStatement.setString(brojac, element.getValue());
+                    brojac++;
+                } 
+                
+                updateStatement.setString(brojac, uslovnaVrednost);
+                updateStatement.executeQuery();
+                
             } catch (SQLException e) {
 
                     System.out.println(e.getMessage());
