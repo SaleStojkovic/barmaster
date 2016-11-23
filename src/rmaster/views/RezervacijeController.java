@@ -69,11 +69,7 @@ public class RezervacijeController extends FXMLDocumentController {
     private TextArea napomena;
     
     public TableView<Map<String, String>> tabelaRezervacija = new TableView<>();
-    
-    public List<Rezervacija> listaRezervacija = new ArrayList();
-    
-    public List<Map<String, String>> listaZaPrikaz = new ArrayList();
-    
+            
     public int[] sirinaKolonaTabele = {140, 100, 100, 100, 100, 100, 242, 0};
     
     /**
@@ -84,9 +80,9 @@ public class RezervacijeController extends FXMLDocumentController {
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
         
-        getRezervacije();
+        List<Map<String, String>> listaZaPrikaz = getRezervacije();
         
-        tabelaRezervacija.getColumns().clear();
+        tableHelper.izbrisiSveIzTabele(tabelaRezervacija);
         
         tabelaRezervacija = tableHelper.formatirajTabelu(
                 tabelaRezervacija, 
@@ -94,11 +90,12 @@ public class RezervacijeController extends FXMLDocumentController {
                 sirinaKolonaTabele
         );
         
+
         scrollPaneRezervacije.setContent(tabelaRezervacija);
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
         datumPicker.setPromptText("Izaberite datum");
-        
+        ime.setText("");
         datumPicker.setValue(null);
         napomena.setText("");
         telefon.setText("");
@@ -107,6 +104,7 @@ public class RezervacijeController extends FXMLDocumentController {
         ime.setPromptText("Unesite ime");
         timePicker.setText("00:00");
         
+        idRezervacije.setVisible(false);
         
         datumPicker.setConverter(new StringConverter<LocalDate>()
             {
@@ -130,7 +128,9 @@ public class RezervacijeController extends FXMLDocumentController {
                 }
                 return LocalDate.parse(dateString, dateTimeFormatter);
             }
-        });    
+        }); 
+        
+        tabelaRezervacija.getSelectionModel().select(tabelaRezervacija.getItems().size()-1);        
     }    
     
     public void nazadNaPrikazSale(ActionEvent event) {
@@ -150,18 +150,18 @@ public class RezervacijeController extends FXMLDocumentController {
     public void pomeriScrollUpRezervacije(){}
     
     
-    public void getRezervacije() {
+    public List<Map<String, String>> getRezervacije() {
         List<HashMap<String,String>> listaRezervacija = DBBroker.vratiSveIzTabele("rezervacija"); 
+        List<Map<String, String>> listaZaPrikaz = new ArrayList<>(); 
         
         for(HashMap<String, String> rezervacijaMapa : listaRezervacija) {
             Rezervacija novaRezervacija = new Rezervacija();
             novaRezervacija.makeFromHashMap(rezervacijaMapa);
             
-            this.listaZaPrikaz.add(novaRezervacija.makeMapForTableOutput());
-            this.listaRezervacija.add(novaRezervacija);
+            listaZaPrikaz.add(novaRezervacija.makeMapForTableOutput());
         }
         
-        
+        return listaZaPrikaz;
     }
     
     public void pozivanjeAlfaNumerickeTastature(MouseEvent event) {
@@ -287,12 +287,11 @@ public class RezervacijeController extends FXMLDocumentController {
         }
         
         novaRezervacija.idRezervacije = idRezervacije.getText();
-        novaRezervacija.saveChanges();
+        novaRezervacija.saveChanges(true);
         
         tabelaRezervacija.getColumns().clear();
         
         this.initialize(null, null);
-
     }
     
     public void promeniRezervaciju(ActionEvent event) {
@@ -307,5 +306,18 @@ public class RezervacijeController extends FXMLDocumentController {
         timePicker.setText(odabranaRezervacija.get(Rezervacija.VREME));
         
         idRezervacije.setText(odabranaRezervacija.get(Rezervacija.PRIMARY_KEY));
+    }
+    
+    public void izbrisiRezervaciju(ActionEvent event) {
+        Map<String, String> odabranaRezervacija =  tabelaRezervacija.getSelectionModel().getSelectedItem();
+
+        String izabranaRezervacijaId = odabranaRezervacija.get(Rezervacija.PRIMARY_KEY);
+        
+        Rezervacija izabranaRezervacija = new Rezervacija();
+        izabranaRezervacija.idRezervacije = izabranaRezervacijaId;
+        
+        izabranaRezervacija.delete(true);
+        
+        this.initialize(null, null);
     }
 }

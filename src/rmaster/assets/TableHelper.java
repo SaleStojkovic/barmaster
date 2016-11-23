@@ -109,4 +109,12 @@ public class TableHelper {
         }
         return tabela;
     }  
+    
+    public void izbrisiSveIzTabele(TableView<Map<String,String>> tabela) 
+    {
+        for ( int i = 0; i< tabela.getItems().size(); i++) {
+                tabela.getItems().clear();
+        }
+        
+    }
 }

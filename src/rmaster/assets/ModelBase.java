@@ -58,7 +58,7 @@ public abstract class ModelBase extends Object {
         }
     }
     
-    public void saveChanges() 
+    public void saveChanges(boolean closeConnection) 
     {
         try {
             dbBroker.izmeni(
@@ -66,10 +66,24 @@ public abstract class ModelBase extends Object {
                  this.getPrimaryKeyName(), 
                  this.toHashMap(true).get(this.getPrimaryKeyName()), 
                  this.toHashMap(false),
-                 true
+                 closeConnection
          );
             } catch (Exception e) {
                 System.err.println(e);
+        }
+    }
+    
+    public void delete(boolean closeConnection)
+    {
+        try {
+            dbBroker.izbrisi(
+                    this.getTableName(), 
+                    this.getPrimaryKeyName(), 
+                    this.toHashMap(true).get(this.getPrimaryKeyName()), 
+                    closeConnection    
+                    );
+        } catch (Exception e) {
+            System.err.println(e);
         }
     }
     

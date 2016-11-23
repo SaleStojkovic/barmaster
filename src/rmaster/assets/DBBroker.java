@@ -56,7 +56,6 @@ public final class DBBroker {
                     PASSWORD
             );
             
-            dbConnection.setAutoCommit(false);
 
         } catch (SQLException e) {
  
@@ -184,7 +183,7 @@ public final class DBBroker {
                 } 
                 
                 updateStatement.setString(brojac, uslovnaVrednost);
-                updateStatement.executeQuery();
+                updateStatement.executeUpdate();
                 
             } catch (SQLException e) {
 
