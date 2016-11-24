@@ -19,6 +19,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -26,6 +29,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
@@ -69,11 +73,7 @@ public class RezervacijeController extends FXMLDocumentController {
     private TextArea napomena;
     
     public TableView<Map<String, String>> tabelaRezervacija = new TableView<>();
-    
-    public List<Rezervacija> listaRezervacija = new ArrayList();
-    
-    public List<Map<String, String>> listaZaPrikaz = new ArrayList();
-    
+            
     public int[] sirinaKolonaTabele = {140, 100, 100, 100, 100, 100, 242, 0};
     
     /**
@@ -84,9 +84,9 @@ public class RezervacijeController extends FXMLDocumentController {
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
         
-        getRezervacije();
+        List<Map<String, String>> listaZaPrikaz = getRezervacije();
         
-        tabelaRezervacija.getColumns().clear();
+        tableHelper.izbrisiSveIzTabele(tabelaRezervacija);
         
         tabelaRezervacija = tableHelper.formatirajTabelu(
                 tabelaRezervacija, 
@@ -94,11 +94,12 @@ public class RezervacijeController extends FXMLDocumentController {
                 sirinaKolonaTabele
         );
         
+
         scrollPaneRezervacije.setContent(tabelaRezervacija);
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
         datumPicker.setPromptText("Izaberite datum");
-        
+        ime.setText("");
         datumPicker.setValue(null);
         napomena.setText("");
         telefon.setText("");
@@ -107,6 +108,7 @@ public class RezervacijeController extends FXMLDocumentController {
         ime.setPromptText("Unesite ime");
         timePicker.setText("00:00");
         
+        idRezervacije.setVisible(false);
         
         datumPicker.setConverter(new StringConverter<LocalDate>()
             {
@@ -130,7 +132,9 @@ public class RezervacijeController extends FXMLDocumentController {
                 }
                 return LocalDate.parse(dateString, dateTimeFormatter);
             }
-        });    
+        }); 
+        
+        tabelaRezervacija.getSelectionModel().select(tabelaRezervacija.getItems().size()-1);        
     }    
     
     public void nazadNaPrikazSale(ActionEvent event) {
@@ -150,18 +154,18 @@ public class RezervacijeController extends FXMLDocumentController {
     public void pomeriScrollUpRezervacije(){}
     
     
-    public void getRezervacije() {
+    public List<Map<String, String>> getRezervacije() {
         List<HashMap<String,String>> listaRezervacija = DBBroker.vratiSveIzTabele("rezervacija"); 
+        List<Map<String, String>> listaZaPrikaz = new ArrayList<>(); 
         
         for(HashMap<String, String> rezervacijaMapa : listaRezervacija) {
             Rezervacija novaRezervacija = new Rezervacija();
             novaRezervacija.makeFromHashMap(rezervacijaMapa);
             
-            this.listaZaPrikaz.add(novaRezervacija.makeMapForTableOutput());
-            this.listaRezervacija.add(novaRezervacija);
+            listaZaPrikaz.add(novaRezervacija.makeMapForTableOutput());
         }
         
-        
+        return listaZaPrikaz;
     }
     
     public void pozivanjeAlfaNumerickeTastature(MouseEvent event) {
@@ -287,12 +291,11 @@ public class RezervacijeController extends FXMLDocumentController {
         }
         
         novaRezervacija.idRezervacije = idRezervacije.getText();
-        novaRezervacija.saveChanges();
+        novaRezervacija.saveChanges(true);
         
         tabelaRezervacija.getColumns().clear();
         
         this.initialize(null, null);
-
     }
     
     public void promeniRezervaciju(ActionEvent event) {
@@ -307,5 +310,41 @@ public class RezervacijeController extends FXMLDocumentController {
         timePicker.setText(odabranaRezervacija.get(Rezervacija.VREME));
         
         idRezervacije.setText(odabranaRezervacija.get(Rezervacija.PRIMARY_KEY));
+    }
+    
+    public void izbrisiRezervaciju(ActionEvent event) {
+        
+        ButtonType yes = new ButtonType("Da", ButtonBar.ButtonData.OK_DONE);
+        ButtonType no = new ButtonType("Ne", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert alert = new Alert(AlertType.WARNING,
+                "Da li ste sigurni da želite da obrišete ovaj zapis? "
+                + "Izabrani zapis biće trajno obrisan!",
+                yes,
+                no);
+        
+        alert.getDialogPane().getStylesheets().
+                addAll(this.getClass().getResource("style/style.css").toExternalForm());
+        
+        alert.getDialogPane().getStyleClass().add("myDialog");
+        alert.initStyle(StageStyle.UNDECORATED);
+
+        alert.setHeaderText("Upozorenje!");
+        alert.setTitle("Brisanje zapisa");
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == no) {
+            return;
+        }
+        
+        Map<String, String> odabranaRezervacija =  tabelaRezervacija.getSelectionModel().getSelectedItem();
+
+        String izabranaRezervacijaId = odabranaRezervacija.get(Rezervacija.PRIMARY_KEY);
+        
+        Rezervacija izabranaRezervacija = new Rezervacija();
+        izabranaRezervacija.idRezervacije = izabranaRezervacijaId;
+        
+        izabranaRezervacija.delete(true);
+        
+        this.initialize(null, null);
     }
 }
