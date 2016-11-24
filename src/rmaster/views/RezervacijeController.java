@@ -19,6 +19,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -26,6 +29,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
@@ -309,6 +313,29 @@ public class RezervacijeController extends FXMLDocumentController {
     }
     
     public void izbrisiRezervaciju(ActionEvent event) {
+        
+        ButtonType yes = new ButtonType("Da", ButtonBar.ButtonData.OK_DONE);
+        ButtonType no = new ButtonType("Ne", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert alert = new Alert(AlertType.WARNING,
+                "Da li ste sigurni da želite da obrišete ovaj zapis? "
+                + "Izabrani zapis biće trajno obrisan!",
+                yes,
+                no);
+        
+        alert.getDialogPane().getStylesheets().
+                addAll(this.getClass().getResource("style/style.css").toExternalForm());
+        
+        alert.getDialogPane().getStyleClass().add("myDialog");
+        alert.initStyle(StageStyle.UNDECORATED);
+
+        alert.setHeaderText("Upozorenje!");
+        alert.setTitle("Brisanje zapisa");
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == no) {
+            return;
+        }
+        
         Map<String, String> odabranaRezervacija =  tabelaRezervacija.getSelectionModel().getSelectedItem();
 
         String izabranaRezervacijaId = odabranaRezervacija.get(Rezervacija.PRIMARY_KEY);
