@@ -119,6 +119,20 @@ public class TableHelper {
         
     }
     
+    public TableColumn<Map<String, String>, ?> getTableColumnByName(
+            TableView<Map<String, String>>  tableView,
+            String name
+    )
+    {
+            List<TableColumn<Map<String,String>, ?>> listaKolona = tableView.getColumns();
+            for (TableColumn<Map<String, String>, ?>  col : listaKolona) {
+                if (col.getText().equals(name)){
+                    return col; 
+                }
+            }
+            return null;
+    }
+    
     public int getRowIndexOfStavka(TableView<Map<String,String>> tabela, StavkaTure stavka) {
         int brojac = 0;
         int redniBrojKolone_RedniBroj = 6;

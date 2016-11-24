@@ -48,10 +48,12 @@ public class NumerickaTastaturaController extends Dialog {
      * Initializes the controller class.
      */
     public NumerickaTastaturaController(
-            TastaturaVrsta vrstaTastature,
+            String headerText,
+            String promptText,
+            boolean isPasswordField,
             String prethodniTekst
             ) {
-        createDialogTastatura(vrstaTastature, prethodniTekst);
+        createDialogTastatura(headerText, promptText, isPasswordField, prethodniTekst);
     }
     
     public void initialize(URL url, ResourceBundle rb) {
@@ -60,7 +62,9 @@ public class NumerickaTastaturaController extends Dialog {
     }    
     
     public void createDialogTastatura(
-            TastaturaVrsta vrstaTastature,
+            String headerText,
+            String promptText,
+            boolean isPasswordField,
             String prethodniTekst
     ) {
         this.initStyle(StageStyle.UNDECORATED);
@@ -87,62 +91,52 @@ public class NumerickaTastaturaController extends Dialog {
         
         HBox redSaTekstom = new HBox();
         
-        switch (vrstaTastature) {
-            case LOGOVANJE:
-            this.setHeaderText("Provera identiteta");
+        
+        this.setHeaderText(headerText);
+        unetiTekst.setPromptText(promptText);
+        
+        unetiTekst = new TextField();
+
+        if (isPasswordField) {
             unetiTekst = new PasswordField();
-            unetiTekst.setPromptText("Unesite lozinku");
-            redSaTekstom.getChildren().add(unetiTekst);
-                break;
-            case UNOS_IZNOSA:
-            this.setHeaderText("Unesite iznos");
-            unetiTekst = new TextField();
-            unetiTekst.setPromptText("Unesite broj");
-            redSaTekstom.getChildren().add(unetiTekst);
-                break;
-            case BROJ_FISKALNOG_ISECKA:
-                this.setHeaderText("Unesite broj fiskalnog isečka");
-                unetiTekst = new TextField();
-                unetiTekst.setPromptText("Broj fiskalnog isečka");
-                redSaTekstom.getChildren().add(unetiTekst);
-                break;
-            default:
         }
+        
+        redSaTekstom.getChildren().add(unetiTekst);
 
-            unetiTekst.setPrefSize(140, 60);
-            
-            unetiTekst.setText(prethodniTekst);
+        unetiTekst.setPrefSize(140, 60);
 
-            Button bBack = new Button("«");
+        unetiTekst.setText(prethodniTekst);
 
-            bBack.setPrefSize(70,60);
+        Button bBack = new Button("«");
 
-            bBack.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override public void handle(ActionEvent e) {
-                                    try {
-                                        backButton(e);
-                                    } catch (Exception ex) {
-                                    }
+        bBack.setPrefSize(70,60);
+
+        bBack.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override public void handle(ActionEvent e) {
+                                try {
+                                    backButton(e);
+                                } catch (Exception ex) {
                                 }
-                            });
-            redSaTekstom.getChildren().add(bBack);     
-            
-            vBoxTastatura.getChildren().add(redSaTekstom);
+                            }
+                        });
+        redSaTekstom.getChildren().add(bBack);     
 
-            for(int i=1; i<4; i++) {
-                HBox redSaBrojevima = new HBox();
+        vBoxTastatura.getChildren().add(redSaTekstom);
 
-                for (int j=1; j<4; j++) {
-                    Button bBroj = new Button("" + ((i-1)*3 + j));
-                    bBroj.setPrefSize(70,70);
-                    bBroj.setOnAction(new EventHandler<ActionEvent>() {
-                                        @Override public void handle(ActionEvent e) {
-                                            try {
-                                                numberKeyPressed(e);
-                                            } catch (Exception ex) {
-                                            }
+        for(int i=1; i<4; i++) {
+            HBox redSaBrojevima = new HBox();
+
+            for (int j=1; j<4; j++) {
+                Button bBroj = new Button("" + ((i-1)*3 + j));
+                bBroj.setPrefSize(70,70);
+                bBroj.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override public void handle(ActionEvent e) {
+                                        try {
+                                            numberKeyPressed(e);
+                                        } catch (Exception ex) {
                                         }
-                                    });
+                                    }
+                                });
 
                     redSaBrojevima.getChildren().add(bBroj);
                 }

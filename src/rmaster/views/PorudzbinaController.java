@@ -924,7 +924,12 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         Map<String, String> izabraniRed = tabelaNovaTuraGosta.getSelectionModel().getSelectedItem();
 
-        NumerickaTastaturaController tastatura = new NumerickaTastaturaController(TastaturaVrsta.UNOS_IZNOSA, null);
+        NumerickaTastaturaController tastatura = new NumerickaTastaturaController(
+                "Unesite količinu", 
+                "Unesite količinu", 
+                false, 
+                null
+        );
         Optional<String> result = tastatura.showAndWait();
         
         if (result.isPresent()){
