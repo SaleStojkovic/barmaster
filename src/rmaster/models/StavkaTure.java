@@ -32,37 +32,7 @@ public class StavkaTure {
     private int redniBrojStavkeOpisni = 0;
     private int redniBrojStavkeDodatni = 0;
 
-    public void setRedniBroj(int rb) {
-        this.redniBroj = rb;
-    }
-    
-    public int getRedniBroj() {
-        return this.redniBroj;
-    }
-    
-    public void setRedniBrojGlavneStavke(int rb) {
-        this.redniBrojGlavneStavke = rb;
-    }
-    
-    public int getRedniBrojGlavneStavke() {
-        return this.redniBrojGlavneStavke;
-    }
-    
-    public String getArtikalIDString(){
-        return "" + this.artikalId;
-    }
-    public long getArtikalID(){
-        return this.artikalId;
-    }
-
-    public long getStavkaTureId(){
-        return this.stavkaTureID;
-    }
-
-    public double getKolicina(){
-        return this.kolicina;
-    }
-
+// Konstruktor
     public StavkaTure(Map<String, String> stavkaTure) {
         this.stavkaTureID = Long.parseLong(stavkaTure.get("id"));
         String novaKolicina = stavkaTure.get("kolicina");
@@ -75,6 +45,40 @@ public class StavkaTure {
         this.setCenaJedinicna(Utils.getDoubleFromString(stavkaTure.get("cena"))); 
         if (stavkaTure.get("GLAVNASTAVKA_ID") != null)
             this.glavnaStavkaID = Long.parseLong(stavkaTure.get("GLAVNASTAVKA_ID"));
+    }
+
+// Redni broj koji pomaze pri formiranju tabele za prikaz i brisanju stavki iz prikaza
+    public int getRedniBroj() {
+        return this.redniBroj;
+    }
+
+    public void setRedniBroj(int rb) {
+        this.redniBroj = rb;
+    }
+    
+// Redni broj glavne stavke za koji se vezu dodatni i opisni artikli, pomaze pri brisanju stavki iz prikaza
+    public int getRedniBrojGlavneStavke() {
+        return this.redniBrojGlavneStavke;
+    }
+    
+    public void setRedniBrojGlavneStavke(int rb) {
+        this.redniBrojGlavneStavke = rb;
+    }
+    
+// F-je koje vracaju ArtikalID kao long i String
+    public long getArtikalID(){
+        return this.artikalId;
+    }
+    public String getArtikalIDString(){
+        return "" + this.artikalId;
+    }
+
+    public long getStavkaTureId(){
+        return this.stavkaTureID;
+    }
+
+    public double getKolicina(){
+        return this.kolicina;
     }
 
     public StavkaTure getOpisniArtikalByRedniBrojOpisnog(int redniBrojOpisnogArtikla) {
