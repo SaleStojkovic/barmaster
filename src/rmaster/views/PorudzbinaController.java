@@ -20,19 +20,18 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import rmaster.assets.DBBroker;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Utils;
@@ -397,6 +396,7 @@ public class PorudzbinaController extends FXMLDocumentController {
     
 
     public void prikaziSalu(ActionEvent event) {
+        
         Map<String, String> newData = new HashMap<>();
         prikaziFormu(
                 newData,
@@ -979,36 +979,41 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
         
         Map<String, String> izabraniRed = tabelaNovaTuraGosta.getSelectionModel().getSelectedItem();
+        
+        if (izabraniRed != null) {
+            int redniBroj = Integer.parseInt(izabraniRed.get("redniBroj"));
+            int redniBrojGlavnaStavka = Integer.parseInt(izabraniRed.get("redniBrojGlavnaStavka"));
+            long artikalID = Long.parseLong(izabraniRed.get("artikalId"));
 
-        int redniBroj = Integer.parseInt(izabraniRed.get("redniBroj"));
-        int redniBrojGlavnaStavka = Integer.parseInt(izabraniRed.get("redniBrojGlavnaStavka"));
-        long artikalID = Long.parseLong(izabraniRed.get("artikalId"));
-
-        if (redniBrojGlavnaStavka != -1) {
-            // Menjanje kolicine ili brisanje ako je odabran dodatni ili opisni artikal
-            StavkaTure stavkaTure = null;
-            StavkaTure glavnaStavka = novaTura.getStavkaTureByRedniBroj(redniBrojGlavnaStavka);
-            if (glavnaStavka != null) {
-                // Menjanje kolicine ili brisanje ako je odabran dodatni artikal
-                stavkaTure = glavnaStavka.getDodatniArtikalByRedniBrojDodatnog(redniBroj);
-                if ((stavkaTure != null) && (artikalID == stavkaTure.getArtikalID())) {
-                    glavnaStavka.getArtikliDodatni().remove(stavkaTure);
-                } else {
-                    // Menjanje kolicine ili brisanje ako je odabran opisni artikal
-                    stavkaTure = glavnaStavka.getOpisniArtikalByRedniBrojOpisnog(redniBroj);
+            if (redniBrojGlavnaStavka != -1) {
+                // Menjanje kolicine ili brisanje ako je odabran dodatni ili opisni artikal
+                StavkaTure stavkaTure = null;
+                StavkaTure glavnaStavka = novaTura.getStavkaTureByRedniBroj(redniBrojGlavnaStavka);
+                if (glavnaStavka != null) {
+                    // Menjanje kolicine ili brisanje ako je odabran dodatni artikal
+                    stavkaTure = glavnaStavka.getDodatniArtikalByRedniBrojDodatnog(redniBroj);
                     if ((stavkaTure != null) && (artikalID == stavkaTure.getArtikalID())) {
-                        glavnaStavka.getArtikliOpisni().remove(stavkaTure);
+                        glavnaStavka.getArtikliDodatni().remove(stavkaTure);
+                    } else {
+                        // Menjanje kolicine ili brisanje ako je odabran opisni artikal
+                        stavkaTure = glavnaStavka.getOpisniArtikalByRedniBrojOpisnog(redniBroj);
+                        if ((stavkaTure != null) && (artikalID == stavkaTure.getArtikalID())) {
+                            glavnaStavka.getArtikliOpisni().remove(stavkaTure);
+                        }
                     }
+                }
+            } else {
+                StavkaTure stavkaTure = novaTura.getStavkaTureByRedniBroj(redniBroj);
+                if (stavkaTure != null) {
+                    novaTura.listStavkeTure.remove(stavkaTure);
                 }
             }
         } else {
-            StavkaTure stavkaTure = novaTura.getStavkaTureByRedniBroj(redniBroj);
-            if (stavkaTure != null) {
-                novaTura.listStavkeTure.remove(stavkaTure);
-            }
+            novaTura.listStavkeTure.clear();
         }
 
         this.tableRefresh();
+        tabelaNovaTuraGosta.getSelectionModel().clearSelection();
         this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
     }
     
@@ -1038,9 +1043,11 @@ public class PorudzbinaController extends FXMLDocumentController {
                     listTura,
                     sirinaKolonaTabele
             );
-
-        tabelaNovaTuraGosta.getSelectionModel().select(listTura.size() - 1);
-
+        
+        tabelaNovaTuraGosta.getSelectionModel().select(
+                tableHelper.getRowIndexOfStavka(tabelaNovaTuraGosta, selektovana)
+        );
+ 
         prikazRacunaGosta.setContent(tabelaNovaTuraGosta);
     }
     
@@ -1160,6 +1167,58 @@ public class PorudzbinaController extends FXMLDocumentController {
         prikazGostijuScrollPane.setHvalue((prikazGostijuScrollPane.getHvalue() + 0.5 ) * 1);
     }
     
+    /**
+     * Smanjenje kolicine za 1 ili brisanje
+     * @param event 
+     */
+    public void smanjiKolicinuZaJedan(ActionEvent event) {
+        if (tabelaNovaTuraGosta.getItems().isEmpty()) {
+            return;
+        }
+        
+        Map<String, String> izabraniRed = tabelaNovaTuraGosta.getSelectionModel().getSelectedItem();
+        
+        if (izabraniRed != null) {
+            int redniBroj = Integer.parseInt(izabraniRed.get("redniBroj"));
+            int redniBrojGlavnaStavka = Integer.parseInt(izabraniRed.get("redniBrojGlavnaStavka"));
+            long artikalID = Long.parseLong(izabraniRed.get("artikalId"));
+
+            if (redniBrojGlavnaStavka != -1) {
+                // Smanjenje kolicine za 1 ili brisanje ako je odabran dodatni ili opisni artikal
+                StavkaTure stavkaTure = null;
+                StavkaTure glavnaStavka = novaTura.getStavkaTureByRedniBroj(redniBrojGlavnaStavka);
+                if (glavnaStavka != null) {
+                    // // Smanjenje kolicine za 1 ili brisanje ako je odabran dodatni artikal
+                    stavkaTure = glavnaStavka.getDodatniArtikalByRedniBrojDodatnog(redniBroj);
+                    if ((stavkaTure != null) && (artikalID == stavkaTure.getArtikalID())) {
+                        stavkaTure.smanjiKolicinu();
+                        if (stavkaTure.getKolicina() == 0)
+                            glavnaStavka.getArtikliDodatni().remove(stavkaTure);
+                    } else {
+                        // // Smanjenje kolicine za 1 ili brisanje ako je odabran opisni artikal
+                        stavkaTure = glavnaStavka.getOpisniArtikalByRedniBrojOpisnog(redniBroj);
+                        if (stavkaTure != null) {
+                            stavkaTure.smanjiKolicinu();
+                            if (stavkaTure.getKolicina() == 0)
+                                glavnaStavka.getArtikliDodatni().remove(stavkaTure);
+                        }
+                    }
+                }
+            } else {
+                // Smanjenje kolicine za 1 ili brisanje glavne stavke
+                StavkaTure stavkaTure = novaTura.getStavkaTureByRedniBroj(redniBroj);
+                if (stavkaTure != null) {
+                    stavkaTure.smanjiKolicinu();
+                    if (stavkaTure.getKolicina() == 0)
+                        novaTura.listStavkeTure.remove(stavkaTure);
+                }
+            }
+        }
+
+        this.tableRefresh();
+        this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
+        
+    }
     
     public void otvoriLojalnost(ActionEvent event) {
         Map<String, String> newData = new HashMap<>();

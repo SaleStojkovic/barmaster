@@ -13,6 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import rmaster.models.StavkaTure;
 
 
 public class TableHelper {
@@ -117,4 +118,24 @@ public class TableHelper {
         }
         
     }
+    
+    public int getRowIndexOfStavka(TableView<Map<String,String>> tabela, StavkaTure stavka) {
+        int brojac = 0;
+        int redniBrojKolone_RedniBroj = 6;
+        int redniBrojKolone_RedniBrojGlavneStavke = 5;
+        
+        TableColumn kolonaRB = tabela.getColumns().get(redniBrojKolone_RedniBroj);
+        TableColumn kolonaGlavniRB = tabela.getColumns().get(redniBrojKolone_RedniBrojGlavneStavke);
+        
+        for (Object row : tabela.getItems()) {
+            if (kolonaRB.getCellObservableValue(row).getValue().equals("" + stavka.getRedniBroj())
+                && kolonaGlavniRB.getCellObservableValue(row).getValue().equals("" + stavka.getRedniBrojGlavneStavke())) {
+                    tabela.getSelectionModel().select(brojac);
+                    return brojac;
+            }
+            brojac++;
+        }
+        return -1;
+    }
+
 }
