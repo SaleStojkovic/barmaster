@@ -13,6 +13,9 @@ public class Gost {
     private long gostID = 0;
     private double procenatPopusta = 0;
     
+    public Gost() {
+    }
+
     public Gost(long ID) {
         gostID = ID;
     }

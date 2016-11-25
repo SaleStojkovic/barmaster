@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javafx.scene.control.Alert;
 import rmaster.models.Konobar;
  
 /**
@@ -652,6 +653,45 @@ public final class DBBroker {
         return listaRezultata;
     }
     
+    public boolean passwordCheckZaMenadzera(String lozinkaText) throws Exception {
+        boolean jesteMenadzer = false;
+        String[] uslovneKolone = {"pass"};
+        String[] uslovneVrednosti = {lozinkaText};
+        
+        List rezultat = this.vratiKoloneIzTabele(
+                "login", 
+                uslovneKolone, 
+                uslovneVrednosti
+        );
+        
+        if (!rezultat.isEmpty()) {
+            Map<String,String>  menadzer = (Map<String, String>)rezultat.get(0);
+            if (menadzer != null) {
+                if (menadzer.get("admin").equals("1")) {
+                    jesteMenadzer = true;
+                } else
+                {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Greška!");
+                    alert.setHeaderText("Greška pri predstavljanju");
+                    alert.setContentText("Menadžer nema privilegije! Unesite lozinku menadžera koje je ovlašćen da odobri ponovnu štampu međuzbira.");
+                    alert.showAndWait();
+
+                    System.out.println("Menadžer nema privilegije! - Forma PoridzbinaController" + lozinkaText);
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Greška!");
+                alert.setHeaderText("Greška pri predstavljanju");
+                alert.setContentText("Pogrešna lozinka menadžera! Unesite lozinku menadžera koje je ovlašćen da odobri ponovnu štampu međuzbira.");
+                alert.showAndWait();
+
+                System.out.println("Pogrešna lozinka menadžera! Nepostojeci menadžer! - Forma PoridzbinaController - " + lozinkaText);
+            }
+        }
+        return jesteMenadzer;
+    }
+
     public Konobar passwordCheck(String lozinkaText) throws Exception {
         String[] uslovneKolone = {"pin"};
         String[] uslovneVrednosti = {lozinkaText};

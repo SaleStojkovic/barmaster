@@ -19,7 +19,12 @@ public class Porudzbina {
     private List<Tura> turePorudzbine = new ArrayList(); 
     private Gost gost;
     private Tura novaTuraPorudzbine;
+    private boolean blokirana = false;
     
+    public Porudzbina(Gost gost) {
+        this.setGost(gost);
+    }
+
     public Porudzbina(Gost gost, long racunID) {
         this.setGost(gost);
         this.racunID = racunID;
@@ -30,7 +35,7 @@ public class Porudzbina {
         this.setGost(gost);
         this.racunID = Integer.parseInt(racunIDstring);
         popuniPorudzbinuIzBaze();
-    }
+}
     
     private void popuniPorudzbinuIzBaze() {
         String[] imenaArgumenata = {"idRacuna"};
@@ -59,5 +64,17 @@ public class Porudzbina {
 
     public void setGost(Gost gost) {
         this.gost = gost;
+    }
+    
+    public boolean getBlokiranaPorudzbina() {
+        return this.blokirana;
+    }
+    
+    public void setBlokiranaPorudzbina(boolean blokiranaPoruzbina) {
+        this.blokirana = blokiranaPoruzbina;
+    }
+    
+    public void snimi() {
+        //DBBroker db = new DBBroker().ubaci("racun", elementi, blokirana)
     }
 }

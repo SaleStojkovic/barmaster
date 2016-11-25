@@ -139,15 +139,14 @@
                   <Pane prefHeight="100.0" prefWidth="1024.0">
                      <children>
                         
-                        <Button layoutX="738.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="141.0" text="Među zbir ★" />
-                        
-                                    <Button layoutX="880.0" mnemonicParsing="false" prefHeight="99.0" prefWidth="143.0" text="Potvrdi ✓" />
                         
                         <Button fx:id="porudzbinaOdustani" mnemonicParsing="false" onAction="#prikaziSalu" prefHeight="100.0" prefWidth="135.0" text="Odustani X" />
                         <Button layoutX="137.0" mnemonicParsing="false" onAction="#setKolicinaStavkeTure" prefHeight="50.0" prefWidth="147.0" text="Količina" />
                         <Button layoutX="137.0" layoutY="52.0" mnemonicParsing="false" onAction="#izbrisiStavkuNoveTure" prefHeight="48.0" prefWidth="147.0" text="Izbriši" />
                         <Button layoutX="288.0" onAction="#smanjiKolicinuZaJedan"  layoutY="-1.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="140.0" text="Umanji količinu za 1" />
                         <Button layoutX="428.0" onAction="#otvoriLojalnost"  layoutY="-1.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="140.0" text="Lojalnost" />
+                        <Button fx:id="porudzbinaMedjuzbor" onAction="#medjuzbir" layoutX="738.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="141.0" text="Među zbir ★" />
+                        <Button fx:id="porudzbinaNaplati" onAction="#naplataIliStampaPorudzbine" layoutX="880.0" mnemonicParsing="false" prefHeight="99.0" prefWidth="143.0" text="Naplati ✓" />
                      </children>
                   </Pane>
                
