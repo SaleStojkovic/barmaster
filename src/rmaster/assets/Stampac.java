@@ -30,7 +30,12 @@ public final class Stampac {
         if (porudzbina.getBlokiranaPorudzbina()) {
             odobrenaStampa = false;
             try {
-                NumerickaTastaturaController tastatura = new NumerickaTastaturaController(TastaturaVrsta.LOGOVANJE, null);
+                NumerickaTastaturaController tastatura = new NumerickaTastaturaController(
+                        "Unesite menadžersku šifru!", 
+                        "Unesite menadžersku šifru!", 
+                        false, 
+                        null
+                );
                 Optional<String> result = tastatura.showAndWait();
 
                 if (result.isPresent()){

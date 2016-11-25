@@ -33,6 +33,8 @@ public class AlfaNumerickaTastaturaController extends Dialog {
     
     public char[] specijalniKarakteri = {'š','ć','č','đ','ž'};
     
+    public String qwerty = "qwertyuiopasdfghjklzxcvbnm";
+    
     @FXML
     private Label response2;
     
@@ -191,17 +193,21 @@ public class AlfaNumerickaTastaturaController extends Dialog {
             unetiTekst.setFocusTraversable(false);
             
             vBoxTastatura.getChildren().add(redSaTekstom);
-            
-            char ch = 'a';
-            
+                        
             List<Button> svaSlova = new ArrayList<>();
             
-            while (ch <= 'z') {
-                               
+            char ch;
+            
+            int brojac = 0;
+            
+            while (brojac < qwerty.length()) {
+                
+                
                 HBox redSaSlovima = new HBox();
 
                 for(int i=1; i<14; i++) {
-                
+                    ch = qwerty.charAt(brojac);     
+
                     Button bSlovo = new Button(ch + "");
                     bSlovo.setPrefSize(70,70);
                     bSlovo.setOnAction(new EventHandler<ActionEvent>() {
@@ -214,7 +220,7 @@ public class AlfaNumerickaTastaturaController extends Dialog {
                                     });
 
                     redSaSlovima.getChildren().add(bSlovo);
-                    ch++;
+                    brojac++;
                     
                     svaSlova.add(bSlovo);
                 }

@@ -111,7 +111,12 @@ public class PromenaKonobaraController  extends FXMLDocumentController {
             Map<String, String> newData = new HashMap<>();
             
             try {
-                NumerickaTastaturaController tastatura = new NumerickaTastaturaController(TastaturaVrsta.LOGOVANJE, null);
+                NumerickaTastaturaController tastatura = new NumerickaTastaturaController(
+                        "Unesite lozinku",
+                        "Unesite lozinku",
+                        true,
+                        null
+                );
                 Optional<String> result = tastatura.showAndWait();
 
                 if (result.isPresent()){

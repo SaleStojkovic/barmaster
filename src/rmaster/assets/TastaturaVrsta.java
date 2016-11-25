@@ -9,8 +9,8 @@ package rmaster.assets;
  *
  * @author Bosko
  */
-public enum TastaturaVrsta {
-    LOGOVANJE,
-    UNOS_IZNOSA,
-    BROJ_FISKALNOG_ISECKA
+public class TastaturaVrsta {
+//    public static LOGOVANJE;
+//    public static UNOS_IZNOSA;
+//    BROJ_FISKALNOG_ISECKA 
 }

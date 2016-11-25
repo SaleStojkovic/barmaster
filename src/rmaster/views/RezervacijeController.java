@@ -20,11 +20,13 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -33,7 +35,6 @@ import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
-import rmaster.assets.TastaturaVrsta;
 import rmaster.models.Rezervacija;
 
 
@@ -72,6 +73,7 @@ public class RezervacijeController extends FXMLDocumentController {
     @FXML
     private TextArea napomena;
     
+    
     public TableView<Map<String, String>> tabelaRezervacija = new TableView<>();
             
     public int[] sirinaKolonaTabele = {140, 100, 100, 100, 100, 100, 242, 0};
@@ -98,16 +100,12 @@ public class RezervacijeController extends FXMLDocumentController {
         scrollPaneRezervacije.setContent(tabelaRezervacija);
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
-        datumPicker.setPromptText("Izaberite datum");
-        ime.setText("");
-        datumPicker.setValue(null);
-        napomena.setText("");
-        telefon.setText("");
-        brOsoba.setText("");
-        izabraniSto.setText("");
-        ime.setPromptText("Unesite ime");
-        timePicker.setText("00:00");
+        this.izbrisiSvaPolja();
         
+        datumPicker.setPromptText("Izaberite datum");
+        ime.setPromptText("Unesite ime");
+        napomena.setPromptText("Unesite napomenu");
+        brOsoba.setPromptText("Unesite broj osoba");
         idRezervacije.setVisible(false);
         
         datumPicker.setConverter(new StringConverter<LocalDate>()
@@ -259,7 +257,11 @@ public class RezervacijeController extends FXMLDocumentController {
         String prethodniTekst = polje.getText();
         
         NumerickaTastaturaController tastatura = new NumerickaTastaturaController(
-                TastaturaVrsta.UNOS_IZNOSA, prethodniTekst);
+                "Unos broja", 
+                "Unesite broj",
+                false,
+                prethodniTekst
+        );
         
         Optional<String> result = tastatura.showAndWait();
                 
@@ -273,6 +275,42 @@ public class RezervacijeController extends FXMLDocumentController {
     }
     
     public void sacuvajRezervaciju(ActionEvent event) {
+        
+        if (ime.getText().isEmpty()) {
+            
+            ButtonType no = new ButtonType("U redu", ButtonBar.ButtonData.CANCEL_CLOSE);
+            Alert alert = new Alert(AlertType.WARNING,"Morate uneti na čije ime se" +
+                    " vodi Rezervacija!",
+                    no);
+
+            alert.getDialogPane().getStylesheets().
+                    addAll(this.getClass().getResource("style/style.css").toExternalForm());
+
+            alert.getDialogPane().getStyleClass().add("myDialog");
+            alert.initStyle(StageStyle.UNDECORATED);
+
+            alert.setHeaderText("Upozorenje!");
+            alert.setTitle("Neuspešan unos!");
+            alert.showAndWait();
+
+            return;
+        }
+        if(datumPicker.getValue() == null) {
+            ButtonType no = new ButtonType("U redu", ButtonBar.ButtonData.CANCEL_CLOSE);
+            Alert alert = new Alert(AlertType.WARNING,"Morate uneti datum Rezervacije!", no);
+
+            alert.getDialogPane().getStylesheets().
+                    addAll(this.getClass().getResource("style/style.css").toExternalForm());
+
+            alert.getDialogPane().getStyleClass().add("myDialog");
+            alert.initStyle(StageStyle.UNDECORATED);
+
+            alert.setHeaderText("Upozorenje!");
+            alert.setTitle("Neuspešan unos!");
+            alert.showAndWait();
+
+            return;
+        }
         
         Rezervacija novaRezervacija = new Rezervacija();
         novaRezervacija.ime = ime.getText();
@@ -330,6 +368,7 @@ public class RezervacijeController extends FXMLDocumentController {
 
         alert.setHeaderText("Upozorenje!");
         alert.setTitle("Brisanje zapisa");
+        
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.isPresent() && result.get() == no) {
@@ -346,5 +385,38 @@ public class RezervacijeController extends FXMLDocumentController {
         izabranaRezervacija.delete(true);
         
         this.initialize(null, null);
+    }
+    
+    public void izbrisiSvaPolja() {
+        ime.setText("");
+        datumPicker.setValue(null);
+        napomena.setText("");
+        telefon.setText("");
+        brOsoba.setText("");
+        izabraniSto.setText("");
+        timePicker.setText("00:00");
+    }
+    
+    
+    public void sortTabelu(ActionEvent event) {
+        
+        Object source = event.getSource();
+        Button clickedBtn = (Button) source; 
+        
+        String sortCriteria = "";
+        
+        switch(clickedBtn.getText()) {
+            case "Ime":
+                sortCriteria = Rezervacija.IME;
+                break;
+            case "Datum":
+                sortCriteria = Rezervacija.DATUM;
+                break;    
+            default:
+        }
+//        TableColumn column = tableHelper.getTableColumnByName(
+//                tabelaRezervacija,
+//                sortCriteria);
+//        tabelaRezervacija.getSortOrder().setAll(column);
     }
 }

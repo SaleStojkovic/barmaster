@@ -954,7 +954,12 @@ public class PorudzbinaController extends FXMLDocumentController {
         String kolicina = izabraniRed.get("kolicina");
         if (kolicina.startsWith("x"))
             kolicina = kolicina.substring(1);
-        NumerickaTastaturaController tastatura = new NumerickaTastaturaController(TastaturaVrsta.UNOS_IZNOSA, kolicina);
+        NumerickaTastaturaController tastatura = new NumerickaTastaturaController(
+                "Unesite količinu", 
+                "Unesite količinu", 
+                false, 
+                kolicina
+        );
         Optional<String> result = tastatura.showAndWait();
         
         if (result.isPresent()){
