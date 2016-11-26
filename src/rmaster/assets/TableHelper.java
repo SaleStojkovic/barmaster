@@ -5,12 +5,18 @@
  */
 package rmaster.assets;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import static java.util.Collections.list;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.VPos;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import rmaster.models.StavkaTure;
@@ -32,19 +38,15 @@ public class TableHelper {
         ) 
     {
         novaTabela = popuniTabelu(novaTabela, lista);
-
-        List<TableColumn<Map<String,String>, ?>> listaKolona = novaTabela.getColumns();
         
         int brojac = 0;
         
-        for(TableColumn<Map<String, String>, ?> novaKolona : listaKolona) {
-            
-            int sirina = sirineKolone[brojac];
-            
-            novaKolona.setPrefWidth(sirineKolone[brojac]);
+        for(int sirina : sirineKolone) {
+                        
+            novaTabela.getColumns().get(brojac).setPrefWidth(sirineKolone[brojac]);
 
             if (sirina == 0) {
-                novaKolona.setVisible(false);
+                novaTabela.getColumns().get(brojac).setVisible(false);
             }
             
             brojac++;
@@ -119,20 +121,6 @@ public class TableHelper {
         
     }
     
-    public TableColumn<Map<String, String>, ?> getTableColumnByName(
-            TableView<Map<String, String>>  tableView,
-            String name
-    )
-    {
-            List<TableColumn<Map<String,String>, ?>> listaKolona = tableView.getColumns();
-            for (TableColumn<Map<String, String>, ?>  col : listaKolona) {
-                if (col.getText().equals(name)){
-                    return col; 
-                }
-            }
-            return null;
-    }
-    
     public int getRowIndexOfStavka(TableView<Map<String,String>> tabela, StavkaTure stavka) {
         int brojac = 0;
         int redniBrojKolone_RedniBroj = 6;
@@ -150,6 +138,33 @@ public class TableHelper {
             brojac++;
         }
         return -1;
+    }
+    
+    public void sortTableByColumn(
+            TableView<Map<String,String>> tabela, 
+            String columnName,
+            int[] sirineKolone
+    ) {
+        
+        List<Map<String, String>> listaPodataka = new ArrayList<>();
+        
+            for (Map<String, String> map : tabela.getItems()) {
+                listaPodataka.add(map);
+            }        
+            
+            Comparator<Map<String, String>> mapComparator = new Comparator<Map<String, String>>() {
+                public int compare(Map<String, String> m1, Map<String, String> m2) {
+                    return m1.get(columnName).compareTo(m2.get(columnName));
+                }
+            };
+
+            Collections.sort(listaPodataka, mapComparator);
+            this.izbrisiSveIzTabele(tabela);
+            this.formatirajTabelu(
+                    tabela, 
+                    listaPodataka,
+                    sirineKolone
+                    );
     }
 
 }

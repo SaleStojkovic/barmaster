@@ -382,6 +382,7 @@ public class RezervacijeController extends FXMLDocumentController {
         brOsoba.setText("");
         izabraniSto.setText("");
         timePicker.setText("00:00");
+        idRezervacije.setText("");
     }
     
     
@@ -389,7 +390,6 @@ public class RezervacijeController extends FXMLDocumentController {
         
         Object source = event.getSource();
         Button clickedBtn = (Button) source; 
-        
         String sortCriteria = "";
         
         switch(clickedBtn.getText()) {
@@ -399,11 +399,26 @@ public class RezervacijeController extends FXMLDocumentController {
             case "Datum":
                 sortCriteria = Rezervacija.DATUM;
                 break;    
+            case "Vreme":
+                sortCriteria = Rezervacija.VREME;
+                break;    
             default:
         }
-//        TableColumn column = tableHelper.getTableColumnByName(
-//                tabelaRezervacija,
-//                sortCriteria);
-//        tabelaRezervacija.getSortOrder().setAll(column);
+        
+        tableHelper.sortTableByColumn(
+                tabelaRezervacija, 
+                sortCriteria, 
+                this.sirinaKolonaTabele
+        );
+        
+        tabelaRezervacija.getSelectionModel().select(tabelaRezervacija.getItems().size() - 1);        
+    }
+    
+    public void pomeriScrollDown() {
+        scrollPaneRezervacije.setVvalue((scrollPaneRezervacije.getVvalue() + 0.5 ) * 1);
+    }
+    
+    public void pomeriScrollUp() {
+        scrollPaneRezervacije.setVvalue((scrollPaneRezervacije.getVvalue() - 0.5 ) * 1);
     }
 }
