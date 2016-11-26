@@ -279,34 +279,27 @@ public class RezervacijeController extends FXMLDocumentController {
         if (ime.getText().isEmpty()) {
             
             ButtonType no = new ButtonType("U redu", ButtonBar.ButtonData.CANCEL_CLOSE);
-            Alert alert = new Alert(AlertType.WARNING,"Morate uneti na čije ime se" +
-                    " vodi Rezervacija!",
-                    no);
-
-            alert.getDialogPane().getStylesheets().
-                    addAll(this.getClass().getResource("style/style.css").toExternalForm());
-
-            alert.getDialogPane().getStyleClass().add("myDialog");
-            alert.initStyle(StageStyle.UNDECORATED);
-
-            alert.setHeaderText("Upozorenje!");
-            alert.setTitle("Neuspešan unos!");
+            
+            Alert alert = this.showWarning(
+                    UPOZORENJE_NEISPRAVAN_UNOS_TITLE,
+                    "Morate uneti ime da bi se sačuvala rezervacija.",
+                    no
+            );
+            
             alert.showAndWait();
 
             return;
         }
         if(datumPicker.getValue() == null) {
+            
             ButtonType no = new ButtonType("U redu", ButtonBar.ButtonData.CANCEL_CLOSE);
-            Alert alert = new Alert(AlertType.WARNING,"Morate uneti datum Rezervacije!", no);
-
-            alert.getDialogPane().getStylesheets().
-                    addAll(this.getClass().getResource("style/style.css").toExternalForm());
-
-            alert.getDialogPane().getStyleClass().add("myDialog");
-            alert.initStyle(StageStyle.UNDECORATED);
-
-            alert.setHeaderText("Upozorenje!");
-            alert.setTitle("Neuspešan unos!");
+            
+            Alert alert = this.showWarning(
+                    UPOZORENJE_NEISPRAVAN_UNOS_TITLE,
+                    "Morate uneti datum da bi se sačuvala rezervacija.",
+                    no
+            );
+            
             alert.showAndWait();
 
             return;
@@ -352,26 +345,19 @@ public class RezervacijeController extends FXMLDocumentController {
     
     public void izbrisiRezervaciju(ActionEvent event) {
         
-        ButtonType yes = new ButtonType("Da", ButtonBar.ButtonData.OK_DONE);
-        ButtonType no = new ButtonType("Ne", ButtonBar.ButtonData.CANCEL_CLOSE);
-        Alert alert = new Alert(AlertType.WARNING,
-                "Da li ste sigurni da želite da obrišete ovaj zapis? "
-                + "Izabrani zapis biće trajno obrisan!",
-                yes,
-                no);
-        
-        alert.getDialogPane().getStylesheets().
-                addAll(this.getClass().getResource("style/style.css").toExternalForm());
-        
-        alert.getDialogPane().getStyleClass().add("myDialog");
-        alert.initStyle(StageStyle.UNDECORATED);
+        ButtonType da = new ButtonType("Da", ButtonBar.ButtonData.OK_DONE);
+        ButtonType ne = new ButtonType("Ne", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-        alert.setHeaderText("Upozorenje!");
-        alert.setTitle("Brisanje zapisa");
+        Alert alert = this.showWarning(
+                UPOZORENJE_BRISANJE_ZAPISA_TITLE,
+                UPOZORENJE_BRISANJE_ZAPISA_CONTENT,
+                da,
+                ne
+        );
         
         Optional<ButtonType> result = alert.showAndWait();
 
-        if (result.isPresent() && result.get() == no) {
+        if (result.isPresent() && result.get() == ne) {
             return;
         }
         

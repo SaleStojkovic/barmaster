@@ -25,6 +25,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -39,6 +42,11 @@ import rmaster.models.Konobar;
  * @author Arbor
  */
 public class FXMLDocumentController implements Initializable {
+    
+    public static String UPOZORENJE_NEISPRAVAN_UNOS_TITLE = "Neispravan unos!";
+    public static String UPOZORENJE_BRISANJE_ZAPISA_TITLE = "Brisanje zapisa";
+    public static String UPOZORENJE_BRISANJE_ZAPISA_CONTENT = "Da li ste sigurni da želite da obrišete ovaj zapis? " + 
+            "Izabrani zapis biće trajno obrisan!";
     
     public DBBroker DBBroker;
     public RMaster RMaster;
@@ -382,5 +390,36 @@ public class FXMLDocumentController implements Initializable {
                     true, 
                     (Node)event.getSource()
             );
+    }
+    
+    /**
+     * 
+     * @param titleText
+     * @param headerText
+     * @param contentText
+     * @param buttons
+     * @return 
+     */
+    public Alert showWarning(
+            String headerText,
+            String contentText,
+            ButtonType... buttons
+    ) {
+        Alert alert = new Alert(
+                Alert.AlertType.WARNING,
+                contentText, 
+                buttons
+        );        
+                
+        alert.getDialogPane().getStylesheets().
+                addAll(this.getClass().getResource("style/style.css").toExternalForm());
+
+        alert.getDialogPane().getStyleClass().add("myDialog");
+        alert.initStyle(StageStyle.UNDECORATED);
+
+        alert.setHeaderText(headerText);
+        alert.setTitle("Upozorenje!");
+        
+        return alert;
     }
 }
