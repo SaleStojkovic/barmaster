@@ -19,7 +19,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -76,7 +75,7 @@ public class RezervacijeController extends FXMLDocumentController {
     
     public TableView<Map<String, String>> tabelaRezervacija = new TableView<>();
             
-    public int[] sirinaKolonaTabele = {140, 100, 100, 100, 100, 100, 242, 0};
+    public int[] sirinaKolonaTabele = {140, 100, 100, 100, 100, 100, 250, 0};
     
     /**
      * Initializes the controller class.
@@ -102,10 +101,12 @@ public class RezervacijeController extends FXMLDocumentController {
         
         this.izbrisiSvaPolja();
         
-        datumPicker.setPromptText("Izaberite datum");
-        ime.setPromptText("Unesite ime");
-        napomena.setPromptText("Unesite napomenu");
-        brOsoba.setPromptText("Unesite broj osoba");
+        datumPicker.setPromptText("Datum");
+        timePicker.setPromptText("Vreme");
+        izabraniSto.setPromptText("Sto");
+        ime.setPromptText("Ime");
+        napomena.setPromptText("Napomena");
+        telefon.setPromptText("Broj telefona");
         idRezervacije.setVisible(false);
         
         datumPicker.setConverter(new StringConverter<LocalDate>()
