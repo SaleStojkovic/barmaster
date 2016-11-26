@@ -72,6 +72,15 @@ public class RezervacijeController extends FXMLDocumentController {
     @FXML
     private TextArea napomena;
     
+    @FXML
+    private Button sortIme;
+    
+    @FXML
+    private Button sortDatum;
+        
+    @FXML
+    private Button sortVreme;
+    
     
     public TableView<Map<String, String>> tabelaRezervacija = new TableView<>();
             
@@ -392,19 +401,18 @@ public class RezervacijeController extends FXMLDocumentController {
         Button clickedBtn = (Button) source; 
         String sortCriteria = "";
         
-        switch(clickedBtn.getText()) {
-            case "Ime":
+        if (clickedBtn.getText().equals(sortIme.getText())) {
                 sortCriteria = Rezervacija.IME;
-                break;
-            case "Datum":
+        } 
+       
+        if (clickedBtn.getText().equals(sortDatum.getText())) {
                 sortCriteria = Rezervacija.DATUM;
-                break;    
-            case "Vreme":
-                sortCriteria = Rezervacija.VREME;
-                break;    
-            default:
-        }
+        }     
         
+        if (clickedBtn.getText().equals(sortVreme.getText())) {
+                sortCriteria = Rezervacija.VREME;
+        } 
+
         tableHelper.sortTableByColumn(
                 tabelaRezervacija, 
                 sortCriteria, 
