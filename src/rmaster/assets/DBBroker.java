@@ -147,6 +147,72 @@ public final class DBBroker {
     /**
      * 
      * @param imeTabele
+     * @param elementi
+     * @param zatvoriKonekciju
+     * @return insertedID
+     * @throws Exception 
+     */
+    public long ubaciRed(
+            String imeTabele,
+            HashMap<String, String> elementi,
+            Boolean zatvoriKonekciju
+    ) throws Exception {
+        Connection dbConnection = null;
+        PreparedStatement insertStatement = null;
+        long result = 0;
+         
+        String insertValues = " VALUES (";
+        String insertTableSQL = "INSERT INTO " + imeTabele + "(";
+        
+        for (HashMap.Entry<String, String> element : elementi.entrySet()) {
+            insertValues += "'" + element.getValue() + "',";
+            insertTableSQL += element.getKey() + ",";
+        }
+        insertTableSQL = insertTableSQL.substring(0, insertTableSQL.length()-1);
+        insertValues = insertValues.substring(0, insertValues.length()-1);
+ 
+        insertTableSQL += ")";
+        insertValues += ");";
+         
+        insertTableSQL += insertValues;
+                  
+        try {
+                dbConnection = poveziSaBazom();
+                
+                insertStatement = dbConnection.prepareStatement(
+                        insertTableSQL,
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                insertStatement.executeUpdate();
+
+                try (ResultSet generatedKeys = insertStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        result = generatedKeys.getLong(1);
+                    }
+                    else {
+                        throw new SQLException("Creating user failed, no ID obtained.");
+                    }
+                }
+
+        } catch (SQLException e) {
+                System.out.println(e.getMessage());
+                dbConnection.rollback();
+
+        } finally {
+                if (insertStatement != null) {
+                    try { insertStatement.close(); } catch (SQLException ignore) {}
+                }
+                if (dbConnection != null && zatvoriKonekciju) {
+                    try { dbConnection.close(); } catch (SQLException ignore) {}
+                }
+        }
+        
+        return result;
+    }
+
+    /**
+     * 
+     * @param imeTabele
      * @param uslovnaKolona
      * @param uslovnaVrednost
      * @param elementi
