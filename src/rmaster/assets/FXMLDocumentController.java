@@ -223,11 +223,10 @@ public class FXMLDocumentController implements Initializable {
      * 
      * @param imeTabele
      * @return
-     * @throws Exception 
      */
      public List vratiSveIzTabele(
             String imeTabele
-    ) throws Exception {
+    ) {
         List listaRezultata = DBBroker.vratiSveIzTabele(
                 imeTabele
         );

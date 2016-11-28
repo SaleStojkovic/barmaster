@@ -6,6 +6,8 @@
 package rmaster.views;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.animation.Timeline;
@@ -14,6 +16,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import rmaster.assets.FXMLDocumentController;
 
@@ -32,8 +36,15 @@ public class LojalnostController extends FXMLDocumentController {
     private Label imeKonobara;
     
     @FXML
-    private HBox  lojalnostSlova = new HBox();
+    private HBox  lojalnostSlova;
     
+    @FXML
+    private ScrollPane lojalnostScrollPane;
+    
+    @FXML
+    private TableView<Map<String, String>> tabelaLojalnost = new TableView();
+    
+    public int[] sirineKolone = {50, 50, 50, 50, 50, 50, 50};
     /**
      * Initializes the controller class.
      */
@@ -57,12 +68,27 @@ public class LojalnostController extends FXMLDocumentController {
                                 });
             lojalnostSlova.getChildren().add(novoDugme);
         }
+        
+        tabelaLojalnost = tableHelper.formatirajTabelu(
+                tabelaLojalnost, 
+                getStalniGosti(), 
+                sirineKolone
+        );
+        
+        lojalnostScrollPane.setContent(tabelaLojalnost);
     } 
     
-//    @Override
+    @Override
     public void initData(Map<String, String> data)
     {
         
+    }
+    
+    public List<Map<String, String>> getStalniGosti() {
+        
+        List<Map<String, String>> listaStalnihGostiju = this.vratiSveIzTabele("stalnigost");
+              
+        return listaStalnihGostiju;
     }
     
 }

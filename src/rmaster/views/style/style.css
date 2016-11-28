@@ -574,6 +574,30 @@ and open the template in the editor.
 
 /* pocetak lojalnost */
 
+#lojalnostScrollPane .table-view  {
+    -fx-background-color: -fx-tamno-crna;
+}
+
+#lojalnostScrollPane .table-view .table-cell {
+    -fx-background-color: -fx-tamno-crna;
+    -fx-font-family: KlavikaRegular;
+    -fx-text-fill: white;
+    -fx-font-size: 12;
+    -fx-selection-bar: white;
+    -fx-border-width: 0.4 0.4 0.4 0.4;
+    -fx-border-color: white;
+
+}
+
+#lojalnostScrollPane *.table-row-cell .text {
+   -fx-fill: white;
+}
+
+#lojalnostScrollPane *.table-row-cell:selected .text {
+       -fx-fill: -fx-zuta ;
+
+}
+
 #lojalnostGlavni {
     -fx-background-color: -fx-tamno-crna;
 }
@@ -687,6 +711,14 @@ and open the template in the editor.
 
 }
 
+#rezervacijeGlavni *.table-row-cell .text {
+   -fx-fill: white;
+}
+
+#rezervacijeGlavni *.table-row-cell:selected .text {
+       -fx-fill: -fx-zuta ;
+
+}
 .text-field
 {
     -fx-background-color: -fx-tamno-crna;
@@ -717,16 +749,6 @@ and open the template in the editor.
     -fx-border-width: 0.4 0.4 0.4 0.4;
     -fx-border-color: white;
 }
-
-#rezervacijeGlavni *.table-row-cell .text {
-   -fx-fill: white;
-}
-
-#rezervacijeGlavni *.table-row-cell:selected .text {
-       -fx-fill: -fx-zuta ;
-
-}
-
 
 #scrollPaneRezervacije .scroll-bar .thumb { 
     -fx-background-color: -fx-svetlo-crna;
