@@ -164,11 +164,9 @@ public class Porudzbina {
         mapa.put("brojFiskalnogIsecka", "" + this.brojFiskalnogIsecka);
         mapa.put("brojStola", "" + this.brojStola);
         mapa.put("crnoPlacanje", "" + this.crnoPlacanje);
-        mapa.put("datum", (this.datum != null 
-                                ? dateFormat.format(this.datum)
-                                : ""
-                          )
-        );
+        if (this.datum == null)
+            this.datum = new Date();
+        mapa.put("datum", dateFormat.format(this.datum));
         mapa.put("fiskalniOdstampan", "" + this.fiskalniOdstampan);
 //        mapa.put("fiskalniOdstampan", "" + (this.fiskalniOdstampan ? "1" : "0"));
         mapa.put("oznakaSobe", "" + this.oznakaSobe);
