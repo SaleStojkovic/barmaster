@@ -825,10 +825,10 @@ public class PorudzbinaController extends FXMLDocumentController {
 
         if (poslednjaDodataStavka.getKolicina()>1) {
             novaGlavnaStavka = new HashMap<>();
-            novaGlavnaStavka.put("id", "" + poslednjaDodataStavka.stavkaTureID);
+            novaGlavnaStavka.put("id", "" + poslednjaDodataStavka.id);
             novaGlavnaStavka.put("ARTIKAL_ID", poslednjaDodataStavka.getArtikalIDString());
             novaGlavnaStavka.put("kolicina", "1");
-            novaGlavnaStavka.put("naziv", "" + poslednjaDodataStavka.imeArtikla);
+            novaGlavnaStavka.put("naziv", "" + poslednjaDodataStavka.naziv);
             novaGlavnaStavka.put("cena", "" + poslednjaDodataStavka.cena);
             novaGlavnaStavka.put("cenaJedinicna", "" + poslednjaDodataStavka.cenaJedinicna);
             poslednjaDodataStavka.smanjiKolicinu();
@@ -916,12 +916,12 @@ public class PorudzbinaController extends FXMLDocumentController {
 //    ) {
 //        prikazRacunaGosta.setContent(null);
 //        
-//        String imeArtikla = izabranaStavkaTure.get("naziv");
+//        String naziv = izabranaStavkaTure.get("naziv");
 //        
 //        for (int i = 0; i < novaTura.listStavkeTure.size(); i++) {
 //            StavkaTure stavka = novaTura.listStavkeTure.get(i);
 //            
-//            if (stavka.imeArtikla.equals(imeArtikla)) {
+//            if (stavka.naziv.equals(naziv)) {
 //                novaTura.listStavkeTure.remove(i);
 //                
 //                double novaCena = (stavka.cena / stavka.kolicina) * novaKolicina;
@@ -1250,7 +1250,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                         if (stavkaTure != null) {
                             stavkaTure.smanjiKolicinu();
                             if (stavkaTure.getKolicina() == 0)
-                                glavnaStavka.getArtikliDodatni().remove(stavkaTure);
+                                glavnaStavka.getArtikliOpisni().remove(stavkaTure);
                         }
                     }
                 }
@@ -1284,11 +1284,13 @@ public class PorudzbinaController extends FXMLDocumentController {
     }
     
     public void naplataIliStampaPorudzbine(ActionEvent event) {
+        porudzbinaTrenutna.zatvoriRacun();
         porudzbinaTrenutna.snimi();
         // TODO: Otvoriti formu za naplatu
     }
 
     public void medjuzbir(ActionEvent event) {
+        porudzbinaTrenutna.zatvoriRacun();
         porudzbinaTrenutna.snimi();
         stampac.stampajMedjuzbir(porudzbinaTrenutna);
     }

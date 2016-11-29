@@ -165,7 +165,17 @@ public final class DBBroker {
         String insertTableSQL = "INSERT INTO " + imeTabele + "(";
         
         for (HashMap.Entry<String, String> element : elementi.entrySet()) {
-            insertValues += "'" + element.getValue() + "',";
+            switch (element.getValue()) {
+                case "true":
+                    insertValues += "b'1',";
+                    break;
+                case "false":
+                    insertValues += "b'0',";
+                    break;
+                default:
+                    insertValues += "'" + element.getValue() + "',";
+                    break;
+            }
             insertTableSQL += element.getKey() + ",";
         }
         insertTableSQL = insertTableSQL.substring(0, insertTableSQL.length()-1);
@@ -245,7 +255,12 @@ public final class DBBroker {
                 updateStatement = dbConnection.prepareStatement(updateTableSQL);
                 int brojac = 1;
                 for (HashMap.Entry<String, String> element : elementi.entrySet()) {
-                    updateStatement.setString(brojac, element.getValue());
+                    if (element.getValue().equals("true"))
+                        updateStatement.setBoolean(brojac, true);
+                    if (element.getValue().equals("false"))
+                        updateStatement.setBoolean(brojac, false);
+                    else
+                        updateStatement.setString(brojac, element.getValue());
                     brojac++;
                 } 
                 

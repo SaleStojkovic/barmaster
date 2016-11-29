@@ -19,32 +19,57 @@ import rmaster.assets.Utils;
 public class StavkaTure {
     private int redniBroj = -1;
     private int redniBrojGlavneStavke = -1;
-    public long stavkaTureID = 0;
-    public long artikalId;
-    public String imeArtikla;
-    public double kolicina = 0;
+     private int redniBrojStavkeOpisni = 0;
+    private int redniBrojStavkeDodatni = 0;
+
     public double cenaJedinicna = 0;
+    // Polja iz baze
+    public long id = 0;
+    private int brojStola;
     public double cena = 0;
+    public double kolicina = 0;
+    public String naziv;
+    public long RACUN_ID;
+    public long ARTIKAL_ID;
+    public long TURA_ID;
+    private long GLAVNASTAVKA_ID = 0;
     public List<StavkaTure> dodatniArtikli = new ArrayList(); 
     public List<StavkaTure> opisniArtikli = new ArrayList();
-    private long glavnaStavkaID = 0;
-    
-    private int redniBrojStavkeOpisni = 0;
-    private int redniBrojStavkeDodatni = 0;
+
 
 // Konstruktor
     public StavkaTure(Map<String, String> stavkaTure) {
-        this.stavkaTureID = Long.parseLong(stavkaTure.get("id"));
-        String novaKolicina = stavkaTure.get("kolicina");
-        if (novaKolicina.contains("x")) {
-            novaKolicina.substring(1);
-        }
-        this.artikalId = Long.parseLong(stavkaTure.get("ARTIKAL_ID"));
-        this.imeArtikla = stavkaTure.get("naziv");
-        this.kolicina = Utils.getDoubleFromString(novaKolicina);
-        this.setCenaJedinicna(Utils.getDoubleFromString(stavkaTure.get("cena"))); 
+        String novaKolicina = "";
+
+        if (stavkaTure.get("id")  != null)
+            this.id = Long.parseLong(stavkaTure.get("id"));
+
+        if (stavkaTure.get("brojStola")  != null)
+            this.brojStola = Integer.parseInt(stavkaTure.get("brojStola"));
+
+        if (stavkaTure.get("cena")  != null)
+            this.setCenaJedinicna(Utils.getDoubleFromString(stavkaTure.get("cena"))); 
+
+        if (stavkaTure.get("kolicina")  != null)
+            this.kolicina = Utils.getDoubleFromString(
+                    (stavkaTure.get("kolicina").contains("x")
+                        ? stavkaTure.get("kolicina").substring(1)
+                        : stavkaTure.get("kolicina")));
+
+        if (stavkaTure.get("naziv")  != null)
+            this.naziv = stavkaTure.get("naziv");
+
+        if (stavkaTure.get("RACUN_ID")  != null)
+            this.RACUN_ID = Long.parseLong(stavkaTure.get("RACUN_ID"));
+        
+        if (stavkaTure.get("ARTIKAL_ID")  != null)
+            this.ARTIKAL_ID = Long.parseLong(stavkaTure.get("ARTIKAL_ID"));
+        
+        if (stavkaTure.get("TURA_ID")  != null)
+            this.TURA_ID = Long.parseLong(stavkaTure.get("TURA_ID"));
+        
         if (stavkaTure.get("GLAVNASTAVKA_ID") != null)
-            this.glavnaStavkaID = Long.parseLong(stavkaTure.get("GLAVNASTAVKA_ID"));
+            this.GLAVNASTAVKA_ID = Long.parseLong(stavkaTure.get("GLAVNASTAVKA_ID"));
     }
 
 // Redni broj koji pomaze pri formiranju tabele za prikaz i brisanju stavki iz prikaza
@@ -67,14 +92,14 @@ public class StavkaTure {
     
 // F-je koje vracaju ArtikalID kao long i String
     public long getArtikalID(){
-        return this.artikalId;
+        return this.ARTIKAL_ID;
     }
     public String getArtikalIDString(){
-        return "" + this.artikalId;
+        return "" + this.ARTIKAL_ID;
     }
 
     public long getStavkaTureId(){
-        return this.stavkaTureID;
+        return this.id;
     }
 
     public double getKolicina(){
@@ -103,7 +128,7 @@ public class StavkaTure {
         stavkaTure.put("redniBroj", "" + this.getRedniBroj());
         stavkaTure.put("id", "" + this.getStavkaTureId());
         stavkaTure.put("artikalId", this.getArtikalIDString());
-        stavkaTure.put("naziv", this.imeArtikla);
+        stavkaTure.put("naziv", this.naziv);
         int intKolicina = (int)this.kolicina;
         if (this.kolicina == intKolicina) {
             stavkaTure.put("kolicina", "x" + intKolicina);
@@ -127,7 +152,7 @@ public class StavkaTure {
     /*** Dodavanje opisnog artikla za kolicinu koja je prosledjena kroz StavkaTure ***/
     public void dodajKolicinuArtikalOpisni(StavkaTure opisniArtikal){
         for (StavkaTure opArtikal: opisniArtikli) {
-            if (opArtikal.artikalId == opisniArtikal.artikalId) {
+            if (opArtikal.ARTIKAL_ID == opisniArtikal.ARTIKAL_ID) {
                 opArtikal.povecajKolicinuZa(opisniArtikal.kolicina);
                 return;
             }
@@ -140,7 +165,7 @@ public class StavkaTure {
      *   brisanje ako je nova kolicina = 0 ***/
     public void smanjiKolicinuArtikalOpisni(StavkaTure opisniArtikal){
         for (StavkaTure opArtikal: opisniArtikli) {
-            if (opArtikal.artikalId == opisniArtikal.artikalId) {
+            if (opArtikal.ARTIKAL_ID == opisniArtikal.ARTIKAL_ID) {
                 opArtikal.smanjiKolicinuZa(opisniArtikal.kolicina);
                 if (opArtikal.kolicina <= 0)
                     opisniArtikli.remove(opArtikal);
@@ -161,7 +186,7 @@ public class StavkaTure {
     /*** Dodavanje dodatnog artikla za kolicinu koja je prosledjena kroz StavkaTure ***/
     public void dodajKolicinuArtikalDodatni(StavkaTure dodatniArtikal){
         for (StavkaTure dodArtikal: dodatniArtikli) {
-            if (dodArtikal.artikalId == dodatniArtikal.artikalId) {
+            if (dodArtikal.ARTIKAL_ID == dodatniArtikal.ARTIKAL_ID) {
                 dodArtikal.povecajKolicinuZa(dodatniArtikal.kolicina);
                 return;
             }
@@ -172,7 +197,7 @@ public class StavkaTure {
     /*** Oduzimanje dodatnog artikla za kolicinu koja je prosledjena kroz StavkaTure, brisanje ako je nova kolicina = 0 ***/
     public void smanjiKolicinuArtikalDodatni(StavkaTure dodatniArtikal){
         for (StavkaTure dodArtikal: dodatniArtikli) {
-            if (dodArtikal.artikalId == dodatniArtikal.artikalId) {
+            if (dodArtikal.ARTIKAL_ID == dodatniArtikal.ARTIKAL_ID) {
                 dodArtikal.smanjiKolicinuZa(dodatniArtikal.kolicina);
                 if (dodArtikal.kolicina <= 0)
                     dodatniArtikli.remove(dodArtikal);
@@ -244,6 +269,6 @@ public class StavkaTure {
     }
     
     public long getGlavnaStavkaID() {
-        return this.glavnaStavkaID;
+        return this.GLAVNASTAVKA_ID;
     }
 }
