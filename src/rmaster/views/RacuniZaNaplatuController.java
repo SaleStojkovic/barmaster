@@ -97,7 +97,7 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
                     Optional<String> result = tastatura.showAndWait();
 
                     if (result.isPresent()){
-                                new Stampac().stampajGotovinskiRacun();
+                                Stampac.getInstance().stampajGotovinskiRacun();
                         // TODO: Upisati u bazu broj FISKALNOG ISECKA
                                 try {
                                     String[] imenaArgumenata = {"racunID","brojIsecka"};

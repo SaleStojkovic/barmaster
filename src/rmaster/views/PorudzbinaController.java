@@ -5,7 +5,6 @@
  */
 package rmaster.views;
 
-import rmaster.assets.TastaturaVrsta;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +31,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
+import rmaster.assets.Settings;
 import rmaster.assets.Stampac;
 import rmaster.assets.Utils;
 import rmaster.assets.items.ArtikalButton;
@@ -160,8 +160,6 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     private List<Porudzbina> porudzbineStola = new ArrayList<Porudzbina>();
     
-    public Stampac stampac = new Stampac();
-  
     int[] sirinaKolonaTabele = {0, 180, 40, 0, 61, 0, 0, 0};
     
     List<Map<String, String>> tureTrenutnoIzabranogGosta = new ArrayList<>();
@@ -442,6 +440,7 @@ public class PorudzbinaController extends FXMLDocumentController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
         String[] uslovneKolone = {"id"};
@@ -1292,6 +1291,7 @@ public class PorudzbinaController extends FXMLDocumentController {
     public void medjuzbir(ActionEvent event) {
         porudzbinaTrenutna.zatvoriRacun();
         porudzbinaTrenutna.snimi();
-        stampac.stampajMedjuzbir(porudzbinaTrenutna);
+        Stampac.getInstance().stampajMedjuzbir(porudzbinaTrenutna);
+        Stampac.getInstance().stampajDnevniIzvestajNaFiskal();
     }
 }

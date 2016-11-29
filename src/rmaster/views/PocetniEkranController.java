@@ -34,28 +34,10 @@ public class PocetniEkranController extends NumberKeypadController {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        clock.setFont(klavikaBold);
         keypad.sledecaForma = "prikazSala";
         Timeline timeline = this.prikaziCasovnik(clock);
         timeline.play();
-        
-//        Timeline timeline1 = new Timeline(
-//            new KeyFrame(Duration.seconds(0.5), new EventHandler<ActionEvent>() {
-//                @Override public void handle(ActionEvent actionEvent) {
-//                    test.setStyle("-fx-background-color: black;");
-//                }
-//            }
-//            ),
-//            new KeyFrame(Duration.seconds(1),new EventHandler<ActionEvent>() {
-//                @Override public void handle(ActionEvent actionEvent) {
-//                    test.setStyle("-fx-background-color: grey;");
-//                }
-//            }
-//            )
-//          );
-//          timeline1.setCycleCount(Animation.INDEFINITE);
-//        
-//          timeline1.play();
+
     }
     
    
