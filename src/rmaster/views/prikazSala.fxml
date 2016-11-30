@@ -80,7 +80,7 @@
                         <Button fx:id="rezervacije" onAction="#otvoriRezervacije" mnemonicParsing="false" prefHeight="50.0" prefWidth="128.0" text="Rezervacije" />
                         <Button mnemonicParsing="false" onAction="#otvoriAdministraciju"  prefHeight="51.0" prefWidth="128.0" text="Administracija" />
                         
-                        <Button fx:id="SRRacuna" layoutX="143.0" layoutY="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="128.0" text=" Sastavljanje/ Rastavljanje " textAlignment="CENTER" wrapText="true" />
+                        <Button fx:id="SRRacuna" layoutX="143.0" layoutY="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="128.0" text=" Sastavljanje/ Rastavljanje " textAlignment="CENTER" wrapText="true" onAction="#otvoriRastavljanjeSastavljanje" />
                         
                         <Button fx:id="promenaKonobara" layoutX="521.0" layoutY="10.0" mnemonicParsing="false" onAction="#promeniKonobara" prefHeight="50.0" prefWidth="128.0" text="Promena konobara" textAlignment="CENTER" wrapText="true">
                             

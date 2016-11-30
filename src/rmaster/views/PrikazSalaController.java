@@ -413,4 +413,14 @@ public class PrikazSalaController extends FXMLDocumentController {
             true, 
             (Node)event.getSource()); 
     }
+    
+    public void otvoriRastavljanjeSastavljanje(ActionEvent event) {
+        Map<String, String> newData = new HashMap<>();
+
+        prikaziFormu(
+            newData,
+            ScreenMap.SASTAVLJANJE_RASTAVLJANJE, 
+            true, 
+            (Node)event.getSource()); 
+    }
 }

@@ -10,6 +10,11 @@ and open the template in the editor.
 
 @import"config.css";
 
+#header
+{
+    -fx-background-color: -fx-tamno-crna;
+}
+
 .myDialog{
     -fx-background-color: -fx-tamno-crna;
 }
@@ -781,7 +786,6 @@ and open the template in the editor.
 }
 
 
-
 .date-picker .date-picker-popup
 {
     -fx-font-size: 40;
@@ -793,6 +797,56 @@ and open the template in the editor.
 }
 
 /* kraj rezervacije*/
+
+/* pocetak sastavljanje rastavljanje */
+
+#sastavljanjeRastavljanjeGlavni {
+    -fx-background-color: -fx-tamno-crna;
+}
+
+#sastavljanjeRastavljanjeFooter {
+    -fx-border-color: -fx-siva;
+    -fx-border-width: 0.5;
+}
+#sastavljanjeRastavljanjeGlavni *.button
+{
+    -fx-background-color: -fx-tamno-crna;
+    -fx-font-family: KlavikaBold;
+    -fx-text-fill: -fx-zuta;
+    -fx-border-color: white;
+    -fx-border-width: 0.5;
+    -fx-font-weight: bold;
+    -fx-font-size: 12; 
+}
+
+#sastavljanjeRastavljanjeGlavni *.scroll-pane {
+    -fx-border-width: 0.4 0.4 0.4 0.4;
+    -fx-border-color: white;
+}
+
+#sastavljanjeRastavljanjeGlavni *.scroll-pane .scroll-bar .thumb { 
+    -fx-background-color: -fx-svetlo-crna;
+
+}
+
+#sastavljanjeRastavljanjeGlavni *.scroll-pane .scroll-bar {
+        -fx-background-color: -fx-tamno-crna;
+
+}
+
+#sastavljanjeRastavljanjeGlavni *.scroll-pane > .scroll-bar > .increment-button,
+#sastavljanjeRastavljanjeGlavni *.scroll-pane > .scroll-bar > .decrement-button {
+    -fx-background-color: -fx-tamno-crna;
+    -fx-border-color:derive(gray,80%);
+    -fx-padding:20px;
+}
+
+#scrollPaneRezervacije > .viewport {
+   -fx-background-color: transparent;
+}
+
+/* kraj sastavljanje rastavljanje */
+
 
 /* table view stil */
 .table-view .column-header-background { 

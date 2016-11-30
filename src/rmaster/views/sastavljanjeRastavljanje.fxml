@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+
+<AnchorPane fx:id="sastavljanjeRastavljanjeGlavni" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.SastavljanjeRastavljanjeController">
+   <children>
+      <HBox fx:id="header" prefHeight="54.0" prefWidth="1024.0">
+         <children>
+            <ImageView fitHeight="51.0" fitWidth="256.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@style/img/logo.png" />
+               </image>
+            </ImageView>
+            <Pane prefHeight="50.0" prefWidth="335.0">
+               <children>
+                  <ImageView fitHeight="30.0" fitWidth="35.0" layoutX="121.0" layoutY="10.0">
+                     <image>
+                        <Image url="@style/img/Person.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="imeKonobara" layoutX="156.0" layoutY="11.0" prefHeight="29.0" prefWidth="127.0" />
+               </children>
+            </Pane>
+            <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <Pane prefHeight="50.0" prefWidth="232.0">
+               <children>
+                  <Label fx:id="casovnik" layoutX="16.0" layoutY="7.0" prefHeight="36.0" prefWidth="146.0" />
+               </children>
+            </Pane>
+            <Button fx:id="odjava" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#odjava" prefHeight="50.0" prefWidth="133.0" text="Odjava" />
+         </children>
+      </HBox>
+      <Pane fx:id="sastavljanjeRastavljanjeFooter" layoutX="-2.0" layoutY="656.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="122.0" prefWidth="1024.0">
+         <children>
+            <Button layoutX="2.0" mnemonicParsing="false" onAction="#nazadNaPrikazSale" prefHeight="122.0" prefWidth="168.0" text=" « Nazad " />
+            <Button layoutX="857.0" mnemonicParsing="false" onAction="#nazadNaPrikazSale" prefHeight="122.0" prefWidth="168.0" text="✓ Potvrdi" />
+            <Button layoutX="170.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="146.0" text="Storno" />
+            <Button layoutX="170.0" layoutY="61.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="146.0" text="Lojalnost" />
+         </children>
+      </Pane>
+      <ScrollPane fx:id="scrollPaneA" layoutY="139.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="458.0" prefWidth="442.0" />
+      <ScrollPane fx:id="scrollPaneB" layoutX="582.0" layoutY="139.0" prefHeight="458.0" prefWidth="442.0" />
+      <Pane layoutX="442.0" layoutY="117.0" prefHeight="480.0" prefWidth="139.0">
+         <children>
+            <Button layoutX="21.0" layoutY="88.0" mnemonicParsing="false" prefHeight="72.0" prefWidth="92.0" text="»" />
+            <Button layoutX="21.0" layoutY="309.0" mnemonicParsing="false" prefHeight="72.0" prefWidth="92.0" text="«" />
+         </children>
+      </Pane>
+      <Pane layoutX="-1.0" layoutY="56.0" prefHeight="61.0" prefWidth="1024.0">
+         <children>
+            <Button fx:id="izaberiStoA" layoutX="1.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="92.0" text="Izaberi sto" onAction="#pozivanjePrikazSalePopup" />
+            <HBox fx:id="gostiStoA" layoutX="93.0" layoutY="-1.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="61.0" prefWidth="256.0" />
+            <Button layoutX="350.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="92.0" text="« »" />
+            <Button layoutX="583.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="92.0" text="« »" />
+            <HBox fx:id="gostiStoB" layoutX="676.0" layoutY="-1.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="61.0" prefWidth="256.0" />
+            <Button fx:id="izaberiStoB" layoutX="933.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="92.0" text="Izaberi sto" onAction="#pozivanjePrikazSalePopup" />
+         </children>
+      </Pane>
+      <Pane layoutX="-1.0" layoutY="597.0" prefHeight="61.0" prefWidth="1024.0">
+         <children>
+            <Button layoutX="45.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▼" />
+            <Button layoutX="249.0" layoutY="6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▲" />
+            <Button layoutX="641.0" layoutY="6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▼" />
+            <Button layoutX="846.0" layoutY="6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▲" />
+         </children>
+      </Pane>
+      <Pane layoutX="1.0" layoutY="117.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="22.0" prefWidth="1024.0">
+         <children>
+            <Label layoutY="3.0" prefHeight="17.0" prefWidth="442.0" text="artikal   |  kol  | cena" />
+            <Label layoutX="582.0" layoutY="3.0" prefHeight="17.0" prefWidth="442.0" text="artikal   |  kol  | cena" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
