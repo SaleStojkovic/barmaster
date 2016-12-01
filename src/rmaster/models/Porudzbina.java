@@ -8,6 +8,7 @@ package rmaster.models;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import rmaster.assets.DBBroker;
@@ -43,17 +44,20 @@ public class Porudzbina {
     
     public Porudzbina(Gost gost) {
         this.setGost(gost);
+        this.brojStola = Integer.parseInt(rmaster.RMaster.izabraniSto);
     }
 
     public Porudzbina(Gost gost, long racunID) {
         this.setGost(gost);
         this.racunID = racunID;
+        this.brojStola = Integer.parseInt(rmaster.RMaster.izabraniSto);
         popuniPorudzbinuIzBaze();
     }
 
     public Porudzbina(Gost gost, String racunIDstring) {
         this.setGost(gost);
         this.racunID = Integer.parseInt(racunIDstring);
+        this.brojStola = Integer.parseInt(rmaster.RMaster.izabraniSto);
         popuniPorudzbinuIzBaze();
     }
     
@@ -149,6 +153,10 @@ public class Porudzbina {
         this.blokirana = blokiranaPoruzbina;
     }
     
+    public void setNovaTuraPorudzbine(Tura tura) {
+        this.novaTuraPorudzbine = tura;
+    }
+    
     public void zatvoriRacun() {
         this.zatvoren = true;
     }
@@ -176,7 +184,7 @@ public class Porudzbina {
         mapa.put("zatvoren", "" + this.zatvoren);
 //        mapa.put("zatvoren", "" + (this.zatvoren ? "1" : "0"));
         mapa.put("KASA_ID", "" + this.KASA_ID);
-        mapa.put("KONOBAR_ID", "" + this.KONOBAR_ID);
+        mapa.put("KONOBAR_ID", "2");// + rmaster.RMaster.ulogovaniKonobar);
         mapa.put("STALNIGOST_ID", "" + this.STALNIGOST_ID);
         mapa.put("gost", "" + this.gost.getGostID());
         if (this.vremeIzdavanjaRacuna != null)
@@ -187,6 +195,30 @@ public class Porudzbina {
         else {
             result = db.ubaciRed("racun", mapa, blokirana);
             this.racunID = result;
+            
+            for (Tura tura : turePorudzbine) {
+                if (tura.getTuraID() == 0) {
+                    // Tura nije upisana, upisi je u bazu
+                    HashMap<String,String> mapaTura = new HashMap();
+                    
+                    
+                    mapaTura.put("brojStola", "" + this.brojStola);
+                    mapaTura.put("brojTure", "223344");
+                    mapaTura.put("datum", dateFormat.format(new Date()));
+                    mapaTura.put("pripremljena", "false");
+                    mapaTura.put("uPripremi", "false");
+                    //mapaTura.put("fiskalniOdstampan", "" + (this.fiskalniOdstampan ? "1" : "0"));
+                    mapaTura.put("RACUN_ID", "" + this.racunID);
+                    result = db.ubaciRed("tura", mapaTura, blokirana);
+                    tura.turaID = result;
+                    
+                    for (StavkaTure stavkaTure : tura.listStavkeTure) {
+                        stavkaTure.setRacunID(this.racunID);
+                        stavkaTure.setTuraID(tura.getTuraID());
+                        stavkaTure.snimi();
+                    }
+                }
+            }
         }
     } catch(Exception e) {
         

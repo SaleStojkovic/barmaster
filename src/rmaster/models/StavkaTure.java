@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import rmaster.assets.DBBroker;
 import rmaster.assets.Utils;
 
 /**
@@ -218,6 +219,10 @@ public class StavkaTure {
         cenaObracunaj();
     }
 
+    public double getCena() {
+        return cena;
+    }
+
     public void cenaObracunaj() {
         this.cena = this.cenaJedinicna * this.kolicina;
     }
@@ -268,7 +273,81 @@ public class StavkaTure {
         return (this.dodatniArtikli.size() + this.opisniArtikli.size() > 0);
     }
     
+    public int getBrojStola() {
+        return this.brojStola;
+    }
+
+    public String getNaziv() {
+        return this.naziv;
+    }
+
+    public long getRacunID() {
+        return this.RACUN_ID;
+    }
+    
+    public void setRacunID(long racunID) {
+        this.RACUN_ID = racunID;
+    }
+    
+    public long getTuraID() {
+        return this.TURA_ID;
+    }
+    
+    public void setTuraID(long turaID) {
+        this.TURA_ID = turaID;
+    }
+    
+    public long getID() {
+        return this.id;
+    }
+    
+    public void setID(long idStavke) {
+        this.id = idStavke;
+    }
+    
     public long getGlavnaStavkaID() {
         return this.GLAVNASTAVKA_ID;
+    }
+
+    public void setGlavnaStavkaID(long glavnaStavkaID) {
+        this.GLAVNASTAVKA_ID = glavnaStavkaID;
+    }
+    
+    public void snimi() {
+        if (this.getID() == 0) {
+            // Stavka ture nije upisana, upisi je u bazu
+            try {
+                DBBroker db = new DBBroker();
+                long result = 0;
+                HashMap<String,String> mapaStavka = new HashMap();
+                mapaStavka.put("brojStola", "" + this.getBrojStola());
+                mapaStavka.put("cena", "" + this.getCena());
+                mapaStavka.put("kolicina", "" + this.getKolicina());
+                mapaStavka.put("naziv", "" + this.getNaziv());
+                mapaStavka.put("RACUN_ID", "" + this.getRacunID());
+                mapaStavka.put("ARTIKAL_ID", "" + this.getArtikalID());
+                mapaStavka.put("TURA_ID", "" + this.getTuraID());
+                mapaStavka.put("GLAVNASTAVKA_ID", "" + this.getGlavnaStavkaID());
+                result = db.ubaciRed("stavkaracuna", mapaStavka, false);
+                this.setID(result);
+                
+                for (StavkaTure stavkaTureDodatni : this.getArtikliDodatni()) {
+                    stavkaTureDodatni.setGlavnaStavkaID(this.getID());
+                    stavkaTureDodatni.setRacunID(this.getRacunID());
+                    stavkaTureDodatni.setTuraID(this.getTuraID());
+                    stavkaTureDodatni.snimi();
+                }
+                for (StavkaTure stavkaTureOpisni : this.getArtikliOpisni()) {
+                    stavkaTureOpisni.setGlavnaStavkaID(this.getID());
+                    stavkaTureOpisni.setRacunID(this.getRacunID());
+                    stavkaTureOpisni.setTuraID(this.getTuraID());
+                    stavkaTureOpisni.snimi();
+                }
+            } catch(Exception e) {
+                
+            }
+
+        }
+        
     }
 }

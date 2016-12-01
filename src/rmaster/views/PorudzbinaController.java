@@ -808,7 +808,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         StavkaTure nova = null;
 
         Map<String, String> novaStavkaTure = new HashMap<>();
-        novaStavkaTure.put("id", artikalOpisniDodatni.getId());
+        novaStavkaTure.put("id", "0");//artikalOpisniDodatni.getId());
         novaStavkaTure.put("ARTIKAL_ID", artikalOpisniDodatni.getId());
         novaStavkaTure.put("kolicina", "1");
 
@@ -868,11 +868,12 @@ public class PorudzbinaController extends FXMLDocumentController {
         String[] vrednostiArgumenata = {idArtikla};
 
         Map<String, String> novaStavkaTure = new HashMap<>();
-        novaStavkaTure.put("id", artikal.getId());
+        novaStavkaTure.put("id", "0");//artikal.getId());
         novaStavkaTure.put("ARTIKAL_ID", idArtikla);
         novaStavkaTure.put("naziv", nazivArtikla);
         novaStavkaTure.put("cena", cena);
         novaStavkaTure.put("cenaJedinicna", cena);
+        novaStavkaTure.put("brojStola", rmaster.RMaster.izabraniSto);
 
         this.dodajStavkuUNovuTuru(novaStavkaTure);
 
@@ -884,6 +885,8 @@ public class PorudzbinaController extends FXMLDocumentController {
     private void dodajStavkuUNovuTuru(Map<String, String> novaStavka) {
         if (novaTura == null) {
             novaTura = new Tura();
+            porudzbinaTrenutna.getTure().add(novaTura);
+            porudzbinaTrenutna.setNovaTuraPorudzbine(novaTura);
             
         }
         novaStavka.put("kolicina", "1");
@@ -1283,13 +1286,13 @@ public class PorudzbinaController extends FXMLDocumentController {
     }
     
     public void naplataIliStampaPorudzbine(ActionEvent event) {
-        porudzbinaTrenutna.zatvoriRacun();
+        //porudzbinaTrenutna.zatvoriRacun();
         porudzbinaTrenutna.snimi();
         // TODO: Otvoriti formu za naplatu
     }
 
     public void medjuzbir(ActionEvent event) {
-        porudzbinaTrenutna.zatvoriRacun();
+        //porudzbinaTrenutna.zatvoriRacun();
         porudzbinaTrenutna.snimi();
         Stampac.getInstance().stampajMedjuzbir(porudzbinaTrenutna);
         Stampac.getInstance().stampajDnevniIzvestajNaFiskal();
