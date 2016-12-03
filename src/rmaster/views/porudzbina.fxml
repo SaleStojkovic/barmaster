@@ -94,7 +94,7 @@
                   </Pane>
                   <Pane prefHeight="26.0" prefWidth="256.0">
                      <children>
-                        <Label fx:id="turaHeader" prefHeight="28.0" prefWidth="256.0" text="  Artikal&#9;&#9;&#9;&#9;&#9;     | kol  |  Cena" />
+                        <Label fx:id="turaHeader" prefHeight="28.0" prefWidth="256.0" text="  Artikal&#9;&#9;&#9;&#9;&#9;      kol      Cena" />
                      </children>
                   </Pane>
                   
