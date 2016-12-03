@@ -154,7 +154,9 @@ public class StavkaTure {
     public void dodajKolicinuArtikalOpisni(StavkaTure opisniArtikal){
         for (StavkaTure opArtikal: opisniArtikli) {
             if (opArtikal.ARTIKAL_ID == opisniArtikal.ARTIKAL_ID) {
-                opArtikal.povecajKolicinuZa(opisniArtikal.kolicina);
+                if (opArtikal.getKolicina() < 1) {
+                    opArtikal.povecajKolicinuZa(opisniArtikal.kolicina);
+                }
                 return;
             }
         }
@@ -242,6 +244,7 @@ public class StavkaTure {
     
     /*** Povecavanje kolicine ***/
     public void povecajKolicinu() {
+        
             this.kolicina = this.kolicina + 1;
             this.cenaObracunaj();
     }
