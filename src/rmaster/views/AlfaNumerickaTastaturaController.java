@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
@@ -31,9 +31,13 @@ import javafx.stage.StageStyle;
 public class AlfaNumerickaTastaturaController extends Dialog {
 
     
-    public char[] specijalniKarakteri = {'š','ć','č','đ','ž'};
+//    public char[] specijalniKarakteri = {'š','ć','č','đ','ž'};
     
-    public String qwerty = "qwertyuiopasdfghjklzxcvbnm";
+    public String qwerty = "qwertyuiopšđ";
+    
+    public String asdf = "asdfghjklčćž";
+    
+    public String zxcv = "zxcvbnm,.";
     
     @FXML
     private Label response2;
@@ -68,7 +72,7 @@ public class AlfaNumerickaTastaturaController extends Dialog {
         this.getDialogPane().getStylesheets().
                 addAll(this.getClass().getResource("style/style.css").toExternalForm());
         
-        this.getDialogPane().getStyleClass().add("myDialog");
+        this.getDialogPane().getStyleClass().add("alphaNumeric");
         
             
         // Create the unetiTekst and password labels and fields.
@@ -79,7 +83,6 @@ public class AlfaNumerickaTastaturaController extends Dialog {
         
         HBox redSaTekstom = new HBox();
 
-        this.setHeaderText("Unesite tekst");
         unetiTekst = new TextField();
         unetiTekst.setPromptText("Unesite tekst");
         redSaTekstom.getChildren().add(unetiTekst);
@@ -181,7 +184,6 @@ public class AlfaNumerickaTastaturaController extends Dialog {
         
             HBox redSaTekstom = new HBox();
 
-            this.setHeaderText("Unesite tekst");
             unetiTekst = new TextField();
             unetiTekst.setPromptText("Unesite tekst");
             redSaTekstom.getChildren().add(unetiTekst);
@@ -196,96 +198,12 @@ public class AlfaNumerickaTastaturaController extends Dialog {
                         
             List<Button> svaSlova = new ArrayList<>();
             
-            char ch;
+            HBox redSaBrojevima = new HBox(3);
             
-            int brojac = 0;
-            
-            while (brojac < qwerty.length()) {
-                
-                
-                HBox redSaSlovima = new HBox();
+            redSaBrojevima.setPadding(new Insets(20, 0, 0, 0));
 
-                for(int i=1; i<14; i++) {
-                    ch = qwerty.charAt(brojac);     
-
-                    Button bSlovo = new Button(ch + "");
-                    bSlovo.setPrefSize(70,70);
-                    bSlovo.setOnAction(new EventHandler<ActionEvent>() {
-                                        @Override public void handle(ActionEvent e) {
-                                            try {
-                                                numberKeyPressed(e);
-                                            } catch (Exception ex) {
-                                            }
-                                        }
-                                    });
-
-                    redSaSlovima.getChildren().add(bSlovo);
-                    brojac++;
-                    
-                    svaSlova.add(bSlovo);
-                }
-                
-                vBoxTastatura.getChildren().add(redSaSlovima);
-
-            }
-
-            HBox redSaSpecijalnimKarakterima = new HBox();
-
-            for (char karakter : specijalniKarakteri) {
-                                
-                Button bSlovo = new Button(karakter + "");
-                    bSlovo.setPrefSize(70,70);
-                    bSlovo.setOnAction(new EventHandler<ActionEvent>() {
-                                        @Override public void handle(ActionEvent e) {
-                                            try {
-                                                numberKeyPressed(e);
-                                            } catch (Exception ex) {
-                                            }
-                                        }
-                                    });
-
-                    redSaSpecijalnimKarakterima.getChildren().add(bSlovo);
-                    
-                    svaSlova.add(bSlovo);
-            }
-            
-            Button bSpace = new Button("space");
-            bSpace.setPrefSize(350,70);
-            bSpace.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override public void handle(ActionEvent e) {
-                                    try {
-                                        spaceButtonPressed();
-                                    } catch (Exception ex) {
-                                    }
-                                }
-                            });
-            
-            redSaSpecijalnimKarakterima.getChildren().add(bSpace);
-
-            Button bBack = new Button("«");
-
-            bBack.setPrefSize(210,70);
-
-            bBack.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override public void handle(ActionEvent e) {
-                                    try {
-                                        backButton(e);
-                                    } catch (Exception ex) {
-                                    }
-                                }
-                            });
-            
-            redSaSpecijalnimKarakterima.getChildren().add(bBack);
-            
-
-            vBoxTastatura.getChildren().add(redSaSpecijalnimKarakterima);
-            
-            
-            HBox redSaBrojevima = new HBox();
-
-                for (int j=0; j<10; j++) {
-                
-                        
+                for (int j=1; j<10; j++) {
+ 
                     Button bBroj = new Button("" + j);
                     bBroj.setPrefSize(70,70);
                     bBroj.setOnAction(new EventHandler<ActionEvent>() {
@@ -300,8 +218,73 @@ public class AlfaNumerickaTastaturaController extends Dialog {
                     redSaBrojevima.getChildren().add(bBroj);
                 }
               
+            Button bBroj = new Button("0");
+                    bBroj.setPrefSize(70,70);
+                    bBroj.setOnAction(new EventHandler<ActionEvent>() {
+                                        @Override public void handle(ActionEvent e) {
+                                            try {
+                                                numberKeyPressed(e);
+                                            } catch (Exception ex) {
+                                            }
+                                        }
+                                    });
+
+            redSaBrojevima.getChildren().add(bBroj);
+                            
+            Button bBack = new Button("«");
+
+            bBack.setPrefSize(210,70);
+
+            bBack.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override public void handle(ActionEvent e) {
+                                    try {
+                                        backButton(e);
+                                    } catch (Exception ex) {
+                                    }
+                                }
+                            });
+            
+            redSaBrojevima.getChildren().add(bBack);
+                
+            vBoxTastatura.getChildren().add(redSaBrojevima);
+            
+            
+            char ch;
+            
+            int brojac = 0;
+            
+            HBox redQwerty = new HBox(3);
+            
+            redQwerty.setPadding(new Insets(0, 0, 0, 35));
+            
+            while (brojac < qwerty.length()) {
+
+                ch = qwerty.charAt(brojac);     
+
+                Button bSlovo = new Button(ch + "");
+                bSlovo.setPrefSize(70,70);
+                bSlovo.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override public void handle(ActionEvent e) {
+                                        try {
+                                            numberKeyPressed(e);
+                                        } catch (Exception ex) {
+                                        }
+                                    }
+                                });
+
+                redQwerty.getChildren().add(bSlovo);
+
+                svaSlova.add(bSlovo);
+                
+                brojac++;
+            }
+            
+            vBoxTastatura.getChildren().add(redQwerty);
+
+            HBox redAsdf = new HBox(3);
+
             Button capsLock = new Button("▲");
-            capsLock.setPrefSize(210,70);
+            capsLock.setPrefSize(70,70);
             capsLock.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override public void handle(ActionEvent e) {
                                     try {
@@ -311,9 +294,77 @@ public class AlfaNumerickaTastaturaController extends Dialog {
                                 }
                             });  
             
-            redSaBrojevima.getChildren().add(capsLock);
+            redAsdf.getChildren().add(capsLock);
    
-            vBoxTastatura.getChildren().add(redSaBrojevima);
+            brojac = 0;
+            
+            while (brojac < asdf.length()) {
+                
+                ch = asdf.charAt(brojac);     
+
+                Button bSlovo = new Button(ch + "");
+                bSlovo.setPrefSize(70,70);
+                bSlovo.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override public void handle(ActionEvent e) {
+                                        try {
+                                            numberKeyPressed(e);
+                                        } catch (Exception ex) {
+                                        }
+                                    }
+                                });
+
+                redAsdf.getChildren().add(bSlovo);
+
+                svaSlova.add(bSlovo);
+                
+                brojac++;
+            }
+
+            vBoxTastatura.getChildren().add(redAsdf);
+
+            HBox redZxcv = new HBox(3);
+
+            redZxcv.setPadding(new Insets(0, 0, 0, 35));
+
+            brojac = 0;
+            
+            while (brojac < zxcv.length()) {
+                
+                ch = zxcv.charAt(brojac);     
+
+                Button bSlovo = new Button(ch + "");
+                bSlovo.setPrefSize(70,70);
+                bSlovo.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override public void handle(ActionEvent e) {
+                                        try {
+                                            numberKeyPressed(e);
+                                        } catch (Exception ex) {
+                                        }
+                                    }
+                                });
+
+                redZxcv.getChildren().add(bSlovo);
+
+                svaSlova.add(bSlovo);
+                
+                brojac++;
+            }
+            
+            Button bSpace = new Button("space");
+            
+            bSpace.setPrefSize(210,70);
+            bSpace.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override public void handle(ActionEvent e) {
+                                    try {
+                                        spaceButtonPressed();
+                                    } catch (Exception ex) {
+                                    }
+                                }
+                            });
+            
+            redZxcv.getChildren().add(bSpace);
+            
+            vBoxTastatura.getChildren().add(redZxcv);
 
             return vBoxTastatura;
     }
