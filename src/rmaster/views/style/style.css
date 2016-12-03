@@ -398,7 +398,8 @@ and open the template in the editor.
 }
 
 #prikazRacunaGosta .table-view  {
-    -fx-background-color: -fx-tamno-crna;
+    -fx-background-color: -fx-siva;
+    -fx-border-width: 1, 1, 0, 1;
 }
 
 #prikazRacunaGosta .table-view .table-cell {
