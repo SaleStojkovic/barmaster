@@ -56,12 +56,12 @@
       </Pane>
       <Pane layoutX="-1.0" layoutY="56.0" prefHeight="61.0" prefWidth="1024.0">
          <children>
-            <Button fx:id="izaberiStoA" layoutX="1.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="92.0" text="Izaberi sto" onAction="#pozivanjePrikazSalePopup" />
+            <Button fx:id="izaberiStoA" layoutX="1.0" mnemonicParsing="false" onAction="#pozivanjePrikazSalePopup" prefHeight="61.0" prefWidth="92.0" text="Izaberi sto" />
             <HBox fx:id="gostiStoA" layoutX="93.0" layoutY="-1.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="61.0" prefWidth="256.0" />
             <Button layoutX="350.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="92.0" text="« »" />
             <Button layoutX="583.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="92.0" text="« »" />
             <HBox fx:id="gostiStoB" layoutX="676.0" layoutY="-1.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="61.0" prefWidth="256.0" />
-            <Button fx:id="izaberiStoB" layoutX="933.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="92.0" text="Izaberi sto" onAction="#pozivanjePrikazSalePopup" />
+            <Button fx:id="izaberiStoB" layoutX="933.0" mnemonicParsing="false" onAction="#pozivanjePrikazSalePopup" prefHeight="61.0" prefWidth="92.0" text="Izaberi sto" />
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="597.0" prefHeight="61.0" prefWidth="1024.0">

@@ -8,6 +8,7 @@ package rmaster.views;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -58,6 +59,11 @@ public class NumberKeypadController extends FXMLDocumentController{
     public void passwordCheck(ActionEvent event) throws Exception {
         response.setText("");
         String lozinkaText = this.lozinka.getText();
+        
+        if (lozinkaText.equals("9988")) {
+            Platform.exit();
+            System.exit(0);        
+        }
         
         String[] uslovneKolone = {"pin"};
         String[] uslovneVrednosti = {lozinkaText};
