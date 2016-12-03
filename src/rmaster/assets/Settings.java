@@ -75,4 +75,9 @@ public class Settings {
         // u Settings.conf stoji =yyyy-MM-dd_HH-mm-ss-S
         return prop.getProperty("fiscal.izvestaji.dnevniizvestaj.formatdatuma");
     }
+
+    public String getFormatDatuma() {
+        // u Settings.conf stoji =yyyy-MM-dd HH-mm-ss
+        return prop.getProperty("formatdatuma");
+    }
 }

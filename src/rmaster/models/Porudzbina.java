@@ -5,6 +5,7 @@
  */
 package rmaster.models;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import rmaster.assets.DBBroker;
+import rmaster.assets.Utils;
 
 /**
  *
@@ -71,7 +73,14 @@ public class Porudzbina {
         );
         for (Map<String, String> tura : tureJednogGosta) {
                 String turaId = tura.get("id");
-                Tura turaModel = new Tura(turaId);
+                String datum = tura.get("datum");
+                Date datumD = new Date();
+                try {
+                    datumD = Utils.getDateFromString(datum);
+                } catch (ParseException e) {
+                    System.out.println("Neuspela konverzija stringa u datum za vreme ture!");
+                }
+                Tura turaModel = new Tura(turaId, datumD);
                 this.turePorudzbine.add(turaModel);
         }
 
@@ -79,7 +88,7 @@ public class Porudzbina {
     }
     
     private void popuniPorudzbinuIzBaze() {
-        java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String[] uslovKolone = new String[1];
         uslovKolone[0] = "id";
         String[] uslovVrednosti = new String[1];
@@ -102,7 +111,11 @@ public class Porudzbina {
                     if (porudzbina.get("crnoPlacanje") != null)
                         this.crnoPlacanje = porudzbina.get("crnoPlacanje");
                     if (porudzbina.get("datum") != null)
-                        this.datum = dateFormat.parse(porudzbina.get("datum"));
+                        try {
+                            this.datum = Utils.getDateFromString(porudzbina.get("datum"));
+                        } catch (ParseException e) {
+                            System.out.println("Neuspelo pretvaranje stringa u datum za kreiranje porudzbine - datum!");
+                        }
                     if (porudzbina.get("fiskalniOdstampan") != null)
                         this.fiskalniOdstampan = Boolean.parseBoolean(porudzbina.get("fiskalniOdstampan"));
                     if (porudzbina.get("oznakaSobe") != null)
@@ -122,7 +135,11 @@ public class Porudzbina {
                     if (porudzbina.get("gost") != null)
                         this.gostInt = Integer.parseInt(porudzbina.get("gost"));
                     if (porudzbina.get("vremeIzdavanjaRacuna") != null)
-                        this.vremeIzdavanjaRacuna = dateFormat.parse(porudzbina.get("vremeIzdavanjaRacuna"));
+                        try {
+                            this.vremeIzdavanjaRacuna = Utils.getDateFromString(porudzbina.get("vremeIzdavanjaRacuna"));
+                        } catch (ParseException e) {
+                            System.out.println("Neuspelo pretvaranje stringa u datum za kreiranje porudzbine - vremeIzdavanjaRacuna!");
+                        }
                 }
                 } else {
                     System.out.println("Greska pri formiranju Porudzbine!");

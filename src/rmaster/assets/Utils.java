@@ -6,9 +6,11 @@
 package rmaster.assets;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 
 /**
  *
@@ -67,4 +69,26 @@ public class Utils {
         return String.format("%1$,.2f", doubleVrednost);
     }
 
+    public static Date getDateFromString(String datum) throws ParseException{
+        // Format datuma je dat u Settings.conf u parametru formatdatuma
+        java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(Settings.getInstance().getFormatDatuma());
+        return dateFormat.parse(datum);
+    }
+
+    public static String getStringFromDate(Date datum){
+        // Format datuma je dat u Settings.conf u parametru formatdatuma
+        java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(Settings.getInstance().getFormatDatuma());
+        return dateFormat.format(datum);
+    }
+
+    public static String getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+        long diffInMillies = date2.getTime() - date1.getTime();
+        //long vreme = timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
+        long diffSeconds = diffInMillies / 1000 % 60;;         
+        long diffMinutes = diffInMillies / (60 * 1000) % 60;         
+        long diffHours = diffInMillies / (60 * 60 * 1000);
+        return "" + (diffHours < 10 ? "0" + diffHours : diffHours)
+                + ":" + (diffMinutes < 10 ? "0" + diffMinutes : diffMinutes)
+                + ":" + (diffSeconds < 10 ? "0" + diffSeconds : diffSeconds);
+    }
 }

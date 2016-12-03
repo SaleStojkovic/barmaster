@@ -5,10 +5,13 @@
  */
 package rmaster.models;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import rmaster.assets.DBBroker;
+import rmaster.assets.Utils;
 
 /**
  *
@@ -20,13 +23,16 @@ public class Tura {
     public long turaID = 0;
     private long gostID = 0;
     public int redniBrojStavke = 0;
+    public Date datum = new Date();
     
     public Tura () {
     }
     public Tura (
-            String idTure
+            String idTure,
+            Date datum
     ) { 
         this.turaID = Integer.parseInt(idTure);
+        this.datum = datum;
         
         String[] imenaArgumenata = {"idTure"};
         String[] vrednostiArgumenata = {idTure};
@@ -121,9 +127,13 @@ public class Tura {
         return ++this.redniBrojStavke;
     }
     public Tura getClone(long turaID) {
-        Tura novaTura = new Tura("" + turaID);
+        Tura novaTura = new Tura("" + turaID, new Date());
         novaTura.turaID = 0;
         return novaTura;
+    }
+
+    public Date getVremeTure() {
+        return this.datum;
     }
 
 }

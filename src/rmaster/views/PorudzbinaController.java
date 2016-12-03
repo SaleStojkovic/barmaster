@@ -6,12 +6,15 @@
 package rmaster.views;
 
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -31,7 +34,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
-import rmaster.assets.Settings;
 import rmaster.assets.Stampac;
 import rmaster.assets.Utils;
 import rmaster.assets.items.ArtikalButton;
@@ -304,7 +306,10 @@ public class PorudzbinaController extends FXMLDocumentController {
             
             Button ponoviTuru = new Button();
             ponoviTuru.setPrefSize(287, 40);
-            ponoviTuru.setText("Ponovi Turu");
+            //DateTime vreme = new DateTime((new Date()).getTime());
+            //Period p = new Period(new DateTime(tura.getVremeTure()), vreme);
+            String period = Utils.getDateDiff(tura.getVremeTure(), new Date(), TimeUnit.MINUTES);
+            ponoviTuru.setText("Ponovi Turu (" + period + ")");
             ponoviTuru.setId("" + tura.getTuraID());
             ponoviTuru.setOnAction(new EventHandler<ActionEvent>() {
                             @Override public void handle(ActionEvent e) {
@@ -350,7 +355,13 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         for (Map<String, String> tura : tureJednogGosta) {
                 String turaId = tura.get("id");
-                Tura turaModel = new Tura(turaId);
+                Date datum = new Date();
+                try {
+                    datum = Utils.getDateFromString(tura.get("datum"));
+                } catch (ParseException e) {
+                    System.out.println("Neuspelo pretvaranje stringa u datum za ture jednog gosta!");
+                }
+                Tura turaModel = new Tura(turaId, datum);
                 
                 listTuraZaPrikazNaplate.add(turaModel);
                 
@@ -364,7 +375,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                 
                 Button ponoviTuru = new Button();
                 ponoviTuru.setPrefSize(287, 40);
-                ponoviTuru.setText("Ponovi Turu");
+                ponoviTuru.setText("Ponovi Turu (" + Utils.getDateDiff(turaModel.getVremeTure(), new Date(), TimeUnit.MINUTES) + ")");
                 ponoviTuru.setId(turaId);
                 ponoviTuru.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override public void handle(ActionEvent e) {
@@ -538,8 +549,18 @@ public class PorudzbinaController extends FXMLDocumentController {
 /***************************************************************/
     public void prikazArtikalIliGrupa(List rs, Pane gdePrikazati, VrsteGrupaIliArtikal staSePrikazuje) {
         try {
-            this.ArtikalPodgrupe.setPrefHeight(prikazPodgrupaBrojRedova * defaultVisinaDugmeta);
-            this.Artikal.setPrefHeight(prikazArtikalBrojRedova * defaultVisinaDugmeta);
+//                    if (staSePrikazuje == VrsteGrupaIliArtikal.POD_GRUPA && rs.isEmpty()) {
+//                        this.ArtikalPodgrupe.getChildren().clear();
+//                        this.ArtikalPodgrupe.setPrefHeight(0);
+//                        this.Artikal.setPrefHeight((prikazPodgrupaBrojRedova+prikazArtikalBrojRedova)*defaultVisinaDugmeta);
+//                    } else {
+//                        this.ArtikalPodgrupe.getChildren().clear();
+//                        this.ArtikalPodgrupe.setPrefHeight(prikazBrojRedova*defaultVisinaDugmeta);
+//                        this.Artikal.setPrefHeight(prikazArtikalBrojRedova*defaultVisinaDugmeta);
+//                    }
+            
+            //this.ArtikalPodgrupe.setPrefHeight(prikazPodgrupaBrojRedova * defaultVisinaDugmeta);
+            //this.Artikal.setPrefHeight(prikazArtikalBrojRedova * defaultVisinaDugmeta);
             switch(staSePrikazuje) {
                 case GLAVNA_GRUPA:
                     prikazRedniBrojPrvog = prikazGrupaRedniBrojPrvog;
@@ -550,17 +571,29 @@ public class PorudzbinaController extends FXMLDocumentController {
                 // Za podgrupu i opisne artikle
                 case POD_GRUPA:
                 case ARTIKAL_OPISNI:
+                    if (rs.isEmpty()) {
+                        prikazBrojPrikazanihPlus1 = 0;
+                        prikazBrojRedova = 0;
+                    } else {
+                        prikazBrojPrikazanihPlus1 = prikazPodgrupaBrojPrikazanihPlus1;
+                        prikazBrojRedova = prikazPodgrupaBrojRedova;
+                    }
+                    
                     prikazRedniBrojPrvog = prikazPodgrupaRedniBrojPrvog;
-                    prikazBrojPrikazanihPlus1 = prikazPodgrupaBrojPrikazanihPlus1;
-                    prikazBrojRedova = prikazPodgrupaBrojRedova;
                     stilArtikalIliGrupa = stilPodgrupa;
                     break;
                 // Za artikle i dodatne artikle
                 case ARTIKAL_DODATNI:
                 case ARTIKAL_GLAVNI:
+                    if (this.ArtikalPodgrupe.getPrefHeight() == 0) {
+                        prikazBrojRedova = prikazFavoriteBrojRedova;
+                        prikazBrojPrikazanihPlus1 = prikazFavoriteBrojPrikazanihPlus1;
+                    } else {
+                        prikazBrojRedova = prikazArtikalBrojRedova;
+                        prikazBrojPrikazanihPlus1 = prikazArtikalBrojPrikazanihPlus1;
+                    }
                     prikazRedniBrojPrvog = prikazArtikalRedniBrojPrvog;
-                    prikazBrojPrikazanihPlus1 = prikazArtikalBrojPrikazanihPlus1;
-                    prikazBrojRedova = prikazArtikalBrojRedova;
+                    //prikazBrojRedova = prikazArtikalBrojRedova;
                     stilArtikalIliGrupa = stilArtikal;
                     break;
                 case ARTIKAL_FAVORITE:
@@ -626,87 +659,89 @@ public class PorudzbinaController extends FXMLDocumentController {
                     break;
             }
             
-            int ostaloPraznihDugmica = this.prikazBrojPrikazanihPlus1 - 1 - rs.size();
-            while (ostaloPraznihDugmica>0) {
-                Button bPrazan = new Button();
-                bPrazan.getStyleClass().add(stilArtikliPrazanButton);
-                bPrazan.setDisable(true);
-                bPrazan.setPrefSize(artikalPodgrupaSirina, defaultVisinaDugmeta);
+            if (!rs.isEmpty()) {
+                int ostaloPraznihDugmica = this.prikazBrojPrikazanihPlus1 - 1 - rs.size();
+                while (ostaloPraznihDugmica>0) {
+                    Button bPrazan = new Button();
+                    bPrazan.getStyleClass().add(stilArtikliPrazanButton);
+                    bPrazan.setDisable(true);
+                    bPrazan.setPrefSize(artikalPodgrupaSirina, defaultVisinaDugmeta);
 
-                gdePrikazati.getChildren().add(bPrazan);
-                ostaloPraznihDugmica--;
-            }
-
-            Button bPrethodniArtikliIliGrupe = new Button("«");
-            bPrethodniArtikliIliGrupe.setPrefSize(artikalPodgrupaSirina/2, defaultVisinaDugmeta);
-            bPrethodniArtikliIliGrupe.getStyleClass().add(stilArtikalIliGrupa);
-            if (this.prikazRedniBrojPrvog==1)
-                bPrethodniArtikliIliGrupe.setDisable(true);
-            else {
-                bPrethodniArtikliIliGrupe.setDisable(false);
-                bPrethodniArtikliIliGrupe.getStyleClass().add(stilArtikliGrupeNextPrev);
-                    }
-            bPrethodniArtikliIliGrupe.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override public void handle(ActionEvent e) {
-                                    switch(staSePrikazuje) {
-                                        case GLAVNA_GRUPA:
-                                            prikazGrupaRedniBrojPrvog = prikazGrupaRedniBrojPrvog - prikazGrupaBrojPrikazanihPlus1 + 1;
-                                            break;
-                                        // Za podgrupu i opisne artikle
-                                        case POD_GRUPA:
-                                        case ARTIKAL_OPISNI:
-                                            prikazPodgrupaRedniBrojPrvog = prikazPodgrupaRedniBrojPrvog - prikazPodgrupaBrojPrikazanihPlus1 + 1;
-                                            break;
-                                        // Za artikle i dodatne artikle
-                                        case ARTIKAL_GLAVNI:
-                                        case ARTIKAL_DODATNI:
-                                            prikazArtikalRedniBrojPrvog = prikazArtikalRedniBrojPrvog - prikazArtikalBrojPrikazanihPlus1 + 1;
-                                            break;
-                                        case ARTIKAL_FAVORITE:
-                                            prikazFavoriteRedniBrojPrvog = prikazFavoriteRedniBrojPrvog - prikazFavoriteBrojPrikazanihPlus1 + 1;
-                                            break;
-                                        default:
+                    gdePrikazati.getChildren().add(bPrazan);
+                    ostaloPraznihDugmica--;
+                }
+            
+                Button bPrethodniArtikliIliGrupe = new Button("«");
+                bPrethodniArtikliIliGrupe.setPrefSize(artikalPodgrupaSirina/2, defaultVisinaDugmeta);
+                bPrethodniArtikliIliGrupe.getStyleClass().add(stilArtikalIliGrupa);
+                if (this.prikazRedniBrojPrvog==1)
+                    bPrethodniArtikliIliGrupe.setDisable(true);
+                else {
+                    bPrethodniArtikliIliGrupe.setDisable(false);
+                    bPrethodniArtikliIliGrupe.getStyleClass().add(stilArtikliGrupeNextPrev);
+                        }
+                bPrethodniArtikliIliGrupe.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override public void handle(ActionEvent e) {
+                                        switch(staSePrikazuje) {
+                                            case GLAVNA_GRUPA:
+                                                prikazGrupaRedniBrojPrvog = prikazGrupaRedniBrojPrvog - prikazGrupaBrojPrikazanihPlus1 + 1;
+                                                break;
+                                            // Za podgrupu i opisne artikle
+                                            case POD_GRUPA:
+                                            case ARTIKAL_OPISNI:
+                                                prikazPodgrupaRedniBrojPrvog = prikazPodgrupaRedniBrojPrvog - prikazPodgrupaBrojPrikazanihPlus1 + 1;
+                                                break;
+                                            // Za artikle i dodatne artikle
+                                            case ARTIKAL_GLAVNI:
+                                            case ARTIKAL_DODATNI:
+                                                prikazArtikalRedniBrojPrvog = prikazArtikalRedniBrojPrvog - prikazArtikalBrojPrikazanihPlus1 + 1;
+                                                break;
+                                            case ARTIKAL_FAVORITE:
+                                                prikazFavoriteRedniBrojPrvog = prikazFavoriteRedniBrojPrvog - prikazFavoriteBrojPrikazanihPlus1 + 1;
+                                                break;
+                                            default:
+                                        }
+                                        refreshGrupeIliArtikla(gdePrikazati, staSePrikazuje);
                                     }
-                                    refreshGrupeIliArtikla(gdePrikazati, staSePrikazuje);
-                                }
-                            });
-            gdePrikazati.getChildren().add(bPrethodniArtikliIliGrupe);
+                                });
+                gdePrikazati.getChildren().add(bPrethodniArtikliIliGrupe);
 
-            sirina = roditeljSirina - (prikazBrojArtikalaUJednomRedu-1)*artikalPodgrupaSirina - artikalPodgrupaSirina/2;
-            Button bSledeciArtikliIliGrupe = new Button("»");
-            bSledeciArtikliIliGrupe.setPrefSize(sirina, defaultVisinaDugmeta);
-            bSledeciArtikliIliGrupe.getStyleClass().add(stilArtikalIliGrupa);
-            if (this.prikazBrojPrikazanihPlus1 == rs.size()) {
-                bSledeciArtikliIliGrupe.setDisable(false);
-                bSledeciArtikliIliGrupe.getStyleClass().add(stilArtikliGrupeNextPrev);
-            }
-            else
-                bSledeciArtikliIliGrupe.setDisable(true);
-            bSledeciArtikliIliGrupe.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override public void handle(ActionEvent e) {
-                                    switch(staSePrikazuje) {
-                                        case GLAVNA_GRUPA:
-                                            prikazGrupaRedniBrojPrvog = prikazGrupaRedniBrojPrvog + prikazGrupaBrojPrikazanihPlus1 - 1;
-                                            break;
-                                        // Za podgrupu i opisne artikle
-                                        case POD_GRUPA:
-                                        case ARTIKAL_OPISNI:
-                                            prikazPodgrupaRedniBrojPrvog = prikazPodgrupaRedniBrojPrvog + prikazPodgrupaBrojPrikazanihPlus1 - 1;
-                                            break;
-                                        // Za artikle i dodatne artikle
-                                        case ARTIKAL_GLAVNI:
-                                        case ARTIKAL_DODATNI:
-                                            prikazArtikalRedniBrojPrvog = prikazArtikalRedniBrojPrvog + prikazArtikalBrojPrikazanihPlus1 - 1;
-                                            break;
-                                        case ARTIKAL_FAVORITE:
-                                            prikazFavoriteRedniBrojPrvog = prikazFavoriteRedniBrojPrvog + prikazFavoriteBrojPrikazanihPlus1 - 1;
-                                            break;
-                                        default:
+                sirina = roditeljSirina - (prikazBrojArtikalaUJednomRedu-1)*artikalPodgrupaSirina - artikalPodgrupaSirina/2;
+                Button bSledeciArtikliIliGrupe = new Button("»");
+                bSledeciArtikliIliGrupe.setPrefSize(sirina, defaultVisinaDugmeta);
+                bSledeciArtikliIliGrupe.getStyleClass().add(stilArtikalIliGrupa);
+                if (this.prikazBrojPrikazanihPlus1 == rs.size()) {
+                    bSledeciArtikliIliGrupe.setDisable(false);
+                    bSledeciArtikliIliGrupe.getStyleClass().add(stilArtikliGrupeNextPrev);
+                }
+                else
+                    bSledeciArtikliIliGrupe.setDisable(true);
+                bSledeciArtikliIliGrupe.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override public void handle(ActionEvent e) {
+                                        switch(staSePrikazuje) {
+                                            case GLAVNA_GRUPA:
+                                                prikazGrupaRedniBrojPrvog = prikazGrupaRedniBrojPrvog + prikazGrupaBrojPrikazanihPlus1 - 1;
+                                                break;
+                                            // Za podgrupu i opisne artikle
+                                            case POD_GRUPA:
+                                            case ARTIKAL_OPISNI:
+                                                prikazPodgrupaRedniBrojPrvog = prikazPodgrupaRedniBrojPrvog + prikazPodgrupaBrojPrikazanihPlus1 - 1;
+                                                break;
+                                            // Za artikle i dodatne artikle
+                                            case ARTIKAL_GLAVNI:
+                                            case ARTIKAL_DODATNI:
+                                                prikazArtikalRedniBrojPrvog = prikazArtikalRedniBrojPrvog + prikazArtikalBrojPrikazanihPlus1 - 1;
+                                                break;
+                                            case ARTIKAL_FAVORITE:
+                                                prikazFavoriteRedniBrojPrvog = prikazFavoriteRedniBrojPrvog + prikazFavoriteBrojPrikazanihPlus1 - 1;
+                                                break;
+                                            default:
+                                        }
+                                        refreshGrupeIliArtikla(gdePrikazati, staSePrikazuje);
                                     }
-                                    refreshGrupeIliArtikla(gdePrikazati, staSePrikazuje);
-                                }
-                            });
-            gdePrikazati.getChildren().add(bSledeciArtikliIliGrupe);
+                                });
+                gdePrikazati.getChildren().add(bSledeciArtikliIliGrupe);
+            }
         } catch (Exception e) {
             System.out.println("Greska u prikazu artikala!");
         } 
