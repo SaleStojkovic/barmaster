@@ -318,9 +318,9 @@ and open the template in the editor.
 }
 
 #sekcijaNaplata .label {
-    -fx-text-fill: white;
+    -fx-text-fill: -fx-zuta;
     -fx-font-family: KlavikaBold; 
-    -fx-font-size: 16px;
+    -fx-font-size: 20px;
 }
 
 #favorites {
