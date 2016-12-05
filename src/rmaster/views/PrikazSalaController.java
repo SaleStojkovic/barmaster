@@ -315,7 +315,8 @@ public class PrikazSalaController extends FXMLDocumentController {
                     b.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override public void handle(ActionEvent e) {
                                             Button b = (Button)e.getSource();
-                                            RMaster.izabraniSto = b.getId();
+                                            RMaster.izabraniStoID = b.getId();
+                                            RMaster.izabraniStoBroj = Integer.parseInt(b.getText());
                                               prikaziFormu(
                                                       newData,
                                                       "porudzbina", 
@@ -384,7 +385,7 @@ public class PrikazSalaController extends FXMLDocumentController {
     
     public void brzaNaplata(ActionEvent event){
         Map<String, String> newData = new HashMap<>();
-        RMaster.izabraniSto = "0";
+        RMaster.izabraniStoID = "0";
         prikaziFormu(
                 newData,
                 ScreenMap.PORUDZBINA, 
