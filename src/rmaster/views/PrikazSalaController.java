@@ -184,6 +184,13 @@ public class PrikazSalaController extends FXMLDocumentController {
                 hBoxDugmiciSaSalama.getChildren().add(newButton);
             }
             prikaziStolove();
+            
+            prikaziDodatneSale.setVisible(false);
+
+            if (listSale.size() > 7) {
+                prikaziDodatneSale.setVisible(true);
+            }
+            
         } catch (Exception e) {
             System.out.println("Greska u prikazu sale! - " + e.toString());
         }
