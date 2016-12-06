@@ -1324,6 +1324,13 @@ public class PorudzbinaController extends FXMLDocumentController {
         //porudzbinaTrenutna.zatvoriRacun();
         porudzbinaTrenutna.snimi();
         // TODO: Otvoriti formu za naplatu
+        Map<String, String> newData = new HashMap<>();
+        prikaziFormu(
+                newData,
+                ScreenMap.NAPLATA,
+                true, 
+                (Node)event.getSource()
+        );    
     }
 
     public void medjuzbir(ActionEvent event) {

@@ -32,4 +32,6 @@ public class ScreenMap {
     public static String REZERVACIJE = "rezervacije";
     
    public static String SASTAVLJANJE_RASTAVLJANJE = "sastavljanjeRastavljanje";
+   
+   public static String NAPLATA = "naplata";
 }
