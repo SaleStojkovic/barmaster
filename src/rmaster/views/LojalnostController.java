@@ -6,7 +6,6 @@
 package rmaster.views;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -19,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
 
 /**
@@ -36,7 +36,7 @@ public class LojalnostController extends FXMLDocumentController {
     private Label imeKonobara;
     
     @FXML
-    private HBox  lojalnostSlova;
+    private VBox  lojalnostSlova;
     
     @FXML
     private ScrollPane lojalnostScrollPane;
@@ -45,6 +45,11 @@ public class LojalnostController extends FXMLDocumentController {
     private TableView<Map<String, String>> tabelaLojalnost = new TableView();
     
     public int[] sirineKolone = {50, 50, 50, 50, 50, 50, 50};
+    
+    public String prviRed = "ABCDEFGHIJKLM12345";
+    
+    public String drugiRed = "NOPQRSTUVWXYZ67890";
+
     /**
      * Initializes the controller class.
      */
@@ -53,21 +58,46 @@ public class LojalnostController extends FXMLDocumentController {
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
         this.imeKonobara.setText(ulogovaniKonobar.imeKonobara);
-        //dodaje dugmice jer me mrzi da pravim 26 dugmeta... :P
-        for(char alphabet = 'A'; alphabet <= 'Z';alphabet++) {
-           
+
+        HBox prviRedBox = new HBox();
+        
+        for(char ch : prviRed.toCharArray()) {
+            
             Button novoDugme = new Button();
             
-            novoDugme.setId(alphabet + "");
-            novoDugme.setPrefSize(39.3, 50);
-            novoDugme.setText(alphabet + "");
+            novoDugme.setId(ch + "");
+            novoDugme.setPrefSize(56, 50);
+            novoDugme.setText(ch + "");
             novoDugme.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {
                                         //TODO
                                     }
                                 });
-            lojalnostSlova.getChildren().add(novoDugme);
+            prviRedBox.getChildren().add(novoDugme);
         }
+        
+        lojalnostSlova.getChildren().add(prviRedBox);
+        
+        HBox drugiRedBox = new HBox();
+
+                
+        for(char ch : drugiRed.toCharArray()) {
+           
+            Button novoDugme = new Button();
+            
+            novoDugme.setId(ch + "");
+            novoDugme.setPrefSize(56, 50);
+            novoDugme.setText(ch + "");
+            novoDugme.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override public void handle(ActionEvent e) {
+                                        //TODO
+                                    }
+                                });
+            drugiRedBox.getChildren().add(novoDugme);
+        }
+        
+        lojalnostSlova.getChildren().add(drugiRedBox);
+
         
         tabelaLojalnost = tableHelper.formatirajTabelu(
                 tabelaLojalnost, 

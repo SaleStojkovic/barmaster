@@ -8,11 +8,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="lojalnostGlavni" maxHeight="768.0" maxWidth="1024.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.LojalnostController">
    <children>
-      <ScrollPane fx:id="lojalnostScrollPane" layoutX="1.0" layoutY="191.0" prefHeight="472.0" prefWidth="1023.0" />
-      <HBox fx:id="lojalnostSlova" layoutY="138.0" prefHeight="50.0" prefWidth="1024.0" />
+      <ScrollPane fx:id="lojalnostScrollPane" layoutX="1.0" layoutY="249.0" prefHeight="412.0" prefWidth="1023.0" />
       <Pane fx:id="lojalnostFooter" layoutX="-7.0" layoutY="663.0" prefHeight="103.0" prefWidth="1024.0">
          <children>
             <Button layoutX="898.0" mnemonicParsing="false" prefHeight="103.0" prefWidth="133.0" text="Potvrdi ✓" />
@@ -54,5 +54,6 @@
             <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="204.8" text="Vaučeri" />
             <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="204.8" text="Kompanije" />
          </children></HBox>
+      <VBox fx:id="lojalnostSlova" layoutX="7.0" layoutY="141.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="103.0" prefWidth="1008.0" />
    </children>
 </AnchorPane>

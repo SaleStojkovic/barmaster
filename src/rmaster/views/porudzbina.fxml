@@ -50,7 +50,6 @@
                        
                          </Pane>
                          <Button fx:id="favorites" layoutX="830.0" layoutY="0.0" mnemonicParsing="false" onAction="#prikaziArtikleFavorite" text="❤" />
-                         <Button fx:id="odjava" layoutX="899.0" mnemonicParsing="false" onAction="#odjava" prefHeight="46.0" prefWidth="126.0" text="Odjava" />
                         
                      </children>
                   </Pane>

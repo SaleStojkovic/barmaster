@@ -1180,12 +1180,12 @@ public class PorudzbinaController extends FXMLDocumentController {
             total += Utils.getDoubleFromString(red.get("cena"));
         }
 
-        double popust = porudzbinaTrenutna.getGost().getProcenatPopusta();
-        double naplata = total * (100 - popust) / 100;
+        //double popust = porudzbinaTrenutna.getGost().getProcenatPopusta();
+        //double naplata = total * (100 - popust) / 100;
 
         this.total.setText(Utils.getStringFromDouble(total));
-        this.popust.setText(Utils.getStringFromDouble(popust) + "%");
-        this.naplata.setText(Utils.getStringFromDouble(naplata));
+        //this.popust.setText(Utils.getStringFromDouble(popust) + "%");
+        //this.naplata.setText(Utils.getStringFromDouble(naplata));
     }
     
     public void dodajNovogGosta(ActionEvent event) {
@@ -1335,6 +1335,13 @@ public class PorudzbinaController extends FXMLDocumentController {
         //porudzbinaTrenutna.oslobodiSto();
         porudzbinaTrenutna.snimi();
         // TODO: Otvoriti formu za naplatu
+        Map<String, String> newData = new HashMap<>();
+        prikaziFormu(
+                newData,
+                ScreenMap.NAPLATA,
+                true, 
+                (Node)event.getSource()
+        );    
     }
 
     public void medjuzbir(ActionEvent event) {
