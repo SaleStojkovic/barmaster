@@ -723,7 +723,7 @@ public final class DBBroker {
             dbConnection = poveziSaBazom();
             cStmt = dbConnection.prepareCall("{CALL getPorudzbineStolaIKonobara(?,?)}");
             cStmt.setLong("konobarID", rmaster.RMaster.ulogovaniKonobar.konobarID);
-            cStmt.setString("stoID", rmaster.RMaster.izabraniSto);
+            cStmt.setString("stoID", rmaster.RMaster.izabraniStoID);
             cStmt.execute();
             rs = cStmt.getResultSet();
             
@@ -786,7 +786,7 @@ public final class DBBroker {
             dbConnection = poveziSaBazom();
             cStmt = dbConnection.prepareCall("{CALL getPorudzbinaGosta(?,?,?)}");
             cStmt.setLong("konobarID", rmaster.RMaster.ulogovaniKonobar.konobarID);
-            cStmt.setString("stoID", rmaster.RMaster.izabraniSto);
+            cStmt.setString("stoID", rmaster.RMaster.izabraniStoID);
             cStmt.setString("brojGosta", brojGosta);
             cStmt.execute();
             rs = cStmt.getResultSet();
@@ -870,5 +870,31 @@ public final class DBBroker {
         
         return null;
     }
+
+    /**
+     * 
+     * @param noviKonobarID
+     * @param stolovi
+     * @return 
+     */
+    public void oslobodiSto(
+            long RacunID, 
+            int stoBroj) 
+    {
+        Connection dbConnection;
+        CallableStatement cStmt;
+        
+        try {
+            dbConnection = poveziSaBazom();
+            cStmt = dbConnection.prepareCall("{CALL zatvoriRacun(?,?)}");
+            cStmt.setLong("RacunID", RacunID);
+            cStmt.setInt("stoBroj", stoBroj);
+            cStmt.execute();
+            prekiniVezuSaBazom(dbConnection);
+        } catch (Exception e) {
+            System.out.println("Store procedure \"promeniKonobaraZaStolove\" exec error! - " + e.toString());
+        }
+    }
+    
     
 }
