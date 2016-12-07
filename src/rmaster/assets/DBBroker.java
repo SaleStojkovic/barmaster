@@ -329,6 +329,7 @@ public final class DBBroker {
         }
     }
      
+    
     /**
      * 
      * @param imeTabele
@@ -337,7 +338,7 @@ public final class DBBroker {
      * @return
      * @throws Exception 
      */
-    public List vratiKoloneIzTabele(
+    public List vratiSveIzTabeleUzUslov(
             String imeTabele,
             String[] uslovneKolone,
             String[] uslovneVrednosti
@@ -356,6 +357,84 @@ public final class DBBroker {
         }
         
         selectQuery += uslovneKolone[brojKolona-1] + " = '" + uslovneVrednosti[brojKolona-1] + "';";
+        
+        try {
+            dbConnection = poveziSaBazom();
+            
+            selectStatement = dbConnection.createStatement();
+ 
+            setRezultata = selectStatement.executeQuery(selectQuery);
+ 
+            listaRezultata = this.prebaciUListu(setRezultata);
+            
+        } catch (SQLException e) {
+ 
+            System.out.println(e.getMessage());
+ 
+        } finally {
+            
+            if (setRezultata != null) {
+                try { setRezultata.close(); } catch (SQLException ignore) {}
+            }
+            
+            if (selectStatement != null) {
+                try { selectStatement.close(); } catch (SQLException ignore) {}
+            }
+            
+            if (dbConnection != null) {
+                try { dbConnection.close(); } catch (SQLException ignore) {}
+            }
+            
+            
+        } 
+ 
+         
+        return listaRezultata; 
+    }
+    
+    /**
+     * 
+     * @param imeTabele
+     * @param naziviKolona
+     * @param uslovneKolone
+     * @param uslovneVrednosti
+     * @return
+     * @throws Exception 
+     */
+    public List vratiKoloneIzTabele(
+            String imeTabele,
+            String[] naziviKolona,
+            String[] uslovneKolone,
+            String[] uslovneVrednosti
+    ) throws Exception {
+        Connection dbConnection = null;
+        Statement selectStatement = null;
+        ResultSet setRezultata = null;
+        List listaRezultata = null;
+         
+        
+        String selectQuery = "SELECT ";
+              
+        for (int j = 0; j < naziviKolona.length - 1; j++) {
+            selectQuery += naziviKolona[j] + ", ";
+        }
+        
+        selectQuery = selectQuery.substring(0, selectQuery.length() - 1);
+        
+        selectQuery += naziviKolona[naziviKolona.length - 1] + " FROM " + imeTabele; 
+                 
+        if (uslovneKolone.length > 0) {
+            
+            selectQuery += " WHERE ";
+            
+            for (int i = 0; i < uslovneKolone.length - 1; i++) {
+                selectQuery += uslovneKolone[i] + " = '" + uslovneVrednosti[i] + "' AND "; 
+            }
+
+            selectQuery += uslovneKolone[uslovneKolone.length - 1] + " = '" + uslovneVrednosti[uslovneKolone.length - 1] + "'";
+        }
+        
+        selectQuery += ";";
         
         try {
             dbConnection = poveziSaBazom();
@@ -739,7 +818,7 @@ public final class DBBroker {
         String[] uslovneKolone = {"pass"};
         String[] uslovneVrednosti = {lozinkaText};
         
-        List rezultat = this.vratiKoloneIzTabele(
+        List rezultat = this.vratiSveIzTabeleUzUslov(
                 "login", 
                 uslovneKolone, 
                 uslovneVrednosti
@@ -777,7 +856,7 @@ public final class DBBroker {
         String[] uslovneKolone = {"pin"};
         String[] uslovneVrednosti = {lozinkaText};
         
-        List rezultat = this.vratiKoloneIzTabele(
+        List rezultat = this.vratiSveIzTabeleUzUslov(
                 "konobar", 
                 uslovneKolone, 
                 uslovneVrednosti

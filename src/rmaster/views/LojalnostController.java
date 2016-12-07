@@ -6,6 +6,8 @@
 package rmaster.views;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -20,6 +22,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.models.StalniGost;
 
 /**
  * FXML Controller class
@@ -44,7 +47,7 @@ public class LojalnostController extends FXMLDocumentController {
     @FXML
     private TableView<Map<String, String>> tabelaLojalnost = new TableView();
     
-    public int[] sirineKolone = {50, 50, 50, 50, 50, 50, 50};
+    public int[] sirineKolone = {0, 100, 100};
     
     public String prviRed = "ABCDEFGHIJKLM12345";
     
@@ -116,7 +119,27 @@ public class LojalnostController extends FXMLDocumentController {
     
     public List<Map<String, String>> getStalniGosti() {
         
-        List<Map<String, String>> listaStalnihGostiju = this.vratiSveIzTabele("stalnigost");
+        String[] kolone = {StalniGost.PRIMARY_KEY, StalniGost.NAZIV, StalniGost.POPUST};
+        
+        String[] uslovneKolone = {};
+        
+        String[] uslovneVrednosti = {};
+        
+        List<Map<String, String>> listaRezultata = this.vratiKoloneIzTabele(
+                StalniGost.TABLE_NAME, 
+                kolone, 
+                uslovneKolone, 
+                uslovneVrednosti
+        );
+        
+        List<Map<String, String>> listaStalnihGostiju = new ArrayList<>();
+        
+        for (Map mapStalniGost : listaRezultata) {
+            StalniGost noviStalniGost = new StalniGost();
+            noviStalniGost.makeFromHashMap((HashMap)mapStalniGost);
+            
+            listaStalnihGostiju.add(noviStalniGost.makeMapForTableOutput());
+        }
               
         return listaStalnihGostiju;
     }

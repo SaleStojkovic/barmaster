@@ -457,7 +457,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         String[] uslovneKolone = {"id"};
         String[] uslovneVrednosti = {rmaster.RMaster.izabraniSto};
         
-        List<Map<String, String>> resultList = vratiKoloneIzTabele(
+        List<Map<String, String>> resultList = vratiSveIzTabeleUzUslov(
                 "stonaziv", 
                 uslovneKolone, 
                 uslovneVrednosti

@@ -48,7 +48,7 @@ public class ConfirmFormController extends FXMLDocumentController {
         String[] uslovneKolone = {"pin"};
         String[] uslovneVrednosti = {lozinkaText};
         
-        List rezultat = vratiKoloneIzTabele(
+        List rezultat = vratiSveIzTabeleUzUslov(
                 "konobar", 
                 uslovneKolone, 
                 uslovneVrednosti

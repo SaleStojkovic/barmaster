@@ -94,7 +94,7 @@ public class Porudzbina {
         String[] uslovVrednosti = new String[1];
         uslovVrednosti[0] = "" + this.racunID;
         try {
-            List podaci = new DBBroker().vratiKoloneIzTabele("racun", uslovKolone, uslovVrednosti);
+            List podaci = new DBBroker().vratiSveIzTabeleUzUslov("racun", uslovKolone, uslovVrednosti);
             if (!podaci.isEmpty()) {
                 Map<String,String>  porudzbina = (Map<String, String>)podaci.get(0);
                 if (porudzbina != null) {
