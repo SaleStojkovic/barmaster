@@ -20,6 +20,9 @@ public class StalniGost extends ModelBase {
     
     public static String POPUST = "popust";
     public static String NAZIV = "naziv";
+    public static String SIFRA = "sifra";
+    public static String BLOKIRAN = "blokiran";
+    public static String GRUPA_ID = "GRUPA_ID";
     
     public String idStalniGost;
     public String popust;

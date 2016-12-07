@@ -397,6 +397,8 @@ public final class DBBroker {
      * @param imeTabele
      * @param naziviKolona
      * @param uslovneKolone
+     * @param kriterijumi
+     * @param operatori
      * @param uslovneVrednosti
      * @return
      * @throws Exception 
@@ -405,6 +407,8 @@ public final class DBBroker {
             String imeTabele,
             String[] naziviKolona,
             String[] uslovneKolone,
+            String[] kriterijumi,
+            String[] operatori,
             String[] uslovneVrednosti
     ) throws Exception {
         Connection dbConnection = null;
@@ -413,7 +417,7 @@ public final class DBBroker {
         List listaRezultata = null;
          
         
-        String selectQuery = "SELECT ";
+        String selectQuery = "SELECT  ";
               
         for (int j = 0; j < naziviKolona.length - 1; j++) {
             selectQuery += naziviKolona[j] + ", ";
@@ -421,18 +425,36 @@ public final class DBBroker {
         
         selectQuery = selectQuery.substring(0, selectQuery.length() - 1);
         
-        selectQuery += naziviKolona[naziviKolona.length - 1] + " FROM " + imeTabele; 
+        selectQuery += naziviKolona[naziviKolona.length - 1] 
+                + " FROM " 
+                + imeTabele; 
                  
-        if (uslovneKolone.length > 0) {
+        if (uslovneKolone.length > 1) {
             
             selectQuery += " WHERE ";
             
             for (int i = 0; i < uslovneKolone.length - 1; i++) {
-                selectQuery += uslovneKolone[i] + " = '" + uslovneVrednosti[i] + "' AND "; 
+                
+                selectQuery += uslovneKolone[i] 
+                        + kriterijumi[i] 
+                        + uslovneVrednosti[i] 
+                        + operatori[i]; 
             }
 
-            selectQuery += uslovneKolone[uslovneKolone.length - 1] + " = '" + uslovneVrednosti[uslovneKolone.length - 1] + "'";
+            selectQuery += uslovneKolone[uslovneKolone.length - 1] 
+                    + kriterijumi[kriterijumi.length - 1] 
+                    + uslovneVrednosti[uslovneKolone.length - 1] + "'";
         }
+        
+        if (uslovneKolone.length == 1) {
+            selectQuery += " WHERE ";
+            
+            selectQuery += uslovneKolone[0] 
+                    + kriterijumi[0] 
+                    + uslovneVrednosti[0] 
+                    + "' "; 
+        }
+        
         
         selectQuery += ";";
         
@@ -452,15 +474,21 @@ public final class DBBroker {
         } finally {
             
             if (setRezultata != null) {
-                try { setRezultata.close(); } catch (SQLException ignore) {}
+                try { setRezultata.close(); } catch (SQLException ignore) {
+                    System.err.println(ignore);
+                }
             }
             
             if (selectStatement != null) {
-                try { selectStatement.close(); } catch (SQLException ignore) {}
+                try { selectStatement.close(); } catch (SQLException ignore) {
+                    System.err.println(ignore);
+                }
             }
             
             if (dbConnection != null) {
-                try { dbConnection.close(); } catch (SQLException ignore) {}
+                try { dbConnection.close(); } catch (SQLException ignore) {   
+                    System.err.println(ignore);
+                }
             }
             
             
@@ -518,6 +546,94 @@ public final class DBBroker {
         return listaRezultata; 
     }
     
+    
+    public List runQuery(QueryBuilder query) 
+    {
+        Connection dbConnection = null;
+        Statement selectStatement = null;
+        ResultSet setRezultata = null;
+        List listaRezultata = null;
+         
+        
+        String selectQuery = "SELECT *";
+        
+        if (query.SELECT_COLUMNS != null) {
+        
+            selectQuery = selectQuery.substring(0, selectQuery.length() - 1);
+            
+            for (int j = 0; j < query.SELECT_COLUMNS.length - 1; j++) {
+                selectQuery += query.SELECT_COLUMNS[j] + ", ";
+            }
+
+            selectQuery += query.SELECT_COLUMNS[query.SELECT_COLUMNS.length - 1];
+        }
+        
+        selectQuery += " FROM " + query.TABLE_NAME; 
+                 
+        
+        if (query.CRITERIA_COLUMNS != null ) {
+        
+            if (query.CRITERIA_COLUMNS.length > 1) {
+
+                selectQuery += " WHERE ";
+
+                for (int i = 0; i < query.CRITERIA_COLUMNS.length - 1; i++) {
+
+                    selectQuery += query.CRITERIA_COLUMNS[i] 
+                            + query.CRITERIA[i] 
+                            + query.CRITERIA_VALUES[i] 
+                            + query.OPERATORS[i]; 
+                }
+
+                selectQuery += query.CRITERIA_COLUMNS[query.CRITERIA_COLUMNS.length - 1] 
+                        + query.CRITERIA[query.CRITERIA.length - 1] 
+                        + query.CRITERIA_VALUES[query.CRITERIA_COLUMNS.length - 1] + "'";
+            }
+
+            if (query.CRITERIA_COLUMNS.length == 1) {
+                selectQuery += " WHERE ";
+
+                selectQuery += query.CRITERIA_COLUMNS[0] 
+                        + query.CRITERIA[0] 
+                        + query.CRITERIA_VALUES[0] 
+                        + "' "; 
+            }
+        }
+        
+        selectQuery += ";";
+        
+        try {
+            dbConnection = poveziSaBazom();
+            
+            selectStatement = dbConnection.createStatement();
+ 
+            setRezultata = selectStatement.executeQuery(selectQuery);
+ 
+            listaRezultata = prebaciUListu(setRezultata);
+        
+        } catch (SQLException e) {
+ 
+            System.out.println(e.getMessage());
+ 
+        } finally {
+            
+            if (setRezultata != null) {
+                try { setRezultata.close(); } catch (SQLException ignore) {}
+            }
+            
+            if (selectStatement != null) {
+                try { selectStatement.close(); } catch (SQLException ignore) {}
+            }
+            
+            if (dbConnection != null) {
+                try { dbConnection.close(); } catch (SQLException ignore) {}
+            }
+            
+           
+        }
+ 
+        return listaRezultata; 
+    }
     
     /**
      * 

@@ -33,6 +33,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.QueryBuilder;
 import rmaster.assets.ScreenMap;
 import rmaster.models.Rezervacija;
 
@@ -163,7 +164,11 @@ public class RezervacijeController extends FXMLDocumentController {
     
     
     public List<Map<String, String>> getRezervacije() {
-        List<HashMap<String,String>> listaRezervacija = DBBroker.vratiSveIzTabele("rezervacija"); 
+        
+        QueryBuilder query = new QueryBuilder();
+        query.setTableName(Rezervacija.TABLE_NAME);
+        
+        List<HashMap<String,String>> listaRezervacija = runQuery(query);
         List<Map<String, String>> listaZaPrikaz = new ArrayList<>(); 
         
         for(HashMap<String, String> rezervacijaMapa : listaRezervacija) {

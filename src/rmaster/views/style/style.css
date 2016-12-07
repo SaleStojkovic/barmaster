@@ -687,15 +687,6 @@ and open the template in the editor.
     -fx-font-size: 18; 
 }
 
-#lojalnostAkcije *.button {
-    -fx-background-color: -fx-tamno-crna;
-    -fx-font-family: KlavikaBold;
-    -fx-text-fill: white;
-    -fx-border-color: -fx-siva;
-    -fx-border-width: 0.5;
-    -fx-font-size: 16; 
-}
-
 #lojalnostScrollPane > .viewport {
     -fx-background-color: transparent;
 }
@@ -715,8 +706,7 @@ and open the template in the editor.
     -fx-border-color: -fx-siva;
     -fx-border-width: 0.5;
 }
-
-#lojalnostAkcije *.button,
+#lojalnostGostiGrupe *.button,
 #lojalnostFooter *.button {
     -fx-background-color: -fx-tamno-crna;
     -fx-font-family: KlavikaBold;

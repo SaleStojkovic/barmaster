@@ -46,14 +46,7 @@
             <Label fx:id="imeKonobara" layoutX="435.0" layoutY="13.0" prefHeight="29.0" prefWidth="127.0" />
          </children>
       </Pane>
-      <HBox fx:id="lojalnostAkcije" layoutY="64.0" prefHeight="74.0" prefWidth="1024.0">
-         <children>
-            <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="204.8" text="Osoba" />
-            <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="204.8" text="Na račun kuće" />
-            <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="204.8" text="Besplatan obrok" />
-            <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="204.8" text="Vaučeri" />
-            <Button mnemonicParsing="false" prefHeight="77.0" prefWidth="204.8" text="Kompanije" />
-         </children></HBox>
+      <HBox fx:id="lojalnostGostiGrupe" layoutY="64.0" prefHeight="74.0" prefWidth="1024.0" />
       <VBox fx:id="lojalnostSlova" layoutX="7.0" layoutY="141.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="103.0" prefWidth="1008.0" />
    </children>
 </AnchorPane>

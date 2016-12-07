@@ -5,6 +5,7 @@
  */
 package rmaster.views;
 
+import static java.lang.Math.round;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.QueryBuilder;
 import rmaster.models.StalniGost;
 
 /**
@@ -45,9 +47,12 @@ public class LojalnostController extends FXMLDocumentController {
     private ScrollPane lojalnostScrollPane;
     
     @FXML
+    private HBox lojalnostGostiGrupe;
+    
+    @FXML
     private TableView<Map<String, String>> tabelaLojalnost = new TableView();
     
-    public int[] sirineKolone = {0, 100, 100};
+    public int[] sirineKolone = {0, 700, 50};
     
     public String prviRed = "ABCDEFGHIJKLM12345";
     
@@ -62,7 +67,91 @@ public class LojalnostController extends FXMLDocumentController {
         timeline.play();
         this.imeKonobara.setText(ulogovaniKonobar.imeKonobara);
 
-        HBox prviRedBox = new HBox();
+        popuniSlova();
+
+        popuniLojalnostGostiGrupe();
+        
+        List<Map<String, String>> listaRezultata = getGrupeGostiju();
+        
+        String izabranaGrupa = listaRezultata.get(0).get("id");
+        
+        tabelaLojalnost = tableHelper.formatirajTabelu(
+                tabelaLojalnost, 
+                getStalniGosti(izabranaGrupa), 
+                sirineKolone
+        );
+
+        lojalnostScrollPane.setContent(tabelaLojalnost);
+    } 
+    
+    @Override
+    public void initData(Map<String, String> data)
+    {
+        
+    }
+    
+    public List<Map<String, String>> getStalniGosti(String grupaId) {
+        
+        QueryBuilder query = new QueryBuilder();
+        query.setTableName(StalniGost.TABLE_NAME);
+        query.setColumns(StalniGost.PRIMARY_KEY, StalniGost.NAZIV, StalniGost.POPUST);
+        query.setCriteriaColumns(StalniGost.SIFRA, StalniGost.BLOKIRAN, StalniGost.GRUPA_ID);
+        query.setCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
+        query.setOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
+        query.setCriteriaValues("", QueryBuilder.TRUE, grupaId);
+        
+        List<Map<String, String>> listaRezultata = runQuery(query);
+          
+        List<Map<String, String>> listaStalnihGostiju = new ArrayList<>();
+        
+        for (Map mapStalniGost : listaRezultata) {
+            StalniGost noviStalniGost = new StalniGost();
+            noviStalniGost.makeFromHashMap((HashMap)mapStalniGost);
+            
+            listaStalnihGostiju.add(noviStalniGost.makeMapForTableOutput());
+        }
+              
+        return listaStalnihGostiju;
+    }
+    
+    
+    public List<Map<String, String>> getGrupeGostiju()
+    {
+        QueryBuilder query = new QueryBuilder();
+        query.setTableName("stalnigostigrupa");
+        query.setCriteriaColumns("naziv", "naziv");
+        query.setCriteria(QueryBuilder.IS_NOT_EQUAL, QueryBuilder.IS_NOT_EQUAL);
+        query.setOperators(QueryBuilder.LOGIC_AND);
+        query.setCriteriaValues("PREDUZECE", "NEPOZELJNI GOST");
+        
+        List<Map<String, String>> listaRezultata = runQuery(query);
+        
+        return listaRezultata;
+    }
+    
+    public void popuniLojalnostGostiGrupe() {
+        
+        List<Map<String, String>> listaGrupaGostiju = getGrupeGostiju();
+                
+        int sirina = round(1024/listaGrupaGostiju.size());
+        
+        
+        for (Map grupaGost : listaGrupaGostiju) {
+            
+            Button novoDugme = new Button(grupaGost.get("naziv") + "");
+            novoDugme.setId(grupaGost.get("id") + "");
+            novoDugme.setPrefSize(sirina, 74);
+            novoDugme.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override public void handle(ActionEvent e) {
+                                        prikaziLojalneGosteZavisnoOdGrupe(e);
+                                    }
+                                });
+            lojalnostGostiGrupe.getChildren().add(novoDugme);
+        }
+    } 
+    
+    private void popuniSlova() {
+         HBox prviRedBox = new HBox();
         
         for(char ch : prviRed.toCharArray()) {
             
@@ -73,7 +162,7 @@ public class LojalnostController extends FXMLDocumentController {
             novoDugme.setText(ch + "");
             novoDugme.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {
-                                        //TODO
+                                        //TO DO
                                     }
                                 });
             prviRedBox.getChildren().add(novoDugme);
@@ -100,48 +189,25 @@ public class LojalnostController extends FXMLDocumentController {
         }
         
         lojalnostSlova.getChildren().add(drugiRedBox);
+    }
+    
+    public void prikaziLojalneGosteZavisnoOdGrupe(ActionEvent event) {
+        lojalnostScrollPane.setContent(null);
+        
+        tableHelper.izbrisiSveIzTabele(tabelaLojalnost);
+        
+        Button pritisnutoDugme = (Button)event.getSource();
+        
+        List<Map<String, String>> listaLojalnihGostiju = getStalniGosti(pritisnutoDugme.getId());
 
+        TableView<Map<String, String>> tabela = new TableView<>();
         
         tabelaLojalnost = tableHelper.formatirajTabelu(
-                tabelaLojalnost, 
-                getStalniGosti(), 
+                tabela, 
+                listaLojalnihGostiju, 
                 sirineKolone
         );
         
         lojalnostScrollPane.setContent(tabelaLojalnost);
-    } 
-    
-    @Override
-    public void initData(Map<String, String> data)
-    {
-        
     }
-    
-    public List<Map<String, String>> getStalniGosti() {
-        
-        String[] kolone = {StalniGost.PRIMARY_KEY, StalniGost.NAZIV, StalniGost.POPUST};
-        
-        String[] uslovneKolone = {};
-        
-        String[] uslovneVrednosti = {};
-        
-        List<Map<String, String>> listaRezultata = this.vratiKoloneIzTabele(
-                StalniGost.TABLE_NAME, 
-                kolone, 
-                uslovneKolone, 
-                uslovneVrednosti
-        );
-        
-        List<Map<String, String>> listaStalnihGostiju = new ArrayList<>();
-        
-        for (Map mapStalniGost : listaRezultata) {
-            StalniGost noviStalniGost = new StalniGost();
-            noviStalniGost.makeFromHashMap((HashMap)mapStalniGost);
-            
-            listaStalnihGostiju.add(noviStalniGost.makeMapForTableOutput());
-        }
-              
-        return listaStalnihGostiju;
-    }
-    
 }

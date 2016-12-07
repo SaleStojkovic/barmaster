@@ -194,10 +194,36 @@ public class FXMLDocumentController implements Initializable {
     }
      
     
+    public List runQuery(QueryBuilder query) 
+    {
+        List<Map<String, String>> listaRezultata = null;
+         
+         try{
+            listaRezultata = DBBroker.runQuery(query);
+        
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+         
+        return listaRezultata;
+    }
+    
+    /**
+     * 
+     * @param imeTabele
+     * @param kolone
+     * @param uslovneKolone
+     * @param kriterijumi
+     * @param operatori
+     * @param uslovneVrednosti
+     * @return 
+     */
     public List vratiKoloneIzTabele(
             String imeTabele,
             String[] kolone,
             String[] uslovneKolone,
+            String[] kriterijumi,
+            String[] operatori,
             String[] uslovneVrednosti 
     )   
     {
@@ -207,7 +233,9 @@ public class FXMLDocumentController implements Initializable {
             listaRezultata = DBBroker.vratiKoloneIzTabele(
                     imeTabele, 
                     kolone, 
-                    uslovneKolone, 
+                    uslovneKolone,
+                    kriterijumi,
+                    operatori,
                     uslovneVrednosti
             );
         
