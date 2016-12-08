@@ -51,6 +51,23 @@ public class Settings {
         }
         return instance;
     }
+
+    public String getValueString(String key) {
+        try {
+            return prop.getProperty(key);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public boolean getValueBoolean(String key) {
+        try {
+            return Boolean.parseBoolean(prop.getProperty(key));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
     public String getFiscalniPrinterPath() {
         // u Settings.conf stoji =C\:\\BarMaster\\fiscal\\
         return prop.getProperty("rmi.putanja");
