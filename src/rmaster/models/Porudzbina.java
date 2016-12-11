@@ -51,6 +51,13 @@ public class Porudzbina {
         this.brojStolaBroj = rmaster.RMaster.izabraniStoBroj;
     }
 
+    public double getVrednostPorudzbine() {
+        double vrednostPorudzbine = 0.;
+        for (Tura tura : turePorudzbine) {
+            vrednostPorudzbine += tura.getVrednostTure();
+        }
+        return vrednostPorudzbine;
+    }
     public Porudzbina(Gost gost, long racunID) {
         this.setGost(gost);
         this.racunID = racunID;

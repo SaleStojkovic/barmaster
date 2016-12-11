@@ -60,6 +60,16 @@ public class Tura {
         }
     }
     
+    public double getVrednostTure() {
+        double vrednostTure = 0.;
+        for (StavkaTure stavkaTure : listStavkeTure) {
+            vrednostTure += stavkaTure.getCena();
+            for (StavkaTure dodatniArtikli : stavkaTure.getArtikliDodatni()) {
+                vrednostTure += dodatniArtikli.getCena();
+            }
+        }
+        return vrednostTure;
+    }
     
     public List<Map<String, String>> dajTuru() {
         List<Map<String, String>> list_StavkeTure = new ArrayList<>();

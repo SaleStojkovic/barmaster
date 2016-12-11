@@ -27,6 +27,7 @@ import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.Utils;
 import rmaster.models.NacinPlacanja;
+import rmaster.models.Porudzbina;
 
 /**
  * FXML Controller class
@@ -69,6 +70,7 @@ public class NaplataController extends FXMLDocumentController {
     @FXML
     private Button fxID_Lojalnost;
     
+    private Porudzbina porudzbina;
     private List<NacinPlacanja> placanja = new ArrayList();
     private NacinPlacanja aktivnoPlacanje;
     
@@ -96,7 +98,6 @@ public class NaplataController extends FXMLDocumentController {
         aktivnoPlacanje = new NacinPlacanja(NacinPlacanja.VrstePlacanja.GOTOVINA);
         placanja.add(aktivnoPlacanje);
         
-        this.fxID_Total.setText(Utils.getStringFromDouble(1567.76));
         tgVrstaPlacanja.selectedToggleProperty().addListener(new ChangeListener<Toggle>()
             {
             @Override
@@ -129,6 +130,18 @@ public class NaplataController extends FXMLDocumentController {
         popuniHotelGost();
         osveziPrikaz();
     } 
+    
+    /* BOSKO DODAO */
+    public void initData(Object data) {
+        List<Object> d = (List<Object>)data;
+        for (Object object : d) {
+            if (object instanceof Porudzbina)
+                porudzbina = (Porudzbina) object;
+        }
+        this.fxID_Total.setText(Utils.getStringFromDouble(porudzbina.getVrednostPorudzbine()));
+
+        this.data = data;
+    }
     
     private void popuniPopuste() {
         List<Map<String, String>> popustiZaNaplatu;

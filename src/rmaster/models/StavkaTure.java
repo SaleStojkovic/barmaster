@@ -52,10 +52,10 @@ public class StavkaTure {
             this.setCenaJedinicna(Utils.getDoubleFromString(stavkaTure.get("cena"))); 
 
         if (stavkaTure.get("kolicina")  != null)
-            this.kolicina = Utils.getDoubleFromString(
+            this.setKolicina(Utils.getDoubleFromString(
                     (stavkaTure.get("kolicina").contains("x")
                         ? stavkaTure.get("kolicina").substring(1)
-                        : stavkaTure.get("kolicina")));
+                        : stavkaTure.get("kolicina"))));
 
         if (stavkaTure.get("naziv")  != null)
             this.naziv = stavkaTure.get("naziv");
@@ -237,7 +237,7 @@ public class StavkaTure {
 /************************* Rad sa kolicinama ****************************************/
 /************************************************************************************/
     /*** Promena kolicine ***/
-    public void promeniKolicinu(double novaKolicina) {
+    public void setKolicina(double novaKolicina) {
             this.kolicina = novaKolicina;
             this.cenaObracunaj();
     }

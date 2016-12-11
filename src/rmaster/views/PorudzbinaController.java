@@ -980,7 +980,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                         if (novaKolicina == 0)
                             glavnaStavka.getArtikliDodatni().remove(stavkaTure);
                         else
-                            stavkaTure.promeniKolicinu(novaKolicina);
+                            stavkaTure.setKolicina(novaKolicina);
                     } else {
                         // Menjanje kolicine ili brisanje ako je odabran opisni artikal
                         stavkaTure = glavnaStavka.getOpisniArtikalByRedniBrojOpisnog(redniBroj);
@@ -988,7 +988,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                             if (novaKolicina == 0)
                                 glavnaStavka.getArtikliOpisni().remove(stavkaTure);
                             else
-                                stavkaTure.promeniKolicinu(novaKolicina);
+                                stavkaTure.setKolicina(novaKolicina);
                         }
                     }
                 }
@@ -999,7 +999,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                         novaTura.listStavkeTure.remove(stavkaTure);
                     }
                     else {
-                        stavkaTure.promeniKolicinu(novaKolicina);
+                        stavkaTure.setKolicina(novaKolicina);
                     }
                 }
             }
@@ -1113,7 +1113,6 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     
     public void prikaziTotalPopustNaplataStavke(List<StavkaTure> listaStavkiTure) {
-        
         if (listaStavkiTure.isEmpty()) {
             this.total.setText("0.00");
             this.popust.setText("0.00%");
@@ -1284,6 +1283,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         porudzbinaTrenutna.snimi();
         // TODO: Otvoriti formu za naplatu
         List<Object> newData = new ArrayList<>();
+        newData.add(this.porudzbinaTrenutna);
         prikaziFormu(
                 newData,
                 ScreenMap.NAPLATA,
