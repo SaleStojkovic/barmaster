@@ -120,7 +120,7 @@ public class NaplataController extends FXMLDocumentController {
     
     private void osveziPrikaz() {
         for (NacinPlacanja nacinPlacanja : placanja) {
-            String textZaPrikaz = nacinPlacanja.getText();
+            String textZaPrikaz = nacinPlacanja.getTextZaButton();
             switch (nacinPlacanja.getNacinPlacanja()) {
                 case FAKTURA:
                     this.fxID_Faktura.setText(textZaPrikaz);

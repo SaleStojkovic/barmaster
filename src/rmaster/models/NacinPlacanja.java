@@ -16,7 +16,7 @@ public class NacinPlacanja {
     private VrstePlacanja nacinPlacanja;
     private String text = "";
     private double vrednost = 0.;
-    
+    private String vrednostString = "";
     
     public NacinPlacanja() {
     }
@@ -47,17 +47,25 @@ public class NacinPlacanja {
         return this.vrednost;
     }
     
-    public String getVrednostString() {
-        return Utils.getStringFromDouble(this.vrednost);
+    public void setVrednostString(String vred) {
+        this.vrednostString = vred;
+        this.vrednost = Utils.getDoubleFromString(this.vrednostString);
     }
-    public String getText() {
+
+    public String getVrednostString() {
+        return this.vrednostString;
+    }
+
+    public String getTextZaButton() {
         String rez = this.text;
         if (this.vrednost!=0)
             rez = rez + "\n" + this.getVrednostString();
         return rez;
     }
     
+    
     public void setVrednost (double vred) {
         this.vrednost = vred;
+        this.vrednostString = Utils.getStringFromDouble(this.vrednost);
     }
 }
