@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package rmaster.assets.items;
+import java.io.File;
+import java.io.FileInputStream;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -39,11 +41,11 @@ public class ArtikalButton extends Button{
         this.ImagePutanja = imagePutanja;
         try {
             if (this.ImagePutanja != null && !this.ImagePutanja.equals("")) {
-                image = new Image(getClass().getResourceAsStream("style/img/" + imagePutanja));
+                image = new Image(new FileInputStream(new File("images/" + imagePutanja)),50,50,true,true);
                 this.setGraphic(new ImageView(image));
             }
         } catch (Exception e) {
-            System.out.println("Greska u otvaranju slike " + "style/img/" + imagePutanja + "!");
+            System.out.println("Greska u otvaranju slike " + "../images/" + imagePutanja + "!");
         }
         this.prioritet = prioritet;
         this.skrNaziv = skrNaziv;
