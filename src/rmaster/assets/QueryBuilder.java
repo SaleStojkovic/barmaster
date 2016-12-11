@@ -44,6 +44,8 @@ public class QueryBuilder {
     
     public String[] CRITERIA_VALUES;
     
+    public String GROUP_BY;
+    
     
     public void setTableName(String tableName) {
         this.TABLE_NAME = tableName;
@@ -70,4 +72,58 @@ public class QueryBuilder {
     }
     
     
+    
+    public String toQueryString() {
+        String queryString = "SELECT *";
+        
+        if (SELECT_COLUMNS != null) {
+        
+            queryString = queryString.substring(0, queryString.length() - 1);
+            
+            for (int j = 0; j < SELECT_COLUMNS.length - 1; j++) {
+                queryString += SELECT_COLUMNS[j] + ", ";
+            }
+
+            queryString += SELECT_COLUMNS[SELECT_COLUMNS.length - 1];
+        }
+        
+        queryString += " FROM " + TABLE_NAME; 
+                 
+        
+        if (CRITERIA_COLUMNS != null ) {
+        
+            if (CRITERIA_COLUMNS.length > 1) {
+
+                queryString += " WHERE ";
+
+                for (int i = 0; i < CRITERIA_COLUMNS.length - 1; i++) {
+
+                    queryString += CRITERIA_COLUMNS[i] 
+                            + CRITERIA[i] 
+                            + CRITERIA_VALUES[i] 
+                            + OPERATORS[i]; 
+                }
+
+                queryString += CRITERIA_COLUMNS[CRITERIA_COLUMNS.length - 1] 
+                        + CRITERIA[CRITERIA.length - 1] 
+                        + CRITERIA_VALUES[CRITERIA_COLUMNS.length - 1] + "'";
+            }
+
+            if (CRITERIA_COLUMNS.length == 1) {
+                queryString += " WHERE ";
+
+                queryString += CRITERIA_COLUMNS[0] 
+                        + CRITERIA[0] 
+                        + CRITERIA_VALUES[0] 
+                        + "' "; 
+            }
+        }
+        
+        if (GROUP_BY != null && !GROUP_BY.isEmpty()) {
+            queryString += "GROUP BY '" + GROUP_BY + "'";
+        }
+        
+        queryString += ";";
+        return queryString;
+    }
 }
