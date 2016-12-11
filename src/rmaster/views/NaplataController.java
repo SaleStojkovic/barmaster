@@ -22,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.Utils;
@@ -51,6 +52,8 @@ public class NaplataController extends FXMLDocumentController {
     private VBox fxID_PopustiZaNaplatu2;
     
     @FXML
+    private GridPane fxID_NacinPlacanjaGrid;
+    @FXML
     private ToggleGroup tgVrstaPlacanja;
     @FXML
     private ToggleButton fxID_Faktura;
@@ -60,15 +63,6 @@ public class NaplataController extends FXMLDocumentController {
     private ToggleButton fxID_Kartica;
     @FXML
     private ToggleButton fxID_Gotovina;
-
-    @FXML
-    private ToggleButton fxID_HotelGost1;
-    @FXML
-    private ToggleButton fxID_HotelGost2;
-    @FXML
-    private ToggleButton fxID_HotelGost3;
-    @FXML
-    private ToggleButton fxID_HotelGost4;
     
     @FXML
     private Button fxID_PorudzbinaMedjuzbir;
@@ -132,15 +126,15 @@ public class NaplataController extends FXMLDocumentController {
                 }
             });
         popuniPopuste();
+        popuniHotelGost();
         osveziPrikaz();
     } 
     
     private void popuniPopuste() {
-        List<Map<String, String>> popustiZaNaplatu = null;
+        List<Map<String, String>> popustiZaNaplatu;
         popustiZaNaplatu = runStoredProcedure("getPopustiZaNaplatu", new String[0], new String[0]);
         int brojac=0;
         for (Map<String, String> popust : popustiZaNaplatu) {
-            brojac++;
             Button popustButton = new Button(popust.get("naziv"));
             popustButton.setId(popust.get("id"));
             popustButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -151,13 +145,39 @@ public class NaplataController extends FXMLDocumentController {
                                     }
                                 });
            mapaPopusta.put(popust.get("id"), popust.get("popust"));
-            if (brojac<5)
+            if (brojac<4)
                 this.fxID_PopustiZaNaplatu1.getChildren().add(popustButton);
             else
                 this.fxID_PopustiZaNaplatu2.getChildren().add(popustButton);
+            brojac++;
         }
     }
     
+    private void popuniHotelGost() {
+        List<Map<String, String>> hotelGostList;
+        hotelGostList = runStoredProcedure("getHotelGost", new String[0], new String[0]);
+        int brojac=0;
+        for (Map<String, String> hotelGost : hotelGostList) {
+            Button hotelGostButton = new Button(hotelGost.get("naziv"));
+            hotelGostButton.setId(hotelGost.get("id"));
+            hotelGostButton.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override public void handle(ActionEvent e) {
+                                        Button hotel = (Button)e.getSource();
+                                        //popustPorudzbine = Utils.getDoubleFromString(mapaPopusta.get(pop.getId()));
+                                        //osveziPrikaz();
+                                    }
+                                });
+            this.fxID_NacinPlacanjaGrid.add(hotelGostButton, brojac/4, brojac%4);
+            brojac++;
+        }
+        while (brojac<8) {
+            Button hotelGostButton = new Button("");
+            hotelGostButton.setDisable(true);
+            this.fxID_NacinPlacanjaGrid.add(hotelGostButton, brojac/4, brojac%4);
+            brojac++;
+        }
+    }
+
     private void setAktivnoPlacanje(NacinPlacanja.VrstePlacanja vp) {
         for (NacinPlacanja nacinPlacanja : placanja) {
             if (nacinPlacanja.getNacinPlacanja() == vp) {
