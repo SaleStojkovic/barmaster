@@ -206,45 +206,7 @@ public class FXMLDocumentController implements Initializable {
         }
          
         return listaRezultata;
-    }
-    
-    /**
-     * 
-     * @param imeTabele
-     * @param kolone
-     * @param uslovneKolone
-     * @param kriterijumi
-     * @param operatori
-     * @param uslovneVrednosti
-     * @return 
-     */
-    public List vratiKoloneIzTabele(
-            String imeTabele,
-            String[] kolone,
-            String[] uslovneKolone,
-            String[] kriterijumi,
-            String[] operatori,
-            String[] uslovneVrednosti 
-    )   
-    {
-         List<Map<String, String>> listaRezultata = null;
-         
-         try{
-            listaRezultata = DBBroker.vratiKoloneIzTabele(
-                    imeTabele, 
-                    kolone, 
-                    uslovneKolone,
-                    kriterijumi,
-                    operatori,
-                    uslovneVrednosti
-            );
-        
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-         
-        return listaRezultata;
-    }        
+    }       
     
     /**
      * 
@@ -272,20 +234,6 @@ public class FXMLDocumentController implements Initializable {
         return listaRezultata;
     }
      
-    /**
-     * 
-     * @param imeTabele
-     * @return
-     */
-     public List vratiSveIzTabele(
-            String imeTabele
-    ) {
-        List listaRezultata = DBBroker.vratiSveIzTabele(
-                imeTabele
-        );
-         
-        return listaRezultata;
-    }
      
     /* BOSKO DODAO */
      public void initData(Map<String, String> data) {

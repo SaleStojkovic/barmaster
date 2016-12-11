@@ -25,3 +25,4 @@ build/built-jar.properties
 build/*
 nbproject/*
 dist/*
+src/rmaster/assets/Settings.conf
