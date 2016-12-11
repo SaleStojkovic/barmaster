@@ -693,8 +693,9 @@ public final class DBBroker {
             for (int i = 0; i < brojArgumenata; i++) {
                 procedureCall += "?,";
             }
-           
-            procedureCall = procedureCall.substring(0, procedureCall.length()-1);
+            
+            if (brojArgumenata>0)
+                procedureCall = procedureCall.substring(0, procedureCall.length()-1);
             procedureCall += ")}";
             
             cStmt = dbConnection.prepareCall(procedureCall);
