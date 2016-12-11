@@ -52,7 +52,7 @@ public class NacinPlacanja {
     public String getTextZaButton() {
         String rez = this.text;
         if (this.vrednost!=0) 
-            rez = rez + "\n" + this.getVrednostString();
+            rez = rez + "\n" + Utils.getStringFromDouble(this.vrednost);
         return rez;
     }
     

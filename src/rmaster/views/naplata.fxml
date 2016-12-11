@@ -99,10 +99,22 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="fxID_tastatura01" mnemonicParsing="false" text="tastatura01" />
+            <Button fx:id="fxID_tastaturaTacka" mnemonicParsing="false" onAction="#numberKeyPressed" text="." GridPane.rowIndex="3" />
+            <Button fx:id="fxID_tastatura00" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Button fx:id="fxID_tastaturaBack" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#backButton" text="«" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Button fx:id="fxID_tastatura01" mnemonicParsing="false" onAction="#numberKeyPressed" text="1" GridPane.rowIndex="2" />
+            <Button fx:id="fxID_tastatura02" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" text="2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button fx:id="fxID_tastatura03" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" text="3" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Button fx:id="fxID_tastatura04" mnemonicParsing="false" onAction="#numberKeyPressed" text="4" GridPane.rowIndex="1" />
+            <Button fx:id="fxID_tastatura05" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" text="5" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button fx:id="fxID_tastatura06" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" text="6" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Button fx:id="fxID_tastatura07" mnemonicParsing="false" onAction="#numberKeyPressed" text="7" />
+            <Button fx:id="fxID_tastatura08" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" text="8" GridPane.columnIndex="1" />
+            <Button fx:id="fxID_tastatura09" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" text="9" GridPane.columnIndex="2" />
          </children>
       </GridPane>
       <Button fx:id="fxID_Lojalnost" layoutX="388.0" layoutY="667.0" mnemonicParsing="false" onAction="#otvoriLojalnost" prefHeight="100.0" prefWidth="140.0" text="Lojalnost" />
       <Button fx:id="fxID_PorudzbinaMedjuzbir" layoutX="698.0" layoutY="667.0" mnemonicParsing="false" onAction="#medjuzbir" prefHeight="100.0" prefWidth="141.0" text="Među zbir ★" />
+      <Button fx:id="fxID_Naplata" layoutX="840.0" layoutY="667.0" mnemonicParsing="false" onAction="#naplata" prefHeight="100.0" prefWidth="141.0" text="Naplata" />
    </children>
 </AnchorPane>

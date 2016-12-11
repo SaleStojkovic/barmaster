@@ -320,77 +320,77 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
         sveTure.getChildren().add(paneTura);
         
-        this.prikaziTotalPopustNaplataTura(porudzbina.getTure());
-        
+        //this.prikaziTotalPopustNaplataTura(porudzbina.getTure());
+        this.prikaziTotalPopustNaplataPorudzbina(porudzbina);
         this.prikazRacunaGosta.setContent(sveTure);
     }
 
-    public void prikaziTureZaGosta(
-            String gost
-    ) {
-        idTrenutnoIzabranogGosta = gost;
-        prikazRacunaGosta.setContent(null);  
-        prikazRacunaGosta.setFitToWidth(true);
-        //listNovaTuraGosta.clear();
-                                                
-        VBox sveTure = new VBox();
-        VBox paneTura = new VBox();
-        paneTura.setPadding(new Insets(0, 0, 0, 0));
-
-        List<Map<String, String>> racuniJednogGosta = racuniStolaPoGostima.get(gost);
-        
-        List<Tura> listTuraZaPrikazNaplate = new ArrayList();
-        
-        String racunId = racuniJednogGosta.get(0).get("RACUN_ID");
-
-        String[] imenaArgumenata = {"idRacuna"};
-        String[] vrednostiArgumenata = {racunId};
-        List<Map<String, String>> tureJednogGosta = runStoredProcedure(
-                "getPorudzbinaTure", 
-                imenaArgumenata, 
-                vrednostiArgumenata
-        );        
-        
-        for (Map<String, String> tura : tureJednogGosta) {
-                String turaId = tura.get("id");
-                Date datum = new Date();
-                try {
-                    datum = Utils.getDateFromString(tura.get("datum"));
-                } catch (ParseException e) {
-                    System.out.println("Neuspelo pretvaranje stringa u datum za ture jednog gosta!");
-                }
-                Tura turaModel = new Tura(turaId, datum);
-                
-                listTuraZaPrikazNaplate.add(turaModel);
-                
-                TableView<Map<String, String>> tabelaNoveTure = new TableView<>();
-                tabelaNoveTure.setSelectionModel(null);
-                
-                tabelaNoveTure = tableHelper.formatirajTabelu(tabelaNoveTure,
-                        turaModel.dajTuru(),
-                        sirinaKolonaTabele
-                );
-                
-                Button ponoviTuru = new Button();
-                ponoviTuru.setPrefSize(287, 40);
-                ponoviTuru.setText("Ponovi Turu (" + Utils.getDateDiff(turaModel.getVremeTure(), new Date(), TimeUnit.MINUTES) + ")");
-                ponoviTuru.setId(turaId);
-                ponoviTuru.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override public void handle(ActionEvent e) {
-                                    String turaId = ((Button)e.getSource()).getId();
-                                    ponoviTuru(turaId);
-                                }
-                            }); 
-                paneTura.getChildren().add(tabelaNoveTure);
-                paneTura.getChildren().add(ponoviTuru);
-            }
-        
-            sveTure.getChildren().add(paneTura);
-            
-            this.prikaziTotalPopustNaplataTura(listTuraZaPrikazNaplate);
-            
-            this.prikazRacunaGosta.setContent(sveTure);
-    }    
+//    public void prikaziTureZaGosta(
+//            String gost
+//    ) {
+//        idTrenutnoIzabranogGosta = gost;
+//        prikazRacunaGosta.setContent(null);  
+//        prikazRacunaGosta.setFitToWidth(true);
+//        //listNovaTuraGosta.clear();
+//                                                
+//        VBox sveTure = new VBox();
+//        VBox paneTura = new VBox();
+//        paneTura.setPadding(new Insets(0, 0, 0, 0));
+//
+//        List<Map<String, String>> racuniJednogGosta = racuniStolaPoGostima.get(gost);
+//        
+//        List<Tura> listTuraZaPrikazNaplate = new ArrayList();
+//        
+//        String racunId = racuniJednogGosta.get(0).get("RACUN_ID");
+//
+//        String[] imenaArgumenata = {"idRacuna"};
+//        String[] vrednostiArgumenata = {racunId};
+//        List<Map<String, String>> tureJednogGosta = runStoredProcedure(
+//                "getPorudzbinaTure", 
+//                imenaArgumenata, 
+//                vrednostiArgumenata
+//        );        
+//        
+//        for (Map<String, String> tura : tureJednogGosta) {
+//                String turaId = tura.get("id");
+//                Date datum = new Date();
+//                try {
+//                    datum = Utils.getDateFromString(tura.get("datum"));
+//                } catch (ParseException e) {
+//                    System.out.println("Neuspelo pretvaranje stringa u datum za ture jednog gosta!");
+//                }
+//                Tura turaModel = new Tura(turaId, datum);
+//                
+//                listTuraZaPrikazNaplate.add(turaModel);
+//                
+//                TableView<Map<String, String>> tabelaNoveTure = new TableView<>();
+//                tabelaNoveTure.setSelectionModel(null);
+//                
+//                tabelaNoveTure = tableHelper.formatirajTabelu(tabelaNoveTure,
+//                        turaModel.dajTuru(),
+//                        sirinaKolonaTabele
+//                );
+//                
+//                Button ponoviTuru = new Button();
+//                ponoviTuru.setPrefSize(287, 40);
+//                ponoviTuru.setText("Ponovi Turu (" + Utils.getDateDiff(turaModel.getVremeTure(), new Date(), TimeUnit.MINUTES) + ")");
+//                ponoviTuru.setId(turaId);
+//                ponoviTuru.setOnAction(new EventHandler<ActionEvent>() {
+//                                @Override public void handle(ActionEvent e) {
+//                                    String turaId = ((Button)e.getSource()).getId();
+//                                    ponoviTuru(turaId);
+//                                }
+//                            }); 
+//                paneTura.getChildren().add(tabelaNoveTure);
+//                paneTura.getChildren().add(ponoviTuru);
+//            }
+//        
+//            sveTure.getChildren().add(paneTura);
+//            
+//            this.prikaziTotalPopustNaplataTura(listTuraZaPrikazNaplate);
+//            
+//            this.prikazRacunaGosta.setContent(sveTure);
+//    }    
     
     public void ponoviTuru(String izabranaTuraIdString) {
         if (porudzbinaTrenutna.getBlokiranaPorudzbina()) {
@@ -423,7 +423,8 @@ public class PorudzbinaController extends FXMLDocumentController {
             tabelaNovaTuraGosta.getSelectionModel().select(novaTura.listStavkeTure.size() - 1);
 
             prikazRacunaGosta.setContent(tabelaNovaTuraGosta);
-            this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
+            this.prikaziTotalPopustNaplataTura(novaTura);
+//            this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
         }
     }
 
@@ -882,7 +883,8 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
 
         this.tableRefresh();
-        this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
+        this.prikaziTotalPopustNaplataTura(novaTura);
+//        this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
         this.porudzbinaNaplati.setText("Potvrdi ✓");
     }
 
@@ -910,7 +912,8 @@ public class PorudzbinaController extends FXMLDocumentController {
         this.dodajStavkuUNovuTuru(novaStavkaTure);
 
         this.tableRefresh();
-        this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
+        this.prikaziTotalPopustNaplataTura(novaTura);
+//        this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
         this.porudzbinaNaplati.setText("Potvrdi ✓");
     }
        
@@ -1005,7 +1008,8 @@ public class PorudzbinaController extends FXMLDocumentController {
             }
 
             this.tableRefresh();
-            this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
+            this.prikaziTotalPopustNaplataTura(novaTura);
+//            this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
         }
     }
     
@@ -1050,7 +1054,8 @@ public class PorudzbinaController extends FXMLDocumentController {
 
         this.tableRefresh();
         tabelaNovaTuraGosta.getSelectionModel().clearSelection();
-        this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
+        this.prikaziTotalPopustNaplataTura(novaTura);
+//        this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
     }
     
     private void tableRefresh() {
@@ -1090,60 +1095,66 @@ public class PorudzbinaController extends FXMLDocumentController {
     }
     
     
-    
-    public void prikaziTotalPopustNaplataTura(List<Tura> listTure) {
-        
-        if (listTure.isEmpty()) {
-            this.total.setText("0.00");
-            this.popust.setText("0.00%");
-            this.naplata.setText("0.00");
-            return;
-        }
-
-        List<Map<String, String>> totalPopustNaplata = new ArrayList<>();
-        
-        for (Tura tura : listTure) {
-            List<Map<String, String>> listStavkeTure = tura.dajTuru();
-            for (Map<String, String> red : listStavkeTure) {
-                totalPopustNaplata.add(red);
-            }
-        }
-        this.stampajTotalPopustNaplata(totalPopustNaplata);
+    public void prikaziTotalPopustNaplataPorudzbina(Porudzbina porudzbina) {
+        this.total.setText(Utils.getStringFromDouble(porudzbina.getVrednostPorudzbine()));
+    }
+    public void prikaziTotalPopustNaplataTura(Tura tura) {
+        this.total.setText(Utils.getStringFromDouble(tura.getVrednostTure()));
     }
     
+//    public void prikaziTotalPopustNaplataTura(List<Tura> listTure) {
+//        
+//        if (listTure.isEmpty()) {
+//            this.total.setText("0.00");
+//            this.popust.setText("0.00%");
+//            this.naplata.setText("0.00");
+//            return;
+//        }
+//
+//        List<Map<String, String>> totalPopustNaplata = new ArrayList<>();
+//        
+//        for (Tura tura : listTure) {
+//            List<Map<String, String>> listStavkeTure = tura.dajTuru();
+//            for (Map<String, String> red : listStavkeTure) {
+//                totalPopustNaplata.add(red);
+//            }
+//        }
+//        this.stampajTotalPopustNaplata(totalPopustNaplata);
+//    }
     
-    public void prikaziTotalPopustNaplataStavke(List<StavkaTure> listaStavkiTure) {
-        if (listaStavkiTure.isEmpty()) {
-            this.total.setText("0.00");
-            this.popust.setText("0.00%");
-            this.naplata.setText("0.00");
-            return;
-        }
-
-        List<Map<String, String>> totalPopustNaplata = new ArrayList<>();
-
-        for (StavkaTure stavka : listaStavkiTure) {
-               totalPopustNaplata.add(stavka.dajStavkuTure());
-            }
-        this.stampajTotalPopustNaplata(totalPopustNaplata);
-    }
     
-    public void stampajTotalPopustNaplata(List<Map<String, String>> totalPopustNaplata ) {
-        
-        double total = 0;
-
-        for(Map<String, String> red : totalPopustNaplata) {
-            total += Utils.getDoubleFromString(red.get("cena"));
-        }
-
-        //double popust = porudzbinaTrenutna.getGost().getProcenatPopusta();
-        //double naplata = total * (100 - popust) / 100;
-
-        this.total.setText(Utils.getStringFromDouble(total));
-        //this.popust.setText(Utils.getStringFromDouble(popust) + "%");
-        //this.naplata.setText(Utils.getStringFromDouble(naplata));
-    }
-    
+//    public void prikaziTotalPopustNaplataStavke(List<StavkaTure> listaStavkiTure) {
+//        if (listaStavkiTure.isEmpty()) {
+//            this.total.setText("0.00");
+//            this.popust.setText("0.00%");
+//            this.naplata.setText("0.00");
+//            return;
+//        }
+//
+//        List<Map<String, String>> totalPopustNaplata = new ArrayList<>();
+//
+//        for (StavkaTure stavka : listaStavkiTure) {
+//               totalPopustNaplata.add(stavka.dajStavkuTure());
+//            }
+//        this.stampajTotalPopustNaplata(totalPopustNaplata);
+//    }
+//    
+//    public void stampajTotalPopustNaplata(List<Map<String, String>> totalPopustNaplata ) {
+//        
+//        double total = 0;
+//
+//        for(Map<String, String> red : totalPopustNaplata) {
+//            total += Utils.getDoubleFromString(red.get("cena"));
+//        }
+//
+//        //double popust = porudzbinaTrenutna.getGost().getProcenatPopusta();
+//        //double naplata = total * (100 - popust) / 100;
+//
+//        this.total.setText(Utils.getStringFromDouble(total));
+//        //this.popust.setText(Utils.getStringFromDouble(popust) + "%");
+//        //this.naplata.setText(Utils.getStringFromDouble(naplata));
+//    }
+//    
     public void dodajNovogGosta(ActionEvent event) {
         
         ObservableList<Node> gostiButtons = prikazGostiju.getChildren();
@@ -1273,7 +1284,8 @@ public class PorudzbinaController extends FXMLDocumentController {
         if (izabraniRedIndex+1 > this.tabelaNovaTuraGosta.getItems().size())
             izabraniRedIndex--;
         this.tabelaNovaTuraGosta.getSelectionModel().select(izabraniRedIndex);
-        this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
+        this.prikaziTotalPopustNaplataTura(novaTura);
+//        this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
         
     }
 

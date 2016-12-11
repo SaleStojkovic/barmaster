@@ -17,6 +17,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Toggle;
@@ -25,6 +26,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.Stampac;
 import rmaster.assets.Utils;
 import rmaster.models.NacinPlacanja;
 import rmaster.models.Porudzbina;
@@ -69,6 +71,8 @@ public class NaplataController extends FXMLDocumentController {
     private Button fxID_PorudzbinaMedjuzbir;
     @FXML
     private Button fxID_Lojalnost;
+    @FXML
+    private Button fxID_Naplata;
     
     private Porudzbina porudzbina;
     private List<NacinPlacanja> placanja = new ArrayList();
@@ -100,30 +104,28 @@ public class NaplataController extends FXMLDocumentController {
         
         tgVrstaPlacanja.selectedToggleProperty().addListener(new ChangeListener<Toggle>()
             {
-            @Override
-            public void changed(ObservableValue<? extends Toggle> ov, Toggle t, Toggle t1) {
-                ToggleButton chk;
-                if (t1 != null)
-                    chk = (ToggleButton)t1.getToggleGroup().getSelectedToggle(); // Cast object to radio button
-                else
-                    chk = (ToggleButton)t; // Cast object to radio button
+                @Override
+                public void changed(ObservableValue<? extends Toggle> ov, Toggle t, Toggle t1) {
+                    ToggleButton chk;
+                    if (t1 != null)
+                        chk = (ToggleButton)t1.getToggleGroup().getSelectedToggle();
+                    else
+                        chk = (ToggleButton)t;
 
-                switch (chk.getId()) {
-                    case "fxID_Faktura":
-                        setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.FAKTURA);
-                        break;
-                    case "fxID_Cek":
-                        setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.CEK);
-                        break;
-                    case "fxID_Kartica":
-                        setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.KARTICA);
-                        break;
-                    case "fxID_Gotovina":
-                        setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.GOTOVINA);
-                        break;
-                }
-                aktivnoPlacanje.setVrednost(aktivnoPlacanje.getVrednost() + 99.);
-                osveziPrikaz();
+                    switch (chk.getId()) {
+                        case "fxID_Faktura":
+                            setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.FAKTURA);
+                            break;
+                        case "fxID_Cek":
+                            setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.CEK);
+                            break;
+                        case "fxID_Kartica":
+                            setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.KARTICA);
+                            break;
+                        case "fxID_Gotovina":
+                            setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.GOTOVINA);
+                            break;
+                    }
                 }
             });
         popuniPopuste();
@@ -199,18 +201,26 @@ public class NaplataController extends FXMLDocumentController {
             }
         }
     }
-    
-    private void osveziPrikaz() {
-        this.fxID_Popust.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) * (popustPorudzbine/100)));
-        this.fxID_ZaUplatu.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) - Utils.getDoubleFromString(this.fxID_Popust.getText())));
+
+    private double getUplaceno() {
         double uplaceno = 0.;
         for (NacinPlacanja nacinPlacanja : placanja) {
             uplaceno += nacinPlacanja.getVrednost();
         }
-        this.fxID_Uplaceno.setText(Utils.getStringFromDouble(uplaceno));
+        return uplaceno;
+    }
+    
+    private double getKusur() {
         double kusur = Utils.getDoubleFromString(this.fxID_Uplaceno.getText()) - Utils.getDoubleFromString(this.fxID_ZaUplatu.getText());
+        return kusur>0?kusur:0;
+    }
+    
+    private void osveziPrikaz() {
+        this.fxID_Popust.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) * (popustPorudzbine/100)));
+        this.fxID_ZaUplatu.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) - Utils.getDoubleFromString(this.fxID_Popust.getText())));
+        this.fxID_Uplaceno.setText(Utils.getStringFromDouble(this.getUplaceno()));
         
-        this.fxID_Kusur.setText(Utils.getStringFromDouble(kusur>0?kusur:0.));
+        this.fxID_Kusur.setText(Utils.getStringFromDouble(this.getKusur()));
         
         
         for (NacinPlacanja nacinPlacanja : placanja) {
@@ -237,4 +247,63 @@ public class NaplataController extends FXMLDocumentController {
     
     public void medjuzbir(ActionEvent event) {
     }
+
+    public void naplata(ActionEvent event) {
+        if (this.getUplaceno() == 0) {
+            // Nista nije uneto, obracunava kao da je tacan iznos gotovine
+            // - ako nista nije kucano knjizi kao da je uplacen tacan iznos u gotovini
+            for (NacinPlacanja nacinPlacanja : placanja) {
+                if (nacinPlacanja.getNacinPlacanja() == NacinPlacanja.VrstePlacanja.GOTOVINA)
+                    nacinPlacanja.setVrednost(porudzbina.getVrednostPorudzbine());
+            }
+            osveziPrikaz();
+            this.snimi();
+            Stampac.getInstance().stampajGotovinskiRacun();
+            return;
+        }
+        
+        if (this.getUplaceno() < this.porudzbina.getVrednostPorudzbine()) {
+            // Nedovoljno uplaceno
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Naplata!");
+            alert.setHeaderText("Nedovoljan iznos!");
+            alert.setContentText("Morate uneti dovoljan iznos za plaćanje.");
+            alert.showAndWait();
+            return;
+        }
+        /*
+        for (NacinPlacanja nacinPlacanja : placanja) {
+            if (nacinPlacanja.getNacinPlacanja() == NacinPlacanja.VrstePlacanja.GOTOVINA)
+                nacinPlacanja.setVrednost(porudzbina.getVrednostPorudzbine());
+        }
+                                - ako je ista menjano proverava sledece
+                                        kombinovano ili ne?
+                                        kombinovano - ne sme faktura, mora biti tacan iznos ili da gotovina prelazi preko a u bazu se upisuje tacno po racunu bez kusura
+                                        ne - ok, ima kusura"
+        */
+    }
+
+    public void snimi() {
+        // ovde treba odraditi snimanje placanja, moguce da treba vise razlicitih snimanja
+    }
+    public void backButton(ActionEvent event) {
+        String text = this.aktivnoPlacanje.getVrednostString();
+        
+        if (text.length() != 0) {
+            text = text.substring(0, text.length()-1);
+            if (text.endsWith("."))
+                text = text.substring(0, text.length()-1);
+            this.aktivnoPlacanje.setVrednostString(text);
+        }
+        this.osveziPrikaz();        
+    }
+
+    public void numberKeyPressed(ActionEvent event) throws Exception {
+        Button pritisnutTaster = (Button)event.getSource();
+        String text = this.aktivnoPlacanje.getVrednostString();
+        text += pritisnutTaster.getText();
+        this.aktivnoPlacanje.setVrednostString(text);
+        this.osveziPrikaz();
+    }
+    
 }
