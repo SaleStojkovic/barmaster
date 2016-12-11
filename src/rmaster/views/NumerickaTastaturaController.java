@@ -45,7 +45,11 @@ public class NumerickaTastaturaController extends Dialog {
     
     
     /**
-     * Initializes the controller class.
+     * 
+     * @param headerText
+     * @param promptText
+     * @param isPasswordField
+     * @param prethodniTekst 
      */
     public NumerickaTastaturaController(
             String headerText,
@@ -69,10 +73,6 @@ public class NumerickaTastaturaController extends Dialog {
     ) {
         this.initStyle(StageStyle.UNDECORATED);
         
-        // Set the icon (must be included in the project).
-        //dialog.setGraphic(new ImageView(this.getClass().getResource("login.png").toString()));
-
-        // Set the button types.
         ButtonType potvrdiButtonType = new ButtonType("✓", ButtonData.OK_DONE);
         ButtonType odustaniButtonType = new ButtonType("X", ButtonData.OK_DONE);
         this.getDialogPane().getButtonTypes().addAll(potvrdiButtonType, odustaniButtonType);

@@ -5,7 +5,6 @@
  */
 package rmaster.views;
 
-import rmaster.assets.TastaturaVrsta;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,7 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
     private Button cancelButton;
     
     @Override
-    public void initData(Map<String, String> data) {
+    public void initData(Object data) {
         try {
             String[] imenaArgumenata = {"konobarID"};
             String[] vrednostiArgumenata = {ulogovaniKonobar.konobarID + ""};

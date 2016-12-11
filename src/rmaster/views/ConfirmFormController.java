@@ -41,51 +41,53 @@ public class ConfirmFormController extends FXMLDocumentController {
     }    
     
 
-    public void passwordCheck(ActionEvent event) throws Exception {
-        response2.setText("");
-        String lozinkaText = this.lozinka2.getText();
-        
-        String[] uslovneKolone = {"pin"};
-        String[] uslovneVrednosti = {lozinkaText};
-        
-        List rezultat = vratiSveIzTabeleUzUslov(
-                "konobar", 
-                uslovneKolone, 
-                uslovneVrednosti
-        );
-        
-        if (!rezultat.isEmpty()) {
-            Map<String,String>  konobar = (Map<String, String>)rezultat.get(0);
-            
-            proveraPina(konobar);
-            return;
-        }
-        
-        response2.setText("Neuspešna promena!");
-        lozinka2.setText("");
-    }
-    
-    /**
-     * 
-     * @param konobar 
-     */
-    public void proveraPina(Map<String, String> konobar) {
-        String unetKonobarId = konobar.get("id") + "";
-        String trenutniKonobar = ulogovaniKonobar.konobarID + "";
-        
-        if (trenutniKonobar.equals(unetKonobarId))
-        {
-            response2.setText("Greška! Već ste ulogovani!");
-            lozinka2.setText("");
-            return;
-        }
-        
-        DBBroker.promeniKonobaraZaStolove(
-                Long.parseLong(unetKonobarId),
-                data.get("promenjeniStolovi")
-        );
-        zatvoriOvuFormu();
-    }
+//    public void passwordCheck(ActionEvent event) throws Exception {
+//        response2.setText("");
+//        String lozinkaText = this.lozinka2.getText();
+//        
+//        String[] uslovneKolone = {"pin"};
+//        String[] uslovneVrednosti = {lozinkaText};
+//        
+//        List rezultat = vratiSveIzTabeleUzUslov(
+//                "konobar", 
+//                uslovneKolone, 
+//                uslovneVrednosti
+//        );
+//        
+//        if (!rezultat.isEmpty()) {
+//            Map<String,String>  konobar = (Map<String, String>)rezultat.get(0);
+//            
+//            proveraPina(konobar);
+//            return;
+//        }
+//        
+//        response2.setText("Neuspešna promena!");
+//        lozinka2.setText("");
+//    }
+//    
+//    /**
+//     * 
+//     * @param konobar 
+//     */
+//    public void proveraPina(Map<String, String> konobar) {
+//        String unetKonobarId = konobar.get("id") + "";
+//        String trenutniKonobar = ulogovaniKonobar.konobarID + "";
+//        
+//        if (trenutniKonobar.equals(unetKonobarId))
+//        {
+//            response2.setText("Greška! Već ste ulogovani!");
+//            lozinka2.setText("");
+//            return;
+//        }
+//        
+//        Map<String>
+//        
+//        DBBroker.promeniKonobaraZaStolove(
+//                Long.parseLong(unetKonobarId),
+//                data.get("promenjeniStolovi")
+//        );
+//        zatvoriOvuFormu();
+//    }
     
     public void cancelAction(ActionEvent event) {
         zatvoriOvuFormu();

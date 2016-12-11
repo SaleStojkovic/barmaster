@@ -53,7 +53,7 @@ public class SalePopupController extends Dialog {
     AnchorPane salaPrikazPane = new AnchorPane();
 
 
-    FXMLDocumentController fxmlController = new FXMLDocumentController();
+    FXMLDocumentController fxmlController;
 
     private List<Button> listaRezervacija = new ArrayList<>();
     

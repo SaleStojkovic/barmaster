@@ -84,11 +84,6 @@ public class LojalnostController extends FXMLDocumentController {
         lojalnostScrollPane.setContent(tabelaLojalnost);
     } 
     
-    @Override
-    public void initData(Map<String, String> data)
-    {
-        
-    }
     
     public List<Map<String, String>> getStalniGosti(String grupaId) {
         

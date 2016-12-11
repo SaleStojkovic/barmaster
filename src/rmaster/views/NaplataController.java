@@ -187,10 +187,6 @@ public class NaplataController extends FXMLDocumentController {
         }
     }
     
-    @Override
-    public void initData(Map<String, String> data) {
-    }
-    
     private void osveziPrikaz() {
         this.fxID_Popust.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) * (popustPorudzbine/100)));
         this.fxID_ZaUplatu.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) - Utils.getDoubleFromString(this.fxID_Popust.getText())));

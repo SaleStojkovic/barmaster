@@ -6,7 +6,7 @@
 package rmaster.views;
 
 import java.net.URL;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -89,7 +89,7 @@ public class PocetniEkranController extends FXMLDocumentController {
             //zapamti KonobarID
             setUlogovaniKonobar(konobar);
             
-            Map<String, String> newData = new HashMap<>();
+            List<Object> newData = new ArrayList<>();
                             
             //sledeca stranica 
             prikaziFormu(

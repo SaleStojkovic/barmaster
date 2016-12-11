@@ -58,8 +58,8 @@ public class PromenaKonobaraController  extends FXMLDocumentController {
         // TODO
     }  
     
-    //@Override
-    public void initData(Map<String, String> data) {
+    @Override
+    public void initData(Object data) {
         
         try {
             String[] imenaArgumenata = {"KonobarID"};

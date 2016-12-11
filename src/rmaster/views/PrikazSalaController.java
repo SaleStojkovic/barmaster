@@ -82,7 +82,7 @@ public class PrikazSalaController extends FXMLDocumentController {
      * @param data 
      */
     @Override
-    public void initData(Map<String, String> data) {
+    public void initData(Object data) {
         try {
             String[] imenaArgumenata = {"KonobarID"};
             String[] vrednostiArgumenata = {ulogovaniKonobar.konobarID + ""};
@@ -197,12 +197,10 @@ public class PrikazSalaController extends FXMLDocumentController {
     }
     
     public void odjava(ActionEvent event)
-    {
-            Map<String, String> newData = new HashMap<>();
-            
+    {            
             //sledeca stranica 
             prikaziFormu(
-                    newData,
+                    new ArrayList<>(),
                     ScreenMap.POCETNI_EKRAN, 
                     true, 
                     (Node)event.getSource()
@@ -210,19 +208,16 @@ public class PrikazSalaController extends FXMLDocumentController {
     }
     
     public void prikaziRacuneZaStampu(ActionEvent event){
-        Map<String, String> newData = new HashMap<>();
         prikaziFormuModalno(
-                newData,
+                new ArrayList<>(),
                 ScreenMap.RACUNI_ZA_NAPLATU, 
                 (Node)(event.getSource())
         );
     }
     
     public void promeniKonobara(ActionEvent event){
-        Map<String, String> newData = new HashMap<>();
-
         prikaziFormuModalno(
-                newData,
+                new ArrayList<>(),
                 ScreenMap.PROMENA_KONOBARA,
                 (Node)(event.getSource())
         );
@@ -326,7 +321,7 @@ public class PrikazSalaController extends FXMLDocumentController {
                                             RMaster.izabraniStoBroj = Integer.parseInt(b.getText());
                                               prikaziFormu(
                                                       newData,
-                                                      "porudzbina", 
+                                                      ScreenMap.PORUDZBINA, 
                                                       true, 
                                                       (Node)e.getSource());
                                         }

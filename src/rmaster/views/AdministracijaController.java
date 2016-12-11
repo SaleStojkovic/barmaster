@@ -6,8 +6,8 @@
 package rmaster.views;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
@@ -30,10 +30,9 @@ public class AdministracijaController extends FXMLDocumentController{
     }    
     
     public void nazadNaPrikazSala(ActionEvent event) {
-        Map<String, String> newData = new HashMap<>();
 
         prikaziFormu(
-            newData,
+            new Object(),
             ScreenMap.PRIKAZ_SALA, 
             true, 
             (Node)event.getSource());

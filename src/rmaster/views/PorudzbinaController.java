@@ -174,7 +174,7 @@ public class PorudzbinaController extends FXMLDocumentController {
     StavkaTure selektovana = null;
     
     @Override
-    public void initData(Map<String, String> data) {
+    public void initData(Object data) {
 
         try {
             refreshGrupeIliArtikla(this.ArtikalGrupe, GLAVNA_GRUPA);
@@ -431,9 +431,8 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     public void prikaziSalu(ActionEvent event) {
         
-        Map<String, String> newData = new HashMap<>();
         prikaziFormu(
-                newData,
+                new ArrayList<>(),
                 ScreenMap.PRIKAZ_SALA,
                 true, 
                 (Node)event.getSource()
@@ -945,39 +944,6 @@ public class PorudzbinaController extends FXMLDocumentController {
     }
     
     
-//    private void promeniKolicinuStavkeTure(
-//            Map<String, String> izabranaStavkaTure,
-//            int novaKolicina
-//    ) {
-//        prikazRacunaGosta.setContent(null);
-//        
-//        String naziv = izabranaStavkaTure.get("naziv");
-//        
-//        for (int i = 0; i < novaTura.listStavkeTure.size(); i++) {
-//            StavkaTure stavka = novaTura.listStavkeTure.get(i);
-//            
-//            if (stavka.naziv.equals(naziv)) {
-//                novaTura.listStavkeTure.remove(i);
-//                
-//                double novaCena = (stavka.cena / stavka.kolicina) * novaKolicina;
-//                
-//                stavka.promeniKolicinu(novaKolicina);
-//                if (stavka.kolicina != 0) {
-//                    stavka.cena = novaCena;
-//
-//                    novaTura.listStavkeTure.add(i, stavka);
-//                }
-//            }
-//        }
-//        
-//        this.tableRefresh();
-//        this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
-//
-//    }
-    
-    
-    
-    
     public void setKolicinaStavkeTure(ActionEvent event) {
              
         if (tabelaNovaTuraGosta.getItems().isEmpty() || porudzbinaTrenutna.getBlokiranaPorudzbina()) {
@@ -1123,15 +1089,6 @@ public class PorudzbinaController extends FXMLDocumentController {
         //tabelaNovaTuraGosta.getSelectionModel().select(selektovano);
     }
     
-//    //TODO
-//    public void unesiNovuTuruGosta() {
-//        String idGosta = idTrenutnoIzabranogGosta;
-//        String idStola = rmaster.RMaster.izabraniStoID;
-//        
-//        String prirpemljena = "0";
-//        String uPripremi = "0";
-//        String RACUN_ID = "";
-//    }
     
     
     public void prikaziTotalPopustNaplataTura(List<Tura> listTure) {
@@ -1320,22 +1277,13 @@ public class PorudzbinaController extends FXMLDocumentController {
         this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
         
     }
-    
-    public void otvoriLojalnost(ActionEvent event) {
-        Map<String, String> newData = new HashMap<>();
-        prikaziFormu(
-                newData,
-                ScreenMap.LOJALNOST,
-                true, 
-                (Node)event.getSource()
-        );
-    }
+
     
     public void naplataIliStampaPorudzbine(ActionEvent event) {
         //porudzbinaTrenutna.oslobodiSto();
         porudzbinaTrenutna.snimi();
         // TODO: Otvoriti formu za naplatu
-        Map<String, String> newData = new HashMap<>();
+        List<Object> newData = new ArrayList<>();
         prikaziFormu(
                 newData,
                 ScreenMap.NAPLATA,

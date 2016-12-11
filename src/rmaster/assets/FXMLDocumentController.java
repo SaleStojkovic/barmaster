@@ -5,6 +5,7 @@
  */
 package rmaster.assets;
  
+import static java.lang.Math.E;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,9 +27,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import static javafx.scene.input.KeyCode.T;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -53,7 +54,7 @@ public class FXMLDocumentController implements Initializable {
     public TableHelper tableHelper;
     
     public Konobar ulogovaniKonobar;
-    public Map<String, String> data = new HashMap<>();
+    public Object data;
      
     public FXMLDocumentController() {
         
@@ -236,7 +237,7 @@ public class FXMLDocumentController implements Initializable {
      
      
     /* BOSKO DODAO */
-     public void initData(Map<String, String> data) {
+     public void initData(Object data) {
          this.data = data;
      }
      
@@ -271,7 +272,7 @@ public class FXMLDocumentController implements Initializable {
       * @param prethodnaForma
       */
      public void prikaziFormu(
-             Map<String, String> data,
+             Object data,
              String imeForme, 
              boolean ugasiPrethodnuFormu, 
              Node prethodnaForma) 
@@ -290,10 +291,10 @@ public class FXMLDocumentController implements Initializable {
             stage.setScene(novaScena);
             
             FXMLDocumentController controller = loader.getController();
-            if (!data.isEmpty()) {
+            if (data != null) {
                 controller.initData(data);
             } else {
-                Map<String, String> newData = new HashMap<>();
+                Object newData = new Object();
                 controller.initData(newData);
             }
 
@@ -313,7 +314,7 @@ public class FXMLDocumentController implements Initializable {
      
 
     public void prikaziFormuModalno(
-            Map<String, String> data,
+            List<Object> data,
             String imeForme, 
             Node prethodnaForma
     ) {
@@ -381,7 +382,7 @@ public class FXMLDocumentController implements Initializable {
     {
             //TODO da li treba upisati kada se konobar izlogovao
         
-            Map<String, String> newData = new HashMap<>();
+            List<Object> newData = new ArrayList<>();
             
             //sledeca stranica 
             prikaziFormu(
@@ -394,7 +395,6 @@ public class FXMLDocumentController implements Initializable {
     
     /**
      * 
-     * @param titleText
      * @param headerText
      * @param contentText
      * @param buttons
