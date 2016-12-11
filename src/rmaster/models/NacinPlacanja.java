@@ -52,7 +52,7 @@ public class NacinPlacanja {
     }
     public String getText() {
         String rez = this.text;
-        if (this.vrednost!=0)
+        if (this.vrednost!=0) 
             rez = rez + "\n" + this.getVrednostString();
         return rez;
     }

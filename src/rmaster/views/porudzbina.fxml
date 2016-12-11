@@ -21,35 +21,56 @@
          
           <top>
            
-              <HBox prefHeight="46.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
+              <HBox prefHeight="54.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
                
                   <children>
-                  <Pane fx:id="porudzbinaHeader" prefHeight="46.0" prefWidth="1025.0">
+                  <Pane fx:id="porudzbinaHeader" prefHeight="54.0" prefWidth="1019.0">
                      <children>
                         
-                            <ImageView fitHeight="41.0" fitWidth="255.0" pickOnBounds="true" preserveRatio="true">
-                              <image>
-                                 <Image url="@../../rmaster/views/style/img/logo.png" />
-                              </image>
-                          </ImageView>
-                        
-                         <Pane layoutX="291.0" layoutY="-2.0" prefHeight="50.0" prefWidth="536.0">
+                         <Pane layoutX="291.0" layoutY="-2.0" prefHeight="50.0" prefWidth="731.0">
                             <children>
                                 
-                                <ImageView fitHeight="30.0" fitWidth="35.0" layoutX="268.0" layoutY="10.0">
+                                <ImageView fitHeight="30.0" fitWidth="35.0" layoutX="644.0" layoutY="10.0">
                                      <image>
                                         <Image url="@../../rmaster/views/style/img/Person.png" />
                                     </image>
                                 </ImageView>
                               
-                                <Label fx:id="imeKonobara" layoutX="303.0" layoutY="11.0" prefHeight="29.0" prefWidth="127.0" />
+                                <Label fx:id="imeKonobara" layoutX="552.0" layoutY="12.0" prefHeight="29.0" prefWidth="127.0" />
                               
-                                <Label fx:id="izabraniSto" layoutX="20.0" layoutY="5.0" prefHeight="42.0" prefWidth="184.0" />
+                                <Label fx:id="izabraniSto" layoutX="298.0" layoutY="6.0" prefHeight="42.0" prefWidth="184.0" />
                         
                             </children>
                        
                          </Pane>
-                         <Button fx:id="favorites" layoutX="830.0" layoutY="0.0" mnemonicParsing="false" onAction="#prikaziArtikleFavorite" text="❤" />
+                        <Pane fx:id="sekcijaDodavanjeGostiju" layoutY="-3.0" prefHeight="60.0" prefWidth="496.0">
+                           <children>
+                              <ScrollPane fx:id="prikazGostijuScrollPane" hbarPolicy="NEVER" layoutX="62.0" layoutY="5.0" prefHeight="50.0" prefWidth="367.0" vbarPolicy="NEVER" />
+                                 
+                                    
+                              <Button layoutX="431.0" layoutY="4.0" mnemonicParsing="false" onAction="#toggleDodavanjeGostiju" prefHeight="52.0" prefWidth="65.0" text="« »" />
+                              
+                                                    <Button layoutX="1.0" layoutY="5.0" mnemonicParsing="false" onAction="#dodajNovogGosta" prefHeight="50.0" prefWidth="60.0" text="+">
+                                 
+                                                        <graphic>
+                                         <ImageView fitHeight="20.0" fitWidth="20.0">
+                                            <image>
+                                               <Image url="@../../rmaster/views/style/img/Person.png" />
+                                            </image>
+                                            <viewport>
+                                               <Rectangle2D />
+                                            </viewport>
+                                         </ImageView>
+                                      </graphic>
+      
+                                                        <opaqueInsets>
+                                         <Insets />
+                                      </opaqueInsets>
+      
+                                                
+                                              </Button>
+                           </children>
+                        </Pane>
                         
                      </children>
                   </Pane>
@@ -63,41 +84,13 @@
             <VBox fx:id="sekcijaPorudzbina" minWidth="-Infinity" prefHeight="622.0" prefWidth="287.0" BorderPane.alignment="CENTER">
                
                 <children>
-                  <Pane fx:id="sekcijaDodavanjeGostiju" prefHeight="52.0" prefWidth="256.0">
-                     <children>
-                        <ScrollPane fx:id="prikazGostijuScrollPane" hbarPolicy="NEVER" layoutX="63.0" prefHeight="50.0" prefWidth="155.0" vbarPolicy="NEVER" />
-                           
-                        
-                        <Button layoutX="222.0" layoutY="-1.0" mnemonicParsing="false" onAction="#toggleDodavanjeGostiju" prefHeight="52.0" prefWidth="65.0" text="« »" />
-                        
-                                        <Button mnemonicParsing="false" onAction="#dodajNovogGosta" prefHeight="50.0" prefWidth="60.0" text="+">
-                           
-                                            <graphic>
-                                   <ImageView fitHeight="20.0" fitWidth="20.0">
-                                      <image>
-                                         <Image url="@../../rmaster/views/style/img/Person.png" />
-                                      </image>
-                                      <viewport>
-                                         <Rectangle2D />
-                                      </viewport>
-                                   </ImageView>
-                                </graphic>
-
-                                            <opaqueInsets>
-                                   <Insets />
-                                </opaqueInsets>
-
-                                    
-                                  </Button>
-                     </children>
-                  </Pane>
                   <Pane prefHeight="26.0" prefWidth="256.0">
                      <children>
                         <Label fx:id="turaHeader" prefHeight="28.0" prefWidth="256.0" text="  Artikal&#9;&#9;&#9;&#9;&#9;      kol      Cena" />
                      </children>
                   </Pane>
                   
-                  <ScrollPane fx:id="prikazRacunaGosta" prefHeight="404.0" prefWidth="287.0" />
+                  <ScrollPane fx:id="prikazRacunaGosta" prefHeight="455.0" prefWidth="287.0" />
                   <Line endX="125.0" startX="-100.0" stroke="#4f5460">
                      <VBox.margin>
                         <Insets bottom="3.0" left="25.0" right="10.0" top="10.0" />
@@ -139,9 +132,8 @@
                         <Button layoutX="137.0" mnemonicParsing="false" onAction="#setKolicinaStavkeTure" prefHeight="50.0" prefWidth="147.0" text="Količina" />
                         <Button layoutX="137.0" layoutY="52.0" mnemonicParsing="false" onAction="#izbrisiStavkuNoveTure" prefHeight="48.0" prefWidth="147.0" text="Izbriši" />
                         <Button layoutX="288.0" layoutY="-1.0" mnemonicParsing="false" onAction="#smanjiKolicinuZaJedan" prefHeight="100.0" prefWidth="140.0" text="Umanji količinu za 1" />
-                        <Button layoutX="428.0" layoutY="-1.0" mnemonicParsing="false" onAction="#otvoriLojalnost" prefHeight="100.0" prefWidth="140.0" text="Lojalnost" />
-                        <Button fx:id="porudzbinaMedjuzbor" layoutX="738.0" layoutY="-1.0" mnemonicParsing="false" onAction="#medjuzbir" prefHeight="100.0" prefWidth="141.0" text="Među zbir ★" />
                         <Button fx:id="porudzbinaNaplati" layoutX="880.0" mnemonicParsing="false" onAction="#naplataIliStampaPorudzbine" prefHeight="99.0" prefWidth="143.0" text="Naplati ✓" />
+                         <Button fx:id="favorites" layoutX="428.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#prikaziArtikleFavorite" prefHeight="100.0" prefWidth="147.0" text="❤" />
                      </children>
                   </Pane>
                
