@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ToggleButton?>
@@ -9,11 +13,14 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane id="AnchorPane" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.NaplataController">
+<AnchorPane id="AnchorPane" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.NaplataController">
    <children>
       <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox prefHeight="75.0" prefWidth="491.0" />
+            <HBox prefHeight="75.0" prefWidth="491.0">
+               <children>
+                  <Label text="Ovde ide ono kao na slici" />
+               </children></HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <VBox prefHeight="200.0" prefWidth="100.0">
@@ -129,7 +136,7 @@
             <Button fx:id="fxID_tastatura01" mnemonicParsing="false" text="tastatura01" />
          </children>
       </GridPane>
-      <Button layoutX="388.0" layoutY="667.0" mnemonicParsing="false" onAction="#otvoriLojalnost" prefHeight="100.0" prefWidth="140.0" text="Lojalnost" />
-      <Button fx:id="porudzbinaMedjuzbor" layoutX="698.0" layoutY="667.0" mnemonicParsing="false" onAction="#medjuzbir" prefHeight="100.0" prefWidth="141.0" text="Među zbir ★" />
+      <Button fx:id="fxID_Lojalnost" layoutX="388.0" layoutY="667.0" mnemonicParsing="false" onAction="#otvoriLojalnost" prefHeight="100.0" prefWidth="140.0" text="Lojalnost" />
+      <Button fx:id="fxID_PorudzbinaMedjuzbir" layoutX="698.0" layoutY="667.0" mnemonicParsing="false" onAction="#medjuzbir" prefHeight="100.0" prefWidth="141.0" text="Među zbir ★" />
    </children>
 </AnchorPane>

@@ -70,6 +70,11 @@ public class NaplataController extends FXMLDocumentController {
     @FXML
     private ToggleButton fxID_HotelGost4;
     
+    @FXML
+    private Button fxID_PorudzbinaMedjuzbir;
+    @FXML
+    private Button fxID_Lojalnost;
+    
     private List<NacinPlacanja> placanja = new ArrayList();
     private NacinPlacanja aktivnoPlacanje;
     
@@ -196,5 +201,11 @@ public class NaplataController extends FXMLDocumentController {
                     break;
             }
         }
+    }
+    
+    public void otvoriLojalnost(ActionEvent event) {
+    }
+    
+    public void medjuzbir(ActionEvent event) {
     }
 }
