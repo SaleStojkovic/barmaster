@@ -150,6 +150,7 @@ public class Porudzbina {
                     System.out.println("Greska pri formiranju Porudzbine!");
             }
         } catch(Exception e) {
+            e.printStackTrace();
         }
         // TODO: Pokupi stavke racuna, treba voditi racuna u kojoj je turi, za svaku novu kreirati novu Tura, i dodati StavkaTure u Tura
         popuniTurePorudzbineIzBaze();

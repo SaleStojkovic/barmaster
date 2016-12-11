@@ -19,19 +19,19 @@ public class Settings {
     // Singleton instance
     private static Settings instance = null;
     
-    String putanjaSettings = "D:\\5com\\git\\BarMaster\\src\\rmaster\\assets\\Settings.conf";
+    String putanjaSettings = "Settings.conf";
     
-    Properties prop = null;   
+    Properties prop = new Properties();   
     
-    protected Settings() {
-        InputStream input = null;
-        prop = new Properties();
+    protected Settings() { 
         
+        InputStream input = null;
+
 	try {
-                File file = new File(putanjaSettings);
-		input = new FileInputStream(file);
+                input = new FileInputStream(new File(putanjaSettings));
 		// load a properties file
 		prop.load(input);
+                
 	} catch (IOException ex) {
 		ex.printStackTrace();
 	} finally {
