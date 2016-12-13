@@ -93,6 +93,20 @@ public class Settings {
         return prop.getProperty("fiscal.izvestaji.dnevniizvestaj.formatdatuma");
     }
 
+    public String getPrintTuraFormatVremana() {
+        // u Settings.conf stoji =HH:mm:ss
+        return prop.getProperty("print.tura.formatvremena");
+    }
+
+    public String getPrintTuraFormatDatuma() {
+        // u Settings.conf stoji =yyyy/MM/dd
+        return prop.getProperty("print.tura.formatdatuma");
+    }
+    public String getPrintTuraStampacNaziv() {
+        // u Settings.conf stoji =yyyy/MM/dd
+        return prop.getProperty("print.tura.stampac.naziv");
+    }
+
     public String getFormatDatuma() {
         // u Settings.conf stoji =yyyy-MM-dd HH-mm-ss
         return prop.getProperty("formatdatuma");
