@@ -650,7 +650,7 @@ and open the template in the editor.
     -fx-font-size: 12;
     -fx-selection-bar: white;
     -fx-border-width: 0.4 0.4 0.4 0.4;
-    -fx-border-color: white;
+    -fx-border-color: -fx-siva;
 
 }
 
@@ -665,6 +665,11 @@ and open the template in the editor.
 
 #lojalnostGlavni {
     -fx-background-color: -fx-tamno-crna;
+}
+
+#lojalnostGlavni *.label {
+    -fx-font-family: KlavikaBold;
+    -fx-text-fill: white;  
 }
 
 #lojalnostHeader *.button {
@@ -897,6 +902,28 @@ and open the template in the editor.
 
 /* kraj sastavljanje rastavljanje */
 
+
+/* pocetak naplate */
+
+#naplataFooter 
+{
+    -fx-background-color: -fx-tamno-crna;
+    -fx-border-color: -fx-siva;
+    -fx-border-width: 0.5;
+}
+
+#naplataFooter *.button
+{
+    -fx-background-color: -fx-tamno-crna;
+    -fx-font-family: KlavikaBold;
+    -fx-text-fill: -fx-zuta;
+    -fx-border-color: white;
+    -fx-border-width: 0.5;
+    -fx-font-weight: bold;
+    -fx-font-size: 12; 
+}
+
+/* kraj naplate */ 
 
 /* table view stil */
 .table-view .column-header-background { 

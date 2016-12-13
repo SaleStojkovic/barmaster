@@ -16,6 +16,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -24,6 +25,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.QueryBuilder;
+import rmaster.assets.ScreenMap;
+import rmaster.models.Porudzbina;
 import rmaster.models.StalniGost;
 
 /**
@@ -49,18 +52,24 @@ public class LojalnostController extends FXMLDocumentController {
     @FXML
     private HBox lojalnostGostiGrupe;
     
+    
     @FXML
     private TableView<Map<String, String>> tabelaLojalnost = new TableView();
     
-    public int[] sirineKolone = {0, 700, 50};
+    public int[] sirineKolone = {0, 960, 50};
     
     public String prviRed = "ABCDEFGHIJKLM12345";
     
     public String drugiRed = "NOPQRSTUVWXYZ67890";
+    
+    private Porudzbina porudzbina;
 
-    /**
-     * Initializes the controller class.
-     */
+
+    @Override
+    public void initData(Object data) {
+        
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Timeline timeline = this.prikaziCasovnik(casovnik);
@@ -81,7 +90,10 @@ public class LojalnostController extends FXMLDocumentController {
                 sirineKolone
         );
 
+        tabelaLojalnost.getSelectionModel().select(0);   
+        
         lojalnostScrollPane.setContent(tabelaLojalnost);
+        
     } 
     
     
@@ -204,5 +216,37 @@ public class LojalnostController extends FXMLDocumentController {
         );
         
         lojalnostScrollPane.setContent(tabelaLojalnost);
+    }
+    
+    public void nazadNaNaplatu(ActionEvent event) {
+        List<Object> data = new ArrayList<>();
+        
+        data.add(porudzbina);
+        
+        prikaziFormu(
+                data, 
+                ScreenMap.NAPLATA, 
+                true, 
+                (Node)event.getSource()
+        );
+    }
+    
+    public void potvrdi(ActionEvent event) {
+        
+        Map<String, String> izabraniLojalnost = tabelaLojalnost.getSelectionModel().getSelectedItem();
+        
+        double popust = Double.parseDouble(izabraniLojalnost.get(StalniGost.POPUST));
+        
+        List<Object> data = new ArrayList<>();
+        
+        data.add(porudzbina);
+        data.add(popust);
+        
+        prikaziFormu(
+                data, 
+                ScreenMap.NAPLATA, 
+                true, 
+                (Node)event.getSource()
+        );
     }
 }

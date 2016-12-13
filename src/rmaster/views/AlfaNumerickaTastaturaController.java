@@ -188,7 +188,7 @@ public class AlfaNumerickaTastaturaController extends Dialog {
             unetiTekst.setPromptText("Unesite tekst");
             redSaTekstom.getChildren().add(unetiTekst);
             
-            unetiTekst.setPrefSize(910, 60);
+            unetiTekst.setPrefSize(940, 60);
             
             unetiTekst.setText(prethodniTekst);
             

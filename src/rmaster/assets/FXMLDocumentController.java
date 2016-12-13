@@ -5,7 +5,8 @@
  */
 package rmaster.assets;
  
-import static java.lang.Math.E;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,7 +30,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import static javafx.scene.input.KeyCode.T;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -306,7 +306,7 @@ public class FXMLDocumentController implements Initializable {
             
             if (ugasiPrethodnuFormu) {
                 prethodnaForma.getScene().getWindow().hide();
-        }
+            }
      }
         
     }
@@ -422,4 +422,26 @@ public class FXMLDocumentController implements Initializable {
         
         return alert;
     }
+    
+    
+    public static Map<String, Object> ConvertObjectToMap(Object obj) throws 
+    IllegalAccessException, 
+    IllegalArgumentException, 
+    InvocationTargetException 
+    {
+        Class<?> pomclass = obj.getClass();
+        pomclass = obj.getClass();
+        Method[] methods = obj.getClass().getMethods();
+
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        for (Method m : methods) {
+           if (m.getName().startsWith("get") && !m.getName().startsWith("getClass")) {
+              Object value = (Object) m.invoke(obj);
+              map.put(m.getName().substring(3), (Object) value);
+           }
+        }
+        return map;
+    }
+
 }

@@ -12,11 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,6 +28,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampac;
 import rmaster.assets.Utils;
 import rmaster.models.NacinPlacanja;
@@ -38,6 +41,10 @@ import rmaster.models.Porudzbina;
  */
 public class NaplataController extends FXMLDocumentController {
 
+    @FXML
+    private Label casovnik;
+    @FXML
+    private Label imeKonobara;
     @FXML
     private Label fxID_Total;
     @FXML
@@ -79,18 +86,20 @@ public class NaplataController extends FXMLDocumentController {
     private NacinPlacanja aktivnoPlacanje;
     
     private Map<String, String> mapaPopusta = new HashMap();
-    private double popustPorudzbine = 0.;
+    public double popustPorudzbine = 0.;
+    
     
     private String sVrednostFaktura = "";
     private String sVrednostCek = "";
     private String sVrednostKartica = "";
     private String sVrednostGotovina = "";
-    /**
-     * Initializes the controller class.
-     */
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        Timeline timeline = this.prikaziCasovnik(casovnik);
+        timeline.play();
+        this.imeKonobara.setText(ulogovaniKonobar.imeKonobara);
+        
         this.fxID_Faktura.setDisable(!Settings.getInstance().getValueBoolean("faktura"));
         this.fxID_Cek.setDisable(!Settings.getInstance().getValueBoolean("cek"));
         this.fxID_Kartica.setDisable(!Settings.getInstance().getValueBoolean("kartica"));
@@ -137,8 +146,12 @@ public class NaplataController extends FXMLDocumentController {
     public void initData(Object data) {
         List<Object> d = (List<Object>)data;
         for (Object object : d) {
-            if (object instanceof Porudzbina)
+            if (object instanceof Porudzbina) {
                 porudzbina = (Porudzbina) object;
+            }
+            if (object instanceof Double) {
+                popustPorudzbine = (Double) object;
+            }
         }
         this.fxID_Total.setText(Utils.getStringFromDouble(porudzbina.getVrednostPorudzbine()));
 
@@ -243,6 +256,12 @@ public class NaplataController extends FXMLDocumentController {
     }
     
     public void otvoriLojalnost(ActionEvent event) {
+        prikaziFormu(
+                porudzbina, 
+                ScreenMap.LOJALNOST, 
+                true, 
+                (Node)event.getSource()
+        );
     }
     
     public void medjuzbir(ActionEvent event) {
@@ -305,5 +324,6 @@ public class NaplataController extends FXMLDocumentController {
         this.aktivnoPlacanje.setVrednostString(text);
         this.osveziPrikaz();
     }
+   
     
 }

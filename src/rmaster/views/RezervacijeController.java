@@ -158,10 +158,6 @@ public class RezervacijeController extends FXMLDocumentController {
             );
     }
     
-    public void pomeriScrollDownRezervacije(){}
-    
-    public void pomeriScrollUpRezervacije(){}
-    
     
     public List<Map<String, String>> getRezervacije() {
         
