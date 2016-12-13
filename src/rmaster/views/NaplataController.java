@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -41,10 +40,6 @@ import rmaster.models.Porudzbina;
  */
 public class NaplataController extends FXMLDocumentController {
 
-    @FXML
-    private Label casovnik;
-    @FXML
-    private Label imeKonobara;
     @FXML
     private Label fxID_Total;
     @FXML
@@ -86,20 +81,22 @@ public class NaplataController extends FXMLDocumentController {
     private NacinPlacanja aktivnoPlacanje;
     
     private Map<String, String> mapaPopusta = new HashMap();
-    public double popustPorudzbine = 0.;
-    
+    private double total = 0.;
+    private double popustPorudzbineProcenat = 0.;
+    private double popustPorudzbineIznos = 0.;
+    private double zaUplatu = 0.;
+    private double kusur = 0.;
     
     private String sVrednostFaktura = "";
     private String sVrednostCek = "";
     private String sVrednostKartica = "";
     private String sVrednostGotovina = "";
-    
+    /**
+     * Initializes the controller class.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Timeline timeline = this.prikaziCasovnik(casovnik);
-        timeline.play();
-        this.imeKonobara.setText(ulogovaniKonobar.imeKonobara);
-        
+        // TODO
         this.fxID_Faktura.setDisable(!Settings.getInstance().getValueBoolean("faktura"));
         this.fxID_Cek.setDisable(!Settings.getInstance().getValueBoolean("cek"));
         this.fxID_Kartica.setDisable(!Settings.getInstance().getValueBoolean("kartica"));
@@ -150,10 +147,11 @@ public class NaplataController extends FXMLDocumentController {
                 porudzbina = (Porudzbina) object;
             }
             if (object instanceof Double) {
-                popustPorudzbine = (Double) object;
+                popustPorudzbineProcenat = (Double) object;
             }
         }
-        this.fxID_Total.setText(Utils.getStringFromDouble(porudzbina.getVrednostPorudzbine()));
+        this.total = porudzbina.getVrednostPorudzbine();
+        this.fxID_Total.setText(Utils.getStringFromDouble(this.total));
 
         this.data = data;
     }
@@ -168,7 +166,7 @@ public class NaplataController extends FXMLDocumentController {
             popustButton.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {
                                         Button pop = (Button)e.getSource();
-                                        popustPorudzbine = Utils.getDoubleFromString(mapaPopusta.get(pop.getId()));
+                                        popustPorudzbineProcenat = Utils.getDoubleFromString(mapaPopusta.get(pop.getId()));
                                         osveziPrikaz();
                                     }
                                 });
@@ -224,15 +222,15 @@ public class NaplataController extends FXMLDocumentController {
     }
     
     private double getKusur() {
-        double kusur = Utils.getDoubleFromString(this.fxID_Uplaceno.getText()) - Utils.getDoubleFromString(this.fxID_ZaUplatu.getText());
-        return kusur>0?kusur:0;
+        this.kusur = this.getUplaceno() - this.zaUplatu;
+        return (this.kusur>0 ? this.kusur : 0);
     }
     
     private void osveziPrikaz() {
-        this.fxID_Popust.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) * (popustPorudzbine/100)));
-        this.fxID_ZaUplatu.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) - Utils.getDoubleFromString(this.fxID_Popust.getText())));
+        this.fxID_Popust.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) * (popustPorudzbineProcenat/100)));
+        this.zaUplatu = Utils.getDoubleFromString(this.fxID_Total.getText()) - Utils.getDoubleFromString(this.fxID_Popust.getText());
+        this.fxID_ZaUplatu.setText(Utils.getStringFromDouble(this.zaUplatu));
         this.fxID_Uplaceno.setText(Utils.getStringFromDouble(this.getUplaceno()));
-        
         this.fxID_Kusur.setText(Utils.getStringFromDouble(this.getKusur()));
         
         
@@ -267,21 +265,35 @@ public class NaplataController extends FXMLDocumentController {
     public void medjuzbir(ActionEvent event) {
     }
 
+    private NacinPlacanja getNacinPlacanja(NacinPlacanja.VrstePlacanja vrstaPlacanja) {
+        // Vraca nacin placanja, ako ne postoji kreira ga, ubacuje u listu placanja i vraca
+        NacinPlacanja placanje = null;
+        for (NacinPlacanja nacinPlacanja : placanja) {
+            if (nacinPlacanja.getNacinPlacanja() == vrstaPlacanja) {
+                placanje = nacinPlacanja;
+                break;
+            }
+        }
+        if (placanje == null) {
+            placanje = new NacinPlacanja(vrstaPlacanja);
+            placanja.add(placanje);
+        }
+        return placanje;
+    }
+    
     public void naplata(ActionEvent event) {
         if (this.getUplaceno() == 0) {
             // Nista nije uneto, obracunava kao da je tacan iznos gotovine
             // - ako nista nije kucano knjizi kao da je uplacen tacan iznos u gotovini
-            for (NacinPlacanja nacinPlacanja : placanja) {
-                if (nacinPlacanja.getNacinPlacanja() == NacinPlacanja.VrstePlacanja.GOTOVINA)
-                    nacinPlacanja.setVrednost(porudzbina.getVrednostPorudzbine());
-            }
+            NacinPlacanja nacinPlacanjaGotovina = getNacinPlacanja(NacinPlacanja.VrstePlacanja.GOTOVINA);
+            nacinPlacanjaGotovina.setVrednost(porudzbina.getVrednostPorudzbine());
             osveziPrikaz();
             this.snimi();
             Stampac.getInstance().stampajGotovinskiRacun();
             return;
         }
-        
-        if (this.getUplaceno() < this.porudzbina.getVrednostPorudzbine()) {
+
+        if (this.getUplaceno() < this.zaUplatu) {
             // Nedovoljno uplaceno
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Naplata!");
@@ -289,6 +301,32 @@ public class NaplataController extends FXMLDocumentController {
             alert.setContentText("Morate uneti dovoljan iznos za plaćanje.");
             alert.showAndWait();
             return;
+        }
+
+        NacinPlacanja nacinPlacanjaFaktura = getNacinPlacanja(NacinPlacanja.VrstePlacanja.FAKTURA);
+        if (nacinPlacanjaFaktura.getVrednost() != 0) {
+            // Placanje fakturom
+            if (nacinPlacanjaFaktura.getVrednost() != this.zaUplatu) {
+                // Provera da li je tacan iznos i da li ima jos nekog placanja osim fakture, ne sme da bude
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Naplata!");
+                alert.setHeaderText("Netačan iznos fakture!");
+                alert.setContentText("Morate uneti tačan iznos računa za plaćanje fakturom.");
+                alert.showAndWait();
+                return;
+            }
+            osveziPrikaz();
+            this.snimi();
+            Stampac.getInstance().stampajFakturu();
+        }
+        
+        if (this.kusur > getNacinPlacanja(NacinPlacanja.VrstePlacanja.GOTOVINA).getVrednost()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Naplata!");
+                alert.setHeaderText("Neregularno plaćanje!");
+                alert.setContentText("Kusur ne sme biti veći od iznosa plaćenog gotovinom.");
+                alert.showAndWait();
+                return;
         }
         /*
         for (NacinPlacanja nacinPlacanja : placanja) {
@@ -322,8 +360,23 @@ public class NaplataController extends FXMLDocumentController {
         String text = this.aktivnoPlacanje.getVrednostString();
         text += pritisnutTaster.getText();
         this.aktivnoPlacanje.setVrednostString(text);
+        long iznos = 0;
+        if (!this.aktivnoPlacanje.getVrednostString().equals(""))
+            iznos = (long)(this.aktivnoPlacanje.getVrednost());
+        if (iznos > 9999999999L) {
+            // Unet preveliki iznos
+            text = text.substring(0, text.length()-1);
+            if (text.endsWith("."))
+                text = text.substring(0, text.length()-1);
+            this.aktivnoPlacanje.setVrednostString(text);
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Naplata!");
+            alert.setHeaderText("Preveliki iznos!");
+            alert.setContentText("Ne možete uneti toliki iznos za plaćanje.");
+            alert.showAndWait();
+            return;
+        }
         this.osveziPrikaz();
     }
-   
     
 }

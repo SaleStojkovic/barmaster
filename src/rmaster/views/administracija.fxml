@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -7,7 +11,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="prikazAdministracijaGlavni" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.AdministracijaController">
+<AnchorPane fx:id="prikazAdministracijaGlavni" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.AdministracijaController">
     <stylesheets>
         <URL value="@/rmaster/views/style/style.css" />
     </stylesheets>
@@ -34,47 +38,47 @@
          <children>
             <AnchorPane GridPane.columnIndex="2" GridPane.rowIndex="1">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="103.0" prefWidth="125.0" text="Dnevni izveštaj" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button fx:id="fxID_DnevniIzvestaj" disable="true" mnemonicParsing="false" onAction="#stampajDnevniIzvestaj" prefHeight="103.0" prefWidth="125.0" text="Dnevni izveštaj" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                </children>
             </AnchorPane>
             <AnchorPane layoutX="260.0" layoutY="113.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="103.0" prefWidth="125.0" text="Periodični izveštaj" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button fx:id="fxID_PeriodicniIzvestaj" disable="true" mnemonicParsing="false" onAction="#stampajPeriodicniIzvestaj" prefHeight="103.0" prefWidth="125.0" text="Periodični izveštaj" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                </children>
             </AnchorPane>
             <AnchorPane layoutX="510.0" layoutY="113.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="103.0" prefWidth="125.0" text="Zaključenje dana" wrapText="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button fx:id="fxID_ZakljucenjeDana" disable="true" mnemonicParsing="false" onAction="#zakljucenjeDana" prefHeight="103.0" prefWidth="125.0" text="Zaključenje dana" wrapText="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                </children>
             </AnchorPane>
             <AnchorPane layoutX="376.0" layoutY="276.0" GridPane.columnIndex="3" GridPane.rowIndex="5">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="103.0" prefWidth="125.0" text="Presek stanja" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button fx:id="fxID_PresekStanja" disable="true" mnemonicParsing="false" onAction="#presekStanja" prefHeight="103.0" prefWidth="125.0" text="Presek stanja" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                </children>
             </AnchorPane>
             <AnchorPane layoutX="376.0" layoutY="452.0" GridPane.columnIndex="4" GridPane.rowIndex="5">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="103.0" prefWidth="125.0" text="Prodati artikli" wrapText="true" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button fx:id="fxID_ProdatiArtikli" disable="true" mnemonicParsing="false" onAction="#prodatiArtikli" prefHeight="103.0" prefWidth="125.0" text="Prodati artikli" wrapText="true" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                </children>
             </AnchorPane>
             <AnchorPane layoutX="490.0" layoutY="452.0" GridPane.columnIndex="2" GridPane.rowIndex="5">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="103.0" prefWidth="125.0" text="Promet korisnika" wrapText="true" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button fx:id="fxID_PrometKorisnika" disable="true" mnemonicParsing="false" onAction="#prometKorisnika" prefHeight="103.0" prefWidth="125.0" text="Promet korisnika" wrapText="true" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                </children>
             </AnchorPane>
             <AnchorPane layoutX="208.0" layoutY="452.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="103.0" prefWidth="125.0" text="U pripremi..." wrapText="true" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button disable="true" mnemonicParsing="false" prefHeight="103.0" prefWidth="125.0" text="U pripremi..." wrapText="true" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                </children>
             </AnchorPane>
             <AnchorPane layoutX="92.0" layoutY="364.0" GridPane.columnIndex="5" GridPane.rowIndex="4">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="103.0" prefWidth="125.0" text="U pripremi..." wrapText="true" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button disable="true" mnemonicParsing="false" prefHeight="103.0" prefWidth="125.0" text="U pripremi..." wrapText="true" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" GridPane.rowIndex="6">
                <children>
-                  <Button layoutX="25.0" layoutY="14.0" mnemonicParsing="false" onAction="#nazadNaPrikazSala" prefHeight="109.0" prefWidth="141.0" text="Izlaz" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="0.0" />
+                  <Button fx:id="fxID_Izlaz" layoutX="25.0" layoutY="14.0" mnemonicParsing="false" onAction="#nazadNaPrikazSala" prefHeight="109.0" prefWidth="141.0" text="Izlaz" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
          </children>

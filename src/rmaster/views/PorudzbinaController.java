@@ -22,6 +22,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -910,7 +911,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         novaStavkaTure.put("brojStola", "" + rmaster.RMaster.izabraniStoBroj);
 
         this.dodajStavkuUNovuTuru(novaStavkaTure);
-
+        
         this.tableRefresh();
         this.prikaziTotalPopustNaplataTura(novaTura);
 //        this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
@@ -1292,7 +1293,10 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     public void naplataIliStampaPorudzbine(ActionEvent event) {
         //porudzbinaTrenutna.oslobodiSto();
-        porudzbinaTrenutna.snimi();
+        if (novaTura != null) {
+            porudzbinaTrenutna.snimi();
+            Stampac.getInstance().stampajTuru(novaTura);
+        }
         // TODO: Otvoriti formu za naplatu
         List<Object> newData = new ArrayList<>();
         newData.add(this.porudzbinaTrenutna);

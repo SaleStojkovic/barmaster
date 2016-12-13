@@ -14,6 +14,7 @@ import java.nio.channels.FileChannel;
 import java.util.Date;
 import java.util.Optional;
 import rmaster.models.Porudzbina;
+import rmaster.models.Tura;
 import rmaster.views.NumerickaTastaturaController;
 
 /**
@@ -83,6 +84,38 @@ public final class Stampac {
         
     }
 
+    public final void stampajTuru(Tura tura) {
+/*
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Poruzbina>
+    <Datum>2016/11/05</Datum>
+    <Vreme>12:57:27</Vreme>
+    <ProdajnoMesto>Restoran CHEZ NIK</ProdajnoMesto>
+    <kasa>Kasa 1</kasa>
+    <sto>R 32</sto>
+    <Stavka>
+        <kolicina>1.0</kolicina>
+        <naziv>ICE CAFFE</naziv>
+        <tip></tip>
+    </Stavka>
+    <Stavka>
+        <kolicina>1.0</kolicina>
+        <naziv>ESPRESSO</naziv>
+        <tip></tip>
+    </Stavka>
+    <Stavka>
+        <kolicina>1.0</kolicina>
+        <naziv>Lungo</naziv>
+        <tip>DODA</tip>
+    </Stavka>
+    <Konobar>Konobar 1</Konobar>
+</Poruzbina>
+        
+*/      
+    //  Settings.getInstance().getNefiskalniStampacPutanja();
+    
+    }
+
     public final void stampajMedjuzbir(Porudzbina porudzbina) {
         boolean odobrenaStampa = true;
         if (porudzbina.getBlokiranaPorudzbina()) {
@@ -104,8 +137,10 @@ public final class Stampac {
                 return;
             }
         }
-        // DOTO: Odstampati medjuzbir
         
-        porudzbina.setBlokiranaPorudzbina(true);
+        if (odobrenaStampa) {
+            // DOTO: Odstampati medjuzbir
+            porudzbina.setBlokiranaPorudzbina(true);
+        }
     }
 }

@@ -6,13 +6,17 @@
 package rmaster.views;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.QueryBuilder;
 import rmaster.assets.ScreenMap;
+import rmaster.models.StalniGost;
 
 /**
  * FXML Controller class
@@ -20,15 +24,86 @@ import rmaster.assets.ScreenMap;
  * @author Bosko
  */
 public class AdministracijaController extends FXMLDocumentController{
-
+    
+    @FXML
+    private Button fxID_DnevniIzvestaj;
+    @FXML
+    private Button fxID_PeriodicniIzvestaj;
+    @FXML
+    private Button fxID_ZakljucenjeDana;
+    @FXML
+    private Button fxID_PrometKorisnika;
+    @FXML
+    private Button fxID_PresekStanja;
+    @FXML
+    private Button fxID_ProdatiArtikli;
+    @FXML
+    private Button fxID_Izlaz;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
     }    
+
+    /**
+     * 
+     * @param data 
+     */
+    @Override
+    public void initData(Object data) {
+        List<Map<String, String>> listaRezultata = null;
+        try {
+            QueryBuilder query = new QueryBuilder();
+            query.setTableName("posmeni");
+            query.setColumns("fxID");
+            query.setCriteriaColumns("korisnikID", "vrstaKorisnika");
+            query.setCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
+            query.setOperators(QueryBuilder.LOGIC_AND);
+            query.setCriteriaValues(ulogovaniKonobar.konobarID + "", "1");
+
+            listaRezultata = runQuery(query);
+        } catch (Exception e) {
+            System.out.println("Greska u pozivu SP getAdministracijaMeni! - " + e.toString());
+        }
+        for (Map mapPrivilegija : listaRezultata) {
+            try {
+                Button button = (Button) fxID_Izlaz.getScene().lookup("#" + mapPrivilegija.get("fxID"));
+                button.setDisable(false);
+            } catch (Exception e) {
+                
+            }
+            
+        }
+        
+    }
     
+    public void stampajDnevniIzvestaj(ActionEvent event) {
+        
+    }
+
+    public void stampajPeriodicniIzvestaj(ActionEvent event) {
+        
+    }
+
+    public void zakljucenjeDana(ActionEvent event) {
+        
+    }
+    
+    public void prometKorisnika(ActionEvent event) {
+        
+    }
+
+    public void presekStanja(ActionEvent event) {
+        
+    }
+
+    public void prodatiArtikli(ActionEvent event) {
+        
+    }
+
     public void nazadNaPrikazSala(ActionEvent event) {
 
         prikaziFormu(
