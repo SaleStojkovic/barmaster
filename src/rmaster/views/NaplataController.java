@@ -17,6 +17,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,6 +27,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampac;
 import rmaster.assets.Utils;
 import rmaster.models.NacinPlacanja;
@@ -243,6 +245,15 @@ public class NaplataController extends FXMLDocumentController {
     }
     
     public void otvoriLojalnost(ActionEvent event) {
+        List<Object> newData = new ArrayList<>();
+//        newData.add(this.porudzbinaTrenutna);
+        prikaziFormu(
+                newData,
+                ScreenMap.LOJALNOST,
+                true, 
+                (Node)event.getSource()
+        );    
+        
     }
     
     public void medjuzbir(ActionEvent event) {
@@ -303,6 +314,22 @@ public class NaplataController extends FXMLDocumentController {
         String text = this.aktivnoPlacanje.getVrednostString();
         text += pritisnutTaster.getText();
         this.aktivnoPlacanje.setVrednostString(text);
+        long iznos = 0;
+        if (!this.aktivnoPlacanje.getVrednostString().equals(""))
+            iznos = (long)(this.aktivnoPlacanje.getVrednost());
+        if (iznos > 9999999999L) {
+            // Unet preveliki iznos
+            text = text.substring(0, text.length()-1);
+            if (text.endsWith("."))
+                text = text.substring(0, text.length()-1);
+            this.aktivnoPlacanje.setVrednostString(text);
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Naplata!");
+            alert.setHeaderText("Preveliki iznos!");
+            alert.setContentText("Ne možete uneti toliki iznos za plaćanje.");
+            alert.showAndWait();
+            return;
+        }
         this.osveziPrikaz();
     }
     
