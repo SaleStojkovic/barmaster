@@ -97,4 +97,8 @@ public class Settings {
         // u Settings.conf stoji =yyyy-MM-dd HH-mm-ss
         return prop.getProperty("formatdatuma");
     }
+    public String getNefiskalniStampacPutanja() {
+        // u Settings.conf - putanja gde nefiskalni stampac trazi fajl za stampu
+        return prop.getProperty("nefiscal.stampa.izvestaji.putanja");
+    }
 }
