@@ -75,6 +75,18 @@ public class Utils {
         return dateFormat.parse(datum);
     }
 
+    public static String getStringVremeFromDate(Date datum){
+        // Format datuma je dat u Settings.conf u parametru formatdatuma
+        java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(Settings.getInstance().getPrintTuraFormatVremana());
+        return dateFormat.format(datum);
+    }
+
+    public static String getStringDatumFromDate(Date datum){
+        // Format datuma je dat u Settings.conf u parametru formatdatuma
+        java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(Settings.getInstance().getPrintTuraFormatDatuma());
+        return dateFormat.format(datum);
+    }
+
     public static String getStringFromDate(Date datum){
         // Format datuma je dat u Settings.conf u parametru formatdatuma
         java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(Settings.getInstance().getFormatDatuma());
