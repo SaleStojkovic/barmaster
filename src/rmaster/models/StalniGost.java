@@ -24,7 +24,7 @@ public class StalniGost extends ModelBase {
     public static String BLOKIRAN = "blokiran";
     public static String GRUPA_ID = "GRUPA_ID";
     
-    public String idStalniGost;
+    public String id;
     public String popust;
     public String naziv;
     
@@ -43,7 +43,7 @@ public class StalniGost extends ModelBase {
     @Override
     public void makeFromHashMap(HashMap<String, String> stalniGostMap) 
     {
-        this.idStalniGost = stalniGostMap.get(PRIMARY_KEY);
+        this.id = stalniGostMap.get(PRIMARY_KEY);
 
         this.naziv = stalniGostMap.get(NAZIV);
                
@@ -60,7 +60,7 @@ public class StalniGost extends ModelBase {
         stalniGostMap.put(POPUST, this.popust);
         
         if (includeId) {
-            stalniGostMap.put(PRIMARY_KEY, this.idStalniGost);
+            stalniGostMap.put(PRIMARY_KEY, this.id);
         }
         
         return stalniGostMap;
@@ -69,7 +69,7 @@ public class StalniGost extends ModelBase {
     public LinkedHashMap<String, String> makeMapForTableOutput() {
         LinkedHashMap<String, String> stalniGostMap = new LinkedHashMap();
         
-        stalniGostMap.put(PRIMARY_KEY, this.idStalniGost);
+        stalniGostMap.put(PRIMARY_KEY, this.id);
         stalniGostMap.put(NAZIV, this.naziv);
         stalniGostMap.put(POPUST, this.popust);
 

@@ -5,8 +5,12 @@
  */
 package rmaster.assets;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -87,5 +91,40 @@ public abstract class ModelBase extends Object {
         }
     }
     
+    public void getInstance(String id) {
+       
+        QueryBuilder query = new QueryBuilder();
+        query.setTableName(this.getTableName());
+        query.setCriteriaColumns(this.getPrimaryKeyName());
+        query.setCriteria(QueryBuilder.IS_EQUAL);
+        query.setCriteriaValues(id);
+        
+        try {
+            
+            List result;
+            
+            result =  dbBroker.runQuery(query);
+            
+            Field[] fields = this.clazz.getDeclaredFields();
+            
+            Map<String, String> mapResult = (Map)result.get(0);
+             
+            for (Field field : fields) {
+                //setuje samo nestaticka polja modela
+                if (!java.lang.reflect.Modifier.isStatic(field.getModifiers())){
+                    
+                    field.setAccessible(true);
+                    field.set(this, mapResult.get(field.getName()));
+                    
+                }
+            }
+            
+        } catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
+            System.err.println(e);
+        }
+        
+    }
     
 }
+
+

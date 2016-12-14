@@ -32,6 +32,7 @@ import rmaster.assets.Stampac;
 import rmaster.assets.Utils;
 import rmaster.models.NacinPlacanja;
 import rmaster.models.Porudzbina;
+import rmaster.models.StalniGost;
 
 /**
  * FXML Controller class
@@ -91,6 +92,8 @@ public class NaplataController extends FXMLDocumentController {
     private String sVrednostCek = "";
     private String sVrednostKartica = "";
     private String sVrednostGotovina = "";
+    
+    private StalniGost stalniGost;
     /**
      * Initializes the controller class.
      */
@@ -146,8 +149,9 @@ public class NaplataController extends FXMLDocumentController {
             if (object instanceof Porudzbina) {
                 porudzbina = (Porudzbina) object;
             }
-            if (object instanceof Double) {
-                popustPorudzbineProcenat = (Double) object;
+            if (object instanceof StalniGost) {
+               stalniGost = (StalniGost)object;
+               popustPorudzbineProcenat = Double.parseDouble(stalniGost.popust);
             }
         }
         this.total = porudzbina.getVrednostPorudzbine();

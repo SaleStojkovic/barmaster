@@ -28,6 +28,9 @@ import rmaster.assets.QueryBuilder;
 import rmaster.assets.ScreenMap;
 import rmaster.models.Porudzbina;
 import rmaster.models.StalniGost;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
 
 /**
  * FXML Controller class
@@ -235,12 +238,16 @@ public class LojalnostController extends FXMLDocumentController {
         
         Map<String, String> izabraniLojalnost = tabelaLojalnost.getSelectionModel().getSelectedItem();
         
-        double popust = Double.parseDouble(izabraniLojalnost.get(StalniGost.POPUST));
+        String stalniGostId = izabraniLojalnost.get(StalniGost.PRIMARY_KEY);
+        
+        StalniGost izabraniGost = new StalniGost();
+        
+        izabraniGost.getInstance(stalniGostId);
         
         List<Object> data = new ArrayList<>();
         
         data.add(porudzbina);
-        data.add(popust);
+        data.add(izabraniGost);
         
         prikaziFormu(
                 data, 
