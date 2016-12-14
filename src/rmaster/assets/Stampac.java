@@ -72,20 +72,177 @@ public final class Stampac {
         }
 
     }
+
     public final void stampajDnevniIzvestajNaFiskal() {
-        // Kopira fajl u direktorijum za stampu
-        
         try {
             java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(Settings.getInstance().getFiscalniIzvestajiDnevniIzvestajFormatDatuma());
 
-            File fSource = new File(Settings.getInstance().getFiscalniIzvestajiPutanja() + Settings.getInstance().getFiscalniIzvestajiDnevniIzvestaj());
-            File fDestination = new File(Settings.getInstance().getFiscalniPrinterPath() + "dnevni " + dateFormat.format(new Date()) + ".xml");
-            copyFile(fSource, fDestination);
-        } catch(IOException e) {
-            
-        }
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
+            // root elements <Poruzbina>
+            Document doc = docBuilder.newDocument();
+            Element element = doc.createElement("Izvestaj");
+            element.appendChild(doc.createTextNode("2"));
+            doc.appendChild(element);
 
+            // write the content into xml file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(
+                                        new File(
+                                                Settings.getInstance().getFiscalniPrinterPath() + 
+                                                "dnevni " + 
+                                                dateFormat.format(new Date()) + 
+                                                ".xml")
+            );
+
+            // Output to console for testing
+            // StreamResult result = new StreamResult(System.out);
+
+            transformer.transform(source, result);
+
+            System.out.println("File saved!");
+
+        } catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        } catch (TransformerException tfe) {
+            tfe.printStackTrace();
+        }        
+    }
+
+    public final void stampajPresekNaFiskal() {
+        try {
+            java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(Settings.getInstance().getFiscalniIzvestajiDnevniIzvestajFormatDatuma());
+
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+            // root elements <Poruzbina>
+            Document doc = docBuilder.newDocument();
+            Element element = doc.createElement("Izvestaj");
+            element.appendChild(doc.createTextNode("1"));
+            doc.appendChild(element);
+
+            // write the content into xml file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(
+                                        new File(
+                                                Settings.getInstance().getFiscalniPrinterPath() + 
+                                                "presek " + 
+                                                dateFormat.format(new Date()) + 
+                                                ".xml")
+            );
+
+            // Output to console for testing
+            // StreamResult result = new StreamResult(System.out);
+
+            transformer.transform(source, result);
+
+            System.out.println("File saved!");
+
+        } catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        } catch (TransformerException tfe) {
+            tfe.printStackTrace();
+        }        
+    }
+
+    public final void stampajDnevniIzvestajIPresekNaFiskal() {
+        try {
+            java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(Settings.getInstance().getFiscalniIzvestajiDnevniIzvestajFormatDatuma());
+
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+            // root elements <Poruzbina>
+            Document doc = docBuilder.newDocument();
+            Element element = doc.createElement("Izvestaj");
+            element.appendChild(doc.createTextNode("4"));
+            doc.appendChild(element);
+
+            // write the content into xml file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(
+                                        new File(
+                                                Settings.getInstance().getFiscalniPrinterPath() + 
+                                                "dnevni i presek " + 
+                                                dateFormat.format(new Date()) + 
+                                                ".xml")
+            );
+
+            // Output to console for testing
+            // StreamResult result = new StreamResult(System.out);
+
+            transformer.transform(source, result);
+
+            System.out.println("File saved!");
+
+        } catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        } catch (TransformerException tfe) {
+            tfe.printStackTrace();
+        }        
+    }
+    
+    public final void stampajPeriodicni(Date odDatuma, Date doDatuma ) {
+        try {
+            java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(Settings.getInstance().getFiscalniIzvestajiDnevniIzvestajFormatDatuma());
+            java.text.SimpleDateFormat dateFormatDatum = new java.text.SimpleDateFormat(Settings.getInstance().getPrintTuraFormatDatuma());
+
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+            // root elements <Poruzbina>
+            Document doc = docBuilder.newDocument();
+            Element element = doc.createElement("Periodicni");
+            doc.appendChild(element);
+
+            Element elementFromDate = doc.createElement("FromDate");
+            elementFromDate.appendChild(doc.createTextNode(dateFormatDatum.format(odDatuma)));
+            element.appendChild(elementFromDate);
+
+            Element elementToDate = doc.createElement("ToDate");
+            elementToDate.appendChild(doc.createTextNode(dateFormatDatum.format(doDatuma)));
+            element.appendChild(elementToDate);
+
+            // write the content into xml file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(
+                                        new File(
+                                                Settings.getInstance().getFiscalniPrinterPath() + 
+                                                "periodicni " + 
+                                                dateFormat.format(new Date()) + 
+                                                ".xml")
+            );
+
+            // Output to console for testing
+            // StreamResult result = new StreamResult(System.out);
+
+            transformer.transform(source, result);
+
+            System.out.println("File saved!");
+
+        } catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        } catch (TransformerException tfe) {
+            tfe.printStackTrace();
+        }        
     }
 
     public final void stampajGotovinskiRacun() {
@@ -136,7 +293,7 @@ public final class Stampac {
             // <Stavka>
             //    <kolicina>1.0</kolicina>
             //    <naziv>ICE CAFFE</naziv>
-            //    <tip></tip>
+            //    <tip></tip>               "", "DODA", "OPIS"
             // </Stavka>
             for (StavkaTure stavkaTura : tura.listStavkeTure) {
                 Element stavka = doc.createElement("Stavka");
@@ -168,6 +325,22 @@ public final class Stampac {
 
                     element = doc.createElement("tip");
                     element.appendChild(doc.createTextNode("DODA"));
+                    stavka.appendChild(element);
+                }
+                for (StavkaTure stavkaTureDodatni : stavkaTura.getArtikliOpisni()) {
+                    stavka = doc.createElement("Stavka");
+                    porudzbina.appendChild(stavka);
+
+                    element = doc.createElement("kolicina");
+                    element.appendChild(doc.createTextNode("" + stavkaTureDodatni.getKolicina()));
+                    stavka.appendChild(element);
+
+                    element = doc.createElement("naziv");
+                    element.appendChild(doc.createTextNode("" + stavkaTureDodatni.getNaziv()));
+                    stavka.appendChild(element);
+
+                    element = doc.createElement("tip");
+                    element.appendChild(doc.createTextNode("OPIS"));
                     stavka.appendChild(element);
                 }
             }
@@ -204,35 +377,6 @@ public final class Stampac {
         } catch (TransformerException tfe) {
             tfe.printStackTrace();
         }        
-/*
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Poruzbina>
-    <Datum>2016/11/05</Datum>
-    <Vreme>12:57:27</Vreme>
-    <ProdajnoMesto>Restoran CHEZ NIK</ProdajnoMesto>
-    <kasa>Kasa 1</kasa>
-    <sto>R 32</sto>
-    <Stavka>
-        <kolicina>1.0</kolicina>
-        <naziv>ICE CAFFE</naziv>
-        <tip></tip>
-    </Stavka>
-    <Stavka>
-        <kolicina>1.0</kolicina>
-        <naziv>ESPRESSO</naziv>
-        <tip></tip>
-    </Stavka>
-    <Stavka>
-        <kolicina>1.0</kolicina>
-        <naziv>Lungo</naziv>
-        <tip>DODA</tip>
-    </Stavka>
-    <Konobar>Konobar 1</Konobar>
-</Poruzbina>
-        
-*/      
-    //  Settings.getInstance().getNefiskalniStampacPutanja();
-    
     }
 
     public final void stampajMedjuzbir(Porudzbina porudzbina) {

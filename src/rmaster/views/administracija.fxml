@@ -68,7 +68,7 @@
             </AnchorPane>
             <AnchorPane layoutX="208.0" layoutY="452.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
-                  <Button disable="true" mnemonicParsing="false" prefHeight="103.0" prefWidth="125.0" text="U pripremi..." wrapText="true" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button fx:id="fxID_DnevniIzvestajIPresek"  disable="true" mnemonicParsing="false" onAction="#dnevniIzvestajIPresek" prefHeight="103.0" prefWidth="125.0" text="DI + Presek" wrapText="true" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                </children>
             </AnchorPane>
             <AnchorPane layoutX="92.0" layoutY="364.0" GridPane.columnIndex="5" GridPane.rowIndex="4">

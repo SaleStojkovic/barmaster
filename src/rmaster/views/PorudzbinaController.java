@@ -1313,6 +1313,5 @@ public class PorudzbinaController extends FXMLDocumentController {
         //porudzbinaTrenutna.snimi();
         porudzbinaTrenutna.zatvoriRacun();
         Stampac.getInstance().stampajMedjuzbir(porudzbinaTrenutna);
-        Stampac.getInstance().stampajDnevniIzvestajNaFiskal();
     }
 }
