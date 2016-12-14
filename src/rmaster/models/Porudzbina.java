@@ -275,5 +275,10 @@ public class Porudzbina {
         
     }
     }
+    
+    public void setStalniGost(StalniGost stalniGost) {
+        this.STALNIGOST_ID = Long.valueOf(stalniGost.id);
+        this.popust = Double.parseDouble(stalniGost.popust);
+    }
 }
  

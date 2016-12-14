@@ -151,10 +151,14 @@ public class NaplataController extends FXMLDocumentController {
             }
             if (object instanceof StalniGost) {
                stalniGost = (StalniGost)object;
-               popustPorudzbineProcenat = Double.parseDouble(stalniGost.popust);
             }
         }
         this.total = porudzbina.getVrednostPorudzbine();
+        
+        if (stalniGost != null) {
+            porudzbina.setStalniGost(stalniGost);
+        }
+        
         this.fxID_Total.setText(Utils.getStringFromDouble(this.total));
 
         this.data = data;
