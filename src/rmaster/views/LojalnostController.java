@@ -70,7 +70,8 @@ public class LojalnostController extends FXMLDocumentController {
 
     @Override
     public void initData(Object data) {
-        
+        if (data instanceof Porudzbina)
+                porudzbina = (Porudzbina) data;
     }
     
     @Override

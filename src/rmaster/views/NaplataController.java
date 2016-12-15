@@ -83,7 +83,7 @@ public class NaplataController extends FXMLDocumentController {
     
     private Map<String, String> mapaPopusta = new HashMap();
     private double total = 0.;
-    private double popustPorudzbineProcenat = 0.;
+//    private double popustPorudzbineProcenat = 0.;
     private double popustPorudzbineIznos = 0.;
     private double zaUplatu = 0.;
     private double kusur = 0.;
@@ -93,7 +93,6 @@ public class NaplataController extends FXMLDocumentController {
     private String sVrednostKartica = "";
     private String sVrednostGotovina = "";
     
-    private StalniGost stalniGost;
     /**
      * Initializes the controller class.
      */
@@ -139,12 +138,13 @@ public class NaplataController extends FXMLDocumentController {
             });
         popuniPopuste();
         popuniHotelGost();
-        osveziPrikaz();
     } 
     
     /* BOSKO DODAO */
     public void initData(Object data) {
         List<Object> d = (List<Object>)data;
+        StalniGost stalniGost = null;
+
         for (Object object : d) {
             if (object instanceof Porudzbina) {
                 porudzbina = (Porudzbina) object;
@@ -162,6 +162,8 @@ public class NaplataController extends FXMLDocumentController {
         this.fxID_Total.setText(Utils.getStringFromDouble(this.total));
 
         this.data = data;
+
+        osveziPrikaz();
     }
     
     private void popuniPopuste() {
@@ -174,7 +176,10 @@ public class NaplataController extends FXMLDocumentController {
             popustButton.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {
                                         Button pop = (Button)e.getSource();
-                                        popustPorudzbineProcenat = Utils.getDoubleFromString(mapaPopusta.get(pop.getId()));
+                                        StalniGost sg = new StalniGost();
+                                        sg.getInstance(pop.getId());
+                                        porudzbina.setStalniGost(sg);
+                                        //popustPorudzbineProcenat = Utils.getDoubleFromString(mapaPopusta.get(pop.getId()));
                                         osveziPrikaz();
                                     }
                                 });
@@ -197,6 +202,8 @@ public class NaplataController extends FXMLDocumentController {
             hotelGostButton.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {
                                         Button hotel = (Button)e.getSource();
+                                        // TODO - odraditi crno placanje
+                                        
                                         //popustPorudzbine = Utils.getDoubleFromString(mapaPopusta.get(pop.getId()));
                                         //osveziPrikaz();
                                     }
@@ -235,7 +242,10 @@ public class NaplataController extends FXMLDocumentController {
     }
     
     private void osveziPrikaz() {
-        this.fxID_Popust.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) * (popustPorudzbineProcenat/100)));
+        if (this.porudzbina != null)
+            this.fxID_Popust.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) * (this.porudzbina.getPopustDouble()/100)));
+        else
+            this.fxID_Popust.setText(Utils.getStringFromDouble(0.));
         this.zaUplatu = Utils.getDoubleFromString(this.fxID_Total.getText()) - Utils.getDoubleFromString(this.fxID_Popust.getText());
         this.fxID_ZaUplatu.setText(Utils.getStringFromDouble(this.zaUplatu));
         this.fxID_Uplaceno.setText(Utils.getStringFromDouble(this.getUplaceno()));

@@ -40,10 +40,11 @@ public class Porudzbina {
     private boolean zatvoren;
     private long KASA_ID;
     private long KONOBAR_ID;
-    private long STALNIGOST_ID;
+    //private long STALNIGOST_ID;
     private int gostInt;
     private Date vremeIzdavanjaRacuna;
 
+    private StalniGost stalniGost;
     
     public Porudzbina(Gost gost) {
         this.setGost(gost);
@@ -142,8 +143,11 @@ public class Porudzbina {
                         this.KASA_ID = Long.parseLong(porudzbina.get("KASA_ID"));
                     if (porudzbina.get("KONOBAR_ID") != null)
                         this.KONOBAR_ID = Long.parseLong(porudzbina.get("KONOBAR_ID"));
-                    if (porudzbina.get("STALNIGOST_ID") != null)
-                        this.STALNIGOST_ID = Long.parseLong(porudzbina.get("STALNIGOST_ID"));
+                    if (porudzbina.get("STALNIGOST_ID") != null && !porudzbina.get("STALNIGOST_ID").equals("0")) {
+                        //this.STALNIGOST_ID = Long.parseLong(porudzbina.get("STALNIGOST_ID"));
+                        this.stalniGost = new StalniGost();
+                        this.stalniGost.getInstance(porudzbina.get("STALNIGOST_ID"));
+                    }
                     if (porudzbina.get("gost") != null)
                         this.gostInt = Integer.parseInt(porudzbina.get("gost"));
                     if (porudzbina.get("vremeIzdavanjaRacuna") != null)
@@ -219,7 +223,8 @@ public class Porudzbina {
 //        mapa.put("zatvoren", "" + (this.zatvoren ? "1" : "0"));
         mapa.put("KASA_ID", "" + this.KASA_ID);
         mapa.put("KONOBAR_ID", "2");// + rmaster.RMaster.ulogovaniKonobar);
-        mapa.put("STALNIGOST_ID", "" + this.STALNIGOST_ID);
+        if (this.stalniGost != null)
+            mapa.put("STALNIGOST_ID", "" + this.stalniGost.id);
         mapa.put("gost", "" + this.gost.getGostID());
         if (this.vremeIzdavanjaRacuna != null)
             mapa.put("vremeIzdavanjaRacuna", Utils.getStringFromDate(this.vremeIzdavanjaRacuna));
@@ -276,9 +281,23 @@ public class Porudzbina {
     }
     }
     
+    public double getPopustDouble() {
+        if (this.stalniGost != null)
+            return Utils.getDoubleFromString(this.stalniGost.popust);
+        else
+            return 0.;
+    }
+    public String getPopustString() {
+        if (this.stalniGost != null)
+            return this.stalniGost.popust;
+        else
+            return Utils.getStringFromDouble(0.);
+    }
+    
     public void setStalniGost(StalniGost stalniGost) {
-        this.STALNIGOST_ID = Long.valueOf(stalniGost.id);
-        this.popust = Double.parseDouble(stalniGost.popust);
+        this.stalniGost = stalniGost;
+        //this.STALNIGOST_ID = Long.valueOf(stalniGost.id);
+        //this.popust = Double.parseDouble(stalniGost.popust);
     }
 }
  
