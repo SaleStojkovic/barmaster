@@ -26,6 +26,7 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
@@ -207,6 +208,7 @@ public class NaplataController extends FXMLDocumentController {
         int brojac=0;
         for (Map<String, String> hotelGost : hotelGostList) {
             Button hotelGostButton = new Button(hotelGost.get("naziv"));
+            hotelGostButton.setPrefSize(90, 80);
             hotelGostButton.setId(hotelGost.get("id"));
             hotelGostButton.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {
@@ -222,6 +224,7 @@ public class NaplataController extends FXMLDocumentController {
         }
         while (brojac<8) {
             Button hotelGostButton = new Button("");
+            hotelGostButton.setPrefSize(90, 80);
             hotelGostButton.setDisable(true);
             this.fxID_NacinPlacanjaGrid.add(hotelGostButton, brojac/4, brojac%4);
             brojac++;

@@ -933,6 +933,16 @@ and open the template in the editor.
     -fx-font-size: 16;  
 }
 
+#fxID_NacinPlacanjaGrid *.toggle-button:selected 
+{
+    -fx-background-color: -fx-svetlo-crna;
+    -fx-font-family: KlavikaBold;
+    -fx-text-fill: -fx-zuta;
+    -fx-border-color: -fx-svetlo-crna;
+    -fx-font-weight: bold;
+    -fx-font-size: 16;  
+}
+
 #naplataFooter 
 {
     -fx-background-color: -fx-tamno-crna;
