@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -51,6 +52,10 @@ public class NaplataController extends FXMLDocumentController {
     private Label fxID_Uplaceno;
     @FXML
     private Label fxID_Kusur;
+    @FXML
+    private Label casovnik;
+    @FXML
+    private Label imeKonobara;
     
     @FXML
     private VBox fxID_PopustiZaNaplatu1;
@@ -98,7 +103,11 @@ public class NaplataController extends FXMLDocumentController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
+        Timeline timeline = this.prikaziCasovnik(casovnik);
+        timeline.play();
+        this.imeKonobara.setText(ulogovaniKonobar.imeKonobara);
+
         this.fxID_Faktura.setDisable(!Settings.getInstance().getValueBoolean("faktura"));
         this.fxID_Cek.setDisable(!Settings.getInstance().getValueBoolean("cek"));
         this.fxID_Kartica.setDisable(!Settings.getInstance().getValueBoolean("kartica"));

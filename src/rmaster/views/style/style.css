@@ -13,6 +13,9 @@ and open the template in the editor.
 #header
 {
     -fx-background-color: -fx-tamno-crna;
+    -fx-border-weight: 0.5px;
+    -fx-border-color: -fx-siva;
+
 }
 
 .myDialog{
@@ -905,6 +908,31 @@ and open the template in the editor.
 
 /* pocetak naplate */
 
+#naplataGlavni 
+{
+    -fx-background-color: -fx-tamno-crna;
+}
+
+#srednjiDonjiPane *.button 
+{
+    -fx-background-color: -fx-tamno-crna;
+    -fx-font-family: KlavikaBold;
+    -fx-text-fill: -fx-zuta;
+    -fx-border-color: -fx-svetlo-crna;
+    -fx-font-weight: bold;
+    -fx-font-size: 20; 
+}
+
+#fxID_NacinPlacanjaGrid *.toggle-button 
+{
+    -fx-background-color: -fx-tamno-crna;
+    -fx-font-family: KlavikaBold;
+    -fx-text-fill: -fx-zuta;
+    -fx-border-color: -fx-svetlo-crna;
+    -fx-font-weight: bold;
+    -fx-font-size: 16;  
+}
+
 #naplataFooter 
 {
     -fx-background-color: -fx-tamno-crna;
@@ -917,11 +945,23 @@ and open the template in the editor.
     -fx-background-color: -fx-tamno-crna;
     -fx-font-family: KlavikaBold;
     -fx-text-fill: -fx-zuta;
-    -fx-border-color: white;
+    -fx-border-color: -fx-siva;
     -fx-border-width: 0.5;
     -fx-font-weight: bold;
-    -fx-font-size: 12; 
+    -fx-font-size: 18; 
 }
+
+#naplataLabele 
+{
+    -fx-background-color: -fx-siva;
+}
+
+#naplataLabele *.label
+{
+    -fx-font-family: KlavikaBold;
+    -fx-text-fill: white;
+    -fx-font-size: 18; 
+} 
 
 /* kraj naplate */ 
 
