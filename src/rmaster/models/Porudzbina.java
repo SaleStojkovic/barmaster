@@ -193,10 +193,10 @@ public class Porudzbina {
     
     public void zatvoriRacun(Date vreme) {
         DBBroker db = new DBBroker();
+        //snimi();
+        db.zatvoriRacunIOslobodiSto(this.racunID, vreme);
         this.zatvoren = true;
         this.vremeIzdavanjaRacuna = vreme;
-        snimi();
-        db.oslobodiSto(this.racunID, this.brojStolaBroj);
     }
     
     public void snimi() {

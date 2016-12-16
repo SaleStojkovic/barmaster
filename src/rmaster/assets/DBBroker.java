@@ -9,6 +9,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -798,24 +799,26 @@ public final class DBBroker {
     /**
      * 
      * @param RacunID
+     * @param vreme
      * @param stoBroj
      */
-    public void oslobodiSto(
-            long RacunID, 
-            int stoBroj) 
+    public void zatvoriRacunIOslobodiSto(
+            long RacunID,
+            Date vreme) 
     {
         Connection dbConnection;
         CallableStatement cStmt;
         
         try {
             dbConnection = poveziSaBazom();
-            //cStmt = dbConnection.prepareCall("{CALL zatvoriRacun(?,?)}");
-            cStmt = dbConnection.prepareCall("{CALL oslobodiSto(?)}");
-            cStmt.setInt("stoBroj", stoBroj);
+            cStmt = dbConnection.prepareCall("{CALL zatvoriRacunIOslobodiSto(?,?,?)}");
+            cStmt.setLong("racunID", RacunID);
+            cStmt.setTimestamp("vreme", java.sql.Timestamp.valueOf(Utils.getStringFromDate(vreme)));
+            cStmt.setInt("stoBroj", rmaster.RMaster.izabraniStoBroj);
             cStmt.execute();
             prekiniVezuSaBazom(dbConnection);
         } catch (Exception e) {
-            System.out.println("Store procedure \"oslobodiSto\" exec error! - " + e.toString());
+            System.out.println("Store procedure \"zatvoriRacunIOslobodiSto\" exec error! - " + e.toString());
         }
     }
     

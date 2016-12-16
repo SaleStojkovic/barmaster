@@ -1225,7 +1225,6 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     
     public void naplataIliStampaPorudzbine(ActionEvent event) {
-        //porudzbinaTrenutna.oslobodiSto();
         if (novaTura != null) {
             porudzbinaTrenutna.snimi();
             Stampac.getInstance().stampajTuru(novaTura);
@@ -1242,9 +1241,9 @@ public class PorudzbinaController extends FXMLDocumentController {
         );    
     }
 
-    public void medjuzbir(ActionEvent event) {
-        //porudzbinaTrenutna.snimi();
-        porudzbinaTrenutna.zatvoriRacun(null);
-        Stampac.getInstance().stampajMedjuzbir(porudzbinaTrenutna);
-    }
+//    public void medjuzbir(ActionEvent event) {
+//        //porudzbinaTrenutna.snimi();
+//        porudzbinaTrenutna.zatvoriRacun(null);
+//        Stampac.getInstance().stampajMedjuzbir(porudzbinaTrenutna);
+//    }
 }
