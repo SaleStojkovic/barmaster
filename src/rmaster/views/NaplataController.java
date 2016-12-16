@@ -8,6 +8,7 @@ package rmaster.views;
 import rmaster.assets.Settings;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import rmaster.assets.DBBroker;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampac;
@@ -33,6 +35,8 @@ import rmaster.assets.Utils;
 import rmaster.models.NacinPlacanja;
 import rmaster.models.Porudzbina;
 import rmaster.models.StalniGost;
+import rmaster.models.StavkaTure;
+import rmaster.models.Tura;
 
 /**
  * FXML Controller class
@@ -76,6 +80,8 @@ public class NaplataController extends FXMLDocumentController {
     private Button fxID_Lojalnost;
     @FXML
     private Button fxID_Naplata;
+    
+    public enum VrstaRacunaZaStampu {FAKTURA, GOTOVINSKI, MEDJUZBIR};
     
     private Porudzbina porudzbina;
     private List<NacinPlacanja> placanja = new ArrayList();
@@ -299,15 +305,36 @@ public class NaplataController extends FXMLDocumentController {
         return placanje;
     }
     
+    private void stampajSnimiZatvoriFormu(VrstaRacunaZaStampu vrstaRacuna, ActionEvent event) {
+        // TODO
+        // Ovde treba odraditi zatvaranje forme i odlazak na stolove ili LOG-OF
+        this.snimi(vrstaRacuna);
+        if (vrstaRacuna == VrstaRacunaZaStampu.MEDJUZBIR) {
+            Stampac.getInstance().stampajMedjuzbir(porudzbina);
+        }
+        if (vrstaRacuna == VrstaRacunaZaStampu.FAKTURA) {
+            Stampac.getInstance().stampajFakturu(porudzbina);
+            Stampac.getInstance().stampajGotovinskiRacun(porudzbina);
+        }
+        if (vrstaRacuna == VrstaRacunaZaStampu.GOTOVINSKI) {
+            Stampac.getInstance().stampajGotovinskiRacun(porudzbina);
+        }
+        prikaziFormu(
+                null, 
+                ScreenMap.PRIKAZ_SALA, 
+                true, 
+                (Node)event.getSource()
+        );
+
+    }
     public void naplata(ActionEvent event) {
+        NacinPlacanja nacinPlacanjaGotovina = getNacinPlacanja(NacinPlacanja.VrstePlacanja.GOTOVINA);
         if (this.getUplaceno() == 0) {
             // Nista nije uneto, obracunava kao da je tacan iznos gotovine
             // - ako nista nije kucano knjizi kao da je uplacen tacan iznos u gotovini
-            NacinPlacanja nacinPlacanjaGotovina = getNacinPlacanja(NacinPlacanja.VrstePlacanja.GOTOVINA);
             nacinPlacanjaGotovina.setVrednost(porudzbina.getVrednostPorudzbine());
-            osveziPrikaz();
-            this.snimi();
-            Stampac.getInstance().stampajGotovinskiRacun();
+            //osveziPrikaz();
+            stampajSnimiZatvoriFormu(VrstaRacunaZaStampu.GOTOVINSKI, event);
             return;
         }
 
@@ -333,12 +360,10 @@ public class NaplataController extends FXMLDocumentController {
                 alert.showAndWait();
                 return;
             }
-            osveziPrikaz();
-            this.snimi();
-            Stampac.getInstance().stampajFakturu();
+            stampajSnimiZatvoriFormu(VrstaRacunaZaStampu.FAKTURA, event);
         }
         
-        if (this.kusur > getNacinPlacanja(NacinPlacanja.VrstePlacanja.GOTOVINA).getVrednost()) {
+        if (this.kusur > nacinPlacanjaGotovina.getVrednost()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Naplata!");
                 alert.setHeaderText("Neregularno plaćanje!");
@@ -346,20 +371,36 @@ public class NaplataController extends FXMLDocumentController {
                 alert.showAndWait();
                 return;
         }
-        /*
-        for (NacinPlacanja nacinPlacanja : placanja) {
-            if (nacinPlacanja.getNacinPlacanja() == NacinPlacanja.VrstePlacanja.GOTOVINA)
-                nacinPlacanja.setVrednost(porudzbina.getVrednostPorudzbine());
-        }
-                                - ako je ista menjano proverava sledece
-                                        kombinovano ili ne?
-                                        kombinovano - ne sme faktura, mora biti tacan iznos ili da gotovina prelazi preko a u bazu se upisuje tacno po racunu bez kusura
-                                        ne - ok, ima kusura"
-        */
+        
+        if (this.kusur>0)
+            nacinPlacanjaGotovina.setVrednost(nacinPlacanjaGotovina.getVrednost() - this.kusur);
+        
+        stampajSnimiZatvoriFormu(VrstaRacunaZaStampu.GOTOVINSKI, event);
     }
 
-    public void snimi() {
+    public void snimi(VrstaRacunaZaStampu vrstaRacuna) {
+        // TODO
         // ovde treba odraditi snimanje placanja, moguce da treba vise razlicitih snimanja
+        DBBroker db = new DBBroker();
+        try {
+            //java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            long result = 0;
+            Date vreme = new Date();
+            for (NacinPlacanja nacinPlacanja : placanja) {
+                if (nacinPlacanja.getVrednost() > 0) {
+                    HashMap<String,String> mapa = new HashMap();
+                    mapa.put("iznos", "" + nacinPlacanja.getVrednost());
+                    mapa.put("nacin", "" + nacinPlacanja.getNacinPlacanjaString());
+                    mapa.put("vreme", "" + Utils.getStringFromDate(vreme));
+                    mapa.put("RACUN_ID", "" + this.porudzbina.getID());
+
+                    result = db.ubaciRed("placanje",mapa, Boolean.FALSE);
+                }
+            }
+            this.porudzbina.zatvoriRacun(vreme);
+        } catch(Exception e) {
+
+        }
     }
     public void backButton(ActionEvent event) {
         String text = this.aktivnoPlacanje.getVrednostString();

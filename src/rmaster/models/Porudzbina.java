@@ -191,96 +191,100 @@ public class Porudzbina {
         //this.novaTuraPorudzbine = tura;
     //}
     
-    public void zatvoriRacun() {
+    public void zatvoriRacun(Date vreme) {
         DBBroker db = new DBBroker();
         this.zatvoren = true;
+        this.vremeIzdavanjaRacuna = vreme;
         snimi();
         db.oslobodiSto(this.racunID, this.brojStolaBroj);
     }
     
     public void snimi() {
         DBBroker db = new DBBroker();
-    try {
-        //java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        long result = 0;
-        HashMap<String,String> mapa = new HashMap();
-        mapa.put("brojFakture", "" + this.brojFakture);
-        mapa.put("brojRacuna", "" + this.brojRacuna);
-        mapa.put("brojFiskalnogIsecka", "" + this.brojFiskalnogIsecka);
-        //mapa.put("brojStola", "" + this.brojStolaID);
-        mapa.put("brojStola", "" + this.brojStolaBroj);
-        mapa.put("crnoPlacanje", "" + this.crnoPlacanje);
-        if (this.datum == null)
-            this.datum = new Date();
-        mapa.put("datum", Utils.getStringFromDate(this.datum));
-        mapa.put("fiskalniOdstampan", "" + this.fiskalniOdstampan);
-//        mapa.put("fiskalniOdstampan", "" + (this.fiskalniOdstampan ? "1" : "0"));
-        mapa.put("oznakaSobe", "" + this.oznakaSobe);
-        mapa.put("popust", "" + this.popust);
-        mapa.put("storniran", "" + this.storniran);
-//        mapa.put("storniran", "" + (this.storniran ? "b'1'" : "b'0'"));
-        mapa.put("zatvoren", "" + this.zatvoren);
-//        mapa.put("zatvoren", "" + (this.zatvoren ? "1" : "0"));
-        mapa.put("KASA_ID", "" + this.KASA_ID);
-        mapa.put("KONOBAR_ID", "2");// + rmaster.RMaster.ulogovaniKonobar);
-        if (this.stalniGost != null)
-            mapa.put("STALNIGOST_ID", "" + this.stalniGost.id);
-        mapa.put("gost", "" + this.gost.getGostID());
-        if (this.vremeIzdavanjaRacuna != null)
-            mapa.put("vremeIzdavanjaRacuna", Utils.getStringFromDate(this.vremeIzdavanjaRacuna));
+        try {
+            //java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            long result = 0;
+            HashMap<String,String> mapa = new HashMap();
+            mapa.put("brojFakture", "" + this.brojFakture);
+            mapa.put("brojRacuna", "" + this.brojRacuna);
+            mapa.put("brojFiskalnogIsecka", "" + this.brojFiskalnogIsecka);
+            //mapa.put("brojStola", "" + this.brojStolaID);
+            mapa.put("brojStola", "" + this.brojStolaBroj);
+            mapa.put("crnoPlacanje", "" + this.crnoPlacanje);
+            if (this.datum == null)
+                this.datum = new Date();
+            mapa.put("datum", Utils.getStringFromDate(this.datum));
+            mapa.put("fiskalniOdstampan", "" + this.fiskalniOdstampan);
+    //        mapa.put("fiskalniOdstampan", "" + (this.fiskalniOdstampan ? "1" : "0"));
+            mapa.put("oznakaSobe", "" + this.oznakaSobe);
+            mapa.put("popust", "" + this.popust);
+            mapa.put("storniran", "" + this.storniran);
+    //        mapa.put("storniran", "" + (this.storniran ? "b'1'" : "b'0'"));
+            mapa.put("zatvoren", "" + this.zatvoren);
+    //        mapa.put("zatvoren", "" + (this.zatvoren ? "1" : "0"));
+            mapa.put("KASA_ID", "" + this.KASA_ID);
+            mapa.put("KONOBAR_ID", "2");// + rmaster.RMaster.ulogovaniKonobar);
+            if (this.stalniGost != null)
+                mapa.put("STALNIGOST_ID", "" + this.stalniGost.id);
+            mapa.put("gost", "" + this.gost.getGostID());
+            if (this.vremeIzdavanjaRacuna != null)
+                mapa.put("vremeIzdavanjaRacuna", Utils.getStringFromDate(this.vremeIzdavanjaRacuna));
 
-        if (this.racunID != 0)
-            db.izmeni("racun", "id", "" + this.racunID, mapa, blokirana);
-        else {
-            result = db.ubaciRed("racun", mapa, blokirana);
-            this.racunID = result;
-        }
-            
-        if (!this.zatvoren) {
-            // Upisi u bazu u tabelu sto da je sto zauzet
-            HashMap<String,String> mapaSto = new HashMap();
-
-            mapaSto.put("blokiran", "false");
-            mapaSto.put("broj", "" + this.brojStolaBroj);
-            mapaSto.put("KONOBAR_ID", "" + rmaster.RMaster.ulogovaniKonobar.konobarID);
-            try {
-                result = db.ubaciRed("sto", mapaSto, blokirana);
-            } catch (Exception e) {
+            if (this.racunID != 0)
+                db.izmeni("racun", "id", "" + this.racunID, mapa, blokirana);
+            else {
+                result = db.ubaciRed("racun", mapa, blokirana);
+                this.racunID = result;
             }
-        }
-        //else {
-        //    db.izbrisi("sto", "broj", this.brojStolaBroj, blokirana);
-        //}
 
-        for (Tura tura : turePorudzbine) {
-            if (tura.getTuraID() == 0) {
-                // Tura nije upisana, upisi je u bazu
-                HashMap<String,String> mapaTura = new HashMap();
+            if (!this.zatvoren) {
+                // Upisi u bazu u tabelu sto da je sto zauzet
+                HashMap<String,String> mapaSto = new HashMap();
 
-
-                //mapaTura.put("brojStola", "" + this.brojStolaID);
-                mapaTura.put("brojStola", "" + this.brojStolaBroj);
-                mapaTura.put("brojTure", "223344");
-                mapaTura.put("datum", Utils.getStringFromDate(new Date()));
-                mapaTura.put("pripremljena", "false");
-                mapaTura.put("uPripremi", "false");
-                //mapaTura.put("fiskalniOdstampan", "" + (this.fiskalniOdstampan ? "1" : "0"));
-                mapaTura.put("RACUN_ID", "" + this.racunID);
-                result = db.ubaciRed("tura", mapaTura, blokirana);
-                tura.turaID = result;
-
-                for (StavkaTure stavkaTure : tura.listStavkeTure) {
-                    stavkaTure.setRacunID(this.racunID);
-                    stavkaTure.setTuraID(tura.getTuraID());
-                    stavkaTure.snimi();
+                mapaSto.put("blokiran", "false");
+                mapaSto.put("broj", "" + this.brojStolaBroj);
+                mapaSto.put("KONOBAR_ID", "" + rmaster.RMaster.ulogovaniKonobar.konobarID);
+                try {
+                    result = db.ubaciRed("sto", mapaSto, blokirana);
+                } catch (Exception e) {
                 }
             }
+            //else {
+            //    db.izbrisi("sto", "broj", this.brojStolaBroj, blokirana);
+            //}
+
+            for (Tura tura : turePorudzbine) {
+                if (tura.getTuraID() == 0) {
+                    // Tura nije upisana, upisi je u bazu
+                    HashMap<String,String> mapaTura = new HashMap();
+
+
+                    //mapaTura.put("brojStola", "" + this.brojStolaID);
+                    mapaTura.put("brojStola", "" + this.brojStolaBroj);
+                    mapaTura.put("brojTure", "223344");
+                    mapaTura.put("datum", Utils.getStringFromDate(new Date()));
+                    mapaTura.put("pripremljena", "false");
+                    mapaTura.put("uPripremi", "false");
+                    //mapaTura.put("fiskalniOdstampan", "" + (this.fiskalniOdstampan ? "1" : "0"));
+                    mapaTura.put("RACUN_ID", "" + this.racunID);
+                    result = db.ubaciRed("tura", mapaTura, blokirana);
+                    tura.turaID = result;
+
+                    for (StavkaTure stavkaTure : tura.listStavkeTure) {
+                        stavkaTure.setRacunID(this.racunID);
+                        stavkaTure.setTuraID(tura.getTuraID());
+                        stavkaTure.snimi();
+                    }
+                }
+            }
+        } catch(Exception e) {
+
         }
-    } catch(Exception e) {
-        
-    }
     }
     
+    public long getID() {
+        return this.racunID;
+    }
     public double getPopustDouble() {
         if (this.stalniGost != null)
             return Utils.getDoubleFromString(this.stalniGost.popust);

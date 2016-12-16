@@ -13,6 +13,7 @@ import rmaster.assets.Utils;
  */
 public class NacinPlacanja {
     public enum VrstePlacanja {FAKTURA, CEK, KARTICA, GOTOVINA};
+    private String vrstaPlacanjaString = "";
     private VrstePlacanja nacinPlacanja;
     private String text = "";
     private double vrednost = 0.;
@@ -20,21 +21,29 @@ public class NacinPlacanja {
     
     public NacinPlacanja() {
     }
+    
+    public String getNacinPlacanjaString() {
+        return this.vrstaPlacanjaString;
+    }
 
     public NacinPlacanja(VrstePlacanja np) {
         this.nacinPlacanja = np;
         switch (np) {
             case FAKTURA:
                 this.text = "Faktura";
+                this.vrstaPlacanjaString = "FAKTURA";
                 break;
             case CEK:
                 this.text = "Ček";
+                this.vrstaPlacanjaString = "CEK";
                 break;
             case KARTICA:
                 this.text = "Kartica";
+                this.vrstaPlacanjaString = "KARTICA";
                 break;
             case GOTOVINA:
                 this.text = "Gotovina";
+                this.vrstaPlacanjaString = "GOTOVINA";
                 break;
         }
     }

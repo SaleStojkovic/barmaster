@@ -254,6 +254,9 @@ public final class DBBroker {
                 
                 updateStatement = dbConnection.prepareStatement(updateTableSQL);
                 int brojac = 1;
+
+
+
                 for (HashMap.Entry<String, String> element : elementi.entrySet()) {
                     if (element.getValue().equals("true"))
                         updateStatement.setBoolean(brojac, true);
@@ -806,13 +809,13 @@ public final class DBBroker {
         
         try {
             dbConnection = poveziSaBazom();
-            cStmt = dbConnection.prepareCall("{CALL zatvoriRacun(?,?)}");
-            cStmt.setLong("RacunID", RacunID);
+            //cStmt = dbConnection.prepareCall("{CALL zatvoriRacun(?,?)}");
+            cStmt = dbConnection.prepareCall("{CALL oslobodiSto(?)}");
             cStmt.setInt("stoBroj", stoBroj);
             cStmt.execute();
             prekiniVezuSaBazom(dbConnection);
         } catch (Exception e) {
-            System.out.println("Store procedure \"promeniKonobaraZaStolove\" exec error! - " + e.toString());
+            System.out.println("Store procedure \"oslobodiSto\" exec error! - " + e.toString());
         }
     }
     

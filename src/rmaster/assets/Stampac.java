@@ -245,11 +245,11 @@ public final class Stampac {
         }        
     }
 
-    public final void stampajGotovinskiRacun() {
+    public final void stampajGotovinskiRacun(Porudzbina porudzbina) {
         
     }
     
-    public final void stampajFakturu() {
+    public final void stampajFakturu(Porudzbina porudzbina) {
         
     }
 
