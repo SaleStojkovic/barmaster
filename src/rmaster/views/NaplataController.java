@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -26,6 +27,7 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import rmaster.assets.DBBroker;
 import rmaster.assets.FXMLDocumentController;
@@ -55,6 +57,10 @@ public class NaplataController extends FXMLDocumentController {
     private Label fxID_Uplaceno;
     @FXML
     private Label fxID_Kusur;
+    @FXML
+    private Label casovnik;
+    @FXML
+    private Label imeKonobara;
     
     @FXML
     private VBox fxID_PopustiZaNaplatu1;
@@ -104,7 +110,11 @@ public class NaplataController extends FXMLDocumentController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
+        Timeline timeline = this.prikaziCasovnik(casovnik);
+        timeline.play();
+        this.imeKonobara.setText(ulogovaniKonobar.imeKonobara);
+
         this.fxID_Faktura.setDisable(!Settings.getInstance().getValueBoolean("faktura"));
         this.fxID_Cek.setDisable(!Settings.getInstance().getValueBoolean("cek"));
         this.fxID_Kartica.setDisable(!Settings.getInstance().getValueBoolean("kartica"));
@@ -204,6 +214,7 @@ public class NaplataController extends FXMLDocumentController {
         int brojac=0;
         for (Map<String, String> hotelGost : hotelGostList) {
             Button hotelGostButton = new Button(hotelGost.get("naziv"));
+            hotelGostButton.setPrefSize(90, 80);
             hotelGostButton.setId(hotelGost.get("id"));
             hotelGostButton.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {
@@ -219,6 +230,7 @@ public class NaplataController extends FXMLDocumentController {
         }
         while (brojac<8) {
             Button hotelGostButton = new Button("");
+            hotelGostButton.setPrefSize(90, 80);
             hotelGostButton.setDisable(true);
             this.fxID_NacinPlacanjaGrid.add(hotelGostButton, brojac/4, brojac%4);
             brojac++;

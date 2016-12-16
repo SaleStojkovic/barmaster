@@ -17,72 +17,6 @@
 
 <AnchorPane fx:id="naplataGlavni" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.NaplataController">
    <children>
-      <GridPane fx:id="fxID_NacinPlacanjaGrid" layoutX="627.0" layoutY="316.0" prefHeight="200.0" prefWidth="356.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <ToggleButton fx:id="fxID_Cek" mnemonicParsing="false" text="Ček" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                <toggleGroup>
-                   <ToggleGroup fx:id="tgVrstaPlacanja" />
-                </toggleGroup>
-            </ToggleButton>
-            <ToggleButton fx:id="fxID_Kartica" layoutX="110.0" layoutY="13.0" mnemonicParsing="false" text="Kartica" toggleGroup="$tgVrstaPlacanja" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <ToggleButton fx:id="fxID_Gotovina" layoutX="110.0" layoutY="13.0" mnemonicParsing="false" text="Gotovina" toggleGroup="$tgVrstaPlacanja" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <ToggleButton fx:id="fxID_Faktura" layoutX="110.0" layoutY="43.0" mnemonicParsing="false" text="Faktura" toggleGroup="$tgVrstaPlacanja" wrapText="true" GridPane.columnIndex="2" />
-         </children>
-      </GridPane>
-      <GridPane layoutX="33.0" layoutY="356.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <VBox fx:id="fxID_PopustiZaNaplatu1" prefHeight="200.0" prefWidth="100.0" />
-            <VBox fx:id="fxID_PopustiZaNaplatu2" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" />
-         </children>
-      </GridPane>
-      <GridPane layoutX="362.0" layoutY="347.0">
-        <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Button fx:id="fxID_tastaturaTacka" mnemonicParsing="false" onAction="#numberKeyPressed" text="." GridPane.rowIndex="3" />
-            <Button fx:id="fxID_tastatura00" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Button fx:id="fxID_tastaturaBack" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#backButton" text="«" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Button fx:id="fxID_tastatura01" mnemonicParsing="false" onAction="#numberKeyPressed" text="1" GridPane.rowIndex="2" />
-            <Button fx:id="fxID_tastatura02" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" text="2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Button fx:id="fxID_tastatura03" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" text="3" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <Button fx:id="fxID_tastatura04" mnemonicParsing="false" onAction="#numberKeyPressed" text="4" GridPane.rowIndex="1" />
-            <Button fx:id="fxID_tastatura05" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" text="5" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Button fx:id="fxID_tastatura06" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" text="6" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Button fx:id="fxID_tastatura07" mnemonicParsing="false" onAction="#numberKeyPressed" text="7" />
-            <Button fx:id="fxID_tastatura08" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" text="8" GridPane.columnIndex="1" />
-            <Button fx:id="fxID_tastatura09" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" text="9" GridPane.columnIndex="2" />
-         </children>
-      </GridPane>
       <Pane fx:id="naplataFooter" layoutX="-1.0" layoutY="667.0" prefHeight="100.0" prefWidth="1024.0">
          <children>
             <Button fx:id="fxID_PorudzbinaMedjuzbir" layoutX="742.0" mnemonicParsing="false" onAction="#medjuzbir" prefHeight="100.0" prefWidth="141.0" text="Među zbir ★" />
@@ -116,18 +50,100 @@
             <Button fx:id="odjava" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#odjava" prefHeight="50.0" prefWidth="133.0" text="Odjava" />
          </children>
       </HBox>
-      <Pane layoutX="14.0" layoutY="114.0" prefHeight="180.0" prefWidth="200.0">
+      <Pane fx:id="naplataLabele" layoutX="1.0" layoutY="54.0" prefHeight="289.0" prefWidth="1024.0">
          <children>
-            <Label layoutX="-1.0" layoutY="125.0" text="TOTAL:" />
-            <Label layoutX="-1.0" layoutY="75.0" text="Popust:" />
-            <Label layoutX="-1.0" layoutY="41.0" text="Za uplatu:" />
-            <Label layoutX="-1.0" layoutY="58.0" text="Uplaćeno:" />
-            <Label layoutY="92.0" text="Kusur:" />
-            <Label fx:id="fxID_Total" alignment="CENTER_RIGHT" layoutX="86.0" layoutY="125.0" prefWidth="100.0" text="0.00" />
-            <Label fx:id="fxID_Popust" alignment="CENTER_RIGHT" layoutX="86.0" layoutY="75.0" prefWidth="100.0" text="0.00" />
-            <Label fx:id="fxID_ZaUplatu" alignment="CENTER_RIGHT" layoutX="86.0" layoutY="41.0" prefWidth="100.0" text="0.00" />
-            <Label fx:id="fxID_Uplaceno" alignment="CENTER_RIGHT" layoutX="86.0" layoutY="58.0" prefWidth="100.0" text="0.00" />
-            <Label fx:id="fxID_Kusur" alignment="CENTER_RIGHT" layoutX="86.0" layoutY="92.0" prefWidth="100.0" text="0.00" />
+            <Label layoutX="30.0" layoutY="33.0" text="TOTAL:" />
+            <Label layoutX="30.0" layoutY="70.0" text="Popust:" />
+            <Label layoutX="30.0" layoutY="118.0" text="Za uplatu:" />
+            <Label layoutX="30.0" layoutY="163.0" text="Uplaćeno:" />
+            <Label layoutX="30.0" layoutY="208.0" text="Kusur:" />
+            <Label fx:id="fxID_Total" alignment="CENTER_RIGHT" layoutX="487.0" layoutY="33.0" prefWidth="100.0" text="0.00" />
+            <Label fx:id="fxID_Popust" alignment="CENTER_RIGHT" layoutX="487.0" layoutY="70.0" prefWidth="100.0" text="0.00" />
+            <Label fx:id="fxID_ZaUplatu" alignment="CENTER_RIGHT" layoutX="487.0" layoutY="118.0" prefWidth="100.0" text="0.00" />
+            <Label fx:id="fxID_Uplaceno" alignment="CENTER_RIGHT" layoutX="490.0" layoutY="163.0" prefHeight="17.0" prefWidth="97.0" text="0.00" />
+            <Label fx:id="fxID_Kusur" alignment="CENTER_RIGHT" layoutX="487.0" layoutY="208.0" prefWidth="100.0" text="0.00" />
+            <Label layoutX="653.0" layoutY="33.0" prefHeight="17.0" prefWidth="60.0" text="Gost:" />
+         </children>
+      </Pane>
+      <Pane fx:id="srednjiDonjiPane" layoutY="343.0" prefHeight="323.0" prefWidth="1024.0">
+         <children>
+            <GridPane fx:id="fxID_NacinPlacanjaGrid" layoutX="661.0" layoutY="3.0" prefHeight="317.0" prefWidth="357.0">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.37042236328125" minWidth="10.0" prefWidth="100.06927490234375" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.37042236328125" minWidth="10.0" prefWidth="100.06927490234375" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.93072509765625" minWidth="10.0" prefWidth="180.93072509765625" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <ToggleButton fx:id="fxID_Cek" mnemonicParsing="false" prefHeight="84.0" prefWidth="223.0" text="Ček" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                      <toggleGroup>
+                         <ToggleGroup fx:id="tgVrstaPlacanja" />
+                      </toggleGroup>
+                  </ToggleButton>
+                  <ToggleButton fx:id="fxID_Kartica" layoutX="110.0" layoutY="13.0" mnemonicParsing="false" prefHeight="99.0" prefWidth="249.0" text="Kartica" toggleGroup="$tgVrstaPlacanja" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <ToggleButton fx:id="fxID_Gotovina" layoutX="110.0" layoutY="13.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="226.0" text="Gotovina" toggleGroup="$tgVrstaPlacanja" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <ToggleButton fx:id="fxID_Faktura" layoutX="110.0" layoutY="43.0" mnemonicParsing="false" prefHeight="98.0" prefWidth="221.0" text="Faktura" toggleGroup="$tgVrstaPlacanja" wrapText="true" GridPane.columnIndex="2" />
+               </children>
+            </GridPane>
+            <GridPane layoutY="3.0" prefHeight="317.0" prefWidth="356.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <VBox fx:id="fxID_PopustiZaNaplatu1" prefHeight="200.0" prefWidth="100.0" />
+                  <VBox fx:id="fxID_PopustiZaNaplatu2" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+                     <children>
+                        <Button mnemonicParsing="false" prefHeight="92.0" prefWidth="226.0" text="25%" />
+                     </children>
+                  </VBox>
+                  <Button mnemonicParsing="false" prefHeight="92.0" prefWidth="226.0" text="30%" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button mnemonicParsing="false" prefHeight="92.0" prefWidth="226.0" text="10%" GridPane.rowIndex="1" />
+                  <Button mnemonicParsing="false" prefHeight="92.0" prefWidth="226.0" text="15%" GridPane.rowIndex="2" />
+                  <Button mnemonicParsing="false" prefHeight="92.0" prefWidth="226.0" text="5%" />
+                  <Button mnemonicParsing="false" prefHeight="92.0" prefWidth="226.0" text="40%" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Button mnemonicParsing="false" prefHeight="92.0" prefWidth="226.0" text="20%" GridPane.rowIndex="3" />
+                  <Button mnemonicParsing="false" prefHeight="92.0" prefWidth="226.0" text="50%" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+               </children>
+            </GridPane>
+            <GridPane layoutX="362.0" prefHeight="323.0" prefWidth="300.0">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Button fx:id="fxID_tastaturaTacka" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="89.0" prefWidth="150.0" text="." GridPane.rowIndex="3" />
+                  <Button fx:id="fxID_tastatura00" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="111.0" prefWidth="205.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Button fx:id="fxID_tastaturaBack" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#backButton" prefHeight="94.0" prefWidth="109.0" text="«" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <Button fx:id="fxID_tastatura01" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="95.0" prefWidth="155.0" text="1" GridPane.rowIndex="2" />
+                  <Button fx:id="fxID_tastatura02" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="99.0" prefWidth="217.0" text="2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Button fx:id="fxID_tastatura03" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="89.0" prefWidth="132.0" text="3" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <Button fx:id="fxID_tastatura04" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="122.0" prefWidth="187.0" text="4" GridPane.rowIndex="1" />
+                  <Button fx:id="fxID_tastatura05" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="96.0" prefWidth="184.0" text="5" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button fx:id="fxID_tastatura06" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="95.0" prefWidth="134.0" text="6" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button fx:id="fxID_tastatura07" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="99.0" prefWidth="150.0" text="7" />
+                  <Button fx:id="fxID_tastatura08" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="87.0" prefWidth="142.0" text="8" GridPane.columnIndex="1" />
+                  <Button fx:id="fxID_tastatura09" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="102.0" prefWidth="145.0" text="9" GridPane.columnIndex="2" />
+               </children>
+            </GridPane>
          </children>
       </Pane>
    </children>
