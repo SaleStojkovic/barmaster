@@ -182,6 +182,7 @@ public class NaplataController extends FXMLDocumentController {
         int brojac=0;
         for (Map<String, String> popust : popustiZaNaplatu) {
             Button popustButton = new Button(popust.get("naziv"));
+            popustButton.setPrefSize(173, 79);
             popustButton.setId(popust.get("id"));
             popustButton.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {
