@@ -41,8 +41,8 @@
       <Pane fx:id="glavnaFormaRezervacija" layoutY="51.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="658.0" prefWidth="1024.0">
          <children>
             <ScrollPane fx:id="scrollPaneRezervacije" hbarPolicy="NEVER" layoutX="1.0" layoutY="39.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="398.0" prefWidth="895.0" vbarPolicy="NEVER" />
-            <Button layoutX="896.0" layoutY="39.0" mnemonicParsing="false" onAction="#pomeriScrollUpRezervacije" prefHeight="58.0" prefWidth="127.0" text="▲" />
-            <Button layoutX="896.0" layoutY="379.0" mnemonicParsing="false" onAction="#pomeriScrollDownRezervacije" prefHeight="58.0" prefWidth="127.0" text="▼" />
+            <Button layoutX="896.0" layoutY="39.0" mnemonicParsing="false" onAction="#pomeriScrollUp" prefHeight="58.0" prefWidth="127.0" text="▲" />
+            <Button layoutX="896.0" layoutY="379.0" mnemonicParsing="false" onAction="#pomeriScrollDown" prefHeight="58.0" prefWidth="127.0" text="▼" />
             <Button layoutX="896.0" layoutY="140.0" mnemonicParsing="false" onAction="#promeniRezervaciju" prefHeight="78.0" prefWidth="127.0" text="Promeni" />
             <Button layoutX="896.0" layoutY="251.0" mnemonicParsing="false" onAction="#izbrisiRezervaciju" prefHeight="78.0" prefWidth="127.0" text="Izbriši" />
             <Button fx:id="sortIme" layoutX="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#sortTabelu" prefHeight="41.0" prefWidth="140.0" text="Ime ↓" />

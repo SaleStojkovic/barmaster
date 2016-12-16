@@ -63,6 +63,8 @@ public class SalePopupController extends Dialog {
 
     public SalePopupController() {
         
+        fxmlController = new FXMLDocumentController();
+        
         try {
             this.initStyle(StageStyle.UNDECORATED);
 
