@@ -173,6 +173,7 @@ public class NaplataController extends FXMLDocumentController {
         
         if (stalniGost != null) {
             porudzbina.setStalniGost(stalniGost);
+            porudzbina.setPopust(Utils.getDoubleFromString(stalniGost.popust));
         }
         
         this.fxID_Total.setText(Utils.getStringFromDouble(this.total));
@@ -196,6 +197,7 @@ public class NaplataController extends FXMLDocumentController {
                                         StalniGost sg = new StalniGost();
                                         sg.getInstance(pop.getId());
                                         porudzbina.setStalniGost(sg);
+                                        porudzbina.setPopust(Utils.getDoubleFromString(sg.popust));
                                         //popustPorudzbineProcenat = Utils.getDoubleFromString(mapaPopusta.get(pop.getId()));
                                         osveziPrikaz();
                                     }
@@ -345,7 +347,7 @@ public class NaplataController extends FXMLDocumentController {
         if (this.getUplaceno() == 0) {
             // Nista nije uneto, obracunava kao da je tacan iznos gotovine
             // - ako nista nije kucano knjizi kao da je uplacen tacan iznos u gotovini
-            nacinPlacanjaGotovina.setVrednost(porudzbina.getVrednostPorudzbine());
+            nacinPlacanjaGotovina.setVrednost(porudzbina.getVrednostPorudzbine() * porudzbina.getPopustDouble()/100);
             //osveziPrikaz();
             stampajSnimiZatvoriFormu(VrstaRacunaZaStampu.GOTOVINSKI, event);
             return;

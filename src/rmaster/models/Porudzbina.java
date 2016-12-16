@@ -52,6 +52,10 @@ public class Porudzbina {
         this.brojStolaBroj = rmaster.RMaster.izabraniStoBroj;
     }
 
+    public void setPopust(double popust) {
+        this.popust = popust;
+    }
+    
     public double getVrednostPorudzbine() {
         double vrednostPorudzbine = 0.;
         for (Tura tura : turePorudzbine) {
@@ -193,7 +197,7 @@ public class Porudzbina {
     
     public void zatvoriRacun(Date vreme) {
         DBBroker db = new DBBroker();
-        //snimi();
+        snimi();
         db.zatvoriRacunIOslobodiSto(this.racunID, vreme);
         this.zatvoren = true;
         this.vremeIzdavanjaRacuna = vreme;
@@ -208,7 +212,7 @@ public class Porudzbina {
             mapa.put("brojFakture", "" + this.brojFakture);
             mapa.put("brojRacuna", "" + this.brojRacuna);
             mapa.put("brojFiskalnogIsecka", "" + this.brojFiskalnogIsecka);
-            //mapa.put("brojStola", "" + this.brojStolaID);
+            mapa.put("popust", "" + this.popust);
             mapa.put("brojStola", "" + this.brojStolaBroj);
             mapa.put("crnoPlacanje", "" + this.crnoPlacanje);
             if (this.datum == null)

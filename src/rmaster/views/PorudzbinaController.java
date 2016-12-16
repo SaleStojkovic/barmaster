@@ -1228,6 +1228,13 @@ public class PorudzbinaController extends FXMLDocumentController {
         if (novaTura != null) {
             porudzbinaTrenutna.snimi();
             Stampac.getInstance().stampajTuru(novaTura);
+            List<Object> newData = new ArrayList<>();
+            prikaziFormu(
+                    newData,
+                    ScreenMap.PRIKAZ_SALA,
+                    true, 
+                    (Node)event.getSource()
+            );    
             return;
         }
         // TODO: Otvoriti formu za naplatu
