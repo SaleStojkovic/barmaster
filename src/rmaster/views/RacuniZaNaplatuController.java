@@ -18,6 +18,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.Stampac;
+import rmaster.models.Porudzbina;
 
 /**
  * FXML Controller class
@@ -96,8 +97,10 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
                     Optional<String> result = tastatura.showAndWait();
 
                     if (result.isPresent()){
-                                Stampac.getInstance().stampajGotovinskiRacun();
                         // TODO: Upisati u bazu broj FISKALNOG ISECKA
+                        // OVDE DORADITI DA SE POKUPI PORUDZBINA KOJA SE STAMPA
+                        // Porudzbina porudzbina = null;
+                        // Stampac.getInstance().stampajGotovinskiRacun(porudzbina);
                                 try {
                                     String[] imenaArgumenata = {"racunID","brojIsecka"};
                                     String[] vrednostiArgumenata = {racunID,result.get()};

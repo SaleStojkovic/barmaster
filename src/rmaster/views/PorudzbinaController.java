@@ -1225,10 +1225,16 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     
     public void naplataIliStampaPorudzbine(ActionEvent event) {
-        //porudzbinaTrenutna.oslobodiSto();
         if (novaTura != null) {
             porudzbinaTrenutna.snimi();
             Stampac.getInstance().stampajTuru(novaTura);
+            List<Object> newData = new ArrayList<>();
+            prikaziFormu(
+                    newData,
+                    ScreenMap.PRIKAZ_SALA,
+                    true, 
+                    (Node)event.getSource()
+            );    
             return;
         }
         // TODO: Otvoriti formu za naplatu
@@ -1242,9 +1248,9 @@ public class PorudzbinaController extends FXMLDocumentController {
         );    
     }
 
-    public void medjuzbir(ActionEvent event) {
-        //porudzbinaTrenutna.snimi();
-        porudzbinaTrenutna.zatvoriRacun();
-        Stampac.getInstance().stampajMedjuzbir(porudzbinaTrenutna);
-    }
+//    public void medjuzbir(ActionEvent event) {
+//        //porudzbinaTrenutna.snimi();
+//        porudzbinaTrenutna.zatvoriRacun(null);
+//        Stampac.getInstance().stampajMedjuzbir(porudzbinaTrenutna);
+//    }
 }
