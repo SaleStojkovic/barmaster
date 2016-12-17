@@ -54,6 +54,9 @@ public class Porudzbina {
 
     public void setPopust(double popust) {
         this.popust = popust;
+        for (Tura tura : turePorudzbine) {
+            tura.setPopust(popust);
+        }
     }
     
     public double getVrednostPorudzbine() {
@@ -63,6 +66,14 @@ public class Porudzbina {
         }
         return vrednostPorudzbine;
     }
+    public double getVrednostPorudzbineSaObracunatimPopustom() {
+        double vrednostPorudzbine = 0.;
+        for (Tura tura : turePorudzbine) {
+            vrednostPorudzbine += tura.getVrednostTureSaObracunatimPopustom();
+        }
+        return vrednostPorudzbine;
+    }
+    
     public Porudzbina(Gost gost, long racunID) {
         this.setGost(gost);
         this.racunID = racunID;

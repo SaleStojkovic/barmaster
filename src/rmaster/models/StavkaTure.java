@@ -28,19 +28,22 @@ public class StavkaTure {
     public long id = 0;
     private int brojStola;
     public double cena = 0;
+    public double procenatPopusta = 0;
     public double kolicina = 0;
     public String naziv;
     public long RACUN_ID;
     public long ARTIKAL_ID;
     public long TURA_ID;
-    private long GLAVNASTAVKA_ID = 0;
+    public long GLAVNASTAVKA_ID = 0;
     public List<StavkaTure> dodatniArtikli = new ArrayList(); 
     public List<StavkaTure> opisniArtikli = new ArrayList();
+    
+    public boolean dozvoljenPopust;
 
 
 // Konstruktor
     public StavkaTure(Map<String, String> stavkaTure) {
-        String novaKolicina = "";
+        //String novaKolicina = "";
 
         if (stavkaTure.get("id")  != null)
             this.id = Long.parseLong(stavkaTure.get("id"));
@@ -50,6 +53,9 @@ public class StavkaTure {
 
         if (stavkaTure.get("cena")  != null)
             this.setCenaJedinicna(Utils.getDoubleFromString(stavkaTure.get("cena"))); 
+
+        if (stavkaTure.get("procenatPopusta")  != null)
+            this.setProcenatPopusta(Utils.getDoubleFromString(stavkaTure.get("procenatPopusta"))); 
 
         if (stavkaTure.get("kolicina")  != null)
             this.setKolicina(Utils.getDoubleFromString(
@@ -71,6 +77,9 @@ public class StavkaTure {
         
         if (stavkaTure.get("GLAVNASTAVKA_ID") != null)
             this.GLAVNASTAVKA_ID = Long.parseLong(stavkaTure.get("GLAVNASTAVKA_ID"));
+
+        if (stavkaTure.get("dozvoljenPopust") != null && (stavkaTure.get("dozvoljenPopust").equals("true") || stavkaTure.get("dozvoljenPopust").equals("1")))
+            this.dozvoljenPopust = true;
     }
 
 // Redni broj koji pomaze pri formiranju tabele za prikaz i brisanju stavki iz prikaza
@@ -82,6 +91,10 @@ public class StavkaTure {
         this.redniBroj = rb;
     }
     
+    public void setProcenatPopusta(double procenat) {
+        if (this.dozvoljenPopust)
+            this.procenatPopusta = procenat;
+    }
 // Redni broj glavne stavke za koji se vezu dodatni i opisni artikli, pomaze pri brisanju stavki iz prikaza
     public int getRedniBrojGlavneStavke() {
         return this.redniBrojGlavneStavke;
@@ -136,10 +149,13 @@ public class StavkaTure {
         } else {
             stavkaTure.put("kolicina", "x" + Utils.getStringFromDouble(this.kolicina));
         }
-        stavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(this.cenaJedinicna));
+        stavkaTure.put("procenatPopusta", Utils.getStringFromDouble(this.procenatPopusta));
+        stavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(this.cenaJedinicna));        stavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(this.cenaJedinicna));        stavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(this.cenaJedinicna));
         stavkaTure.put("cena", Utils.getStringFromDouble(this.cena));
         //stavkaTure.put("GlavnaStavkaID", "" + this.getGlavnaStavkaID());
-        stavkaTure.put("redniBrojGlavnaStavka", "" + this.getRedniBrojGlavneStavke());
+        if (this.getRedniBrojGlavneStavke()!=0)
+            stavkaTure.put("redniBrojGlavnaStavka", "" + this.getRedniBrojGlavneStavke());
+        stavkaTure.put("dozvoljenPopust", "" + this.dozvoljenPopust);
         
         return stavkaTure;
     } 
@@ -223,6 +239,17 @@ public class StavkaTure {
 
     public double getCena() {
         return cena;
+    }
+
+    public boolean getDozvoljenPopust() {
+        return this.dozvoljenPopust;
+    }
+
+    public double getCenaSaObracunatimPopustom() {
+        if (this.dozvoljenPopust)
+            return cena * (100 - procenatPopusta) / 100;
+        else
+            return cena;
     }
 
     public void cenaObracunaj() {
@@ -316,6 +343,9 @@ public class StavkaTure {
         this.GLAVNASTAVKA_ID = glavnaStavkaID;
     }
     
+    public double getProcenatPopusta() {
+        return this.procenatPopusta;
+    }
     public void snimi() {
         if (this.getID() == 0) {
             // Stavka ture nije upisana, upisi je u bazu
@@ -325,12 +355,14 @@ public class StavkaTure {
                 HashMap<String,String> mapaStavka = new HashMap();
                 mapaStavka.put("brojStola", "" + this.getBrojStola());
                 mapaStavka.put("cena", "" + this.getCena());
+                mapaStavka.put("procenatPopusta", "" + this.getProcenatPopusta());
                 mapaStavka.put("kolicina", "" + this.getKolicina());
                 mapaStavka.put("naziv", "" + this.getNaziv());
                 mapaStavka.put("RACUN_ID", "" + this.getRacunID());
                 mapaStavka.put("ARTIKAL_ID", "" + this.getArtikalID());
                 mapaStavka.put("TURA_ID", "" + this.getTuraID());
-                mapaStavka.put("GLAVNASTAVKA_ID", "" + this.getGlavnaStavkaID());
+                if (this.getGlavnaStavkaID() != 0)
+                    mapaStavka.put("GLAVNASTAVKA_ID", "" + this.getGlavnaStavkaID());
                 result = db.ubaciRed("stavkaracuna", mapaStavka, false);
                 this.setID(result);
                 

@@ -60,12 +60,31 @@ public class Tura {
         }
     }
     
+    public void setPopust(double popust) {
+        for (StavkaTure stavkaTure : listStavkeTure) {
+            stavkaTure.setProcenatPopusta(popust);
+            for (StavkaTure stavkaTure1 : stavkaTure.getArtikliDodatni()) {
+                stavkaTure1.setProcenatPopusta(popust);
+            }
+        }
+    }
+    
     public double getVrednostTure() {
         double vrednostTure = 0.;
         for (StavkaTure stavkaTure : listStavkeTure) {
             vrednostTure += stavkaTure.getCena();
             for (StavkaTure dodatniArtikli : stavkaTure.getArtikliDodatni()) {
                 vrednostTure += dodatniArtikli.getCena();
+            }
+        }
+        return vrednostTure;
+    }
+    public double getVrednostTureSaObracunatimPopustom() {
+        double vrednostTure = 0.;
+        for (StavkaTure stavkaTure : listStavkeTure) {
+            vrednostTure += stavkaTure.getCenaSaObracunatimPopustom();
+            for (StavkaTure dodatniArtikli : stavkaTure.getArtikliDodatni()) {
+                vrednostTure += dodatniArtikli.getCenaSaObracunatimPopustom();
             }
         }
         return vrednostTure;

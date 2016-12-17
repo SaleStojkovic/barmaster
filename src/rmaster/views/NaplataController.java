@@ -263,11 +263,13 @@ public class NaplataController extends FXMLDocumentController {
     }
     
     private void osveziPrikaz() {
-        if (this.porudzbina != null)
-            this.fxID_Popust.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) * (this.porudzbina.getPopustDouble()/100)));
+        if (this.porudzbina != null) {
+            double zaNaplatu = this.porudzbina.getVrednostPorudzbineSaObracunatimPopustom();
+            this.fxID_Popust.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) - this.porudzbina.getVrednostPorudzbineSaObracunatimPopustom()));
+        }
         else
             this.fxID_Popust.setText(Utils.getStringFromDouble(0.));
-        this.zaUplatu = Utils.getDoubleFromString(this.fxID_Total.getText()) - Utils.getDoubleFromString(this.fxID_Popust.getText());
+        this.zaUplatu = this.porudzbina.getVrednostPorudzbineSaObracunatimPopustom();
         this.fxID_ZaUplatu.setText(Utils.getStringFromDouble(this.zaUplatu));
         this.fxID_Uplaceno.setText(Utils.getStringFromDouble(this.getUplaceno()));
         this.fxID_Kusur.setText(Utils.getStringFromDouble(this.getKusur()));

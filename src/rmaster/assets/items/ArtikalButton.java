@@ -23,6 +23,7 @@ public class ArtikalButton extends Button{
     private String tip;
     private VrsteGrupaIliArtikal vrstaZaPrikaz;
     private double cenaJedinicna;
+    private boolean dozvoljenPopust;
     
     public ArtikalButton(
             String name, 
@@ -33,7 +34,8 @@ public class ArtikalButton extends Button{
             String NadredjenaGrupaID,
             String tip,
             VrsteGrupaIliArtikal vrstaZaPrikaz,
-            double cenaJedinicna
+            double cenaJedinicna,
+            String dozvoljenPopust
     )
     {
         this.idProperty().set(id);
@@ -53,6 +55,8 @@ public class ArtikalButton extends Button{
         this.tip = tip;
         this.vrstaZaPrikaz = vrstaZaPrikaz;
         this.cenaJedinicna = cenaJedinicna;
+        if (dozvoljenPopust.equals("1"))
+            this.dozvoljenPopust = true;
     }
     
     //public String getVrstaArtikalSlozenIliProd() {
@@ -69,5 +73,9 @@ public class ArtikalButton extends Button{
     
     public double getCenaJedinicna() {
         return this.cenaJedinicna;
+    }
+    
+    public boolean getDozvoljenPopust() {
+        return this.dozvoljenPopust;
     }
 }

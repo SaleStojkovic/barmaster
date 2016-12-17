@@ -163,7 +163,7 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     private List<Porudzbina> porudzbineStola = new ArrayList<Porudzbina>();
     
-    int[] sirinaKolonaTabele = {0, 180, 40, 0, 61, 0, 0, 0};
+    int[] sirinaKolonaTabele = {0, 0, 180, 0, 40, 0, 61, 0, 0, 0};
     
     List<Map<String, String>> tureTrenutnoIzabranogGosta = new ArrayList<>();
     
@@ -560,6 +560,10 @@ public class PorudzbinaController extends FXMLDocumentController {
                     cena = Double.parseDouble(red.get("cena"));
                 }catch (Exception e) {
                 }
+                String dozvoljenPopust = red.get("dozvoljenPopust");
+                if(dozvoljenPopust == null) {
+                    dozvoljenPopust = "";
+                }
                 ArtikalButton buttonArtikalIliGrupa = 
                         new ArtikalButton(
                                 red.get("naziv"),
@@ -570,7 +574,8 @@ public class PorudzbinaController extends FXMLDocumentController {
                                 red.get("GRUPA_ID"),
                                 red.get("tip"),
                                 staSePrikazuje,
-                                cena
+                                cena,
+                                dozvoljenPopust
                         );
                 
                 if ((brojac%prikazBrojArtikalaUJednomRedu)==0) {
@@ -795,8 +800,9 @@ public class PorudzbinaController extends FXMLDocumentController {
             novaGlavnaStavka.put("ARTIKAL_ID", poslednjaDodataStavka.getArtikalIDString());
             novaGlavnaStavka.put("kolicina", "1");
             novaGlavnaStavka.put("naziv", "" + poslednjaDodataStavka.naziv);
-            novaGlavnaStavka.put("cena", "" + poslednjaDodataStavka.cena);
+            novaGlavnaStavka.put("cena", "" + poslednjaDodataStavka.cenaJedinicna);
             novaGlavnaStavka.put("cenaJedinicna", "" + poslednjaDodataStavka.cenaJedinicna);
+            novaGlavnaStavka.put("dozvoljenPopust", "" + poslednjaDodataStavka.getDozvoljenPopust());
             poslednjaDodataStavka.smanjiKolicinu();
 
             nova = new StavkaTure(novaGlavnaStavka);
@@ -842,7 +848,8 @@ public class PorudzbinaController extends FXMLDocumentController {
         novaStavkaTure.put("cena", cena);
         novaStavkaTure.put("cenaJedinicna", cena);
         novaStavkaTure.put("brojStola", "" + rmaster.RMaster.izabraniStoBroj);
-
+        novaStavkaTure.put("dozvoljenPopust", "" + artikal.getDozvoljenPopust());
+        
         this.dodajStavkuUNovuTuru(novaStavkaTure);
         
         this.tableRefresh();
