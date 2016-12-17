@@ -1,0 +1,2 @@
+ALTER TABLE stavkaracuna
+	ADD COLUMN procenatPopusta DOUBLE NOT NULL DEFAULT 0 AFTER cena;
