@@ -19,6 +19,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.Label;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
+import rmaster.models.LoginAction;
 /**
  *
  * @author Arbor
@@ -69,10 +70,9 @@ public class PocetniEkranController extends FXMLDocumentController {
         response.setText("");
         String lozinkaText = this.lozinka.getText();
         
-        if (lozinkaText.equals("9988")) {
-            Platform.exit();
-            System.exit(0);        
-        }
+        LoginAction akcija = new LoginAction();
+        
+        akcija.takeAction(lozinkaText);
         
         String[] uslovneKolone = {"pin"};
         String[] uslovneVrednosti = {lozinkaText};
