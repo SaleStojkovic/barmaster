@@ -184,6 +184,7 @@ and open the template in the editor.
 
 #lozinka {
     -fx-text-fill: white;
+    -fx-highlight-fill: none;
     -fx-background-color: -fx-zuta;
     -fx-font-size: 30px; 
     -fx-border-color: white;
