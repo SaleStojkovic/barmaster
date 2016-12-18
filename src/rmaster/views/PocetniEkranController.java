@@ -11,13 +11,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.QueryBuilder;
 import rmaster.assets.ScreenMap;
 import rmaster.models.LoginAction;
 /**
@@ -64,9 +66,11 @@ public class PocetniEkranController extends FXMLDocumentController {
            this.lozinka.setText(lozinkaText);
         } 
         
+        lozinka.requestFocus();
+        
     }  
     
-    public void passwordCheck(ActionEvent event) throws Exception {
+    public void passwordCheck() {
         response.setText("");
         String lozinkaText = this.lozinka.getText();
         
@@ -74,17 +78,17 @@ public class PocetniEkranController extends FXMLDocumentController {
         
         akcija.takeAction(lozinkaText);
         
-        String[] uslovneKolone = {"pin"};
-        String[] uslovneVrednosti = {lozinkaText};
+        QueryBuilder query = new QueryBuilder();
+        query.setTableName("konobar");
+        query.setCriteriaColumns("pin");
+        query.setCriteria(QueryBuilder.IS_EQUAL);
+        query.setCriteriaValues(lozinkaText);
         
-        List rezultat = vratiSveIzTabeleUzUslov(
-                "konobar", 
-                uslovneKolone, 
-                uslovneVrednosti
-        );
+        List<Map<String, String>> rezultat = runQuery(query);
         
         if (!rezultat.isEmpty()) {
-            Map<String,String>  konobar = (Map<String, String>)rezultat.get(0);
+            
+            Map<String,String>  konobar = rezultat.get(0);
             
             //zapamti KonobarID
             setUlogovaniKonobar(konobar);
@@ -104,5 +108,12 @@ public class PocetniEkranController extends FXMLDocumentController {
         response.setText("Neuspelo logovanje!");
         lozinka.setText("");
         lozinka.requestFocus();
+    }
+    
+    public void onEnter(KeyEvent key){
+        if (key.getCode().equals(KeyCode.ENTER))
+        {
+            passwordCheck();
+        }
     }
 }
