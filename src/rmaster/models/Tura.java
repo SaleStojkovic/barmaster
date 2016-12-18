@@ -23,7 +23,7 @@ public class Tura {
     public long turaID = 0;
     private long gostID = 0;
     public int redniBrojStavke = 0;
-    public Date datum = new Date();
+    public Date datum;
     
     public Tura () {
     }

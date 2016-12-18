@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.IntStream;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -135,23 +136,36 @@ public class NaplataController extends FXMLDocumentController {
                         chk = (ToggleButton)t1.getToggleGroup().getSelectedToggle();
                     else
                         chk = (ToggleButton)t;
+//                    String bojaDefault = "color:yellow";
+//                    String bojaPressed = "color:red";
+//                    fxID_Faktura.setStyle(bojaDefault);
+//                    fxID_Cek.setStyle(bojaDefault);
+//                    fxID_Kartica.setStyle(bojaDefault);
+//                    fxID_Gotovina.setStyle(bojaDefault);
 
                     switch (chk.getId()) {
                         case "fxID_Faktura":
+//                            fxID_Faktura.setStyle(bojaPressed);
                             setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.FAKTURA);
                             break;
                         case "fxID_Cek":
+//                            fxID_Cek.setStyle(bojaPressed);
                             setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.CEK);
                             break;
                         case "fxID_Kartica":
+//                            fxID_Kartica.setStyle(bojaPressed);
                             setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.KARTICA);
                             break;
                         case "fxID_Gotovina":
+//                            fxID_Gotovina.setStyle(bojaPressed);
                             setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.GOTOVINA);
                             break;
                     }
                 }
             });
+        
+        this.fxID_Gotovina.fire();
+
         popuniPopuste();
         popuniHotelGost();
     } 
@@ -263,14 +277,14 @@ public class NaplataController extends FXMLDocumentController {
     }
     
     private void osveziPrikaz() {
-        if (this.porudzbina != null) {
-            double zaNaplatu = this.porudzbina.getVrednostPorudzbineSaObracunatimPopustom();
-            this.fxID_Popust.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) - this.porudzbina.getVrednostPorudzbineSaObracunatimPopustom()));
-        }
-        else
-            this.fxID_Popust.setText(Utils.getStringFromDouble(0.));
         this.zaUplatu = this.porudzbina.getVrednostPorudzbineSaObracunatimPopustom();
         this.fxID_ZaUplatu.setText(Utils.getStringFromDouble(this.zaUplatu));
+//        if (this.porudzbina != null) {
+//            double zaNaplatu = this.porudzbina.getVrednostPorudzbineSaObracunatimPopustom();
+            this.fxID_Popust.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) - this.zaUplatu));
+//        }
+//        else
+//            this.fxID_Popust.setText(Utils.getStringFromDouble(0.));
         this.fxID_Uplaceno.setText(Utils.getStringFromDouble(this.getUplaceno()));
         this.fxID_Kusur.setText(Utils.getStringFromDouble(this.getKusur()));
         
@@ -279,20 +293,42 @@ public class NaplataController extends FXMLDocumentController {
             String textZaPrikaz = nacinPlacanja.getTextZaButton();
             switch (nacinPlacanja.getNacinPlacanja()) {
                 case FAKTURA:
+                    obradiFakturu(true);
                     this.fxID_Faktura.setText(textZaPrikaz);
                     break;
                 case CEK:
+                    obradiFakturu(false);
                     this.fxID_Cek.setText(textZaPrikaz);
                     break;
                 case KARTICA:
+                    obradiFakturu(false);
                     this.fxID_Kartica.setText(textZaPrikaz);
                     break;
                 case GOTOVINA:
+                    obradiFakturu(false);
                     this.fxID_Gotovina.setText(textZaPrikaz);
                     break;
             }
         }
     }
+    
+    public void obradiFakturu(boolean jeFaktura) {
+        if (!jeFaktura && (this.getUplaceno() != 0)) {
+            this.fxID_Faktura.setDisable(true);
+            for (NacinPlacanja nacinPlacanja : placanja) {
+                if (nacinPlacanja.getNacinPlacanja() == NacinPlacanja.VrstePlacanja.FAKTURA)
+                    nacinPlacanja.setVrednost(0);
+            }
+            return;
+        }
+        this.fxID_Faktura.setDisable(false);
+        
+        
+        // TODO
+        // Otvoriti formu ili izvestaj za fakturu
+    }
+
+
     
     public void otvoriLojalnost(ActionEvent event) {
         prikaziFormu(
@@ -349,7 +385,7 @@ public class NaplataController extends FXMLDocumentController {
         if (this.getUplaceno() == 0) {
             // Nista nije uneto, obracunava kao da je tacan iznos gotovine
             // - ako nista nije kucano knjizi kao da je uplacen tacan iznos u gotovini
-            nacinPlacanjaGotovina.setVrednost(porudzbina.getVrednostPorudzbine() * porudzbina.getPopustDouble()/100);
+            nacinPlacanjaGotovina.setVrednost(this.zaUplatu);
             //osveziPrikaz();
             stampajSnimiZatvoriFormu(VrstaRacunaZaStampu.GOTOVINSKI, event);
             return;

@@ -6,7 +6,6 @@
 package rmaster.views;
 
 import java.net.URL;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,14 +14,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -140,8 +137,6 @@ public class PorudzbinaController extends FXMLDocumentController {
     public int prikazBrojPrikazanihPlus1 = prikazBrojRedova * prikazBrojArtikalaUJednomRedu;
     public String stilArtikalIliGrupa = "";
 
-    public boolean prikazFavoriteMENJAJ = false;
-
     public String selektovanaGlavnaGrupaID = "0";
     public String selektovanaPodgrupaID = "0";
     public String selektovanArtikalID = "0";
@@ -156,8 +151,6 @@ public class PorudzbinaController extends FXMLDocumentController {
     public int popustTrenutnogGosta = 0;
     
     public Map<String,List> racuniStolaPoGostima = new HashMap<>();
-    
-    //public List<StavkaTure> listNovaTuraGosta = new ArrayList<>();
     
     public TableView<Map<String, String>> tabelaNovaTuraGosta = new TableView<>();
 
@@ -174,6 +167,40 @@ public class PorudzbinaController extends FXMLDocumentController {
     ArtikalButton selektovani = null;
     StavkaTure selektovana = null;
     
+
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        
+        imeKonobara.setText(ulogovaniKonobar.imeKonobara);
+        
+        String[] uslovneKolone = {"id"};
+        String[] uslovneVrednosti = {rmaster.RMaster.izabraniStoID};
+        
+        List<Map<String, String>> resultList = vratiSveIzTabeleUzUslov(
+                "stonaziv", 
+                uslovneKolone, 
+                uslovneVrednosti
+        );
+        
+        String imeStola = rmaster.RMaster.izabraniStoID;
+        
+        if (!resultList.isEmpty()) {
+            Map<String, String> red = resultList.get(0);
+
+            imeStola = resultList.get(0).get("naziv");
+
+            if (red.get("naziv").isEmpty()) {
+                imeStola = red.get("broj");
+            }
+        }
+        izabraniSto.setText("Sto: " + imeStola);
+       
+    }    
+    
+
     @Override
     public void initData(Object data) {
 
@@ -182,29 +209,13 @@ public class PorudzbinaController extends FXMLDocumentController {
             refreshGrupeIliArtikla(this.Artikal, ARTIKAL_FAVORITE);
 
             prikaziPorudzbinu();
-            if (this.prikazGostiju.getChildren().size() == 0) {
+            if (this.prikazGostiju.getChildren().isEmpty()) {
                 // TODO: Dodaj prvog gosta i napravi porudzbinu za njega
                 dodajNovogGosta(new ActionEvent());
-//                Gost gost = new Gost(0);
-//                idTrenutnoIzabranogGosta = "1";
-//                this.porudzbinaTrenutna = new Porudzbina(gost);
-//                this.porudzbineStola.add(porudzbinaTrenutna);
-//                this.racuniStolaPoGostima.put(
-//                    "1", 
-//                    DBBroker.getRecordSetIzStoreProcedureZaParametar(
-//                            "getStavkeRacuna", 
-//                            "racunID", 
-//                            "0"
-//                    )
-//            ); 
-
             }
 
             Button dugme = (Button)prikazGostiju.getChildren().get(0);
-
-            IntStream.range(0, 1).forEach(
-                i -> dugme.fire()
-            );
+            dugme.fire();
 
             
         } catch (Exception e) {
@@ -212,38 +223,6 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
     }
     
-//    public void popuniPorudzbineStola() {
-//        List racuniStola = DBBroker.get_PorudzbineStolaIKonobara();
-//        for (Object racun : racuniStola) {
-//
-//            Map<String, String> red = (Map<String, String>) racun;
-//
-//            String brojNovogGosta = red.get("gost");
-//            
-//            racuniStolaPoGostima.put(
-//                    brojNovogGosta, 
-//                    DBBroker.getRecordSetIzStoreProcedureZaParametar(
-//                            "getStavkeRacuna", 
-//                            "racunID", 
-//                            red.get("id")
-//                    )
-//            ); 
-//            Button b = new Button(brojNovogGosta);
-//            b.setId(brojNovogGosta);
-//            
-//            b.setPrefSize(50, 50);
-//            b.setOnAction(new EventHandler<ActionEvent>() {
-//                                @Override public void handle(ActionEvent e) {
-//                                    String gost = ((Button)e.getSource()).getId();
-//                                    Utils.postaviStil_ObrisiZaOstaleKontroleRoditelja(e, stilButtonGrupeSelektovana);
-//                                    prikaziTureZaGosta(gost);
-//                                }
-//                            });
-//
-//            this.prikazGostiju.getChildren().add(b);
-//        }
-//    }
-
     public void prikaziPorudzbinu() {
            
             prikazRacunaGosta.setHbarPolicy(ScrollBarPolicy.NEVER);
@@ -289,7 +268,6 @@ public class PorudzbinaController extends FXMLDocumentController {
     public void prikaziPorudzbinu(Porudzbina porudzbina) {
         prikazRacunaGosta.setContent(null);  
         prikazRacunaGosta.setFitToWidth(true);
-        //listNovaTuraGosta.clear();
                                                 
         VBox sveTure = new VBox();
         VBox paneTura = new VBox();
@@ -321,7 +299,6 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
         sveTure.getChildren().add(paneTura);
         
-        //this.prikaziTotalPopustNaplataTura(porudzbina.getTure());
         this.prikaziTotalPopustNaplataPorudzbina(porudzbina);
         this.prikazRacunaGosta.setContent(sveTure);
     }
@@ -358,14 +335,10 @@ public class PorudzbinaController extends FXMLDocumentController {
 
             prikazRacunaGosta.setContent(tabelaNovaTuraGosta);
             this.prikaziTotalPopustNaplataTura(novaTura);
-//            this.prikaziTotalPopustNaplataStavke(novaTura.listStavkeTure);
         }
     }
 
-    
-
     public void prikaziSalu(ActionEvent event) {
-        
         prikaziFormu(
                 new ArrayList<>(),
                 ScreenMap.PRIKAZ_SALA,
@@ -375,41 +348,9 @@ public class PorudzbinaController extends FXMLDocumentController {
     }
     
     public void prikaziArtikleFavorite(ActionEvent event) {
-        prikazFavoriteMENJAJ = false;
         onButtonArtikalIliGrupa_click(event, this.Artikal);
     }
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        
-        imeKonobara.setText(ulogovaniKonobar.imeKonobara);
-        
-        String[] uslovneKolone = {"id"};
-        String[] uslovneVrednosti = {rmaster.RMaster.izabraniStoID};
-        
-        List<Map<String, String>> resultList = vratiSveIzTabeleUzUslov(
-                "stonaziv", 
-                uslovneKolone, 
-                uslovneVrednosti
-        );
-        
-        String imeStola = rmaster.RMaster.izabraniStoID;
-        
-        if (!resultList.isEmpty()) {
-            Map<String, String> red = resultList.get(0);
 
-            imeStola = resultList.get(0).get("naziv");
-
-            if (red.get("naziv").isEmpty()) {
-                imeStola = red.get("broj");
-            }
-        }
-        izabraniSto.setText("Sto: " + imeStola);
-       
-    }    
-    
     protected void refreshGrupeIliArtikla(Pane gdePrikazati, VrsteGrupaIliArtikal staSePrikazuje) {
         String imeStoreProcedure = "";
         String[] imenaArgumenata = {"","",""};
@@ -721,7 +662,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         */
         switch(vrstaZaPrikaz) {
             case GLAVNA_GRUPA:
-                prikazFavoriteMENJAJ = true;
+//                prikazFavoriteMENJAJ = true;
                 selektovanaPodgrupaID = selektovanaGlavnaGrupaID = selektovani.getId();
                 prikazPodgrupaRedniBrojPrvog = 1;
                 prikazArtikalRedniBrojPrvog = 1;
@@ -754,7 +695,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             case ARTIKAL_FAVORITE:
                 if (selektovani != null) {
                     dodajArtikalUNovuTuru(selektovani);
-                    if (prikazFavoriteMENJAJ) {
+                    //if (prikazFavoriteMENJAJ) {
                         if (selektovani.getDaLiJeArtikalSlozen()) {
                             // TODO : Mora da zapamti koji je da bi njemu dodao opisne i dodatne artikle
                             selektovanArtikalID = selektovani.getId();
@@ -763,9 +704,9 @@ public class PorudzbinaController extends FXMLDocumentController {
                             refreshGrupeIliArtikla(this.ArtikalPodgrupe, ARTIKAL_OPISNI);
                             refreshGrupeIliArtikla(this.Artikal, ARTIKAL_DODATNI);                    
                         }
-                    }
-                } else
-                    refreshGrupeIliArtikla(this.Artikal, ARTIKAL_FAVORITE);
+                    //}
+                }// else
+                //    refreshGrupeIliArtikla(this.Artikal, ARTIKAL_FAVORITE);
                 break;
             default:
         }
@@ -783,13 +724,17 @@ public class PorudzbinaController extends FXMLDocumentController {
         novaStavkaTure.put("id", "0");//artikalOpisniDodatni.getId());
         novaStavkaTure.put("ARTIKAL_ID", artikalOpisniDodatni.getId());
         novaStavkaTure.put("kolicina", "1");
-
+        novaStavkaTure.put("brojStola", "" + poslednjaDodataStavka.getBrojStola());
+        novaStavkaTure.put("dozvoljenPopust", "" + artikalOpisniDodatni.getDozvoljenPopust());
+        
         if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI) {
-            novaStavkaTure.put("naziv", "--> " + artikalOpisniDodatni.getText());
+            //novaStavkaTure.put("naziv", "--> " + artikalOpisniDodatni.getText());
+            novaStavkaTure.put("naziv", artikalOpisniDodatni.getText());
             novaStavkaTure.put("cena", "0");
             novaStavkaTure.put("cenaJedinicna", "0");
         } else if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI) {
-            novaStavkaTure.put("naziv", "-> " + artikalOpisniDodatni.getText());
+            //novaStavkaTure.put("naziv", "-> " + artikalOpisniDodatni.getText());
+            novaStavkaTure.put("naziv", artikalOpisniDodatni.getText());
             novaStavkaTure.put("cena", Utils.getStringFromDouble(artikalOpisniDodatni.getCenaJedinicna()));
             novaStavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(artikalOpisniDodatni.getCenaJedinicna()));
         }
@@ -798,11 +743,13 @@ public class PorudzbinaController extends FXMLDocumentController {
             novaGlavnaStavka = new HashMap<>();
             novaGlavnaStavka.put("id", "" + poslednjaDodataStavka.id);
             novaGlavnaStavka.put("ARTIKAL_ID", poslednjaDodataStavka.getArtikalIDString());
+            novaGlavnaStavka.put("brojStola", "" + poslednjaDodataStavka.getBrojStola());
             novaGlavnaStavka.put("kolicina", "1");
             novaGlavnaStavka.put("naziv", "" + poslednjaDodataStavka.naziv);
             novaGlavnaStavka.put("cena", "" + poslednjaDodataStavka.cenaJedinicna);
             novaGlavnaStavka.put("cenaJedinicna", "" + poslednjaDodataStavka.cenaJedinicna);
             novaGlavnaStavka.put("dozvoljenPopust", "" + poslednjaDodataStavka.getDozvoljenPopust());
+            novaGlavnaStavka.put("procenatPopusta", "" + poslednjaDodataStavka.getProcenatPopusta());
             poslednjaDodataStavka.smanjiKolicinu();
 
             nova = new StavkaTure(novaGlavnaStavka);
@@ -849,6 +796,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         novaStavkaTure.put("cenaJedinicna", cena);
         novaStavkaTure.put("brojStola", "" + rmaster.RMaster.izabraniStoBroj);
         novaStavkaTure.put("dozvoljenPopust", "" + artikal.getDozvoljenPopust());
+        novaStavkaTure.put("procenatPopusta", this.porudzbinaTrenutna.getPopustString());
         
         this.dodajStavkuUNovuTuru(novaStavkaTure);
         
@@ -1130,7 +1078,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         
         noviGost.setId("" + najveciBrojGosta);
-        noviGost.setText("G" + najveciBrojGosta);
+        noviGost.setText("" + najveciBrojGosta);
         noviGost.setPrefSize(50, 50);
         noviGost.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {

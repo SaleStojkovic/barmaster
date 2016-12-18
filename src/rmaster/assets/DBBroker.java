@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -539,6 +540,71 @@ public final class DBBroker {
         return listaRezultata;   
     }
     
+    /**
+     * 
+     * @param imeFunkcije
+     * @param imenaArgumenata
+     * @param vrednostiArgumenata
+     * @return 
+     */
+    public static int getValueFromFunction(
+            String imeFunkcije,
+            String[] imenaArgumenata,
+            String[] vrednostiArgumenata
+    )
+    {
+        Connection dbConnection = null;
+        ResultSet rs = null;
+        List listaRezultata = null;
+        CallableStatement cStmt = null;
+        int rez = 0;
+        try {
+            dbConnection = poveziSaBazom();
+            
+            String procedureCall = "{? = call " + imeFunkcije + "(";
+            
+            int brojArgumenata = imenaArgumenata.length;
+            
+            for (int i = 0; i < brojArgumenata; i++) {
+                procedureCall += "?,";
+            }
+            
+            if (brojArgumenata>0)
+                procedureCall = procedureCall.substring(0, procedureCall.length()-1);
+            procedureCall += ")}";
+            
+            cStmt = dbConnection.prepareCall(procedureCall);
+            cStmt.registerOutParameter (1, Types.INTEGER);
+    
+            for (int i = 0; i < brojArgumenata; i++) {
+                 cStmt.setString(imenaArgumenata[i], vrednostiArgumenata[i]);
+            }
+           
+            cStmt.execute();
+            rez = cStmt.getInt(1);
+            
+        } catch (Exception e) {
+            
+            System.out.println("Store procedure \"" + imeFunkcije + "\" exec error! - " + e.toString());
+        
+        } finally {
+            
+            if (rs != null) {
+                try { rs.close(); } catch (SQLException ignore) {}
+            }
+            
+            if (cStmt != null) {
+                try { cStmt.close(); } catch (SQLException ignore) {}
+            }
+            
+            if (dbConnection != null) {
+                try { dbConnection.close(); } catch (SQLException ignore) {}
+            }
+        } 
+        
+        return rez;   
+    }
+
     /**
      * 
      * @param imeStoreProcedure

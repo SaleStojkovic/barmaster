@@ -133,7 +133,7 @@
                         <Button layoutX="137.0" layoutY="52.0" mnemonicParsing="false" onAction="#izbrisiStavkuNoveTure" prefHeight="48.0" prefWidth="147.0" text="Izbriši" />
                         <Button layoutX="288.0" layoutY="-1.0" mnemonicParsing="false" onAction="#smanjiKolicinuZaJedan" prefHeight="100.0" prefWidth="140.0" text="Umanji količinu za 1" />
                         <Button fx:id="porudzbinaNaplati" layoutX="880.0" mnemonicParsing="false" onAction="#naplataIliStampaPorudzbine" prefHeight="99.0" prefWidth="143.0" text="Naplati ✓" />
-                         <Button fx:id="favorites" layoutX="428.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#prikaziArtikleFavorite" prefHeight="100.0" prefWidth="147.0" text="❤" />
+                         <Button fx:id="favorites" layoutX="428.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#prikaziArtikleFavorite" prefHeight="100.0" prefWidth="147.0" text="★" />
                      </children>
                   </Pane>
                
