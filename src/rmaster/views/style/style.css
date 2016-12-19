@@ -458,15 +458,24 @@ and open the template in the editor.
 }
 
 #prikazRacunaGosta .scroll-bar {
-        -fx-background-color: -fx-tamno-crna;
+    -fx-background-color: -fx-tamno-crna;
+    prefWidth:5px; 
 
 }
 
-#prikazRacunaGosta > .scroll-bar > .increment-button,
-#prikazRacunaGosta > .scroll-bar > .decrement-button {
-    -fx-background-color: -fx-tamno-crna;
-    -fx-border-color:derive(gray,80%);
-    -fx-padding:20px;
+#prikazRacunaGosta > .scroll-bar:vertical > .increment-button,
+#prikazRacunaGosta > .scroll-bar:vertical > .decrement-button {
+        -fx-background-color:transparent;
+        visibility: hidden;
+	-fx-background-radius: 0em;
+	-fx-padding:0 10 0 0;
+}
+
+#prikazRacunaGosta > .scroll-bar:vertical > .decrement-arrow,
+#prikazRacunaGosta > .scroll-bar:vertical > .increment-arrow
+ {
+        visibility: hidden;
+	-fx-padding:0;
 }
 
 #prikazRacunaGosta > .viewport {

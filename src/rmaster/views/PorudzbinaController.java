@@ -173,7 +173,8 @@ public class PorudzbinaController extends FXMLDocumentController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+        tabelaNovaTuraGosta.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
         String[] uslovneKolone = {"id"};
@@ -226,7 +227,6 @@ public class PorudzbinaController extends FXMLDocumentController {
     public void prikaziPorudzbinu() {
            
             prikazRacunaGosta.setHbarPolicy(ScrollBarPolicy.NEVER);
-            prikazRacunaGosta.setVbarPolicy(ScrollBarPolicy.NEVER);
             
             List racuniStola = DBBroker.get_PorudzbineStolaIKonobara();
             
