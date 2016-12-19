@@ -37,8 +37,10 @@ public class StavkaTure {
     public long GLAVNASTAVKA_ID = 0;
     public List<StavkaTure> dodatniArtikli = new ArrayList(); 
     public List<StavkaTure> opisniArtikli = new ArrayList();
-    
+    public boolean jeOpisni = false;
+    public boolean jeDodatni = false;
     public boolean dozvoljenPopust;
+    public String stampacID;
 
 
 // Konstruktor
@@ -51,9 +53,6 @@ public class StavkaTure {
         if (stavkaTure.get("brojStola")  != null)
             this.brojStola = Integer.parseInt(stavkaTure.get("brojStola"));
 
-        if (stavkaTure.get("cena")  != null)
-            this.setCenaJedinicna(Utils.getDoubleFromString(stavkaTure.get("cena"))); 
-
         if (stavkaTure.get("procenatPopusta")  != null)
             this.setProcenatPopusta(Utils.getDoubleFromString(stavkaTure.get("procenatPopusta"))); 
 
@@ -62,6 +61,9 @@ public class StavkaTure {
                     (stavkaTure.get("kolicina").contains("x")
                         ? stavkaTure.get("kolicina").substring(1)
                         : stavkaTure.get("kolicina"))));
+
+        if (stavkaTure.get("cena")  != null)
+            this.setCenaJedinicna(Utils.getDoubleFromString(stavkaTure.get("cena"))/this.kolicina); 
 
         if (stavkaTure.get("naziv")  != null)
             this.naziv = stavkaTure.get("naziv");
@@ -80,6 +82,9 @@ public class StavkaTure {
 
         if (stavkaTure.get("dozvoljenPopust") != null && (stavkaTure.get("dozvoljenPopust").equals("true") || stavkaTure.get("dozvoljenPopust").equals("1")))
             this.dozvoljenPopust = true;
+
+        if (stavkaTure.get("stampacID") != null)
+            this.stampacID = stavkaTure.get("stampacID");
     }
 
 // Redni broj koji pomaze pri formiranju tabele za prikaz i brisanju stavki iz prikaza
@@ -94,6 +99,10 @@ public class StavkaTure {
     public void setProcenatPopusta(double procenat) {
         if (this.dozvoljenPopust)
             this.procenatPopusta = procenat;
+    }
+
+    public String getStampacID() {
+        return this.stampacID;
     }
 // Redni broj glavne stavke za koji se vezu dodatni i opisni artikli, pomaze pri brisanju stavki iz prikaza
     public int getRedniBrojGlavneStavke() {
@@ -142,7 +151,7 @@ public class StavkaTure {
         stavkaTure.put("redniBroj", "" + this.getRedniBroj());
         stavkaTure.put("id", "" + this.getStavkaTureId());
         stavkaTure.put("artikalId", this.getArtikalIDString());
-        stavkaTure.put("naziv", this.naziv);
+        stavkaTure.put("naziv", this.getNaziv());
         int intKolicina = (int)this.kolicina;
         if (this.kolicina == intKolicina) {
             stavkaTure.put("kolicina", "x" + intKolicina);
@@ -156,6 +165,7 @@ public class StavkaTure {
         if (this.getRedniBrojGlavneStavke()!=0)
             stavkaTure.put("redniBrojGlavnaStavka", "" + this.getRedniBrojGlavneStavke());
         stavkaTure.put("dozvoljenPopust", "" + this.dozvoljenPopust);
+        //stavkaTure.put("stampacID", "" + this.stampacID);
         
         return stavkaTure;
     } 
@@ -177,6 +187,7 @@ public class StavkaTure {
             }
         }
         opisniArtikal.setRedniBroj(++this.redniBrojStavkeOpisni);
+        opisniArtikal.jeOpisni = true;
         opisniArtikli.add(opisniArtikal);
     }
     /*** Oduzimanje opisnog artikla 
@@ -211,6 +222,7 @@ public class StavkaTure {
             }
         }
         dodatniArtikal.setRedniBroj(++this.redniBrojStavkeDodatni);
+        dodatniArtikal.jeDodatni = true;
         dodatniArtikli.add(dodatniArtikal);
     }
     /*** Oduzimanje dodatnog artikla za kolicinu koja je prosledjena kroz StavkaTure, brisanje ako je nova kolicina = 0 ***/
@@ -308,6 +320,10 @@ public class StavkaTure {
     }
 
     public String getNaziv() {
+        if (this.jeDodatni)
+            return "-> " + this.naziv;
+        if (this.jeOpisni)
+            return "--> " + this.naziv;
         return this.naziv;
     }
 
@@ -355,7 +371,7 @@ public class StavkaTure {
             mapaStavka.put("cena", "" + this.getCena());
             mapaStavka.put("procenatPopusta", "" + this.getProcenatPopusta());
             mapaStavka.put("kolicina", "" + this.getKolicina());
-            mapaStavka.put("naziv", "" + this.getNaziv());
+            mapaStavka.put("naziv", this.naziv);
             mapaStavka.put("RACUN_ID", "" + this.getRacunID());
             mapaStavka.put("ARTIKAL_ID", "" + this.getArtikalID());
             mapaStavka.put("TURA_ID", "" + this.getTuraID());

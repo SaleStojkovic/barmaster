@@ -47,11 +47,9 @@ public class Tura {
             StavkaTure novaStavka = new StavkaTure(noviRed);
             if (novaStavka.getGlavnaStavkaID() != 0) {
                 if (novaStavka.cena == 0) {
-                    novaStavka.naziv = "--> " + novaStavka.naziv;
                     this.getStavkaTureByStavkaID(novaStavka.getGlavnaStavkaID()).dodajKolicinuArtikalOpisni(novaStavka);
                 }
                 else {
-                    novaStavka.naziv = "-> " + novaStavka.naziv;
                     this.getStavkaTureByStavkaID(novaStavka.getGlavnaStavkaID()).dodajKolicinuArtikalDodatni(novaStavka);
                 }
             }

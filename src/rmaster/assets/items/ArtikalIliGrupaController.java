@@ -95,7 +95,8 @@ public class ArtikalIliGrupaController {
                                 red.get("tip"),
                                 VrsteGrupaIliArtikal.GLAVNA_GRUPA,
                                 Utils.getDoubleFromString(red.get("cena")),
-                                red.get("dozvoljenPopust")
+                                red.get("dozvoljenPopust"),
+                                red.get("stampacID")
                         );
                 if ((brojac%brojPrikazanihUJednomRedu)==0) {
                     sirina = roditeljSirina - (brojPrikazanihUJednomRedu-1)*artikalPodgrupaSirina;

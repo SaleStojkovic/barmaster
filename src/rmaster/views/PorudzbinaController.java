@@ -32,7 +32,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
-import rmaster.assets.Stampac;
+import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
 import rmaster.assets.items.ArtikalButton;
 import rmaster.assets.items.VrsteGrupaIliArtikal;
@@ -161,7 +161,7 @@ public class PorudzbinaController extends FXMLDocumentController {
     List<Map<String, String>> tureTrenutnoIzabranogGosta = new ArrayList<>();
     
     List<Tura> listTure = new ArrayList<>();
-    Tura novaTura = new Tura();
+    Tura novaTura;
     Porudzbina porudzbinaTrenutna = null;
     
     ArtikalButton selektovani = null;
@@ -246,14 +246,19 @@ public class PorudzbinaController extends FXMLDocumentController {
                                     @Override public void handle(ActionEvent e) {
                                         String gost = ((Button)e.getSource()).getId();
                                         Utils.postaviStil_ObrisiZaOstaleKontroleRoditelja(e, stilButtonGrupeSelektovana);
-                                        if (novaTura != null) {
-                                            novaTura = null;
-                                        }
+//                                        if (novaTura != null) {
+//                                            novaTura = null;
+//                                        }
 
                                         for (Porudzbina porudzbina : porudzbineStola) {
                                             if (porudzbina.getGost().getGostID() == Long.parseLong(gost)) {
                                                 porudzbinaTrenutna = porudzbina;
                                                 prikaziPorudzbinu(porudzbinaTrenutna);
+                                                novaTura = null;
+                                                for (Tura tura : porudzbinaTrenutna.getTure()) {
+                                                    if (tura.getTuraID() == 0)
+                                                        novaTura = tura;
+                                                }
                                                 break;
                                             }
                                         }
@@ -276,7 +281,8 @@ public class PorudzbinaController extends FXMLDocumentController {
         for (Tura tura : porudzbina.getTure()) {
             TableView<Map<String, String>> tabelaNoveTure = new TableView<>();
             tabelaNoveTure.setSelectionModel(null);
-            
+            if (tura.getTuraID() == 0)
+                novaTura = tura;
             tabelaNoveTure = tableHelper.formatirajTabelu(
                     tabelaNoveTure,
                     tura.dajTuru(),
@@ -285,8 +291,12 @@ public class PorudzbinaController extends FXMLDocumentController {
             
             Button ponoviTuru = new Button();
             ponoviTuru.setPrefSize(287, 40);
-            String period = Utils.getDateDiff(tura.getVremeTure(), new Date(), TimeUnit.MINUTES);
-            ponoviTuru.setText("Ponovi Turu (" + period + ")");
+            try {
+                String period = Utils.getDateDiff(tura.getVremeTure(), new Date(), TimeUnit.MINUTES);
+                ponoviTuru.setText("Ponovi Turu (" + period + ")");
+            } catch (Exception e) {
+                ponoviTuru.setText("Ponovi Turu");
+            }
             ponoviTuru.setId("" + tura.getTuraID());
             ponoviTuru.setOnAction(new EventHandler<ActionEvent>() {
                             @Override public void handle(ActionEvent e) {
@@ -501,10 +511,14 @@ public class PorudzbinaController extends FXMLDocumentController {
                     cena = Double.parseDouble(red.get("cena"));
                 }catch (Exception e) {
                 }
+                
                 String dozvoljenPopust = red.get("dozvoljenPopust");
                 if(dozvoljenPopust == null) {
                     dozvoljenPopust = "";
                 }
+                
+                String stampacID = red.get("stampacID");
+                
                 ArtikalButton buttonArtikalIliGrupa = 
                         new ArtikalButton(
                                 red.get("naziv"),
@@ -516,7 +530,8 @@ public class PorudzbinaController extends FXMLDocumentController {
                                 red.get("tip"),
                                 staSePrikazuje,
                                 cena,
-                                dozvoljenPopust
+                                dozvoljenPopust,
+                                stampacID
                         );
                 
                 if ((brojac%prikazBrojArtikalaUJednomRedu)==0) {
@@ -705,8 +720,8 @@ public class PorudzbinaController extends FXMLDocumentController {
                             refreshGrupeIliArtikla(this.Artikal, ARTIKAL_DODATNI);                    
                         }
                     //}
-                }// else
-                //    refreshGrupeIliArtikla(this.Artikal, ARTIKAL_FAVORITE);
+                } else
+                    refreshGrupeIliArtikla(this.Artikal, ARTIKAL_FAVORITE);
                 break;
             default:
         }
@@ -726,14 +741,13 @@ public class PorudzbinaController extends FXMLDocumentController {
         novaStavkaTure.put("kolicina", "1");
         novaStavkaTure.put("brojStola", "" + poslednjaDodataStavka.getBrojStola());
         novaStavkaTure.put("dozvoljenPopust", "" + artikalOpisniDodatni.getDozvoljenPopust());
+        novaStavkaTure.put("stampacID", "" + poslednjaDodataStavka.stampacID);
         
         if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI) {
-            //novaStavkaTure.put("naziv", "--> " + artikalOpisniDodatni.getText());
             novaStavkaTure.put("naziv", artikalOpisniDodatni.getText());
             novaStavkaTure.put("cena", "0");
             novaStavkaTure.put("cenaJedinicna", "0");
         } else if (artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI) {
-            //novaStavkaTure.put("naziv", "-> " + artikalOpisniDodatni.getText());
             novaStavkaTure.put("naziv", artikalOpisniDodatni.getText());
             novaStavkaTure.put("cena", Utils.getStringFromDouble(artikalOpisniDodatni.getCenaJedinicna()));
             novaStavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(artikalOpisniDodatni.getCenaJedinicna()));
@@ -750,6 +764,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             novaGlavnaStavka.put("cenaJedinicna", "" + poslednjaDodataStavka.cenaJedinicna);
             novaGlavnaStavka.put("dozvoljenPopust", "" + poslednjaDodataStavka.getDozvoljenPopust());
             novaGlavnaStavka.put("procenatPopusta", "" + poslednjaDodataStavka.getProcenatPopusta());
+            novaGlavnaStavka.put("stampacID", "" + poslednjaDodataStavka.stampacID);
             poslednjaDodataStavka.smanjiKolicinu();
 
             nova = new StavkaTure(novaGlavnaStavka);
@@ -797,6 +812,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         novaStavkaTure.put("brojStola", "" + rmaster.RMaster.izabraniStoBroj);
         novaStavkaTure.put("dozvoljenPopust", "" + artikal.getDozvoljenPopust());
         novaStavkaTure.put("procenatPopusta", this.porudzbinaTrenutna.getPopustString());
+        novaStavkaTure.put("stampacID", artikal.getStampacID());
         
         this.dodajStavkuUNovuTuru(novaStavkaTure);
         
@@ -1084,14 +1100,22 @@ public class PorudzbinaController extends FXMLDocumentController {
                                     @Override public void handle(ActionEvent e) {
                                         String gost = ((Button)e.getSource()).getId();
                                         Utils.postaviStil_ObrisiZaOstaleKontroleRoditelja(e, stilButtonGrupeSelektovana);
-                                        if (novaTura != null) {
-                                            novaTura = null;
-                                        }
+//                                        if (novaTura != null) {
+//                                            novaTura = null;
+//                                        }
 
                                         for (Porudzbina porudzbina : porudzbineStola) {
                                             if (porudzbina.getGost().getGostID() == Long.parseLong(gost)) {
                                                 porudzbinaTrenutna = porudzbina;
                                                 prikaziPorudzbinu(porudzbinaTrenutna);
+                                                novaTura = null;
+                                                for (Tura tura : porudzbinaTrenutna.getTure()) {
+                                                    if (tura.getTuraID() == 0) {
+                                                        novaTura = tura;
+                                                        break;
+                                                    }
+                                                }
+                                                //novaTura = new Tura();
                                                 break;
                                             }
                                         }
@@ -1181,8 +1205,23 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     public void naplataIliStampaPorudzbine(ActionEvent event) {
         if (novaTura != null) {
-            porudzbinaTrenutna.snimi();
-            Stampac.getInstance().stampajTuru(novaTura);
+            // TODO: Ovo treba preraditi da snimi nove ture svih porudzbina i da ih odstampa po stampacima
+            
+            // Ovo je valjda resilo snimanje
+            for (Porudzbina porudzbina : porudzbineStola) {
+                novaTura = null;
+                for (Tura tura : porudzbina.getTure()) {
+                    if (tura.getTuraID() == 0) {
+                        novaTura = tura;
+                        break;
+                    }
+                }
+                if (novaTura != null) {
+                    porudzbina.snimi();
+                    Stampa.getInstance().stampajTuru(novaTura);
+                }
+            }
+            // Ovde resiti stampu po artiklima
             List<Object> newData = new ArrayList<>();
             prikaziFormu(
                     newData,
@@ -1206,6 +1245,6 @@ public class PorudzbinaController extends FXMLDocumentController {
 //    public void medjuzbir(ActionEvent event) {
 //        //porudzbinaTrenutna.snimi();
 //        porudzbinaTrenutna.zatvoriRacun(null);
-//        Stampac.getInstance().stampajMedjuzbir(porudzbinaTrenutna);
+//        Stampa.getInstance().stampajMedjuzbir(porudzbinaTrenutna);
 //    }
 }

@@ -17,7 +17,7 @@ import javafx.scene.control.Button;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.QueryBuilder;
 import rmaster.assets.ScreenMap;
-import rmaster.assets.Stampac;
+import rmaster.assets.Stampa;
 import rmaster.models.StalniGost;
 
 /**
@@ -83,12 +83,12 @@ public class AdministracijaController extends FXMLDocumentController{
     }
     
     public void stampajDnevniIzvestaj(ActionEvent event) {
-        Stampac.getInstance().stampajDnevniIzvestajNaFiskal();
+        Stampa.getInstance().stampajDnevniIzvestajNaFiskal();
     }
 
     public void stampajPeriodicniIzvestaj(ActionEvent event) {
         Date doDatuma = new Date();
-        Stampac.getInstance().stampajPeriodicni(doDatuma, doDatuma);
+        Stampa.getInstance().stampajPeriodicni(doDatuma, doDatuma);
     }
 
     public void zakljucenjeDana(ActionEvent event) {
@@ -100,11 +100,11 @@ public class AdministracijaController extends FXMLDocumentController{
     }
 
     public void presekStanja(ActionEvent event) {
-        Stampac.getInstance().stampajPresekNaFiskal();
+        Stampa.getInstance().stampajPresekNaFiskal();
     }
 
     public void dnevniIzvestajIPresek(ActionEvent event) {
-        Stampac.getInstance().stampajDnevniIzvestajIPresekNaFiskal();
+        Stampa.getInstance().stampajDnevniIzvestajIPresekNaFiskal();
     }
 
     public void prodatiArtikli(ActionEvent event) {

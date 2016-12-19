@@ -33,7 +33,7 @@ import javafx.scene.layout.VBox;
 import rmaster.assets.DBBroker;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
-import rmaster.assets.Stampac;
+import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
 import rmaster.models.NacinPlacanja;
 import rmaster.models.Porudzbina;
@@ -363,14 +363,14 @@ public class NaplataController extends FXMLDocumentController {
         // Ovde treba odraditi zatvaranje forme i odlazak na stolove ili LOG-OF
         this.snimi(vrstaRacuna);
         if (vrstaRacuna == VrstaRacunaZaStampu.MEDJUZBIR) {
-            Stampac.getInstance().stampajMedjuzbir(porudzbina);
+            Stampa.getInstance().stampajMedjuzbir(porudzbina);
         }
         if (vrstaRacuna == VrstaRacunaZaStampu.FAKTURA) {
-            Stampac.getInstance().stampajFakturu(porudzbina);
-            Stampac.getInstance().stampajGotovinskiRacun(porudzbina);
+            Stampa.getInstance().stampajFakturu(porudzbina);
+            Stampa.getInstance().stampajGotovinskiRacun(porudzbina);
         }
         if (vrstaRacuna == VrstaRacunaZaStampu.GOTOVINSKI) {
-            Stampac.getInstance().stampajGotovinskiRacun(porudzbina);
+            Stampa.getInstance().stampajGotovinskiRacun(porudzbina);
         }
         prikaziFormu(
                 null, 
