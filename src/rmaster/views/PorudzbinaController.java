@@ -98,8 +98,8 @@ public class PorudzbinaController extends FXMLDocumentController {
     public Button porudzbinaMedjuzbir;
     
     // Sirina dela u kome se prikazuju grupe, podgrupe i artikli
-    public double roditeljSirina = 732.0;
-    public final double defaultVisinaDugmeta = 70.0;
+    public double roditeljSirina = 592.0;
+    public final double defaultVisinaDugmeta = 56.0;
         
     // Definise broj artikala, grupa i podgrupa koje se prikazuju u jednom redu
     public int prikazBrojArtikalaUJednomRedu = 4;
@@ -156,7 +156,7 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     private List<Porudzbina> porudzbineStola = new ArrayList<Porudzbina>();
     
-    int[] sirinaKolonaTabele = {0, 0, 180, 0, 40, 0, 61, 0, 0, 0};
+    int[] sirinaKolonaTabele = {0, 0, 322, 0, 40, 0, 61, 0, 0, 0};
     
     List<Map<String, String>> tureTrenutnoIzabranogGosta = new ArrayList<>();
     
@@ -290,7 +290,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             );
             
             Button ponoviTuru = new Button();
-            ponoviTuru.setPrefSize(287, 40);
+            ponoviTuru.setPrefSize(427, 40);
             try {
                 String period = Utils.getDateDiff(tura.getVremeTure(), new Date(), TimeUnit.MINUTES);
                 ponoviTuru.setText("Ponovi Turu (" + period + ")");

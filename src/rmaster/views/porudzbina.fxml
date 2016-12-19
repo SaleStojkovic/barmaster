@@ -14,6 +14,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane id="AnchorPane" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.PorudzbinaController">
    <children>
@@ -24,10 +25,10 @@
               <HBox prefHeight="54.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
                
                   <children>
-                  <Pane fx:id="porudzbinaHeader" prefHeight="54.0" prefWidth="1019.0">
+                  <Pane fx:id="porudzbinaHeader" prefHeight="54.0" prefWidth="1025.0">
                      <children>
                         
-                         <Pane layoutX="291.0" layoutY="-2.0" prefHeight="50.0" prefWidth="731.0">
+                         <Pane layoutX="293.0" layoutY="-2.0" prefHeight="50.0" prefWidth="528.0">
                             <children>
                                 
                                 <ImageView fitHeight="30.0" fitWidth="35.0" layoutX="644.0" layoutY="10.0">
@@ -81,17 +82,19 @@
          </top>
          
          <left>
-            <VBox fx:id="sekcijaPorudzbina" minWidth="-Infinity" prefHeight="622.0" prefWidth="287.0" BorderPane.alignment="CENTER">
+            <VBox fx:id="sekcijaPorudzbina" minWidth="-Infinity" prefHeight="622.0" prefWidth="427.0" BorderPane.alignment="CENTER">
                
                 <children>
-                  <Pane prefHeight="26.0" prefWidth="256.0">
+                  <Pane fx:id="turaHeader" prefHeight="26.0" prefWidth="256.0">
                      <children>
-                        <Label fx:id="turaHeader" prefHeight="28.0" prefWidth="256.0" text="  Artikal&#9;&#9;&#9;&#9;&#9;      kol      Cena" />
+                        <Label layoutX="319.0" layoutY="6.0" text="kol" />
+                        <Label layoutX="11.0" prefHeight="28.0" prefWidth="45.0" text="Artikal" />
+                        <Label layoutX="378.0" layoutY="6.0" text="cena" />
                      </children>
                   </Pane>
                   
-                  <ScrollPane fx:id="prikazRacunaGosta" prefHeight="455.0" prefWidth="287.0" />
-                  <Line endX="125.0" startX="-100.0" stroke="#4f5460">
+                  <ScrollPane fx:id="prikazRacunaGosta" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="455.0" prefWidth="427.0" />
+                  <Line endX="270.0" startX="-100.0" stroke="#4f5460">
                      <VBox.margin>
                         <Insets bottom="3.0" left="25.0" right="10.0" top="10.0" />
                      </VBox.margin>
@@ -99,10 +102,10 @@
                   <Pane fx:id="scrollArea" prefHeight="56.0" prefWidth="256.0">
                      <children>
                         <Button layoutX="14.0" layoutY="4.0" mnemonicParsing="false" onAction="#pomeriScrollUp" prefHeight="48.0" prefWidth="116.0" text="▲" />
-                        <Button layoutX="144.0" layoutY="4.0" mnemonicParsing="false" onAction="#pomeriScrollDown" prefHeight="47.0" prefWidth="123.0" text="▼" />
+                        <Button layoutX="290.0" layoutY="4.0" mnemonicParsing="false" onAction="#pomeriScrollDown" prefHeight="47.0" prefWidth="123.0" text="▼" />
                      </children>
                   </Pane>
-                  <Line endX="125.0" startX="-100.0" stroke="#4f5460">
+                  <Line endX="270.0" startX="-100.0" stroke="#4f5460">
                      <VBox.margin>
                         <Insets bottom="10.0" left="25.0" right="10.0" top="3.0" />
                      </VBox.margin>
@@ -129,11 +132,14 @@
                         
                         
                         <Button fx:id="porudzbinaOdustani" mnemonicParsing="false" onAction="#prikaziSalu" prefHeight="100.0" prefWidth="135.0" text="Odustani X" />
-                        <Button layoutX="137.0" mnemonicParsing="false" onAction="#setKolicinaStavkeTure" prefHeight="50.0" prefWidth="147.0" text="Količina" />
-                        <Button layoutX="137.0" layoutY="52.0" mnemonicParsing="false" onAction="#izbrisiStavkuNoveTure" prefHeight="48.0" prefWidth="147.0" text="Izbriši" />
-                        <Button layoutX="288.0" layoutY="-1.0" mnemonicParsing="false" onAction="#smanjiKolicinuZaJedan" prefHeight="100.0" prefWidth="140.0" text="Umanji količinu za 1" />
+                        <Button fx:id="kolicina" layoutX="137.0" mnemonicParsing="false" onAction="#setKolicinaStavkeTure" prefHeight="50.0" prefWidth="147.0" text="Količina" />
+                        <Button fx:id="izbrisi" layoutX="137.0" layoutY="52.0" mnemonicParsing="false" onAction="#izbrisiStavkuNoveTure" prefHeight="48.0" prefWidth="147.0" text="Izbriši" />
+                        <Button fx:id="smanjiKolicinu" layoutX="288.0" layoutY="-1.0" mnemonicParsing="false" onAction="#smanjiKolicinuZaJedan" prefHeight="100.0" prefWidth="140.0" text="Umanji količinu za 1" />
                         <Button fx:id="porudzbinaNaplati" layoutX="880.0" mnemonicParsing="false" onAction="#naplataIliStampaPorudzbine" prefHeight="99.0" prefWidth="143.0" text="Naplati ✓" />
-                         <Button fx:id="favorites" layoutX="428.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#prikaziArtikleFavorite" prefHeight="100.0" prefWidth="147.0" text="★" />
+                         <Button fx:id="favorites" layoutX="428.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#prikaziArtikleFavorite" prefHeight="100.0" prefWidth="147.0" text="★">
+                           <font>
+                              <Font size="10.0" />
+                           </font></Button>
                      </children>
                   </Pane>
                
@@ -142,11 +148,11 @@
          </bottom>
          
          <center>
-            <VBox fx:id="porudzbinaArtikli" prefHeight="200.0" prefWidth="768.0" BorderPane.alignment="CENTER">
+            <VBox fx:id="porudzbinaArtikli" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="597.0" BorderPane.alignment="CENTER">
                <children>
-                  <HBox fx:id="ArtikalGrupe" alignment="CENTER" maxHeight="64.0" prefHeight="64.0" prefWidth="768.0" />
-                  <FlowPane fx:id="ArtikalPodgrupe" prefHeight="192.0" prefWidth="768.0" />
-                  <FlowPane fx:id="Artikal" maxHeight="1.7976931348623157E308" prefHeight="320.0" prefWidth="768.0" />
+                  <HBox fx:id="ArtikalGrupe" alignment="CENTER" maxHeight="64.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="64.0" prefWidth="597.0" />
+                  <FlowPane fx:id="ArtikalPodgrupe" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="192.0" prefWidth="597.0" />
+                  <FlowPane fx:id="Artikal" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="320.0" prefWidth="597.0" />
                </children>
                <opaqueInsets>
                   <Insets />
