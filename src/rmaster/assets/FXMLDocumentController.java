@@ -34,6 +34,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import rmaster.RMaster;
 import rmaster.models.Konobar;
@@ -299,16 +300,14 @@ public class FXMLDocumentController implements Initializable {
             }
 
             stage.show();
-            
-        } catch (Exception e){
-            System.out.println("Greska pri otvaranju forme " + imeNoveForme + "! - " + e.toString());
-        } finally {
-            
+
             if (ugasiPrethodnuFormu) {
                 prethodnaForma.getScene().getWindow().hide();
-            }
-     }
-        
+            }                    
+           
+        } catch (Exception e){
+            System.out.println("Greska pri otvaranju forme " + imeNoveForme + "! - " + e.toString());
+        } 
     }
      
      
