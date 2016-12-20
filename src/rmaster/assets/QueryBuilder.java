@@ -31,6 +31,10 @@ public class QueryBuilder {
 
     public static String LOGIC_OR = "' OR ";
     
+    public static String SORT_ASC = " ASC";
+    
+    public static String SORT_DESC = " DESC";
+    
     
     public String TABLE_NAME;
     
@@ -46,6 +50,13 @@ public class QueryBuilder {
     
     public String GROUP_BY;
     
+    public String ORDER_BY_COLUMN;
+    
+    public String ORDER_BY_CRITERIA;
+    
+    public Integer LIMIT;
+    
+    public Integer OFFSET;
     
     public void setTableName(String tableName) {
         this.TABLE_NAME = tableName;
@@ -71,7 +82,18 @@ public class QueryBuilder {
         this.CRITERIA_VALUES = uslovneVrednosti;
     }
     
+    public void setOrderBy(String orderByColumn, String orderCriteria) {
+        this.ORDER_BY_COLUMN = orderByColumn;
+        this.ORDER_BY_CRITERIA = orderCriteria;
+    }
     
+    public void setLimit(int limit) {
+        this.LIMIT = limit;
+    }
+    
+    public void setOffset(int offset) {
+        this.OFFSET = offset;
+    }
     
     public String toQueryString() {
         String queryString = "SELECT *";
@@ -121,6 +143,18 @@ public class QueryBuilder {
         
         if (GROUP_BY != null && !GROUP_BY.isEmpty()) {
             queryString += "GROUP BY '" + GROUP_BY + "'";
+        }
+        
+        if (ORDER_BY_COLUMN != null && !ORDER_BY_COLUMN.isEmpty()) {
+            queryString += " ORDER BY '" + ORDER_BY_COLUMN + "'" + ORDER_BY_CRITERIA;
+        }
+        
+        if (LIMIT != null) {
+            queryString += " LIMIT " + LIMIT;
+        }
+        
+        if (OFFSET != null) {
+            queryString += " OFFSET " + OFFSET;
         }
         
         queryString += ";";

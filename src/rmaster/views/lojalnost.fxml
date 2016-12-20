@@ -2,23 +2,19 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="lojalnostGlavni" maxHeight="768.0" maxWidth="1024.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.LojalnostController">
    <children>
-      <ScrollPane fx:id="lojalnostScrollPane" layoutX="1.0" layoutY="269.0" prefHeight="392.0" prefWidth="1023.0" />
       <Pane fx:id="lojalnostFooter" layoutX="-7.0" layoutY="663.0" prefHeight="103.0" prefWidth="1024.0">
          <children>
-            <Button layoutX="898.0" onAction="#potvrdi"  mnemonicParsing="false" prefHeight="103.0" prefWidth="133.0" text="Potvrdi ✓" />
-            <Button onAction="#nazadNaNaplatu"  layoutX="752.0" mnemonicParsing="false" prefHeight="103.0" prefWidth="146.0" text="Odustani X" />
-            <Button layoutX="29.0" layoutY="14.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="156.0" text="▲" />
-            <Button layoutX="204.0" layoutY="14.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="156.0" text="▼" />
+            <Button layoutX="885.0" layoutY="1.0" mnemonicParsing="false" onAction="#nazadNaNaplatu" prefHeight="103.0" prefWidth="146.0" text="Odustani X" />
          </children>
       </Pane>
       <Pane fx:id="lojalnostHeader" prefHeight="64.0" prefWidth="1023.0">
@@ -48,11 +44,7 @@
       </Pane>
       <HBox fx:id="lojalnostGostiGrupe" layoutY="64.0" prefHeight="74.0" prefWidth="1024.0" />
       <VBox fx:id="lojalnostSlova" layoutX="7.0" layoutY="141.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="103.0" prefWidth="1008.0" />
-      <Pane layoutX="1.0" layoutY="252.0" prefHeight="20.0" prefWidth="1023.0">
-         <children>
-            <Label layoutX="7.0" layoutY="1.0" prefHeight="17.0" prefWidth="127.0" text="Korisnikovo ime" />
-            <Label layoutX="967.0" layoutY="1.0" text="Popust" />
-         </children>
-      </Pane>
+      <Pane layoutX="1.0" layoutY="252.0" prefHeight="20.0" prefWidth="1023.0" />
+      <FlowPane fx:id="lojalnostFlowPane" layoutY="273.0" prefHeight="389.0" prefWidth="1024.0" />
    </children>
 </AnchorPane>

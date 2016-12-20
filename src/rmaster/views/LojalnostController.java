@@ -5,7 +5,6 @@
  */
 package rmaster.views;
 
-import static java.lang.Math.round;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +18,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -29,8 +27,9 @@ import rmaster.assets.ScreenMap;
 import rmaster.models.Porudzbina;
 import rmaster.models.StalniGost;
 import static java.lang.Math.round;
-import static java.lang.Math.round;
-import static java.lang.Math.round;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.FlowPane;
 
 /**
  * FXML Controller class
@@ -50,14 +49,10 @@ public class LojalnostController extends FXMLDocumentController {
     private VBox  lojalnostSlova;
     
     @FXML
-    private ScrollPane lojalnostScrollPane;
+    private FlowPane lojalnostFlowPane;
     
     @FXML
     private HBox lojalnostGostiGrupe;
-    
-    
-    @FXML
-    private TableView<Map<String, String>> tabelaLojalnost = new TableView();
     
     public int[] sirineKolone = {0, 960, 50};
     
@@ -70,8 +65,9 @@ public class LojalnostController extends FXMLDocumentController {
 
     @Override
     public void initData(Object data) {
-        if (data instanceof Porudzbina)
+        if (data instanceof Porudzbina) {
                 porudzbina = (Porudzbina) data;
+        }
     }
     
     @Override
@@ -84,24 +80,16 @@ public class LojalnostController extends FXMLDocumentController {
 
         popuniLojalnostGostiGrupe();
         
-        List<Map<String, String>> listaRezultata = getGrupeGostiju();
+        ToggleButton dugme = (ToggleButton)lojalnostGostiGrupe.getChildren().get(0);
+                
+        dugme.fire();
         
-        String izabranaGrupa = listaRezultata.get(0).get("id");
-        
-        tabelaLojalnost = tableHelper.formatirajTabelu(
-                tabelaLojalnost, 
-                getStalniGosti(izabranaGrupa), 
-                sirineKolone
-        );
+        dugme.setSelected(true);
 
-        tabelaLojalnost.getSelectionModel().select(0);   
-        
-        lojalnostScrollPane.setContent(tabelaLojalnost);
-        
     } 
     
     
-    public List<Map<String, String>> getStalniGosti(String grupaId) {
+    public List<Map<String, String>> getStalniGosti(String grupaId, int offset) {
         
         QueryBuilder query = new QueryBuilder();
         query.setTableName(StalniGost.TABLE_NAME);
@@ -110,6 +98,9 @@ public class LojalnostController extends FXMLDocumentController {
         query.setCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
         query.setOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
         query.setCriteriaValues("", QueryBuilder.TRUE, grupaId);
+        query.setOrderBy(StalniGost.NAZIV, QueryBuilder.SORT_ASC);
+        query.setLimit(19);
+        query.setOffset(offset);
         
         List<Map<String, String>> listaRezultata = runQuery(query);
           
@@ -146,10 +137,11 @@ public class LojalnostController extends FXMLDocumentController {
                 
         int sirina = round(1024/listaGrupaGostiju.size());
         
+        ToggleGroup group = new ToggleGroup();
         
         for (Map grupaGost : listaGrupaGostiju) {
             
-            Button novoDugme = new Button(grupaGost.get("naziv") + "");
+            ToggleButton novoDugme = new ToggleButton(grupaGost.get("naziv") + "");
             novoDugme.setId(grupaGost.get("id") + "");
             novoDugme.setPrefSize(sirina, 74);
             novoDugme.setOnAction(new EventHandler<ActionEvent>() {
@@ -157,6 +149,8 @@ public class LojalnostController extends FXMLDocumentController {
                                         prikaziLojalneGosteZavisnoOdGrupe(e);
                                     }
                                 });
+            novoDugme.setToggleGroup(group);
+            
             lojalnostGostiGrupe.getChildren().add(novoDugme);
         }
     } 
@@ -203,23 +197,42 @@ public class LojalnostController extends FXMLDocumentController {
     }
     
     public void prikaziLojalneGosteZavisnoOdGrupe(ActionEvent event) {
-        lojalnostScrollPane.setContent(null);
+       
+        lojalnostFlowPane.getChildren().clear();
         
-        tableHelper.izbrisiSveIzTabele(tabelaLojalnost);
+        ToggleButton pritisnutoDugme = (ToggleButton)event.getSource();
         
-        Button pritisnutoDugme = (Button)event.getSource();
+        List<Map<String, String>> listaLojalnihGostiju = getStalniGosti(pritisnutoDugme.getId(), 0);
         
-        List<Map<String, String>> listaLojalnihGostiju = getStalniGosti(pritisnutoDugme.getId());
+        for (Map<String, String> stalniGostMap : listaLojalnihGostiju) {
 
-        TableView<Map<String, String>> tabela = new TableView<>();
+            Button stalniGostButton = new Button(stalniGostMap.get(StalniGost.NAZIV));
+            
+            stalniGostButton.setId(stalniGostMap.get(StalniGost.PRIMARY_KEY));
+
+            stalniGostButton.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override public void handle(ActionEvent e) {
+                            potvrdi(e);
+                        }
+                    });
+            
+            stalniGostButton.setPrefSize(204, 97);
+
+            lojalnostFlowPane.getChildren().add((Node)stalniGostButton);
+
+        }
         
-        tabelaLojalnost = tableHelper.formatirajTabelu(
-                tabela, 
-                listaLojalnihGostiju, 
-                sirineKolone
-        );
-        
-        lojalnostScrollPane.setContent(tabelaLojalnost);
+        if (listaLojalnihGostiju.size() == 19) {
+            //TODO
+            Button backButton = new Button("«");
+            backButton.setPrefSize(102, 97);
+            lojalnostFlowPane.getChildren().add(backButton);
+            
+            Button forwardButton = new Button("»");
+            forwardButton.setPrefSize(102, 97);
+            lojalnostFlowPane.getChildren().add(forwardButton);
+
+        }
     }
     
     public void nazadNaNaplatu(ActionEvent event) {
@@ -237,9 +250,9 @@ public class LojalnostController extends FXMLDocumentController {
     
     public void potvrdi(ActionEvent event) {
         
-        Map<String, String> izabraniLojalnost = tabelaLojalnost.getSelectionModel().getSelectedItem();
-        
-        String stalniGostId = izabraniLojalnost.get(StalniGost.PRIMARY_KEY);
+        Button pritisnutoDugme = (Button)event.getSource();
+    
+        String stalniGostId = pritisnutoDugme.getId();
         
         StalniGost izabraniGost = new StalniGost();
         
