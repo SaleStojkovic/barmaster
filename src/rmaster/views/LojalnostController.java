@@ -27,6 +27,7 @@ import rmaster.assets.ScreenMap;
 import rmaster.models.Porudzbina;
 import rmaster.models.StalniGost;
 import static java.lang.Math.round;
+import javafx.geometry.Orientation;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.FlowPane;
@@ -72,6 +73,7 @@ public class LojalnostController extends FXMLDocumentController {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        lojalnostFlowPane.setOrientation(Orientation.VERTICAL);
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
         this.imeKonobara.setText(ulogovaniKonobar.imeKonobara);
