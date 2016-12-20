@@ -237,7 +237,7 @@ public class Porudzbina {
             mapa.put("zatvoren", "" + this.zatvoren);
     //        mapa.put("zatvoren", "" + (this.zatvoren ? "1" : "0"));
             mapa.put("KASA_ID", "" + this.KASA_ID);
-            mapa.put("KONOBAR_ID", "2");// + rmaster.RMaster.ulogovaniKonobar);
+            mapa.put("KONOBAR_ID", "" + rmaster.RMaster.ulogovaniKonobar.konobarID);
             if (this.stalniGost != null)
                 mapa.put("STALNIGOST_ID", "" + this.stalniGost.id);
             mapa.put("gost", "" + this.gost.getGostID());
@@ -269,8 +269,8 @@ public class Porudzbina {
                 mapaTura.put("brojStola", "" + this.brojStolaBroj);
                 if (tura.datum == null) {
                     tura.datum = new Date();
-                    mapaTura.put("datum", Utils.getStringFromDate(tura.datum));
                 }
+                mapaTura.put("datum", Utils.getStringFromDate(tura.datum));
                 mapaTura.put("pripremljena", "false");
                 mapaTura.put("uPripremi", "false");
                 mapaTura.put("RACUN_ID", "" + this.racunID);

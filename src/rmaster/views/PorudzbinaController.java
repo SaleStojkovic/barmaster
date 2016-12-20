@@ -99,7 +99,7 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     // Sirina dela u kome se prikazuju grupe, podgrupe i artikli
     public double roditeljSirina = 592.0;
-    public final double defaultVisinaDugmeta = 56.0;
+    public final double defaultVisinaDugmeta = 68.0;
         
     // Definise broj artikala, grupa i podgrupa koje se prikazuju u jednom redu
     public int prikazBrojArtikalaUJednomRedu = 4;

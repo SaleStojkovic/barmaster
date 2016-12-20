@@ -155,7 +155,17 @@ public class Tura {
     }
     public Tura getClone(long turaID) {
         Tura novaTura = new Tura("" + turaID, new Date());
+        //Tura novaTura = new Tura();
         novaTura.turaID = 0;
+        for (StavkaTure stavkaTure : listStavkeTure) {
+            stavkaTure.id = 0;
+            for (StavkaTure stavkaTure1 : stavkaTure.dodatniArtikli) {
+                stavkaTure1.id = 0;
+            }
+            for (StavkaTure stavkaTure2 : stavkaTure.opisniArtikli) {
+                stavkaTure2.id = 0;
+            }
+        }
         return novaTura;
     }
 

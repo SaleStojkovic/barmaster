@@ -20,7 +20,7 @@ import rmaster.assets.Utils;
 public class StavkaTure {
     private int redniBroj = -1;
     private int redniBrojGlavneStavke = -1;
-     private int redniBrojStavkeOpisni = 0;
+    private int redniBrojStavkeOpisni = 0;
     private int redniBrojStavkeDodatni = 0;
 
     public double cenaJedinicna = 0;
@@ -362,6 +362,40 @@ public class StavkaTure {
     public double getProcenatPopusta() {
         return this.procenatPopusta;
     }
+    
+    public StavkaTure getClone() {
+        Map<String, String> novaGlavnaStavka = new HashMap<>();
+        novaGlavnaStavka.put("id", "" + 0);
+        novaGlavnaStavka.put("ARTIKAL_ID", this.getArtikalIDString());
+        novaGlavnaStavka.put("brojStola", "" + this.getBrojStola());
+        novaGlavnaStavka.put("kolicina", "" + this.kolicina);
+        novaGlavnaStavka.put("naziv", "" + this.naziv);
+        novaGlavnaStavka.put("cena", "" + this.cena);
+        novaGlavnaStavka.put("cenaJedinicna", "" + this.cenaJedinicna);
+        novaGlavnaStavka.put("dozvoljenPopust", "" + this.getDozvoljenPopust());
+        novaGlavnaStavka.put("procenatPopusta", "" + this.getProcenatPopusta());
+        novaGlavnaStavka.put("stampacID", "" + this.stampacID);
+        
+        StavkaTure stavka = new StavkaTure(novaGlavnaStavka);
+
+        stavka.redniBroj = this.redniBroj;
+        stavka.redniBrojGlavneStavke = this.redniBrojGlavneStavke;
+ 
+        stavka.redniBrojStavkeOpisni = this.redniBrojStavkeOpisni;
+        stavka.redniBrojStavkeDodatni = this.redniBrojStavkeDodatni;
+        stavka.jeOpisni = this.jeOpisni;
+        stavka.jeDodatni = this.jeDodatni;
+        stavka.GLAVNASTAVKA_ID = this.GLAVNASTAVKA_ID;
+        
+        for (StavkaTure stavkaTure : dodatniArtikli) {
+            stavka.dodajKolicinuArtikalDodatni(stavkaTure.getClone());
+        }
+        for (StavkaTure stavkaTure : opisniArtikli) {
+            stavka.dodajKolicinuArtikalOpisni(stavkaTure.getClone());
+        }
+        return stavka;
+    }
+    
     public void snimi() {
         try {
             DBBroker db = new DBBroker();
