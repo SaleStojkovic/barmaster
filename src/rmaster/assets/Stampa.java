@@ -63,10 +63,10 @@ public final class Stampa {
         
         QueryBuilder query = new QueryBuilder();
         query.setTableName(Stampac.TABLE_NAME);
-        query.setColumns(Stampac.PRIMARY_KEY, Stampac.NAZIV, Stampac.BROJ_KOPIJA_ZBIRNE, Stampac.KODNA_STRANA, Stampac.STAMPA_IZVESTAJE, Stampac.STAMPA_ZBIRNU, Stampac.TIP);
-        //query.setCriteriaColumns(StalniGost.SIFRA, StalniGost.BLOKIRAN, StalniGost.GRUPA_ID);
-        //query.setCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
-        //query.setOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
+        query.addColumns(Stampac.PRIMARY_KEY, Stampac.NAZIV, Stampac.BROJ_KOPIJA_ZBIRNE, Stampac.KODNA_STRANA, Stampac.STAMPA_IZVESTAJE, Stampac.STAMPA_ZBIRNU, Stampac.TIP);
+        //query.addCriteriaColumns(StalniGost.SIFRA, StalniGost.BLOKIRAN, StalniGost.GRUPA_ID);
+        //query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
+        //query.addOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
         //query.setCriteriaValues("", QueryBuilder.TRUE, grupaId);
         DBBroker db = new DBBroker();
         List<Map<String, String>> listaRezultata = db.runQuery(query);

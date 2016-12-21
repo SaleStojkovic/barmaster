@@ -80,8 +80,8 @@ public class PocetniEkranController extends FXMLDocumentController {
         
         QueryBuilder query = new QueryBuilder();
         query.setTableName("konobar");
-        query.setCriteriaColumns("pin");
-        query.setCriteria(QueryBuilder.IS_EQUAL);
+        query.addCriteriaColumns("pin");
+        query.addCriteria(QueryBuilder.IS_EQUAL);
         query.setCriteriaValues(lozinkaText);
         
         List<Map<String, String>> rezultat = runQuery(query);

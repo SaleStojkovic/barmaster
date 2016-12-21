@@ -18,7 +18,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
@@ -26,11 +25,12 @@ import rmaster.assets.QueryBuilder;
 import rmaster.assets.ScreenMap;
 import rmaster.models.Porudzbina;
 import rmaster.models.StalniGost;
-import static java.lang.Math.round;
 import javafx.geometry.Orientation;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.FlowPane;
+import static java.lang.Math.round;
 
 /**
  * FXML Controller class
@@ -62,8 +62,16 @@ public class LojalnostController extends FXMLDocumentController {
     public String drugiRed = "NOPQRSTUVWXYZ67890";
     
     private Porudzbina porudzbina;
+    
+    ToggleGroup headerButtonGroup = new ToggleGroup();
+    
+    ToggleGroup slova = new ToggleGroup();
+    
+    RadioButton prikaziSve = new RadioButton();
 
 
+    public int brojacOffset = 0;
+    
     @Override
     public void initData(Object data) {
         if (data instanceof Porudzbina) {
@@ -91,17 +99,26 @@ public class LojalnostController extends FXMLDocumentController {
     } 
     
     
-    public List<Map<String, String>> getStalniGosti(String grupaId, int offset) {
+    public List<Map<String, String>> getStalniGosti(String grupaId, String text, int offset) {
         
         QueryBuilder query = new QueryBuilder();
         query.setTableName(StalniGost.TABLE_NAME);
-        query.setColumns(StalniGost.PRIMARY_KEY, StalniGost.NAZIV, StalniGost.POPUST);
-        query.setCriteriaColumns(StalniGost.SIFRA, StalniGost.BLOKIRAN, StalniGost.GRUPA_ID);
-        query.setCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
-        query.setOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
+        query.addColumns(StalniGost.PRIMARY_KEY, StalniGost.NAZIV, StalniGost.POPUST);
+        
+        query.addCriteriaColumns(StalniGost.SIFRA, StalniGost.BLOKIRAN, StalniGost.GRUPA_ID);
+        query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
+        query.addOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
         query.setCriteriaValues("", QueryBuilder.TRUE, grupaId);
+                
+        if (text != null) {
+            query.addCriteriaColumns(StalniGost.NAZIV);
+            query.addCriteria(QueryBuilder.IS_LIKE);
+            query.addOperators(QueryBuilder.LOGIC_AND);
+            query.setCriteriaValues(text + "%");
+        }
+        
         query.setOrderBy(StalniGost.NAZIV, QueryBuilder.SORT_ASC);
-        query.setLimit(19);
+        query.setLimit(20);
         query.setOffset(offset);
         
         List<Map<String, String>> listaRezultata = runQuery(query);
@@ -123,9 +140,9 @@ public class LojalnostController extends FXMLDocumentController {
     {
         QueryBuilder query = new QueryBuilder();
         query.setTableName("stalnigostigrupa");
-        query.setCriteriaColumns("naziv", "naziv");
-        query.setCriteria(QueryBuilder.IS_NOT_EQUAL, QueryBuilder.IS_NOT_EQUAL);
-        query.setOperators(QueryBuilder.LOGIC_AND);
+        query.addCriteriaColumns("naziv", "naziv");
+        query.addCriteria(QueryBuilder.IS_NOT_EQUAL, QueryBuilder.IS_NOT_EQUAL);
+        query.addOperators(QueryBuilder.LOGIC_AND);
         query.setCriteriaValues("PREDUZECE", "NEPOZELJNI GOST");
         
         List<Map<String, String>> listaRezultata = runQuery(query);
@@ -139,39 +156,49 @@ public class LojalnostController extends FXMLDocumentController {
                 
         int sirina = round(1024/listaGrupaGostiju.size());
         
-        ToggleGroup group = new ToggleGroup();
-        
         for (Map grupaGost : listaGrupaGostiju) {
             
-            ToggleButton novoDugme = new ToggleButton(grupaGost.get("naziv") + "");
+            RadioButton novoDugme = new RadioButton(grupaGost.get("naziv") + "");
+
+            novoDugme.getStyleClass().remove("radio-button");
+            novoDugme.getStyleClass().add("toggle-button");
+            
             novoDugme.setId(grupaGost.get("id") + "");
             novoDugme.setPrefSize(sirina, 74);
             novoDugme.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {
                                         prikaziLojalneGosteZavisnoOdGrupe(e);
+                                        
                                     }
                                 });
-            novoDugme.setToggleGroup(group);
+            novoDugme.setToggleGroup(headerButtonGroup);
             
             lojalnostGostiGrupe.getChildren().add(novoDugme);
         }
     } 
     
     private void popuniSlova() {
-         HBox prviRedBox = new HBox();
+
+        HBox prviRedBox = new HBox();
         
         for(char ch : prviRed.toCharArray()) {
             
-            Button novoDugme = new Button();
+            RadioButton novoDugme = new RadioButton();
             
             novoDugme.setId(ch + "");
             novoDugme.setPrefSize(56, 50);
             novoDugme.setText(ch + "");
             novoDugme.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {
-                                        //TO DO
+                                        sortStalneGoste(e);
                                     }
                                 });
+                        
+            novoDugme.getStyleClass().remove("radio-button");
+            novoDugme.getStyleClass().add("toggle-button");
+            
+            novoDugme.setToggleGroup(slova);
+
             prviRedBox.getChildren().add(novoDugme);
         }
         
@@ -182,59 +209,59 @@ public class LojalnostController extends FXMLDocumentController {
                 
         for(char ch : drugiRed.toCharArray()) {
            
-            Button novoDugme = new Button();
+            RadioButton novoDugme = new RadioButton();
+
             
             novoDugme.setId(ch + "");
             novoDugme.setPrefSize(56, 50);
             novoDugme.setText(ch + "");
             novoDugme.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {
-                                        //TODO
+                                        sortStalneGoste(e);
                                     }
                                 });
+                        
+            novoDugme.getStyleClass().remove("radio-button");
+            novoDugme.getStyleClass().add("toggle-button");
+            
+            novoDugme.setToggleGroup(slova);
+
             drugiRedBox.getChildren().add(novoDugme);
         }
         
         lojalnostSlova.getChildren().add(drugiRedBox);
+        
+        prikaziSve.setText("Prikaži sve");
+        prikaziSve.setId("sve");
+        prikaziSve.setPrefSize(200, 50);
+        
+        prikaziSve.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override public void handle(ActionEvent e) {
+                                        sortStalneGoste(e);
+                                    }
+                                });
+                        
+            prikaziSve.getStyleClass().remove("radio-button");
+            prikaziSve.getStyleClass().add("toggle-button");
+            
+            prikaziSve.setToggleGroup(slova);
+            
+            
+        lojalnostSlova.getChildren().add(prikaziSve);
+  
     }
     
     public void prikaziLojalneGosteZavisnoOdGrupe(ActionEvent event) {
-       
-        lojalnostFlowPane.getChildren().clear();
+               
+        brojacOffset = 0;
         
         ToggleButton pritisnutoDugme = (ToggleButton)event.getSource();
         
-        List<Map<String, String>> listaLojalnihGostiju = getStalniGosti(pritisnutoDugme.getId(), 0);
+        List<Map<String, String>> listaLojalnihGostiju = getStalniGosti(pritisnutoDugme.getId(), null, 0);
         
-        for (Map<String, String> stalniGostMap : listaLojalnihGostiju) {
-
-            Button stalniGostButton = new Button(stalniGostMap.get(StalniGost.NAZIV));
-            
-            stalniGostButton.setId(stalniGostMap.get(StalniGost.PRIMARY_KEY));
-
-            stalniGostButton.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override public void handle(ActionEvent e) {
-                            potvrdi(e);
-                        }
-                    });
-            
-            stalniGostButton.setPrefSize(204, 97);
-
-            lojalnostFlowPane.getChildren().add((Node)stalniGostButton);
-
-        }
+        prikaziSve.setSelected(true);
         
-        if (listaLojalnihGostiju.size() == 19) {
-            //TODO
-            Button backButton = new Button("«");
-            backButton.setPrefSize(102, 97);
-            lojalnostFlowPane.getChildren().add(backButton);
-            
-            Button forwardButton = new Button("»");
-            forwardButton.setPrefSize(102, 97);
-            lojalnostFlowPane.getChildren().add(forwardButton);
-
-        }
+        popuniFlowPane(listaLojalnihGostiju);
     }
     
     public void nazadNaNaplatu(ActionEvent event) {
@@ -271,5 +298,68 @@ public class LojalnostController extends FXMLDocumentController {
                 true, 
                 (Node)event.getSource()
         );
+    }
+    
+    public void sortStalneGoste(ActionEvent event)
+    {
+        RadioButton pritisnutTaster = (RadioButton)event.getSource();
+        String sortTekst = pritisnutTaster.getId();
+        
+        if (sortTekst.equals("sve")) {
+            sortTekst = null;
+        }
+        
+        RadioButton izabranaGrupa = (RadioButton)headerButtonGroup.getSelectedToggle();
+        String grupaId = izabranaGrupa.getId();
+
+        List<Map<String, String>> listaRezultata = getStalniGosti(grupaId, sortTekst, 0);
+        
+        brojacOffset = 0;
+        
+        popuniFlowPane(listaRezultata);
+    }
+    
+    
+    public void popuniFlowPane(List<Map<String, String>> listaRezultata) {
+        
+        lojalnostFlowPane.getChildren().clear();
+
+        for (Map<String, String> stalniGostMap : listaRezultata) {
+
+            Button stalniGostButton = new Button(stalniGostMap.get(StalniGost.NAZIV));
+            
+            stalniGostButton.setId(stalniGostMap.get(StalniGost.PRIMARY_KEY));
+
+            stalniGostButton.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override public void handle(ActionEvent e) {
+                            potvrdi(e);
+                        }
+                    });
+            
+            stalniGostButton.setPrefSize(204, 97);
+
+            lojalnostFlowPane.getChildren().add((Node)stalniGostButton);
+
+        }
+    }
+    
+    public void prikaziSledecuIliPrethodnuStranuFlowPane(ActionEvent event) 
+    {
+        
+        RadioButton izabranaGrupa = (RadioButton)headerButtonGroup.getSelectedToggle();
+        String grupaId = izabranaGrupa.getId();
+        
+        Button button = (Button)event.getSource();
+        String stisnutiTaster = button.getText();
+                
+        if (stisnutiTaster.equals("»") && lojalnostFlowPane.getChildren().size() > 19) {
+            brojacOffset++;
+            popuniFlowPane(getStalniGosti(grupaId, null, brojacOffset * 19));
+        }
+        
+        if (stisnutiTaster.equals("«") && brojacOffset > 0 ) {
+            brojacOffset--;
+            popuniFlowPane(getStalniGosti(grupaId, null, brojacOffset * 19));
+        }
     }
 }

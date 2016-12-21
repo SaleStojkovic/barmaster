@@ -5,6 +5,9 @@
  */
 package rmaster.assets;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  *
  * @author Arbor
@@ -27,6 +30,8 @@ public class QueryBuilder {
 
     public static String IS_LESS_OR_EQUAL_THAN = " <= '";
     
+    public static String IS_LIKE = " COLLATE UTF8_GENERAL_CI LIKE '";
+    
     public static String LOGIC_AND = "' AND ";
 
     public static String LOGIC_OR = "' OR ";
@@ -38,15 +43,15 @@ public class QueryBuilder {
     
     public String TABLE_NAME;
     
-    public String[] SELECT_COLUMNS;
+    public ArrayList<String> SELECT_COLUMNS = new ArrayList<>();
     
-    public String[] CRITERIA_COLUMNS;
+    public ArrayList<String> CRITERIA_COLUMNS = new ArrayList<>();
     
-    public String[] CRITERIA;
+    public ArrayList<String> CRITERIA = new ArrayList<>();
     
-    public String[] OPERATORS;
+    public ArrayList<String> OPERATORS = new ArrayList<>();
     
-    public String[] CRITERIA_VALUES;
+    public ArrayList<String> CRITERIA_VALUES = new ArrayList<>();
     
     public String GROUP_BY;
     
@@ -62,24 +67,24 @@ public class QueryBuilder {
         this.TABLE_NAME = tableName;
     }
     
-    public void setColumns(String... kolone) {
-        this.SELECT_COLUMNS = kolone;
+    public void addColumns(String... kolone) {
+        this.SELECT_COLUMNS.addAll(Arrays.asList(kolone));
     }
     
-    public void setCriteriaColumns(String... uslovneKolone) {
-        this.CRITERIA_COLUMNS = uslovneKolone;
+    public void addCriteriaColumns(String... uslovneKolone) {
+        this.CRITERIA_COLUMNS.addAll(Arrays.asList(uslovneKolone));
     }
     
-    public void setCriteria(String... kriterijumi) {
-        this.CRITERIA = kriterijumi;
+    public void addCriteria(String... kriterijumi) {
+        this.CRITERIA.addAll(Arrays.asList(kriterijumi));
     }
     
-    public void setOperators(String... operatori) {
-        this.OPERATORS = operatori;
+    public void addOperators(String... operatori) {
+        this.OPERATORS.addAll(Arrays.asList(operatori));
     }
     
     public void setCriteriaValues(String... uslovneVrednosti) {
-        this.CRITERIA_VALUES = uslovneVrednosti;
+        this.CRITERIA_VALUES.addAll(Arrays.asList(uslovneVrednosti));
     }
     
     public void setOrderBy(String orderByColumn, String orderCriteria) {
@@ -95,48 +100,49 @@ public class QueryBuilder {
         this.OFFSET = offset;
     }
     
+    
     public String toQueryString() {
         String queryString = "SELECT *";
         
-        if (SELECT_COLUMNS != null) {
+        if (!SELECT_COLUMNS.isEmpty()) {
         
             queryString = queryString.substring(0, queryString.length() - 1);
             
-            for (int j = 0; j < SELECT_COLUMNS.length - 1; j++) {
-                queryString += SELECT_COLUMNS[j] + ", ";
+            for (int j = 0; j < SELECT_COLUMNS.size() - 1; j++) {
+                queryString += SELECT_COLUMNS.get(j) + ", ";
             }
 
-            queryString += SELECT_COLUMNS[SELECT_COLUMNS.length - 1];
+            queryString += SELECT_COLUMNS.get(SELECT_COLUMNS.size() - 1);
         }
         
         queryString += " FROM " + TABLE_NAME; 
                  
         
-        if (CRITERIA_COLUMNS != null ) {
+        if (!CRITERIA_COLUMNS.isEmpty()) {
         
-            if (CRITERIA_COLUMNS.length > 1) {
+            if (CRITERIA_COLUMNS.size() > 1) {
 
                 queryString += " WHERE ";
 
-                for (int i = 0; i < CRITERIA_COLUMNS.length - 1; i++) {
+                for (int i = 0; i < CRITERIA_COLUMNS.size() - 1; i++) {
 
-                    queryString += CRITERIA_COLUMNS[i] 
-                            + CRITERIA[i] 
-                            + CRITERIA_VALUES[i] 
-                            + OPERATORS[i]; 
+                    queryString += CRITERIA_COLUMNS.get(i)
+                            + CRITERIA.get(i)
+                            + CRITERIA_VALUES.get(i) 
+                            + OPERATORS.get(i); 
                 }
 
-                queryString += CRITERIA_COLUMNS[CRITERIA_COLUMNS.length - 1] 
-                        + CRITERIA[CRITERIA.length - 1] 
-                        + CRITERIA_VALUES[CRITERIA_COLUMNS.length - 1] + "'";
+                queryString += CRITERIA_COLUMNS.get(CRITERIA_COLUMNS.size() - 1)
+                        + CRITERIA.get(CRITERIA.size() - 1) 
+                        + CRITERIA_VALUES.get(CRITERIA_COLUMNS.size() - 1) + "'";
             }
 
-            if (CRITERIA_COLUMNS.length == 1) {
+            if (CRITERIA_COLUMNS.size() == 1) {
                 queryString += " WHERE ";
 
-                queryString += CRITERIA_COLUMNS[0] 
-                        + CRITERIA[0] 
-                        + CRITERIA_VALUES[0] 
+                queryString += CRITERIA_COLUMNS.get(0) 
+                        + CRITERIA.get(0) 
+                        + CRITERIA_VALUES.get(0) 
                         + "' "; 
             }
         }

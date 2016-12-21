@@ -692,9 +692,19 @@ and open the template in the editor.
 }
 
 
-#lojalnostSlova *.button
+#lojalnostSlova *.toggle-button
 {
     -fx-background-color: -fx-tamno-crna;
+    -fx-font-family: KlavikaBold;
+    -fx-text-fill: white;
+    -fx-border-color: -fx-siva;
+    -fx-border-width: 0.5;
+    -fx-font-size: 16; 
+}
+
+#lojalnostSlova *.toggle-button:selected
+{
+    -fx-background-color: -fx-svetlo-crna;
     -fx-font-family: KlavikaBold;
     -fx-text-fill: white;
     -fx-border-color: -fx-siva;

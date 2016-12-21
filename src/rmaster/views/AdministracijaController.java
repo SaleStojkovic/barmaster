@@ -60,10 +60,10 @@ public class AdministracijaController extends FXMLDocumentController{
         try {
             QueryBuilder query = new QueryBuilder();
             query.setTableName("posmeni");
-            query.setColumns("fxID");
-            query.setCriteriaColumns("korisnikID", "vrstaKorisnika");
-            query.setCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
-            query.setOperators(QueryBuilder.LOGIC_AND);
+            query.addColumns("fxID");
+            query.addCriteriaColumns("korisnikID", "vrstaKorisnika");
+            query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
+            query.addOperators(QueryBuilder.LOGIC_AND);
             query.setCriteriaValues(ulogovaniKonobar.konobarID + "", "1");
 
             listaRezultata = runQuery(query);

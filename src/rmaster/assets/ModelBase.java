@@ -95,8 +95,8 @@ public abstract class ModelBase extends Object {
        
         QueryBuilder query = new QueryBuilder();
         query.setTableName(this.getTableName());
-        query.setCriteriaColumns(this.getPrimaryKeyName());
-        query.setCriteria(QueryBuilder.IS_EQUAL);
+        query.addCriteriaColumns(this.getPrimaryKeyName());
+        query.addCriteria(QueryBuilder.IS_EQUAL);
         query.setCriteriaValues(id);
         
         try {
