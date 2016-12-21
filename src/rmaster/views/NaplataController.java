@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.stream.IntStream;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -28,8 +27,8 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import rmaster.assets.DBBroker;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
@@ -38,8 +37,6 @@ import rmaster.assets.Utils;
 import rmaster.models.NacinPlacanja;
 import rmaster.models.Porudzbina;
 import rmaster.models.StalniGost;
-import rmaster.models.StavkaTure;
-import rmaster.models.Tura;
 
 /**
  * FXML Controller class
@@ -82,6 +79,8 @@ public class NaplataController extends FXMLDocumentController {
     private ToggleButton fxID_Gotovina;
     
     @FXML
+    private Button fxID_Odustani;
+    @FXML
     private Button fxID_PorudzbinaMedjuzbir;
     @FXML
     private Button fxID_Lojalnost;
@@ -105,7 +104,7 @@ public class NaplataController extends FXMLDocumentController {
     private String sVrednostCek = "";
     private String sVrednostKartica = "";
     private String sVrednostGotovina = "";
-    
+    private Node roditelj = null;
     /**
      * Initializes the controller class.
      */
@@ -181,6 +180,9 @@ public class NaplataController extends FXMLDocumentController {
             }
             if (object instanceof StalniGost) {
                stalniGost = (StalniGost)object;
+            }
+            if (object instanceof Node) {
+               roditelj = (Node)object;
             }
         }
         this.total = porudzbina.getVrednostPorudzbine();
@@ -331,11 +333,11 @@ public class NaplataController extends FXMLDocumentController {
 
     
     public void otvoriLojalnost(ActionEvent event) {
-        prikaziFormu(
-                porudzbina, 
+        prikaziFormu(porudzbina, 
                 ScreenMap.LOJALNOST, 
-                true, 
-                (Node)event.getSource()
+                false, 
+                (Node)event.getSource(), 
+                true
         );
     }
     
@@ -367,19 +369,22 @@ public class NaplataController extends FXMLDocumentController {
         }
         if (vrstaRacuna == VrstaRacunaZaStampu.FAKTURA) {
             Stampa.getInstance().stampajFakturu(porudzbina);
-            Stampa.getInstance().stampajGotovinskiRacun(porudzbina);
+            Stampa.getInstance().stampajGotovinskiRacun(porudzbina, placanja);
         }
         if (vrstaRacuna == VrstaRacunaZaStampu.GOTOVINSKI) {
-            Stampa.getInstance().stampajGotovinskiRacun(porudzbina);
+            Stampa.getInstance().stampajGotovinskiRacun(porudzbina, placanja);
         }
-        prikaziFormu(
-                null, 
+        
+        prikaziFormu(null, 
                 ScreenMap.PRIKAZ_SALA, 
                 true, 
-                (Node)event.getSource()
+                roditelj,
+                false
         );
 
     }
+    
+    @FXML
     public void naplata(ActionEvent event) {
         NacinPlacanja nacinPlacanjaGotovina = getNacinPlacanja(NacinPlacanja.VrstePlacanja.GOTOVINA);
         if (this.getUplaceno() == 0) {
@@ -491,4 +496,19 @@ public class NaplataController extends FXMLDocumentController {
         this.osveziPrikaz();
     }
     
+    @FXML
+    public void prikaziRacun(ActionEvent event) {
+        prikaziFormu(new ArrayList<>(),
+                ScreenMap.PRIKAZ_SALA,
+                true, 
+                (Node)event.getSource(),
+                false
+        );
+    }
+
+    @FXML
+    public void odustani(ActionEvent event) {
+        Button b = (Button)event.getSource(); 
+        b.getScene().getWindow().hide();
+    }
 }

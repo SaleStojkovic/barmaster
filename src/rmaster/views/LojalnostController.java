@@ -269,11 +269,10 @@ public class LojalnostController extends FXMLDocumentController {
         
         data.add(porudzbina);
         
-        prikaziFormu(
-                data, 
+        prikaziFormu(data, 
                 ScreenMap.NAPLATA, 
                 true, 
-                (Node)event.getSource()
+                (Node)event.getSource(), false
         );
     }
     
@@ -292,11 +291,10 @@ public class LojalnostController extends FXMLDocumentController {
         data.add(porudzbina);
         data.add(izabraniGost);
         
-        prikaziFormu(
-                data, 
+        prikaziFormu(data, 
                 ScreenMap.NAPLATA, 
                 true, 
-                (Node)event.getSource()
+                (Node)event.getSource(), false
         );
     }
     

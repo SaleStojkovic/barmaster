@@ -113,11 +113,10 @@ public class AdministracijaController extends FXMLDocumentController{
 
     public void nazadNaPrikazSala(ActionEvent event) {
 
-        prikaziFormu(
-            new Object(),
+        prikaziFormu(new Object(),
             ScreenMap.PRIKAZ_SALA, 
             true, 
-            (Node)event.getSource());
+            (Node)event.getSource(), false);
     }
     
 }

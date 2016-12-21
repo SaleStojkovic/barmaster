@@ -273,10 +273,11 @@ public class FXMLDocumentController implements Initializable {
       * @param prethodnaForma
       */
      public void prikaziFormu(
-             Object data,
+             Object data, 
              String imeForme, 
              boolean ugasiPrethodnuFormu, 
-             Node prethodnaForma) 
+             Node prethodnaForma, 
+             boolean modalnaForma) 
      {
         Stage stage;
         String imeNoveForme = imeForme + ".fxml";
@@ -290,6 +291,10 @@ public class FXMLDocumentController implements Initializable {
             novaScena.getStylesheets().addAll(this.getClass().getResource("style/style.css").toExternalForm());
 
             stage.setScene(novaScena);
+            if (modalnaForma) {
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initOwner(prethodnaForma.getScene().getWindow());
+            }
             
             FXMLDocumentController controller = loader.getController();
             if (data != null) {
@@ -299,12 +304,15 @@ public class FXMLDocumentController implements Initializable {
                 controller.initData(newData);
             }
 
-            stage.show();
+            if (modalnaForma)
+                stage.showAndWait();
+            else {
+                stage.show();
+                if (ugasiPrethodnuFormu) {
+                    prethodnaForma.getScene().getWindow().hide();
+                }
+            }
 
-            if (ugasiPrethodnuFormu) {
-                prethodnaForma.getScene().getWindow().hide();
-            }                    
-           
         } catch (Exception e){
             System.out.println("Greska pri otvaranju forme " + imeNoveForme + "! - " + e.toString());
         } 
@@ -384,11 +392,10 @@ public class FXMLDocumentController implements Initializable {
             List<Object> newData = new ArrayList<>();
             
             //sledeca stranica 
-            prikaziFormu(
-                    newData,
+            prikaziFormu(newData,
                     ScreenMap.POCETNI_EKRAN, 
                     true, 
-                    (Node)event.getSource()
+                    (Node)event.getSource(), false
             );
     }
     

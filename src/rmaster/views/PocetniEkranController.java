@@ -96,11 +96,10 @@ public class PocetniEkranController extends FXMLDocumentController {
             List<Object> newData = new ArrayList<>();
                             
             //sledeca stranica 
-            prikaziFormu(
-                    newData,
+            prikaziFormu(newData,
                     ScreenMap.PRIKAZ_SALA, 
                     true, 
-                    response
+                    response, false
             );
             return;
         }

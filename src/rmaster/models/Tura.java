@@ -44,8 +44,14 @@ public class Tura {
         );
         
         for (Map<String, String> noviRed : listaRezultata) {
-            StavkaTure novaStavka = new StavkaTure(noviRed);
-            if (novaStavka.getGlavnaStavkaID() != 0) {
+            if (noviRed.get("GLAVNASTAVKA_ID") == null || noviRed.get("GLAVNASTAVKA_ID").equals("0")) {
+                StavkaTure novaStavka = new StavkaTure(noviRed);
+                listStavkeTure.add(novaStavka);
+            }
+        }
+        for (Map<String, String> noviRed : listaRezultata) {
+            if (noviRed.get("GLAVNASTAVKA_ID") != null && !noviRed.get("GLAVNASTAVKA_ID").equals("0")) {
+                StavkaTure novaStavka = new StavkaTure(noviRed);
                 if (novaStavka.cena == 0) {
                     this.getStavkaTureByStavkaID(novaStavka.getGlavnaStavkaID()).dodajKolicinuArtikalOpisni(novaStavka);
                 }
@@ -53,8 +59,6 @@ public class Tura {
                     this.getStavkaTureByStavkaID(novaStavka.getGlavnaStavkaID()).dodajKolicinuArtikalDodatni(novaStavka);
                 }
             }
-            else
-                listStavkeTure.add(novaStavka);
         }
     }
     

@@ -150,11 +150,10 @@ public class RezervacijeController extends FXMLDocumentController {
             Map<String, String> newData = new HashMap<>();
             
             //sledeca stranica 
-            prikaziFormu(
-                    newData,
+            prikaziFormu(newData,
                     ScreenMap.PRIKAZ_SALA, 
                     true, 
-                    (Node)event.getSource()
+                    (Node)event.getSource(), false
             );
     }
     

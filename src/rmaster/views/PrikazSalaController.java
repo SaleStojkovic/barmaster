@@ -199,28 +199,43 @@ public class PrikazSalaController extends FXMLDocumentController {
     public void odjava(ActionEvent event)
     {            
             //sledeca stranica 
-            prikaziFormu(
-                    new ArrayList<>(),
+            prikaziFormu(new ArrayList<>(),
                     ScreenMap.POCETNI_EKRAN, 
                     true, 
-                    (Node)event.getSource()
+                    (Node)event.getSource(), false
             );
     }
     
     public void prikaziRacuneZaStampu(ActionEvent event){
-        prikaziFormuModalno(
-                new ArrayList<>(),
+        List<Object> data = new ArrayList<>();
+
+        prikaziFormu(data, 
                 ScreenMap.RACUNI_ZA_NAPLATU, 
-                (Node)(event.getSource())
+                false, 
+                (Node)event.getSource(), 
+                true
         );
+        //prikaziFormuModalno(
+        //        new ArrayList<>(),
+        //        ScreenMap.RACUNI_ZA_NAPLATU, 
+        //        (Node)(event.getSource())
+        //);
     }
     
     public void promeniKonobara(ActionEvent event){
-        prikaziFormuModalno(
-                new ArrayList<>(),
-                ScreenMap.PROMENA_KONOBARA,
-                (Node)(event.getSource())
+        List<Object> data = new ArrayList<>();
+
+        prikaziFormu(data, 
+                ScreenMap.PROMENA_KONOBARA, 
+                false, 
+                (Node)event.getSource(), 
+                true
         );
+//        prikaziFormuModalno(
+//                new ArrayList<>(),
+//                ScreenMap.PROMENA_KONOBARA,
+//                (Node)(event.getSource())
+//        );
         prikaziStolove();
     }
     
@@ -319,11 +334,10 @@ public class PrikazSalaController extends FXMLDocumentController {
                                             Button b = (Button)e.getSource();
                                             RMaster.izabraniStoID = b.getId();
                                             RMaster.izabraniStoBroj = Integer.parseInt(b.getText());
-                                              prikaziFormu(
-                                                      newData,
+                                              prikaziFormu(newData,
                                                       ScreenMap.PORUDZBINA, 
                                                       true, 
-                                                      (Node)e.getSource());
+                                                      (Node)e.getSource(), false);
                                         }
                                     });
                 }
@@ -388,42 +402,38 @@ public class PrikazSalaController extends FXMLDocumentController {
     public void brzaNaplata(ActionEvent event){
         Map<String, String> newData = new HashMap<>();
         RMaster.izabraniStoID = "0";
-        prikaziFormu(
-                newData,
+        prikaziFormu(newData,
                 ScreenMap.PORUDZBINA, 
                 true, 
-                (Node)event.getSource());
+                (Node)event.getSource(), false);
 
     }
     
     public void otvoriAdministraciju(ActionEvent event) {
         Map<String, String> newData = new HashMap<>();
 
-        prikaziFormu(
-            newData,
+        prikaziFormu(newData,
             ScreenMap.ADMINISTRACIJA, 
             true, 
-            (Node)event.getSource()); 
+            (Node)event.getSource(), false); 
     }
     
      
     public void otvoriRezervacije(ActionEvent event) {
         Map<String, String> newData = new HashMap<>();
 
-        prikaziFormu(
-            newData,
+        prikaziFormu(newData,
             ScreenMap.REZERVACIJE, 
             true, 
-            (Node)event.getSource()); 
+            (Node)event.getSource(), false); 
     }
     
     public void otvoriRastavljanjeSastavljanje(ActionEvent event) {
         Map<String, String> newData = new HashMap<>();
 
-        prikaziFormu(
-            newData,
+        prikaziFormu(newData,
             ScreenMap.SASTAVLJANJE_RASTAVLJANJE, 
             true, 
-            (Node)event.getSource()); 
+            (Node)event.getSource(), false); 
     }
 }

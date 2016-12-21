@@ -14,7 +14,6 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,8 +28,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import rmaster.models.NacinPlacanja;
 import rmaster.models.Porudzbina;
-import rmaster.models.StalniGost;
 import rmaster.models.Stampac;
 import rmaster.models.StavkaTure;
 import rmaster.models.Tura;
@@ -283,7 +284,146 @@ public final class Stampa {
         }        
     }
 
-    public final void stampajGotovinskiRacun(Porudzbina porudzbina) {
+    public void ubaciElementeIzListeStavki(Document doc, Map<String, Element> mapaElemenata, List<StavkaTure> lista) {
+        Element element;
+        for (StavkaTure stavkaTura : lista) {
+
+//                    <FiscalItem>
+//                        <Naziv>ESPRESSO</Naziv>
+//                        <Cena>120.0</Cena>
+//                        <Kolicina>1.0</Kolicina>
+//                        <PoreskaGrupa>GRUPA_DJ</PoreskaGrupa>
+//                    </FiscalItem>
+            Element stavkaElem = mapaElemenata.get("" + stavkaTura.ARTIKAL_ID);
+            if (stavkaElem != null) {
+                // loop the staff child node
+		NodeList list = stavkaElem.getChildNodes();
+                Node nodeKolicina = null;
+                Node nodeCena = null;
+                Node node = null;
+
+		for (int i = 0; i < list.getLength(); i++) {
+                    node = list.item(i);
+
+                    if ("Cena".equals(node.getNodeName())) {
+                        nodeCena = node;
+                    }
+                    if ("Kolicina".equals(node.getNodeName())) {
+                        nodeKolicina = node;
+                    }
+                }
+                try {
+                    double cena = Utils.getDoubleFromString(nodeCena.getTextContent()) / Utils.getDoubleFromString(nodeKolicina.getTextContent());
+                    double kolicina = Utils.getDoubleFromString(nodeKolicina.getTextContent()) + stavkaTura.getKolicina();
+                    nodeKolicina.setTextContent("" + kolicina);
+                    nodeCena.setTextContent("" + (cena * kolicina));    
+                } catch (Exception e) {
+                }
+                ubaciElementeIzListeStavki(doc, mapaElemenata, stavkaTura.dodatniArtikli);
+                continue;
+            }
+
+            stavkaElem = doc.createElement("FiscalItem");
+
+            element = doc.createElement("Naziv");
+            element.appendChild(doc.createTextNode("" + stavkaTura.getNaziv()));
+            stavkaElem.appendChild(element);
+
+            element = doc.createElement("Cena");
+            element.appendChild(doc.createTextNode("" + stavkaTura.getCenaSaObracunatimPopustom()));
+            stavkaElem.appendChild(element);
+
+            element = doc.createElement("Kolicina");
+            element.appendChild(doc.createTextNode("" + stavkaTura.getKolicina()));
+            stavkaElem.appendChild(element);
+
+            element = doc.createElement("PoreskaGrupa");
+            element.appendChild(doc.createTextNode("GRUPA_DJ"));
+            stavkaElem.appendChild(element);
+            
+            mapaElemenata.put("" + stavkaTura.ARTIKAL_ID, stavkaElem);
+            
+            ubaciElementeIzListeStavki(doc, mapaElemenata, stavkaTura.dodatniArtikli);
+        }
+        
+    }
+    
+    public final void stampajGotovinskiRacun(Porudzbina porudzbina, List<NacinPlacanja> placanja) {
+        try {
+            java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(Settings.getInstance().getFiscalniIzvestajiDnevniIzvestajFormatDatuma());
+
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            
+            Map<String, Element> mapaElemenata = new HashMap();
+            Element porudzbinaElem = null;
+            Element element = null;
+            Document doc = docBuilder.newDocument();
+
+            // root elements <FiscalRecipet>
+            porudzbinaElem = doc.createElement("FiscalRecipet");
+            doc.appendChild(porudzbinaElem);
+
+            for (Tura tura : porudzbina.getTure())
+                ubaciElementeIzListeStavki(doc, mapaElemenata, tura.listStavkeTure);
+
+            for (Map.Entry<String, Element> entry : mapaElemenata.entrySet()) {
+                porudzbinaElem.appendChild(entry.getValue());
+            }
+            //<Placanje>
+            //    <Gotovina>0.0</Gotovina>
+            //    <Cek>0.0</Cek>
+            //    <Kartica>300.0</Kartica>
+            //</Placanje>
+            Element stavka = doc.createElement("Placanje");
+            porudzbinaElem.appendChild(stavka);
+            
+            for (NacinPlacanja nacinPlacanja : placanja) {
+                if (nacinPlacanja.getNacinPlacanja().equals(NacinPlacanja.VrstePlacanja.GOTOVINA)) {
+                    element = doc.createElement("Gotovina");
+                    element.appendChild(doc.createTextNode(nacinPlacanja.getVrednostString()));
+                    stavka.appendChild(element);
+                }
+
+                if (nacinPlacanja.getNacinPlacanja().equals(NacinPlacanja.VrstePlacanja.CEK)) {
+                    element = doc.createElement("Cek");
+                    element.appendChild(doc.createTextNode(nacinPlacanja.getVrednostString()));
+                    stavka.appendChild(element);
+                }
+
+                if (nacinPlacanja.getNacinPlacanja().equals(NacinPlacanja.VrstePlacanja.KARTICA)) {
+                    element = doc.createElement("Kartica");
+                    element.appendChild(doc.createTextNode(nacinPlacanja.getVrednostString()));
+                    stavka.appendChild(element);
+                }
+            }
+
+            //  <Konobar>Konobar 1</Konobar>
+            element = doc.createElement("Konobar");
+            element.appendChild(doc.createTextNode(rmaster.RMaster.ulogovaniKonobar.imeKonobara));
+            porudzbinaElem.appendChild(element);
+
+            // write the content into xml file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
+            doc.setXmlStandalone(true);
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            DOMSource source = new DOMSource(doc);
+
+            StreamResult result = new StreamResult(new File(
+                    Settings.getInstance().getNefiskalniStampacPutanja() + 
+                    "\\" + dateFormat.format(new Date()) + 
+                    ".xml")
+            );
+            transformer.transform(source, result);
+            System.out.println("File saved!");
+        } catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        } catch (TransformerException tfe) {
+            tfe.printStackTrace();
+        }        
         
     }
     

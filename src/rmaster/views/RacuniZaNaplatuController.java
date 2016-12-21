@@ -34,7 +34,7 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
     public AnchorPane tabelaSaRacunima;
     
     private List listRacuni = null;
-    
+
     @FXML
     private Button cancelButton;
     

@@ -14,9 +14,9 @@
    <children>
       <Pane fx:id="lojalnostFooter" layoutX="-7.0" layoutY="663.0" prefHeight="103.0" prefWidth="1024.0">
          <children>
-            <Button layoutX="885.0" layoutY="1.0" mnemonicParsing="false" onAction="#nazadNaNaplatu" prefHeight="103.0" prefWidth="146.0" text="Odustani X" />
-            <Button layoutX="512.0" layoutY="1.0" mnemonicParsing="false" onAction="#prikaziSledecuIliPrethodnuStranuFlowPane" prefHeight="103.0" prefWidth="133.0" text="»" />
-            <Button layoutX="362.0" mnemonicParsing="false" onAction="#prikaziSledecuIliPrethodnuStranuFlowPane" prefHeight="103.0" prefWidth="133.0" text="«" />
+            <Button layoutX="0" layoutY="0" mnemonicParsing="false" onAction="#nazadNaNaplatu" prefHeight="100.0" prefWidth="140.0" text="Odustani X" />
+            <Button layoutX="512.0" layoutY="1.0" mnemonicParsing="false" onAction="#prikaziSledecuIliPrethodnuStranuFlowPane" prefHeight="100.0" prefWidth="140.0" text="»" />
+            <Button layoutX="362.0" mnemonicParsing="false" onAction="#prikaziSledecuIliPrethodnuStranuFlowPane" prefHeight="100.0" prefWidth="140.0" text="«" />
          </children>
       </Pane>
       <Pane fx:id="lojalnostHeader" prefHeight="64.0" prefWidth="1023.0">

@@ -349,11 +349,10 @@ public class PorudzbinaController extends FXMLDocumentController {
     }
 
     public void prikaziSalu(ActionEvent event) {
-        prikaziFormu(
-                new ArrayList<>(),
+        prikaziFormu(new ArrayList<>(),
                 ScreenMap.PRIKAZ_SALA,
                 true, 
-                (Node)event.getSource()
+                (Node)event.getSource(), false
         );
     }
     
@@ -1223,22 +1222,22 @@ public class PorudzbinaController extends FXMLDocumentController {
             }
             // Ovde resiti stampu po artiklima
             List<Object> newData = new ArrayList<>();
-            prikaziFormu(
-                    newData,
+            prikaziFormu(newData,
                     ScreenMap.PRIKAZ_SALA,
                     true, 
-                    (Node)event.getSource()
+                    (Node)event.getSource(), false
             );    
             return;
         }
         // TODO: Otvoriti formu za naplatu
         List<Object> newData = new ArrayList<>();
         newData.add(this.porudzbinaTrenutna);
-        prikaziFormu(
-                newData,
+        newData.add((Node)event.getSource());
+        prikaziFormu(newData,
                 ScreenMap.NAPLATA,
-                true, 
-                (Node)event.getSource()
+                false, 
+                (Node)event.getSource(), 
+                true
         );    
     }
 
