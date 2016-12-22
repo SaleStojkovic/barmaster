@@ -115,7 +115,7 @@ public class PromenaKonobaraController  extends FXMLDocumentController {
                         "Unesite lozinku",
                         "Unesite lozinku",
                         true,
-                        null
+                        ""
                 );
                 Optional<String> result = tastatura.showAndWait();
 

@@ -19,11 +19,12 @@ public class Settings {
     // Singleton instance
     private static Settings instance = null;
     
-    String putanjaSettings = "Settings.conf";
+    String putanjaSettings;
     
     Properties prop = new Properties();   
     
     protected Settings() { 
+        this.putanjaSettings = "C:\\BarMaster\\Settings.conf";
         
         InputStream input = null;
 

@@ -413,7 +413,7 @@ public final class Stampa {
             DOMSource source = new DOMSource(doc);
 
             StreamResult result = new StreamResult(new File(
-                    Settings.getInstance().getNefiskalniStampacPutanja() + 
+                    Settings.getInstance().getFiscalniPrinterPath() + 
                     "\\" + dateFormat.format(new Date()) + 
                     ".xml")
             );
