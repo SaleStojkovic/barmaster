@@ -64,7 +64,7 @@ public class AdministracijaController extends FXMLDocumentController{
             query.addCriteriaColumns("korisnikID", "vrstaKorisnika");
             query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
             query.addOperators(QueryBuilder.LOGIC_AND);
-            query.setCriteriaValues(ulogovaniKonobar.konobarID + "", "1");
+            query.addCriteriaValues(ulogovaniKonobar.konobarID + "", "1");
 
             listaRezultata = runQuery(query);
         } catch (Exception e) {

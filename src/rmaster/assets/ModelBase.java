@@ -97,7 +97,7 @@ public abstract class ModelBase extends Object {
         query.setTableName(this.getTableName());
         query.addCriteriaColumns(this.getPrimaryKeyName());
         query.addCriteria(QueryBuilder.IS_EQUAL);
-        query.setCriteriaValues(id);
+        query.addCriteriaValues(id);
         
         try {
             

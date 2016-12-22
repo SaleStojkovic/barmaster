@@ -83,7 +83,7 @@ public class QueryBuilder {
         this.OPERATORS.addAll(Arrays.asList(operatori));
     }
     
-    public void setCriteriaValues(String... uslovneVrednosti) {
+    public void addCriteriaValues(String... uslovneVrednosti) {
         this.CRITERIA_VALUES.addAll(Arrays.asList(uslovneVrednosti));
     }
     

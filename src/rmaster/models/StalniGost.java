@@ -27,6 +27,7 @@ public class StalniGost extends ModelBase {
     public String id;
     public String popust;
     public String naziv;
+    public String sifra;
     
     @Override
     public String getTableName()
@@ -48,6 +49,8 @@ public class StalniGost extends ModelBase {
         this.naziv = stalniGostMap.get(NAZIV);
                
         this.popust = stalniGostMap.get(POPUST);
+        
+        this.sifra = stalniGostMap.get(SIFRA);
 
     }
     
@@ -58,6 +61,7 @@ public class StalniGost extends ModelBase {
 
         stalniGostMap.put(NAZIV, this.naziv);
         stalniGostMap.put(POPUST, this.popust);
+        stalniGostMap.put(SIFRA, this.sifra);
         
         if (includeId) {
             stalniGostMap.put(PRIMARY_KEY, this.id);
@@ -72,6 +76,7 @@ public class StalniGost extends ModelBase {
         stalniGostMap.put(PRIMARY_KEY, this.id);
         stalniGostMap.put(NAZIV, this.naziv);
         stalniGostMap.put(POPUST, this.popust);
+        stalniGostMap.put(SIFRA, this.sifra);
 
         return stalniGostMap;
     }

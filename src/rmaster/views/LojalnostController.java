@@ -31,6 +31,10 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.FlowPane;
 import static java.lang.Math.round;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import static java.lang.Math.round;
 
 /**
  * FXML Controller class
@@ -54,6 +58,9 @@ public class LojalnostController extends FXMLDocumentController {
     
     @FXML
     private HBox lojalnostGostiGrupe;
+    
+    @FXML
+    private TextField skenerKartice;
     
     public int[] sirineKolone = {0, 960, 50};
     
@@ -81,6 +88,7 @@ public class LojalnostController extends FXMLDocumentController {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        skenerKartice.setVisible(false);
         lojalnostFlowPane.setOrientation(Orientation.VERTICAL);
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
@@ -108,13 +116,13 @@ public class LojalnostController extends FXMLDocumentController {
         query.addCriteriaColumns(StalniGost.SIFRA, StalniGost.BLOKIRAN, StalniGost.GRUPA_ID);
         query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
         query.addOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
-        query.setCriteriaValues("", QueryBuilder.TRUE, grupaId);
+        query.addCriteriaValues("", QueryBuilder.TRUE, grupaId);
                 
         if (text != null) {
             query.addCriteriaColumns(StalniGost.NAZIV);
             query.addCriteria(QueryBuilder.IS_LIKE);
             query.addOperators(QueryBuilder.LOGIC_AND);
-            query.setCriteriaValues(text + "%");
+            query.addCriteriaValues(text + "%");
         }
         
         query.setOrderBy(StalniGost.NAZIV, QueryBuilder.SORT_ASC);
@@ -143,7 +151,7 @@ public class LojalnostController extends FXMLDocumentController {
         query.addCriteriaColumns("naziv", "naziv");
         query.addCriteria(QueryBuilder.IS_NOT_EQUAL, QueryBuilder.IS_NOT_EQUAL);
         query.addOperators(QueryBuilder.LOGIC_AND);
-        query.setCriteriaValues("PREDUZECE", "NEPOZELJNI GOST");
+        query.addCriteriaValues("PREDUZECE", "NEPOZELJNI GOST");
         
         List<Map<String, String>> listaRezultata = runQuery(query);
         
@@ -358,6 +366,48 @@ public class LojalnostController extends FXMLDocumentController {
         if (stisnutiTaster.equals("«") && brojacOffset > 0 ) {
             brojacOffset--;
             popuniFlowPane(getStalniGosti(grupaId, null, brojacOffset * 19));
+        }
+    }
+    
+    public void keyListener(KeyEvent keyEvent) 
+    {   
+        if (keyEvent.getCharacter().isEmpty()) {
+            return;
+        }
+        String taster = keyEvent.getCharacter();
+        String tekst = skenerKartice.getText() + taster;
+        
+        skenerKartice.setText(tekst);
+    }
+    
+    public void proveriPin(KeyEvent keyEvent)
+    {
+        if (keyEvent.getCode().equals(KeyCode.ENTER))
+        {
+            String lozinka = skenerKartice.getText();
+
+            QueryBuilder query = new QueryBuilder();
+
+            query.setTableName(StalniGost.TABLE_NAME);
+            query.addCriteriaColumns(StalniGost.SIFRA);
+            query.addCriteria(QueryBuilder.IS_EQUAL);
+            query.addCriteriaValues(lozinka);
+
+            List<Map<String, String>> rezultat = this.runQuery(query);
+        
+            StalniGost izabraniGost = new StalniGost();
+            izabraniGost.makeFromHashMap((HashMap)rezultat.get(0));
+            
+            List<Object> data = new ArrayList<>();
+        
+            data.add(porudzbina);
+            data.add(izabraniGost);
+
+            prikaziFormu(data, 
+                ScreenMap.NAPLATA, 
+                true, 
+                (Node)keyEvent.getSource(), false
+            );
         }
     }
 }

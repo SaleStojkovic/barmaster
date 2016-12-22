@@ -39,7 +39,7 @@ public class PocetniEkranController extends FXMLDocumentController {
    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        lozinka.requestFocus();
+//        lozinka.requestFocus();
         Timeline timeline = this.prikaziCasovnik(clock);
         timeline.play();
     }
@@ -82,7 +82,7 @@ public class PocetniEkranController extends FXMLDocumentController {
         query.setTableName("konobar");
         query.addCriteriaColumns("pin");
         query.addCriteria(QueryBuilder.IS_EQUAL);
-        query.setCriteriaValues(lozinkaText);
+        query.addCriteriaValues(lozinkaText);
         
         List<Map<String, String>> rezultat = runQuery(query);
         

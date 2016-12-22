@@ -68,7 +68,7 @@ public final class Stampa {
         //query.addCriteriaColumns(StalniGost.SIFRA, StalniGost.BLOKIRAN, StalniGost.GRUPA_ID);
         //query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
         //query.addOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
-        //query.setCriteriaValues("", QueryBuilder.TRUE, grupaId);
+        //query.addCriteriaValues("", QueryBuilder.TRUE, grupaId);
         DBBroker db = new DBBroker();
         List<Map<String, String>> listaRezultata = db.runQuery(query);
           

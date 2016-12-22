@@ -73,7 +73,7 @@ public class LoginAction extends ModelBase {
         query.setTableName(TABLE_NAME);
         query.addCriteriaColumns(SIFRA);
         query.addCriteria(QueryBuilder.IS_EQUAL);
-        query.setCriteriaValues(lozinkaText);
+        query.addCriteriaValues(lozinkaText);
         
         DBBroker dbBroker = new DBBroker();
         

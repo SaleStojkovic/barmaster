@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -10,13 +11,14 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="lojalnostGlavni" maxHeight="768.0" maxWidth="1024.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.LojalnostController">
+<AnchorPane fx:id="lojalnostGlavni" onKeyPressed="#proveriPin" onKeyTyped="#keyListener"  maxHeight="768.0" maxWidth="1024.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.LojalnostController">
    <children>
       <Pane fx:id="lojalnostFooter" layoutX="-7.0" layoutY="663.0" prefHeight="103.0" prefWidth="1024.0">
          <children>
             <Button layoutX="0" layoutY="0" mnemonicParsing="false" onAction="#nazadNaNaplatu" prefHeight="100.0" prefWidth="140.0" text="Odustani X" />
             <Button layoutX="512.0" layoutY="1.0" mnemonicParsing="false" onAction="#prikaziSledecuIliPrethodnuStranuFlowPane" prefHeight="100.0" prefWidth="140.0" text="»" />
             <Button layoutX="362.0" mnemonicParsing="false" onAction="#prikaziSledecuIliPrethodnuStranuFlowPane" prefHeight="100.0" prefWidth="140.0" text="«" />
+            <TextField fx:id="skenerKartice" layoutX="167.0" layoutY="37.0" />
          </children>
       </Pane>
       <Pane fx:id="lojalnostHeader" prefHeight="64.0" prefWidth="1023.0">
