@@ -386,6 +386,10 @@ public class LojalnostController extends FXMLDocumentController {
         {
             String lozinka = skenerKartice.getText();
 
+            if (lozinka.isEmpty()) {
+                return;
+            }
+            
             QueryBuilder query = new QueryBuilder();
 
             query.setTableName(StalniGost.TABLE_NAME);
@@ -394,7 +398,12 @@ public class LojalnostController extends FXMLDocumentController {
             query.addCriteriaValues(lozinka);
 
             List<Map<String, String>> rezultat = this.runQuery(query);
-        
+
+            if (rezultat.isEmpty()) {
+                skenerKartice.setText("");
+                return;
+            }
+            
             StalniGost izabraniGost = new StalniGost();
             izabraniGost.makeFromHashMap((HashMap)rezultat.get(0));
             
