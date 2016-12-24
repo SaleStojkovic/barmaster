@@ -37,11 +37,9 @@ public class Tura {
         String[] imenaArgumenata = {"idTure"};
         String[] vrednostiArgumenata = {idTure};
         
-        List<Map<String, String>> listaRezultata = DBBroker.runStoredProcedure(
-                "getPorudzbinaTuraStavke", 
+        List<Map<String, String>> listaRezultata = DBBroker.runStoredProcedure("getPorudzbinaTuraStavke", 
                 imenaArgumenata, 
-                vrednostiArgumenata
-        );
+                vrednostiArgumenata);
         
         for (Map<String, String> noviRed : listaRezultata) {
             if (noviRed.get("GLAVNASTAVKA_ID") == null || noviRed.get("GLAVNASTAVKA_ID").equals("0")) {

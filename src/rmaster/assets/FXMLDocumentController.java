@@ -246,21 +246,17 @@ public class FXMLDocumentController implements Initializable {
      * 
      * @param imeProcedure
      * @param imenaArgumenata
-     * @param vrednostiArgumenata
-     * @return 
+     * @param vrednostiArgumenata 
+     * @return the java.util.List 
      */
     public List runStoredProcedure(
-            String imeProcedure,
-            String[] imenaArgumenata,
-            String[] vrednostiArgumenata
-    ) {
+            String imeProcedure, String[] imenaArgumenata, String[] vrednostiArgumenata) {
+        
         List<Map<String, String>> listaRezultata = null;
         try {
-            listaRezultata = DBBroker.runStoredProcedure(
-                    imeProcedure, 
+            listaRezultata = DBBroker.runStoredProcedure(imeProcedure, 
                     imenaArgumenata, 
-                    vrednostiArgumenata
-            );
+                    vrednostiArgumenata);
         } catch (Exception e) {
             System.out.println(e);
         }

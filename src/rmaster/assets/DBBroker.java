@@ -30,7 +30,10 @@ public final class DBBroker {
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/barmaster";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "";
-        
+       
+    private long startTime;
+    private long ms;
+
     public DBBroker() {
     }
     /**
@@ -40,32 +43,22 @@ public final class DBBroker {
     public static Connection poveziSaBazom() {
         
         Connection dbConnection = null;
- 
-        try {
- 
-            Class.forName(DATABASE_DRIVER);
- 
-        } catch (ClassNotFoundException e) {
- 
-            System.out.println(e.getMessage());
- 
-        }
- 
-        try {
- 
-            dbConnection = DriverManager.getConnection(
-                    URL, 
-                    USERNAME,
-                    PASSWORD
-            );
-            
-
-        } catch (SQLException e) {
- 
+        
+            try {
+                Class.forName(DATABASE_DRIVER);
+            } catch (ClassNotFoundException e) {
                 System.out.println(e.getMessage());
- 
-        }
- 
+            }
+            try {
+                dbConnection = DriverManager.getConnection(
+                        URL, 
+                        USERNAME,
+                        PASSWORD
+                );
+            } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+            }
+
         return dbConnection;
     }
      
@@ -478,14 +471,13 @@ public final class DBBroker {
      * 
      * @param imeProcedure
      * @param imenaArgumenata
-     * @param vrednostiArgumenata
-     * @return 
+     * @param vrednostiArgumenata 
+     * @return the java.util.List 
      */
     public static List runStoredProcedure(
-            String imeProcedure,
-            String[] imenaArgumenata,
-            String[] vrednostiArgumenata
-    )
+            String imeProcedure, 
+            String[] imenaArgumenata, 
+            String[] vrednostiArgumenata)
     {
         Connection dbConnection = null;
         ResultSet rs = null;
@@ -711,14 +703,24 @@ public final class DBBroker {
         CallableStatement cStmt = null;
         
         try {
+            startTime = System.nanoTime();
             dbConnection = poveziSaBazom();
+            ms = System.nanoTime() - startTime;
+            System.out.format("get_PorudzbineStolaIKonobara() - poveziSaBazom(): %,10dms%n", ms);
+            
+            startTime = System.nanoTime();
             cStmt = dbConnection.prepareCall("{CALL getPorudzbineStolaIKonobara(?,?)}");
             cStmt.setLong("konobarID", rmaster.RMaster.ulogovaniKonobar.konobarID);
             cStmt.setString("stoID", rmaster.RMaster.izabraniStoID);
             cStmt.execute();
             rs = cStmt.getResultSet();
+            ms = System.nanoTime() - startTime;
+            System.out.format("get_PorudzbineStolaIKonobara() - cStmt.execute(): %,10dms%n", ms);
             
+            startTime = System.nanoTime();
             listaRezultata = prebaciUListu(rs);
+            ms = System.nanoTime() - startTime;
+            System.out.format("get_PorudzbineStolaIKonobara() - prebaciUListu(rs): %,10dms%n", ms);
             
         } catch (Exception e) {
             System.out.println("Store procedure \"getPorudzbineStolaIKonobara\" exec error! - " + e.toString());

@@ -187,11 +187,9 @@ public class SalePopupController extends Dialog {
         try {            
             String[] imenaArgumenata = {"KonobarID"};
             String[] vrednostiArgumenata = {fxmlController.getUlogovaniKonobarID() + ""};
-            listSale = fxmlController.runStoredProcedure(
-                    "get_SaleOmoguceneKonobaru",
+            listSale = fxmlController.runStoredProcedure("get_SaleOmoguceneKonobaru",
                     imenaArgumenata,
-                    vrednostiArgumenata
-            );
+                    vrednostiArgumenata);
         } catch (Exception e) {
             System.out.println("Greska u pozivu SP get_SaleOmoguceneKonobaru! - " + e.toString());
         }
@@ -210,11 +208,9 @@ public class SalePopupController extends Dialog {
         try {
             String[] imenaArgumenata = {"GRAFIK_ID"};
             String[] vrednostiArgumenata = {salaID + ""};
-            listStolovi = fxmlController.runStoredProcedure(
-                    "get_StoloviZaPrikaz_BySala", 
+            listStolovi = fxmlController.runStoredProcedure("get_StoloviZaPrikaz_BySala", 
                     imenaArgumenata,
-                    vrednostiArgumenata 
-            );
+                    vrednostiArgumenata);
         } catch (Exception e) {
             System.out.println("Greska u pozivu SP get_SaleOmoguceneKonobaru! - " + e.toString());
         }

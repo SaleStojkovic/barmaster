@@ -43,11 +43,9 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
         try {
             String[] imenaArgumenata = {"konobarID"};
             String[] vrednostiArgumenata = {ulogovaniKonobar.konobarID + ""};
-            listRacuni = runStoredProcedure(
-                    "getZatvoreniRacuniKonobaraTogDanaZaStampu",
+            listRacuni = runStoredProcedure("getZatvoreniRacuniKonobaraTogDanaZaStampu",
                     imenaArgumenata,
-                    vrednostiArgumenata
-            );
+                    vrednostiArgumenata);
         } catch (Exception e) {
             System.out.println("Greska u pozivu SP get_racuniKonobaraKojiNisuZatvoreni! - " + e.toString());
         }
@@ -105,11 +103,9 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
                                     String[] imenaArgumenata = {"racunID","brojIsecka"};
                                     String[] vrednostiArgumenata = {racunID,result.get()};
 
-                                    listRacuni = runStoredProcedure(
-                                            "setRacun_BrojFiskalnogIsecka",
+                                    listRacuni = runStoredProcedure("setRacun_BrojFiskalnogIsecka",
                                             imenaArgumenata,
-                                            vrednostiArgumenata
-                                    );
+                                            vrednostiArgumenata);
                                 } catch (Exception e) {
                                     System.out.println("Greska u pozivu SP get_racuniKonobaraKojiNisuZatvoreni! - " + e.toString());
                                 }

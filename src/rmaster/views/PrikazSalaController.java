@@ -86,11 +86,9 @@ public class PrikazSalaController extends FXMLDocumentController {
         try {
             String[] imenaArgumenata = {"KonobarID"};
             String[] vrednostiArgumenata = {ulogovaniKonobar.konobarID + ""};
-            listSale = runStoredProcedure(
-                    "get_SaleOmoguceneKonobaru",
+            listSale = runStoredProcedure("get_SaleOmoguceneKonobaru",
                     imenaArgumenata,
-                    vrednostiArgumenata
-            );
+                    vrednostiArgumenata);
         } catch (Exception e) {
             System.out.println("Greska u pozivu SP get_SaleOmoguceneKonobaru! - " + e.toString());
         }
@@ -245,11 +243,9 @@ public class PrikazSalaController extends FXMLDocumentController {
         try {
             String[] imenaArgumenata = {"GRAFIK_ID"};
             String[] vrednostiArgumenata = {RMaster.trenutnaSalaID + ""};
-            listStolovi = runStoredProcedure(
-                    "get_StoloviZaPrikaz_BySala", 
+            listStolovi = runStoredProcedure("get_StoloviZaPrikaz_BySala", 
                     imenaArgumenata,
-                    vrednostiArgumenata 
-            );
+                    vrednostiArgumenata);
         } catch (Exception e) {
             System.out.println("Greska u pozivu SP get_SaleOmoguceneKonobaru! - " + e.toString());
         }
@@ -331,6 +327,7 @@ public class PrikazSalaController extends FXMLDocumentController {
                     //b.setDisable(false);
                     b.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override public void handle(ActionEvent e) {
+            long startTime = System.nanoTime();    
                                             Button b = (Button)e.getSource();
                                             RMaster.izabraniStoID = b.getId();
                                             RMaster.izabraniStoBroj = Integer.parseInt(b.getText());
@@ -338,6 +335,10 @@ public class PrikazSalaController extends FXMLDocumentController {
                                                       ScreenMap.PORUDZBINA, 
                                                       true, 
                                                       (Node)e.getSource(), false);
+            long ms;
+            ms = System.nanoTime() - startTime;
+            System.out.format("OD POCETKA DO KRAJA: %,10d%n%n%n", ms);
+//            System.out.println("Ukljuceno - refreshGrupeIliArtikla(this.ArtikalGrupe, GLAVNA_GRUPA): " + ms + "," + mcs);
                                         }
                                     });
                 }

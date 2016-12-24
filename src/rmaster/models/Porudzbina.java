@@ -92,11 +92,14 @@ public class Porudzbina {
     private void popuniTurePorudzbineIzBaze() {
         String[] imenaArgumenata = {"idRacuna"};
         String[] vrednostiArgumenata = {"" + this.racunID};
-        List<Map<String, String>> tureJednogGosta = DBBroker.runStoredProcedure(
-                "getPorudzbinaTure", 
+        
+        long        startTime = System.nanoTime();
+        List<Map<String, String>> tureJednogGosta = DBBroker.runStoredProcedure("getPorudzbinaTure", 
                 imenaArgumenata, 
-                vrednostiArgumenata
-        );
+                vrednostiArgumenata);
+        long        ms = System.nanoTime() - startTime;
+        System.out.format("SP getPorudzbinaTure(): %,10dms%n", ms);
+        
         for (Map<String, String> tura : tureJednogGosta) {
                 String turaId = tura.get("id");
                 String datum = tura.get("datum");
@@ -106,7 +109,11 @@ public class Porudzbina {
                 } catch (ParseException e) {
                     System.out.println("Neuspela konverzija stringa u datum za vreme ture!");
                 }
+                startTime = System.nanoTime();
                 Tura turaModel = new Tura(turaId, datumD);
+                ms = System.nanoTime() - startTime;
+                System.out.format("new Tura(): %,10dms%n", ms);
+        
                 this.turePorudzbine.add(turaModel);
         }
 

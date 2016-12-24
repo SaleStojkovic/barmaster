@@ -48,6 +48,9 @@ import rmaster.models.Tura;
  * @author Bosko
  */
 public class PorudzbinaController extends FXMLDocumentController {
+
+    private long startTime;
+    private long ms;
     
     @FXML
     public HBox ArtikalGrupe;
@@ -206,19 +209,35 @@ public class PorudzbinaController extends FXMLDocumentController {
     public void initData(Object data) {
 
         try {
+            long startTime = System.nanoTime();
             refreshGrupeIliArtikla(this.ArtikalGrupe, GLAVNA_GRUPA);
+            long ms;
+            ms = System.nanoTime() - startTime;
+            System.out.format("refreshGrupeIliArtikla(this.ArtikalGrupe, GLAVNA_GRUPA): %,10dms%n", ms);
+            startTime = System.nanoTime();
             refreshGrupeIliArtikla(this.Artikal, ARTIKAL_FAVORITE);
+            ms = System.nanoTime() - startTime;
+            System.out.format("refreshGrupeIliArtikla(this.Artikal, ARTIKAL_FAVORITE): %,10dms%n", ms);
 
+            startTime = System.nanoTime();
             prikaziPorudzbinu();
+            ms = System.nanoTime() - startTime;
+            System.out.format("prikaziPorudzbinu(): %,10dms%n", ms);
+
+            startTime = System.nanoTime();
             if (this.prikazGostiju.getChildren().isEmpty()) {
-                // TODO: Dodaj prvog gosta i napravi porudzbinu za njega
+                 //TODO: Dodaj prvog gosta i napravi porudzbinu za njega
                 dodajNovogGosta(new ActionEvent());
             }
+            ms = System.nanoTime() - startTime;
+            System.out.format("dodajNovogGosta(new ActionEvent()): %,10dms%n", ms);
 
+            startTime = System.nanoTime();
             Button dugme = (Button)prikazGostiju.getChildren().get(0);
             dugme.fire();
+            ms = System.nanoTime() - startTime;
+            System.out.format("dugme.fire(): %,10dms%n", ms);
 
-            
         } catch (Exception e) {
             System.out.println("Greska u pozivu SP get_racuniKonobaraKojiNisuZatvoreni! - " + e.toString());
         }
@@ -228,10 +247,13 @@ public class PorudzbinaController extends FXMLDocumentController {
            
             prikazRacunaGosta.setHbarPolicy(ScrollBarPolicy.NEVER);
             
+            long startTime = System.nanoTime();
             List racuniStola = DBBroker.get_PorudzbineStolaIKonobara();
-            
+            long ms = System.nanoTime() - startTime;
+            System.out.format("prikaziPorudzbinu() - DBBroker.get_PorudzbineStolaIKonobara(): %,10dms%n", ms);
             for (Object racun : racuniStola) {
             
+                startTime = System.nanoTime();
                 Map<String, String> red = (Map<String, String>) racun;
                 
                 String brojNovogGosta = red.get("gost");
@@ -266,6 +288,9 @@ public class PorudzbinaController extends FXMLDocumentController {
                                 });
 
                 this.prikazGostiju.getChildren().add(b);
+                ms = System.nanoTime() - startTime;
+                System.out.format("prikaziPorudzbinu() - dinamicko kreiranje porudzbine: %,10dms%n", ms);
+            
         }       
         prikazGostijuScrollPane.setContent(prikazGostiju);
     
@@ -402,7 +427,11 @@ public class PorudzbinaController extends FXMLDocumentController {
                     break;
                 default:
             };
+            startTime = System.nanoTime();
             rs = runStoredProcedure(imeStoreProcedure, imenaArgumenata, vrednostiArgumenata);
+            ms = System.nanoTime() - startTime;
+            System.out.format("runStoredProcedure(" + imeStoreProcedure + ", " + imenaArgumenata.toString() + ", " + vrednostiArgumenata.toString() + ");: %,10dms%n", ms);
+
             switch(staSePrikazuje) {
                 case GLAVNA_GRUPA:
                     rsGrupe = rs;
@@ -423,7 +452,10 @@ public class PorudzbinaController extends FXMLDocumentController {
         } catch (Exception e) {
             System.out.println("View \"" + imeStoreProcedure + "\" fetch error!");
         }
+        startTime = System.nanoTime();
         prikazArtikalIliGrupa(rs, gdePrikazati, staSePrikazuje);
+        ms = System.nanoTime() - startTime;
+        System.out.format("prikazArtikalIliGrupa(" + gdePrikazati + ", " + staSePrikazuje + ");: %,10dms%n", ms);
     }
     
 /***************************************************************/
@@ -1114,7 +1146,6 @@ public class PorudzbinaController extends FXMLDocumentController {
                                                         break;
                                                     }
                                                 }
-                                                //novaTura = new Tura();
                                                 break;
                                             }
                                         }

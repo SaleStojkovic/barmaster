@@ -64,11 +64,9 @@ public class PromenaKonobaraController  extends FXMLDocumentController {
         try {
             String[] imenaArgumenata = {"KonobarID"};
             String[] vrednostiArgumenata = {ulogovaniKonobar.konobarID + ""};
-            listStoloviKojeJeKonobarZauzeo =  runStoredProcedure(
-                    "getStoloviKojeJeKonobarZauzeo", 
+            listStoloviKojeJeKonobarZauzeo =  runStoredProcedure("getStoloviKojeJeKonobarZauzeo", 
                     imenaArgumenata,
-                    vrednostiArgumenata
-            );
+                    vrednostiArgumenata);
         } catch (Exception e) {
             System.out.println("Greska u pozivu SP get_SaleOmoguceneKonobaru! - " + e.toString());
         }
