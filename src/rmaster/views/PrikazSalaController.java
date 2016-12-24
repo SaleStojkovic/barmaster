@@ -224,7 +224,7 @@ public class PrikazSalaController extends FXMLDocumentController {
         List<Object> data = new ArrayList<>();
 
         prikaziFormu(data, 
-                ScreenMap.PROMENA_KONOBARA, 
+                ScreenMap.PROMENA_KONOBARA_V2, 
                 false, 
                 (Node)event.getSource(), 
                 true

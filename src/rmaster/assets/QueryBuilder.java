@@ -7,6 +7,8 @@ package rmaster.assets;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -31,6 +33,8 @@ public class QueryBuilder {
     public static String IS_LESS_OR_EQUAL_THAN = " <= '";
     
     public static String IS_LIKE = " COLLATE UTF8_GENERAL_CI LIKE '";
+        
+    public static String NOT_IN = " NOT IN ";
     
     public static String LOGIC_AND = "' AND ";
 
@@ -39,6 +43,7 @@ public class QueryBuilder {
     public static String SORT_ASC = " ASC";
     
     public static String SORT_DESC = " DESC";
+
     
     
     public String TABLE_NAME;
@@ -52,6 +57,8 @@ public class QueryBuilder {
     public ArrayList<String> OPERATORS = new ArrayList<>();
     
     public ArrayList<String> CRITERIA_VALUES = new ArrayList<>();
+    
+    public ArrayList<TableJoin> TABLE_JOINS = new ArrayList<>();
     
     public String GROUP_BY;
     
@@ -67,7 +74,7 @@ public class QueryBuilder {
         this.TABLE_NAME = tableName;
     }
     
-    public void addColumns(String... kolone) {
+    public void setColumns(String... kolone) {
         this.SELECT_COLUMNS.addAll(Arrays.asList(kolone));
     }
     
@@ -100,6 +107,11 @@ public class QueryBuilder {
         this.OFFSET = offset;
     }
     
+    public void addTableJoins(TableJoin... tableJoins)
+    {
+        this.TABLE_JOINS.addAll(Arrays.asList(tableJoins));
+    }
+    
     
     public String toQueryString() {
         String queryString = "SELECT *";
@@ -115,8 +127,15 @@ public class QueryBuilder {
             queryString += SELECT_COLUMNS.get(SELECT_COLUMNS.size() - 1);
         }
         
-        queryString += " FROM " + TABLE_NAME; 
+        queryString += " FROM "; 
                  
+        if (!this.TABLE_JOINS.isEmpty()) {
+            for(TableJoin join : this.TABLE_JOINS) {
+                queryString += join.joinToString();
+            }
+        } else {
+            queryString += TABLE_NAME;
+        }
         
         if (!CRITERIA_COLUMNS.isEmpty()) {
         
@@ -130,20 +149,31 @@ public class QueryBuilder {
                             + CRITERIA.get(i)
                             + CRITERIA_VALUES.get(i) 
                             + OPERATORS.get(i); 
+                    
+                    if (CRITERIA.get(i).equals(NOT_IN)) {
+                        queryString = queryString.substring(0, queryString.length() - 1);
+                    }
                 }
 
                 queryString += CRITERIA_COLUMNS.get(CRITERIA_COLUMNS.size() - 1)
-                        + CRITERIA.get(CRITERIA.size() - 1) 
-                        + CRITERIA_VALUES.get(CRITERIA_COLUMNS.size() - 1) + "'";
+                        + CRITERIA.get(CRITERIA.size() - 1)
+                        + CRITERIA_VALUES.get(CRITERIA_COLUMNS.size() - 1);
+                
+                if (!CRITERIA.get(CRITERIA.size() - 1).equals(NOT_IN)) {
+                        queryString += "'";
+                    }
             }
 
             if (CRITERIA_COLUMNS.size() == 1) {
                 queryString += " WHERE ";
 
                 queryString += CRITERIA_COLUMNS.get(0) 
-                        + CRITERIA.get(0) 
-                        + CRITERIA_VALUES.get(0) 
-                        + "' "; 
+                        + CRITERIA.get(0)
+                        + CRITERIA_VALUES.get(0);
+                        
+                if (!CRITERIA.get(CRITERIA.size() - 1).equals(NOT_IN)) {
+                        queryString += "'";
+                    }
             }
         }
         
@@ -165,5 +195,20 @@ public class QueryBuilder {
         
         queryString += ";";
         return queryString;
+    }
+    
+    public String makeStringForNotInFromListByParam(List<Map<String, String>> list, String paramName) 
+    {
+        String result = "(";
+        
+        for (Map<String, String> map : list) {
+            result += map.get(paramName) + ",";
+        }
+        
+        result = result.substring(0, result.length() - 1);
+
+        result += ")";
+        
+        return result;
     }
 }

@@ -60,7 +60,7 @@ public class AdministracijaController extends FXMLDocumentController{
         try {
             QueryBuilder query = new QueryBuilder();
             query.setTableName("posmeni");
-            query.addColumns("fxID");
+            query.setColumns("fxID");
             query.addCriteriaColumns("korisnikID", "vrstaKorisnika");
             query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
             query.addOperators(QueryBuilder.LOGIC_AND);
