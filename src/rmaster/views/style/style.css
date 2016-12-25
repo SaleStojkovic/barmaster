@@ -639,13 +639,69 @@ and open the template in the editor.
 /*kraj promena konobara*/
 
 
+/** Promena konobara V2 */
+
+
+#promenaKonobaraGlavni_V2 
+{
+    -fx-background-color: -fx-tamno-crna;  
+}
+
+#promenaKonobaraGlavni_V2 *.toggle-button,
+#promenaKonobaraGlavni_V2 *.button
+{
+    -fx-background-color: -fx-tamno-crna;
+    -fx-font-family: KlavikaBold;
+    -fx-text-fill: -fx-zuta;
+    -fx-border-color: white;
+    -fx-border-width: 0.5;
+    -fx-font-size: 18; 
+    -fx-font-weight: bold;
+}
+
+#promenaKonobaraGlavni_V2 *.toggle-button:selected
+{
+    -fx-background-color: -fx-svetlo-crna;
+    -fx-font-family: KlavikaBold;
+    -fx-text-fill: white;
+    -fx-border-color: -fx-siva;
+    -fx-border-width: 0.5;
+    -fx-font-size: 16; 
+}
+
+#saleTabPane *.tab-header-background 
+{
+    -fx-background-color: -fx-tamno-crna
+}
+
+#saleTabPane *.tab .tab-label {
+     -fx-text-fill: -fx-zuta;
+     -fx-font-weight: bold;
+     -fx-font-size: 20px;
+     -fx-font-family: KlavikaBold;
+ }
+
+ 
+#saleTabPane *.tab 
+{
+     -fx-background-color: -fx-tamno-crna;
+
+}
+#saleTabPane *.tab:selected 
+{
+     -fx-background-color: -fx-svetlo-crna;
+}
+
+/** Kraj promene konobara V2 */
+
+
 /* racuni za naplatu */
 
 #racuniZaStampu {
     -fx-background-color: -fx-tamno-crna;
 }
  
-#racuniZaStampu *.button{
+#racuniZaStampu *.button {
     -fx-background-color: -fx-tamno-crna;
     -fx-font-family: KlavikaBold;
     -fx-text-fill: white;

@@ -4,7 +4,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.PromenaKonobara_V2Controller">
+<AnchorPane fx:id="promenaKonobaraGlavni_V2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.PromenaKonobara_V2Controller">
    <children>
       <TabPane fx:id="saleTabPane" layoutY="-1.0" prefHeight="698.0" prefWidth="1024.0" tabClosingPolicy="UNAVAILABLE" />
       <Button fx:id="odustani" layoutY="697.0" mnemonicParsing="false" prefHeight="71.0" prefWidth="180.0" text="Odustani X" />
