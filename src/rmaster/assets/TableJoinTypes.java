@@ -13,4 +13,6 @@ public final class TableJoinTypes {
     
     public static String INNER_JOIN = "INNER JOIN";
     
+    public static String LEFT_JOIN = "LEFT JOIN";
+    
 }

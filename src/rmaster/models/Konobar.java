@@ -7,12 +7,6 @@ package rmaster.models;
 
 import java.util.List;
 import java.util.Map;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import rmaster.assets.DBBroker;
 import rmaster.assets.QueryBuilder;
 import rmaster.assets.TableJoin;
@@ -44,11 +38,11 @@ public class Konobar {
         List<Map<String, String>> sale = this.dajNizGrafikSale();
         
         QueryBuilder query = new QueryBuilder();
-        String saleString = query.makeStringForNotInFromListByParam(sale, "grafik_id");
+        String saleString = query.makeStringForInCriteriaFromListByParam(sale, "grafik_id");
         
         query.setTableName("grafiksale");
         query.addCriteriaColumns("id");
-        query.addCriteria(QueryBuilder.NOT_IN);
+        query.addCriteria(QueryBuilder.IS_NOT_IN);
         query.addCriteriaValues(saleString);
         
         return dbBroker.runQuery(query);
@@ -86,4 +80,44 @@ public class Konobar {
         
         return dbBroker.runQuery(query);
     }
+                
+    public List<Map<String, String>> stoloviZaPrikazPromeneKonobara(String salaId)
+    {
+        QueryBuilder query = new QueryBuilder();
+        
+        List<Map<String, String>> stoloviKojeJeKonobarZauzeo = this.stoloviKojeJeKonobarZauzeo();
+        
+        query.addTableJoins(
+                new TableJoin(
+                        "stoprikaz",
+                        "stonaziv",
+                        "broj",
+                        "broj",
+                        TableJoinTypes.LEFT_JOIN
+                ),
+                new TableJoin(
+                        "stoprikaz",
+                        "sto",
+                        "broj",
+                        "broj",
+                        TableJoinTypes.LEFT_JOIN
+                ),
+                new TableJoin(
+                        "stoprikaz",
+                        "rezervacija",
+                        "broj",
+                        "brStola",
+                        TableJoinTypes.LEFT_JOIN
+                )
+        );
+        
+        query.addCriteriaColumns("stoprikaz.GRAFIK_ID", "sto.id");
+        query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_IN);
+        query.addOperators(QueryBuilder.LOGIC_AND);
+        query.addCriteriaValues(
+                salaId, 
+                query.makeStringForInCriteriaFromListByParam(stoloviKojeJeKonobarZauzeo, "id"));
+        
+        return dbBroker.runQuery(query);
+    }            
 }

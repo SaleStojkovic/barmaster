@@ -209,32 +209,6 @@ public class FXMLDocumentController implements Initializable {
          
         return listaRezultata;
     }       
-    
-    /**
-     * 
-     * @param imeTabele
-     * @param uslovneKolone
-     * @param uslovneVrednosti
-     * @return
-     */
-    public List vratiSveIzTabeleUzUslov(
-            String imeTabele,
-            String[] uslovneKolone,
-            String[] uslovneVrednosti
-    ) {
-        List<Map<String, String>> listaRezultata = null;
-        try{
-        listaRezultata = DBBroker.vratiSveIzTabeleUzUslov(
-                imeTabele, 
-                uslovneKolone, 
-                uslovneVrednosti
-        );
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-         
-        return listaRezultata;
-    }
      
      
     /* BOSKO DODAO */

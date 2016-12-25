@@ -31,6 +31,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.QueryBuilder;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
@@ -177,14 +178,14 @@ public class PorudzbinaController extends FXMLDocumentController {
 
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
-        String[] uslovneKolone = {"id"};
-        String[] uslovneVrednosti = {rmaster.RMaster.izabraniStoID};
+        QueryBuilder query = new QueryBuilder();
         
-        List<Map<String, String>> resultList = vratiSveIzTabeleUzUslov(
-                "stonaziv", 
-                uslovneKolone, 
-                uslovneVrednosti
-        );
+        query.setTableName("stonaziv");
+        query.addCriteriaColumns("id");
+        query.addCriteria(QueryBuilder.IS_EQUAL);
+        query.addCriteriaValues(rmaster.RMaster.izabraniStoID);
+        
+        List<Map<String, String>> resultList = this.runQuery(query);
         
         String imeStola = rmaster.RMaster.izabraniStoID;
         

@@ -11,7 +11,7 @@ package rmaster.assets;
  */
 public class TableJoin {
     
-    private final String FIRST_TABLE;
+    public String FIRST_TABLE;
     
     private final String SECOND_TABLE;
     
@@ -21,6 +21,14 @@ public class TableJoin {
     
     private final String JOIN_TYPE;
     
+    /**
+     * 
+     * @param firstTableName
+     * @param secondTableName
+     * @param firstKey
+     * @param secondKey
+     * @param joinType 
+     */
     public TableJoin (
             String firstTableName,
             String secondTableName,
@@ -40,8 +48,7 @@ public class TableJoin {
     {
         String joinString;
         
-        joinString = this.FIRST_TABLE + " "
-                + this.JOIN_TYPE + " "
+        joinString = this.JOIN_TYPE + " "
                 + this.SECOND_TABLE 
                 + " ON "
                 + this.FIRST_TABLE + "."
@@ -52,4 +59,5 @@ public class TableJoin {
         
         return joinString;
     }
+    
 }

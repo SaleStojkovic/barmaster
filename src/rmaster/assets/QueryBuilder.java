@@ -34,7 +34,9 @@ public class QueryBuilder {
     
     public static String IS_LIKE = " COLLATE UTF8_GENERAL_CI LIKE '";
         
-    public static String NOT_IN = " NOT IN ";
+    public static String IS_NOT_IN = " NOT IN ";
+    
+    public static String IS_IN = " IN ";
     
     public static String LOGIC_AND = "' AND ";
 
@@ -130,9 +132,14 @@ public class QueryBuilder {
         queryString += " FROM "; 
                  
         if (!this.TABLE_JOINS.isEmpty()) {
+            
+            queryString += this.TABLE_JOINS.get(0).FIRST_TABLE + " ";
+            
             for(TableJoin join : this.TABLE_JOINS) {
+                
                 queryString += join.joinToString();
             }
+            
         } else {
             queryString += TABLE_NAME;
         }
@@ -150,7 +157,7 @@ public class QueryBuilder {
                             + CRITERIA_VALUES.get(i) 
                             + OPERATORS.get(i); 
                     
-                    if (CRITERIA.get(i).equals(NOT_IN)) {
+                    if (CRITERIA.get(i).equals(IS_NOT_IN)) {
                         queryString = queryString.substring(0, queryString.length() - 1);
                     }
                 }
@@ -159,7 +166,8 @@ public class QueryBuilder {
                         + CRITERIA.get(CRITERIA.size() - 1)
                         + CRITERIA_VALUES.get(CRITERIA_COLUMNS.size() - 1);
                 
-                if (!CRITERIA.get(CRITERIA.size() - 1).equals(NOT_IN)) {
+                if (!CRITERIA.get(CRITERIA.size() - 1).equals(IS_NOT_IN) 
+                        && !CRITERIA.get(CRITERIA.size() - 1).equals(IS_IN)) {
                         queryString += "'";
                     }
             }
@@ -171,7 +179,8 @@ public class QueryBuilder {
                         + CRITERIA.get(0)
                         + CRITERIA_VALUES.get(0);
                         
-                if (!CRITERIA.get(CRITERIA.size() - 1).equals(NOT_IN)) {
+                if (!CRITERIA.get(CRITERIA.size() - 1).equals(IS_NOT_IN)
+                        && !CRITERIA.get(CRITERIA.size() - 1).equals(IS_IN)) {
                         queryString += "'";
                     }
             }
@@ -197,7 +206,7 @@ public class QueryBuilder {
         return queryString;
     }
     
-    public String makeStringForNotInFromListByParam(List<Map<String, String>> list, String paramName) 
+    public String makeStringForInCriteriaFromListByParam(List<Map<String, String>> list, String paramName) 
     {
         String result = "(";
         
