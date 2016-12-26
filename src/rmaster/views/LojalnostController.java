@@ -21,7 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
-import rmaster.assets.QueryBuilder;
+import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.ScreenMap;
 import rmaster.models.Porudzbina;
 import rmaster.models.StalniGost;

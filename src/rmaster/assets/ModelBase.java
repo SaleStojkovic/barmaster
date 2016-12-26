@@ -5,6 +5,7 @@
  */
 package rmaster.assets;
 
+import rmaster.assets.QueryBuilder.QueryBuilder;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -19,7 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import rmaster.assets.FXMLDocumentController;
-import rmaster.assets.QueryBuilder;
+import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.ScreenMap;
 import rmaster.models.LoginAction;
 /**

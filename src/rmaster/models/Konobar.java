@@ -8,9 +8,9 @@ package rmaster.models;
 import java.util.List;
 import java.util.Map;
 import rmaster.assets.DBBroker;
-import rmaster.assets.QueryBuilder;
-import rmaster.assets.TableJoin;
-import rmaster.assets.TableJoinTypes;
+import rmaster.assets.QueryBuilder.QueryBuilder;
+import rmaster.assets.QueryBuilder.TableJoin;
+import rmaster.assets.QueryBuilder.TableJoinTypes;
 
 /**
  *

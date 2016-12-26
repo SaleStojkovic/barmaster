@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rmaster.assets;
+package rmaster.assets.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import static rmaster.assets.QueryBuilder.IS_IN;
-import static rmaster.assets.QueryBuilder.IS_NOT_IN;
+import static rmaster.assets.QueryBuilder.QueryBuilder.IS_IN;
+import static rmaster.assets.QueryBuilder.QueryBuilder.IS_NOT_IN;
 
 /**
  *

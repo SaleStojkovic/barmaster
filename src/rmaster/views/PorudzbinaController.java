@@ -33,7 +33,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
-import rmaster.assets.QueryBuilder;
+import rmaster.assets.QueryBuilder.QueryBuilder;
+import rmaster.assets.RM_TableView.RM_TableView;
+import rmaster.assets.RM_TableView.RavnanjeKolone;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
@@ -157,11 +159,11 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     public Map<String,List> racuniStolaPoGostima = new HashMap<>();
     
-    public TableView<Map<String, String>> tabelaNovaTuraGosta = new TableView<>();
+    public RM_TableView tabelaNovaTuraGosta = new RM_TableView();
 
     private List<Porudzbina> porudzbineStola = new ArrayList<Porudzbina>();
     
-    int[] sirinaKolonaTabele = {0, 0, 322, 0, 40, 0, 61, 0, 0, 0};
+    Integer[] sirinaKolonaTabele = {0, 0, 322, 0, 40, 0, 61, 0, 0, 0};
     
     List<Map<String, String>> tureTrenutnoIzabranogGosta = new ArrayList<>();
     
@@ -178,8 +180,9 @@ public class PorudzbinaController extends FXMLDocumentController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        tabelaNovaTuraGosta.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
+        tabelaNovaTuraGosta.addRavnjanje(
+            new RavnanjeKolone(3, RavnanjeKolone.ALIGN_RIGHT)
+        );
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
@@ -290,14 +293,20 @@ public class PorudzbinaController extends FXMLDocumentController {
         paneTura.setPadding(new Insets(0, 0, 0, 0));
         
         for (Tura tura : porudzbina.getTure()) {
-            TableView<Map<String, String>> tabelaNoveTure = new TableView<>();
+            RM_TableView tabelaNoveTure = new RM_TableView();
             tabelaNoveTure.setSelectionModel(null);
-            if (tura.getTuraID() == 0)
+            
+            if (tura.getTuraID() == 0) {
                 novaTura = tura;
-            tabelaNoveTure = tableHelper.formatirajTabelu(
-                    tabelaNoveTure,
-                    tura.dajTuru(),
-                    sirinaKolonaTabele
+            }
+            
+            tabelaNoveTure.addRavnjanje(
+                    new RavnanjeKolone(3, RavnanjeKolone.ALIGN_RIGHT)
+            );
+            
+            tabelaNoveTure.setSirineKolona(sirinaKolonaTabele);
+            tabelaNoveTure.formatirajTabelu(
+                    tura.dajTuru()
             );
             
             Button ponoviTuru = new Button();
@@ -345,12 +354,10 @@ public class PorudzbinaController extends FXMLDocumentController {
 
         if (novaTura != null) {
 
-            TableView<Map<String, String>> novaTabela = new TableView<>();
             tabelaNovaTuraGosta.getItems().clear();
-            tabelaNovaTuraGosta = tableHelper.formatirajTabelu(
-                        novaTabela,
-                        novaTura.dajTuru(),
-                        sirinaKolonaTabele
+            tabelaNovaTuraGosta.setSirineKolona(sirinaKolonaTabele);
+            tabelaNovaTuraGosta.formatirajTabelu(
+                        novaTura.dajTuru()
                 );
             tabelaNovaTuraGosta.getSelectionModel().select(novaTura.listStavkeTure.size() - 1);
 
@@ -987,22 +994,21 @@ public class PorudzbinaController extends FXMLDocumentController {
                 listTura.add(stavkaOpisni.dajStavkuTure());
             }
         }
-                
-        TableView<Map<String, String>> novaTabela = new TableView<>();
-        
+                       
         tabelaNovaTuraGosta.getItems().clear();
         
         if (listTura.isEmpty()) {
             return;
         }
-            
-        tabelaNovaTuraGosta = tableHelper.formatirajTabelu(novaTabela,
-                    listTura,
-                    sirinaKolonaTabele
+        
+        tabelaNovaTuraGosta.setSirineKolona(sirinaKolonaTabele);
+        
+        tabelaNovaTuraGosta.formatirajTabelu(
+                    listTura
             );
         
         tabelaNovaTuraGosta.getSelectionModel().select(
-                tableHelper.getRowIndexOfStavka(tabelaNovaTuraGosta, selektovana)
+                getRowIndexOfStavka(tabelaNovaTuraGosta, selektovana)
         );
  
         prikazRacunaGosta.setContent(tabelaNovaTuraGosta);

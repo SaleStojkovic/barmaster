@@ -1,5 +1,6 @@
 package rmaster.assets;
  
+import rmaster.assets.QueryBuilder.QueryBuilder;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -33,7 +33,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 import rmaster.assets.FXMLDocumentController;
-import rmaster.assets.QueryBuilder;
+import rmaster.assets.QueryBuilder.QueryBuilder;
+import rmaster.assets.RM_TableView.RM_TableView;
 import rmaster.assets.ScreenMap;
 import rmaster.models.Rezervacija;
 
@@ -83,9 +84,9 @@ public class RezervacijeController extends FXMLDocumentController {
     private Button sortVreme;
     
     
-    public TableView<Map<String, String>> tabelaRezervacija = new TableView<>();
+    public RM_TableView tabelaRezervacija = new RM_TableView();
             
-    public int[] sirinaKolonaTabele = {140, 100, 100, 100, 100, 100, 250, 0};
+    public Integer[] sirinaKolonaTabele = {140, 100, 100, 100, 100, 100, 250, 0};
     
     /**
      * Initializes the controller class.
@@ -97,12 +98,10 @@ public class RezervacijeController extends FXMLDocumentController {
         
         List<Map<String, String>> listaZaPrikaz = getRezervacije();
         
-        tableHelper.izbrisiSveIzTabele(tabelaRezervacija);
-        
-        tabelaRezervacija = tableHelper.formatirajTabelu(
-                tabelaRezervacija, 
-                listaZaPrikaz,
-                sirinaKolonaTabele
+        tabelaRezervacija.izbrisiSveIzTabele();
+        tabelaRezervacija.setSirineKolona(sirinaKolonaTabele);
+        tabelaRezervacija.formatirajTabelu(
+                listaZaPrikaz
         );
         
 
@@ -413,10 +412,8 @@ public class RezervacijeController extends FXMLDocumentController {
                 sortCriteria = Rezervacija.VREME;
         } 
 
-        tableHelper.sortTableByColumn(
-                tabelaRezervacija, 
-                sortCriteria, 
-                this.sirinaKolonaTabele
+        tabelaRezervacija.sortTableByColumn(
+                sortCriteria
         );
         
         tabelaRezervacija.getSelectionModel().select(tabelaRezervacija.getItems().size() - 1);        

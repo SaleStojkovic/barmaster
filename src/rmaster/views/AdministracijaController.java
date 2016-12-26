@@ -15,7 +15,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import rmaster.assets.FXMLDocumentController;
-import rmaster.assets.QueryBuilder;
+import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 import rmaster.models.StalniGost;

@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rmaster.assets;
+package rmaster.assets.RM_TableView;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Collections;
-import static java.util.Collections.list;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -16,56 +15,74 @@ import java.util.Set;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.VPos;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import rmaster.models.StavkaTure;
 
 
-public class TableHelper {
+public class RM_TableView extends TableView<Map<String, String>> {
+
+    public List<Integer> SIRINE_KOLONA =  new ArrayList<>();
     
-    /**
-     * 
-     * @param novaTabela
-     * @param lista
-     * @param sirineKolone
-     * @return 
-     */
-    public  TableView<Map<String, String>> formatirajTabelu(
-            TableView<Map<String, String>> novaTabela,
-            List<Map<String, String>> lista,
-            int[] sirineKolone
-        ) 
+    public List<RavnanjeKolone> RAVNANJA_KOLONA =  new ArrayList<>();
+
+    public void setSirineKolona(Integer... sirineKolona)
     {
-        novaTabela = popuniTabelu(novaTabela, lista);
-        
-        int brojac = 0;
-        
-        for(int sirina : sirineKolone) {
-                        
-            novaTabela.getColumns().get(brojac).setPrefWidth(sirineKolone[brojac]);
-
-            if (sirina == 0) {
-                novaTabela.getColumns().get(brojac).setVisible(false);
-            }
-            
-            brojac++;
-            
-        }
-
-        novaTabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        
-        return novaTabela;
+        this.SIRINE_KOLONA.addAll(Arrays.asList(sirineKolona));
+    }
+    
+    public void addRavnjanje(RavnanjeKolone... novoRavnanje) 
+    {
+        RAVNANJA_KOLONA.addAll(Arrays.asList(novoRavnanje));
     }
     
     /**
      * 
-     * @param tabela
-     * @param listaPodataka
-     * @return 
+     * @param lista
      */
-    public TableView<Map<String,String>> popuniTabelu(
-            TableView<Map<String,String>> tabela,
+    public void formatirajTabelu (
+            List<Map<String, String>> lista
+        ) 
+    {
+        popuniTabelu(lista);
+        
+        if (!SIRINE_KOLONA.isEmpty()) {
+            
+            int brojac = 0;
+
+            for(int sirina : this.SIRINE_KOLONA) {
+
+                this.getColumns().get(brojac).setPrefWidth(SIRINE_KOLONA.get(brojac));
+
+
+                if (sirina == 0) {
+                    this.getColumns().get(brojac).setVisible(false);
+                }
+
+                brojac++;
+
+            }
+        }
+        
+        if (!this.RAVNANJA_KOLONA.isEmpty()) {
+                        
+            for (RavnanjeKolone ravnanje : RAVNANJA_KOLONA) {
+                                
+                this.getColumns().get(ravnanje.BROJ_KOLONE - 1).getStyleClass().add(ravnanje.RAVNANJE);
+
+            }
+            
+        }
+
+        this.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        
+    }
+    
+    /**
+     * 
+     * @param listaPodataka
+     */
+    public void popuniTabelu(
             List<Map<String, String>> listaPodataka
     ) {
         ObservableList<Map<String, String>> tableList = FXCollections.observableArrayList(listaPodataka);            
@@ -77,7 +94,7 @@ public class TableHelper {
             Set<String> keys = row.keySet();
             
             String[] kolone = keys.toArray(new String[keys.size()]);
-            
+                        
             for (int i = 0; i < keys.size(); i++) {
                  
                 TableColumn<Map<String, String>, String> column = new TableColumn<>();
@@ -89,7 +106,7 @@ public class TableHelper {
                     Map<String, String> rowValues = data.getValue();
                     String cellValue;
                     cellValue = rowValues.get(colIndex);
-                    
+                                        
                     if(cellValue == null) {
                         return new ReadOnlyStringWrapper("-/-");
                     }
@@ -97,58 +114,38 @@ public class TableHelper {
                     return new ReadOnlyStringWrapper(cellValue);
             });
                 
-               tabela.getColumns().add(column);
+               this.getColumns().add(column);
                
             }
             
             for (int j = 0; j < listaPodataka.size(); j++) {
-                tabela.getItems().add(tableList.get(j));
+                this.getItems().add(tableList.get(j));
             }
             
-            tabela.setFixedCellSize(35);
+            this.setFixedCellSize(35);
             int brojRedova = listaPodataka.size();
-            tabela.setPrefHeight(brojRedova * tabela.getFixedCellSize() + 3);
-            tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            this.setPrefHeight(brojRedova * this.getFixedCellSize() + 3);
+            this.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         }
-        return tabela;
     }  
     
-    public void izbrisiSveIzTabele(TableView<Map<String,String>> tabela) 
+    public void izbrisiSveIzTabele() 
     {
-        for ( int i = 0; i< tabela.getItems().size(); i++) {
-                tabela.getItems().clear();
+        for ( int i = 0; i< this.getItems().size(); i++) {
+                this.getItems().clear();
         }
         
     }
     
-    public int getRowIndexOfStavka(TableView<Map<String,String>> tabela, StavkaTure stavka) {
-        int brojac = 0;
-        int redniBrojKolone_RedniBroj = 6;
-        int redniBrojKolone_RedniBrojGlavneStavke = 5;
-        
-        TableColumn kolonaRB = tabela.getColumns().get(redniBrojKolone_RedniBroj);
-        TableColumn kolonaGlavniRB = tabela.getColumns().get(redniBrojKolone_RedniBrojGlavneStavke);
-        
-        for (Object row : tabela.getItems()) {
-            if (kolonaRB.getCellObservableValue(row).getValue().equals("" + stavka.getRedniBroj())
-                && kolonaGlavniRB.getCellObservableValue(row).getValue().equals("" + stavka.getRedniBrojGlavneStavke())) {
-                    tabela.getSelectionModel().select(brojac);
-                    return brojac;
-            }
-            brojac++;
-        }
-        return -1;
-    }
+
     
     public void sortTableByColumn(
-            TableView<Map<String,String>> tabela, 
-            String columnName,
-            int[] sirineKolone
+            String columnName
     ) {
         
         List<Map<String, String>> listaPodataka = new ArrayList<>();
         
-            for (Map<String, String> map : tabela.getItems()) {
+            for (Map<String, String> map : this.getItems()) {
                 listaPodataka.add(map);
             }        
             
@@ -159,12 +156,13 @@ public class TableHelper {
             };
 
             Collections.sort(listaPodataka, mapComparator);
-            this.izbrisiSveIzTabele(tabela);
-            this.formatirajTabelu(
-                    tabela, 
-                    listaPodataka,
-                    sirineKolone
+            
+            this.izbrisiSveIzTabele();
+            
+            this.formatirajTabelu( 
+                    listaPodataka
                     );
     }
 
+    
 }

@@ -1131,7 +1131,7 @@ and open the template in the editor.
 .table-view .scroll-bar:vertical *.decrement-button,
 .table-view .scroll-bar:vertical *.increment-arrow, 
 .table-view .scroll-bar:vertical *.decrement-arrow,
-table-view .scroll-bar:horizontal *.increment-button,
+.table-view .scroll-bar:horizontal *.increment-button,
 .table-view .scroll-bar:horizontal *.decrement-button,
 .table-view .scroll-bar:horizontal *.increment-arrow, 
 .table-view .scroll-bar:horizontal *.decrement-arrow
@@ -1139,4 +1139,19 @@ table-view .scroll-bar:horizontal *.increment-button,
     -fx-background-color: -fx-tamno-crna;
     visibility: hidden;
     -fx-padding: -1em;
+}
+
+.poravnaj-desno 
+{
+  -fx-alignment: TOP_RIGHT;
+}
+
+.poravnaj-levo
+{
+    -fx-alignment: TOP_LEFT; 
+}
+
+.poravnaj-centar
+{
+    -fx-alignment: CENTER; 
 }

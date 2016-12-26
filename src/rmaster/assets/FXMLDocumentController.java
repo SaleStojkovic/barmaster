@@ -5,6 +5,7 @@
  */
 package rmaster.assets;
  
+import rmaster.assets.QueryBuilder.QueryBuilder;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -30,6 +31,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -38,6 +41,7 @@ import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import rmaster.RMaster;
 import rmaster.models.Konobar;
+import rmaster.models.StavkaTure;
 
 /**
  *
@@ -52,7 +56,6 @@ public class FXMLDocumentController implements Initializable {
     
     public DBBroker DBBroker;
     public RMaster RMaster;
-    public TableHelper tableHelper;
     
     public Konobar ulogovaniKonobar;
     public Object data;
@@ -61,7 +64,6 @@ public class FXMLDocumentController implements Initializable {
         
         try {
             DBBroker = new DBBroker();
-            tableHelper = new TableHelper();
         } catch (Exception ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -428,24 +430,24 @@ public class FXMLDocumentController implements Initializable {
     }
     
     
-    public static Map<String, Object> ConvertObjectToMap(Object obj) throws 
-    IllegalAccessException, 
-    IllegalArgumentException, 
-    InvocationTargetException 
-    {
-        Class<?> pomclass = obj.getClass();
-        pomclass = obj.getClass();
-        Method[] methods = obj.getClass().getMethods();
-
-
-        Map<String, Object> map = new HashMap<String, Object>();
-        for (Method m : methods) {
-           if (m.getName().startsWith("get") && !m.getName().startsWith("getClass")) {
-              Object value = (Object) m.invoke(obj);
-              map.put(m.getName().substring(3), (Object) value);
-           }
+    public int getRowIndexOfStavka(TableView<Map<String,String>> tabela, StavkaTure stavka) {
+        int brojac = 0;
+        int redniBrojKolone_RedniBroj = 6;
+        int redniBrojKolone_RedniBrojGlavneStavke = 5;
+        
+        TableColumn kolonaRB = tabela.getColumns().get(redniBrojKolone_RedniBroj);
+        TableColumn kolonaGlavniRB = tabela.getColumns().get(redniBrojKolone_RedniBrojGlavneStavke);
+        
+        for (Object row : tabela.getItems()) {
+            if (kolonaRB.getCellObservableValue(row).getValue().equals("" + stavka.getRedniBroj())
+                && kolonaGlavniRB.getCellObservableValue(row).getValue().equals("" + stavka.getRedniBrojGlavneStavke())) {
+                    tabela.getSelectionModel().select(brojac);
+                    return brojac;
+            }
+            brojac++;
         }
-        return map;
+        return -1;
     }
 
+    
 }
