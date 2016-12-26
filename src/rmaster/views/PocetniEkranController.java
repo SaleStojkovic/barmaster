@@ -78,7 +78,7 @@ public class PocetniEkranController extends FXMLDocumentController {
         
         akcija.takeAction(lozinkaText);
         
-        QueryBuilder query = new QueryBuilder();
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         query.setTableName("konobar");
         query.addCriteriaColumns("pin");
         query.addCriteria(QueryBuilder.IS_EQUAL);

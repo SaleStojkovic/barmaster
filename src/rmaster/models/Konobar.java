@@ -7,12 +7,6 @@ package rmaster.models;
 
 import java.util.List;
 import java.util.Map;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import rmaster.assets.DBBroker;
 import rmaster.assets.QueryBuilder;
 import rmaster.assets.TableJoin;
@@ -43,23 +37,26 @@ public class Konobar {
     {
         List<Map<String, String>> sale = this.dajNizGrafikSale();
         
-        QueryBuilder query = new QueryBuilder();
-        String saleString = query.makeStringForNotInFromListByParam(sale, "grafik_id");
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         
         query.setTableName("grafiksale");
-        query.addCriteriaColumns("id");
-        query.addCriteria(QueryBuilder.NOT_IN);
-        query.addCriteriaValues(saleString);
         
+        if (!sale.isEmpty()) {
+            String saleString = query.makeStringForInCriteriaFromListByParam(sale, "grafik_id");
+            query.addCriteriaColumns("id");
+            query.addCriteria(QueryBuilder.IS_NOT_IN);
+            query.addCriteriaValues(saleString);
+        }
+
         return dbBroker.runQuery(query);
     }
     
     private List<Map<String, String>> dajNizGrafikSale()
     {
-        QueryBuilder query = new QueryBuilder();
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
 
         query.setTableName("grafik_konobar");
-        query.setColumns("grafik_id");
+        query.setSelectColumns("grafik_id");
         query.addCriteriaColumns("konobar_id");
         query.addCriteria(QueryBuilder.IS_EQUAL);
         query.addCriteriaValues(this.konobarID + "");
@@ -69,7 +66,7 @@ public class Konobar {
     
     public List<Map<String, String>> stoloviKojeJeKonobarZauzeo()
     {
-        QueryBuilder query = new QueryBuilder();
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         TableJoin tableJoin = new TableJoin(
                 "sto", 
                 "stonaziv", 
@@ -79,11 +76,75 @@ public class Konobar {
         );
         
         query.addTableJoins(tableJoin);
-        query.setColumns("sto.id","sto.broj","sto.blokiran","stonaziv.naziv");
+        query.setSelectColumns("sto.id","sto.broj","sto.blokiran","stonaziv.naziv");
         query.addCriteriaColumns("KONOBAR_ID");
         query.addCriteria(QueryBuilder.IS_EQUAL);
         query.addCriteriaValues(this.konobarID + "");
         
         return dbBroker.runQuery(query);
     }
+        
+    public List<Map<String, String>> stoloviZaPrikazPromeneKonobara(String salaId)
+    {
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+                
+        query.addTableJoins(
+                new TableJoin(
+                        "stoprikaz",
+                        "sto",
+                        "broj",
+                        "broj",
+                        TableJoinTypes.INNER_JOIN
+                ),
+                new TableJoin(
+                        "stoprikaz",
+                        "stonaziv",
+                        "broj",
+                        "broj",
+                        TableJoinTypes.LEFT_JOIN
+                ) 
+        );
+        
+        query.setSelectColumns("stoprikaz.*", "stonaziv.naziv");
+        query.addCriteriaColumns("sto.KONOBAR_ID", "stoprikaz.GRAFIK_ID");
+        query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
+        query.addOperators(QueryBuilder.LOGIC_AND);
+        query.addCriteriaValues(
+                this.konobarID + "", 
+                salaId
+        );
+        
+        return dbBroker.runQuery(query);
+    }  
+    
+
+    public void promenaStolova(String stariKonobarId, List<String> brojeviStolova)
+    {
+        for (int i = 0; i < brojeviStolova.size() - 1; i++)
+        {
+            QueryBuilder query = new QueryBuilder(QueryBuilder.UPDATE);
+            query.setTableName("sto");
+            query.setUpdateColumns("KONOBAR_ID");
+            query.setUpdateColumnValues(this.konobarID + "");
+            query.addCriteriaColumns("KONOBAR_ID", "broj");
+            query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
+            query.addOperators(QueryBuilder.LOGIC_AND);
+            query.addCriteriaValues(stariKonobarId, brojeviStolova.get(i));
+            
+            dbBroker.runQuery(query, Boolean.TRUE);
+            
+        }
+        
+        QueryBuilder query = new QueryBuilder(QueryBuilder.UPDATE);
+        query.setTableName("sto");
+        query.setUpdateColumns("KONOBAR_ID");
+        query.setUpdateColumnValues(this.konobarID + "");
+        query.addCriteriaColumns("KONOBAR_ID", "broj");
+        query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
+        query.addOperators(QueryBuilder.LOGIC_AND);
+        query.addCriteriaValues(stariKonobarId, brojeviStolova.get(brojeviStolova.size() - 1));
+
+        dbBroker.runQuery(query);
+    }
+    
 }

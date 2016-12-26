@@ -195,7 +195,11 @@ public class FXMLDocumentController implements Initializable {
         }
     }
      
-    
+    /**
+     * 
+     * @param query
+     * @return 
+     */
     public List runQuery(QueryBuilder query) 
     {
         List<Map<String, String>> listaRezultata = null;
@@ -208,33 +212,27 @@ public class FXMLDocumentController implements Initializable {
         }
          
         return listaRezultata;
-    }       
+    }  
     
     /**
      * 
-     * @param imeTabele
-     * @param uslovneKolone
-     * @param uslovneVrednosti
-     * @return
+     * @param query
+     * @param ostaviKonekciju
+     * @return 
      */
-    public List vratiSveIzTabeleUzUslov(
-            String imeTabele,
-            String[] uslovneKolone,
-            String[] uslovneVrednosti
-    ) {
+    public List runQuery(QueryBuilder query, Boolean ostaviKonekciju) 
+    {
         List<Map<String, String>> listaRezultata = null;
-        try{
-        listaRezultata = DBBroker.vratiSveIzTabeleUzUslov(
-                imeTabele, 
-                uslovneKolone, 
-                uslovneVrednosti
-        );
+         
+         try{
+            listaRezultata = DBBroker.runQuery(query, ostaviKonekciju);
+        
         } catch (Exception e) {
             System.out.println(e);
         }
          
         return listaRezultata;
-    }
+    }   
      
      
     /* BOSKO DODAO */

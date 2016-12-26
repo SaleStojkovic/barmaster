@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import rmaster.assets.DBBroker;
+import rmaster.assets.QueryBuilder;
 import rmaster.assets.Utils;
 
 /**
@@ -120,14 +121,17 @@ public class Porudzbina {
         // TODO: Pokupi stavke racuna, treba voditi racuna u kojoj je turi, za svaku novu kreirati novu Tura, i dodati StavkaTure u Tura
     }
     
-    private void popuniPorudzbinuIzBaze() {
-        //java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String[] uslovKolone = new String[1];
-        uslovKolone[0] = "id";
-        String[] uslovVrednosti = new String[1];
-        uslovVrednosti[0] = "" + this.racunID;
+    private void popuniPorudzbinuIzBaze() 
+    {
+        
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+        query.setTableName("racun");
+        query.addCriteriaColumns("id");
+        query.addCriteria(QueryBuilder.IS_EQUAL);
+        query.addCriteriaValues(this.racunID + "");
+        
         try {
-            List podaci = new DBBroker().vratiSveIzTabeleUzUslov("racun", uslovKolone, uslovVrednosti);
+            List podaci = new DBBroker().runQuery(query);
             if (!podaci.isEmpty()) {
                 Map<String,String>  porudzbina = (Map<String, String>)podaci.get(0);
                 if (porudzbina != null) {

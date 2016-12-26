@@ -160,7 +160,7 @@ public class RezervacijeController extends FXMLDocumentController {
     
     public List<Map<String, String>> getRezervacije() {
         
-        QueryBuilder query = new QueryBuilder();
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         query.setTableName(Rezervacija.TABLE_NAME);
         
         List<HashMap<String,String>> listaRezervacija = runQuery(query);

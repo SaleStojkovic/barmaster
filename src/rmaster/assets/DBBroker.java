@@ -330,68 +330,6 @@ public final class DBBroker {
     
     /**
      * 
-     * @param imeTabele
-     * @param uslovneKolone
-     * @param uslovneVrednosti
-     * @return
-     * @throws Exception 
-     */
-    public List vratiSveIzTabeleUzUslov(
-            String imeTabele,
-            String[] uslovneKolone,
-            String[] uslovneVrednosti
-    ) throws Exception {
-        Connection dbConnection = null;
-        Statement selectStatement = null;
-        ResultSet setRezultata = null;
-        List listaRezultata = null;
-         
-        int brojKolona = uslovneKolone.length;
-        
-        String selectQuery = "SELECT * FROM " + imeTabele + " WHERE ";
-              
-        for (int i = 0; i < brojKolona-1; i++) {
-            selectQuery += uslovneKolone[i] + " = '" + uslovneVrednosti[i] + "' AND "; 
-        }
-        
-        selectQuery += uslovneKolone[brojKolona-1] + " = '" + uslovneVrednosti[brojKolona-1] + "';";
-        
-        try {
-            dbConnection = poveziSaBazom();
-            
-            selectStatement = dbConnection.createStatement();
- 
-            setRezultata = selectStatement.executeQuery(selectQuery);
- 
-            listaRezultata = this.prebaciUListu(setRezultata);
-            
-        } catch (SQLException e) {
- 
-            System.out.println(e.getMessage());
- 
-        } finally {
-            
-            if (setRezultata != null) {
-                try { setRezultata.close(); } catch (SQLException ignore) {}
-            }
-            
-            if (selectStatement != null) {
-                try { selectStatement.close(); } catch (SQLException ignore) {}
-            }
-            
-            if (dbConnection != null) {
-                try { dbConnection.close(); } catch (SQLException ignore) {}
-            }
-            
-            
-        } 
- 
-         
-        return listaRezultata; 
-    }
-    
-    /**
-     * 
      * @param query
      * @return 
      */
@@ -402,16 +340,29 @@ public final class DBBroker {
         ResultSet setRezultata = null;
         List listaRezultata = null;
          
-        String selectQuery = query.toQueryString();
+        String queryString = query.toQueryString();
         
         try {
             dbConnection = poveziSaBazom();
             
-            selectStatement = dbConnection.createStatement();
- 
-            setRezultata = selectStatement.executeQuery(selectQuery);
- 
-            listaRezultata = prebaciUListu(setRezultata);
+            // select query
+            if (query.QUERY_TYPE.equals(QueryBuilder.SELECT)) {
+                
+                selectStatement = dbConnection.createStatement();
+                
+                setRezultata = selectStatement.executeQuery(queryString);
+
+                listaRezultata = prebaciUListu(setRezultata);
+            }
+            
+            //update query
+            if (query.QUERY_TYPE.equals(QueryBuilder.UPDATE)) 
+            {
+                PreparedStatement updateStatement = dbConnection.prepareStatement(queryString);
+                
+                updateStatement.executeUpdate();   
+            }
+            
         
         } catch (SQLException e) {
  
@@ -436,6 +387,71 @@ public final class DBBroker {
  
         return listaRezultata; 
     }
+    
+    /**
+     * 
+     * @param query
+     * @param otvorenaKonekcija
+     * @return 
+     */
+    public List runQuery(
+            QueryBuilder query,
+            Boolean otvorenaKonekcija
+    ) 
+    {
+        Connection dbConnection = null;
+        Statement selectStatement = null;
+        ResultSet setRezultata = null;
+        List listaRezultata = null;
+         
+        String queryString = query.toQueryString();
+        
+        try {
+            dbConnection = poveziSaBazom();
+            
+            // select query
+            if (query.QUERY_TYPE.equals(QueryBuilder.SELECT)) {
+                
+                selectStatement = dbConnection.createStatement();
+                
+                setRezultata = selectStatement.executeQuery(queryString);
+
+                listaRezultata = prebaciUListu(setRezultata);
+            }
+            
+            //update query
+            if (query.QUERY_TYPE.equals(QueryBuilder.UPDATE)) 
+            {
+                PreparedStatement updateStatement = dbConnection.prepareStatement(queryString);
+                
+                updateStatement.executeUpdate();   
+            }
+            
+        
+        } catch (SQLException e) {
+ 
+            System.out.println(e.getMessage());
+ 
+        } finally {
+            
+            if (setRezultata != null) {
+                try { setRezultata.close(); } catch (SQLException ignore) {}
+            }
+            
+            if (selectStatement != null) {
+                try { selectStatement.close(); } catch (SQLException ignore) {}
+            }
+            
+            if (dbConnection != null && !otvorenaKonekcija) {
+                try { dbConnection.close(); } catch (SQLException ignore) {}
+            }
+            
+           
+        }
+ 
+        return listaRezultata; 
+    }
+    
     
     /**
      * 
@@ -808,14 +824,13 @@ public final class DBBroker {
     
     public boolean passwordCheckZaMenadzera(String lozinkaText) throws Exception {
         boolean jesteMenadzer = false;
-        String[] uslovneKolone = {"pass"};
-        String[] uslovneVrednosti = {lozinkaText};
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+        query.setTableName("login");
+        query.addCriteriaColumns("pass");
+        query.addCriteria(QueryBuilder.IS_EQUAL);
+        query.addCriteriaValues(lozinkaText);
         
-        List rezultat = this.vratiSveIzTabeleUzUslov(
-                "login", 
-                uslovneKolone, 
-                uslovneVrednosti
-        );
+        List rezultat = this.runQuery(query);
         
         if (!rezultat.isEmpty()) {
             Map<String,String>  menadzer = (Map<String, String>)rezultat.get(0);
@@ -846,14 +861,13 @@ public final class DBBroker {
     }
 
     public Konobar passwordCheck(String lozinkaText) throws Exception {
-        String[] uslovneKolone = {"pin"};
-        String[] uslovneVrednosti = {lozinkaText};
-        
-        List rezultat = this.vratiSveIzTabeleUzUslov(
-                "konobar", 
-                uslovneKolone, 
-                uslovneVrednosti
-        );
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+        query.setTableName("konobar");
+        query.addCriteriaColumns("pin");
+        query.addCriteria(QueryBuilder.IS_EQUAL);
+        query.addCriteriaValues(lozinkaText);
+                
+        List rezultat = this.runQuery(query);
         
         if (!rezultat.isEmpty()) {
             Map<String,String>  konobar = (Map<String, String>)rezultat.get(0);

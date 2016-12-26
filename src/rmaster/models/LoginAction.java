@@ -69,7 +69,7 @@ public class LoginAction extends ModelBase {
     
     public void takeAction(String lozinkaText) {
         
-        QueryBuilder query = new QueryBuilder();
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         query.setTableName(TABLE_NAME);
         query.addCriteriaColumns(SIFRA);
         query.addCriteria(QueryBuilder.IS_EQUAL);

@@ -9,12 +9,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import static rmaster.assets.QueryBuilder.IS_IN;
+import static rmaster.assets.QueryBuilder.IS_NOT_IN;
 
 /**
  *
  * @author Arbor
  */
 public class QueryBuilder {
+    
+    public static String SELECT = "SELECT ";
+    
+    public static String UPDATE = "UPDATE ";
+    
+    public static String DELETE = "DELETE ";
     
     public static String TRUE = "true";
     
@@ -34,7 +42,9 @@ public class QueryBuilder {
     
     public static String IS_LIKE = " COLLATE UTF8_GENERAL_CI LIKE '";
         
-    public static String NOT_IN = " NOT IN ";
+    public static String IS_NOT_IN = " NOT IN ";
+    
+    public static String IS_IN = " IN ";
     
     public static String LOGIC_AND = "' AND ";
 
@@ -45,8 +55,13 @@ public class QueryBuilder {
     public static String SORT_DESC = " DESC";
 
     
+    public String QUERY_TYPE;
     
     public String TABLE_NAME;
+    
+    public ArrayList<String> UPDATE_COLUMNS = new ArrayList<>();
+
+    public ArrayList<String> UPDATE_COLUMNS_VALUES = new ArrayList<>();
     
     public ArrayList<String> SELECT_COLUMNS = new ArrayList<>();
     
@@ -69,15 +84,30 @@ public class QueryBuilder {
     public Integer LIMIT;
     
     public Integer OFFSET;
+
+    public String queryString; 
+    
+    public QueryBuilder(String queryType) 
+    {
+        this.QUERY_TYPE = queryType;
+    }
     
     public void setTableName(String tableName) {
         this.TABLE_NAME = tableName;
     }
     
-    public void setColumns(String... kolone) {
+    public void setSelectColumns(String... kolone) {
         this.SELECT_COLUMNS.addAll(Arrays.asList(kolone));
     }
     
+    public void setUpdateColumns(String... kolone) {
+        this.UPDATE_COLUMNS.addAll(Arrays.asList(kolone));
+    }
+    
+    public void setUpdateColumnValues(String... noveVrednosti) {
+        this.UPDATE_COLUMNS_VALUES.addAll(Arrays.asList(noveVrednosti));
+    }
+        
     public void addCriteriaColumns(String... uslovneKolone) {
         this.CRITERIA_COLUMNS.addAll(Arrays.asList(uslovneKolone));
     }
@@ -114,32 +144,136 @@ public class QueryBuilder {
     
     
     public String toQueryString() {
-        String queryString = "SELECT *";
+
+        if (this.QUERY_TYPE.equals(SELECT)) {
+            this.makeSelectQuery();
+        }
+
+        if (this.QUERY_TYPE.equals(UPDATE)) {
+            this.makeUpdateQuery();
+        }
+        
+        queryString += ";";
+        
+        return queryString;
+    }
+    
+    public String makeStringForInCriteriaFromListByParam(List<Map<String, String>> list, String paramName) 
+    {
+        String result = "(";
+        
+        if (list.size() > 1) {
+            
+            for (Map<String, String> map : list) {
+                result += map.get(paramName) + ",";
+            }
+
+            result = result.substring(0, result.length() - 1);
+        }
+        
+        if (list.size() == 1) {
+            result += list.get(0).get(paramName);
+        }
+        
+        result += ")";
+        
+        return result;
+    }
+    
+    private void makeSelectQuery()
+    {
+        queryString = "SELECT *";
         
         if (!SELECT_COLUMNS.isEmpty()) {
-        
+
             queryString = queryString.substring(0, queryString.length() - 1);
-            
+
+
             for (int j = 0; j < SELECT_COLUMNS.size() - 1; j++) {
                 queryString += SELECT_COLUMNS.get(j) + ", ";
             }
 
             queryString += SELECT_COLUMNS.get(SELECT_COLUMNS.size() - 1);
+
         }
-        
+
         queryString += " FROM "; 
-                 
-        if (!this.TABLE_JOINS.isEmpty()) {
-            for(TableJoin join : this.TABLE_JOINS) {
+
+
+        if (!TABLE_JOINS.isEmpty()) {
+
+            queryString += TABLE_JOINS.get(0).FIRST_TABLE + " ";
+
+            for(TableJoin join : TABLE_JOINS) {
+
                 queryString += join.joinToString();
             }
+
         } else {
             queryString += TABLE_NAME;
         }
-        
+
         if (!CRITERIA_COLUMNS.isEmpty()) {
+
+            this.addWhereClauses();
+        }
+
+        if (GROUP_BY != null && !GROUP_BY.isEmpty()) {
+            queryString += "GROUP BY '" + GROUP_BY + "'";
+        }
+
+        if (ORDER_BY_COLUMN != null && !ORDER_BY_COLUMN.isEmpty()) {
+            queryString += " ORDER BY '" + ORDER_BY_COLUMN + "'" + ORDER_BY_CRITERIA;
+        }
+
+        if (LIMIT != null) {
+            queryString += " LIMIT " + LIMIT;
+        }
+
+        if (OFFSET != null) {
+            queryString += " OFFSET " + OFFSET;
+        }
+            
+    }
+    
+    private void makeUpdateQuery() {
         
-            if (CRITERIA_COLUMNS.size() > 1) {
+        queryString = "UPDATE ";
+        
+        queryString += TABLE_NAME;
+        
+        queryString += " SET ";
+        
+        queryString += UPDATE_COLUMNS.get(0) + " = " + UPDATE_COLUMNS_VALUES.get(0);
+        
+        if (UPDATE_COLUMNS.size() > 1) {
+            
+            queryString += ",";
+
+            for (int i = 1; i < UPDATE_COLUMNS.size() - 1; i++) {
+
+                queryString += UPDATE_COLUMNS.get(i) + " = " + UPDATE_COLUMNS_VALUES.get(i);
+                queryString += ",";
+            } 
+            
+            queryString = queryString.substring(0, queryString.length() - 1);
+            
+            queryString += 
+                    UPDATE_COLUMNS.get(UPDATE_COLUMNS.size() - 1) 
+                    + " = " 
+                    + UPDATE_COLUMNS_VALUES.get(UPDATE_COLUMNS_VALUES.size() - 1);
+        }
+
+        if (!CRITERIA_COLUMNS.isEmpty()) {
+
+            this.addWhereClauses();
+        }
+        
+    }
+    
+    private void addWhereClauses() {
+        
+        if (CRITERIA_COLUMNS.size() > 1) {
 
                 queryString += " WHERE ";
 
@@ -149,8 +283,8 @@ public class QueryBuilder {
                             + CRITERIA.get(i)
                             + CRITERIA_VALUES.get(i) 
                             + OPERATORS.get(i); 
-                    
-                    if (CRITERIA.get(i).equals(NOT_IN)) {
+
+                    if (CRITERIA.get(i).equals(IS_NOT_IN) && CRITERIA.get(i).equals(IS_IN)) {
                         queryString = queryString.substring(0, queryString.length() - 1);
                     }
                 }
@@ -158,8 +292,9 @@ public class QueryBuilder {
                 queryString += CRITERIA_COLUMNS.get(CRITERIA_COLUMNS.size() - 1)
                         + CRITERIA.get(CRITERIA.size() - 1)
                         + CRITERIA_VALUES.get(CRITERIA_COLUMNS.size() - 1);
-                
-                if (!CRITERIA.get(CRITERIA.size() - 1).equals(NOT_IN)) {
+
+                if (!CRITERIA.get(CRITERIA.size() - 1).equals(IS_NOT_IN) 
+                        && !CRITERIA.get(CRITERIA.size() - 1).equals(IS_IN)) {
                         queryString += "'";
                     }
             }
@@ -170,45 +305,11 @@ public class QueryBuilder {
                 queryString += CRITERIA_COLUMNS.get(0) 
                         + CRITERIA.get(0)
                         + CRITERIA_VALUES.get(0);
-                        
-                if (!CRITERIA.get(CRITERIA.size() - 1).equals(NOT_IN)) {
+
+                if (!CRITERIA.get(CRITERIA.size() - 1).equals(IS_NOT_IN)
+                        && !CRITERIA.get(CRITERIA.size() - 1).equals(IS_IN)) {
                         queryString += "'";
                     }
             }
-        }
-        
-        if (GROUP_BY != null && !GROUP_BY.isEmpty()) {
-            queryString += "GROUP BY '" + GROUP_BY + "'";
-        }
-        
-        if (ORDER_BY_COLUMN != null && !ORDER_BY_COLUMN.isEmpty()) {
-            queryString += " ORDER BY '" + ORDER_BY_COLUMN + "'" + ORDER_BY_CRITERIA;
-        }
-        
-        if (LIMIT != null) {
-            queryString += " LIMIT " + LIMIT;
-        }
-        
-        if (OFFSET != null) {
-            queryString += " OFFSET " + OFFSET;
-        }
-        
-        queryString += ";";
-        return queryString;
-    }
-    
-    public String makeStringForNotInFromListByParam(List<Map<String, String>> list, String paramName) 
-    {
-        String result = "(";
-        
-        for (Map<String, String> map : list) {
-            result += map.get(paramName) + ",";
-        }
-        
-        result = result.substring(0, result.length() - 1);
-
-        result += ")";
-        
-        return result;
     }
 }

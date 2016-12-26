@@ -229,11 +229,7 @@ public class PrikazSalaController extends FXMLDocumentController {
                 (Node)event.getSource(), 
                 true
         );
-//        prikaziFormuModalno(
-//                new ArrayList<>(),
-//                ScreenMap.PROMENA_KONOBARA,
-//                (Node)(event.getSource())
-//        );
+        
         prikaziStolove();
     }
     
