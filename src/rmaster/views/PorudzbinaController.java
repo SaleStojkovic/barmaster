@@ -1031,7 +1031,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         //if (!gostiButtons.isEmpty()) {
         int najveciBrojGosta = 0;
         for (Node gostiButton : gostiButtons) {
-            int brojStola = Integer.parseInt(((Button)gostiButton).getText());
+            int brojStola = Integer.parseInt(((RadioButton)gostiButton).getText());
             if (brojStola > najveciBrojGosta)
                 najveciBrojGosta = brojStola;
         }
