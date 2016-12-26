@@ -22,10 +22,12 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -148,6 +150,8 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     //Lokalne varijable 
     public String idTrenutnoIzabranogGosta;
+    
+    ToggleGroup gostiButtonGroup = new ToggleGroup();
 
     public int popustTrenutnogGosta = 0;
     
@@ -216,7 +220,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                 dodajNovogGosta(new ActionEvent());
             }
 
-            Button dugme = (Button)prikazGostiju.getChildren().get(0);
+            RadioButton dugme = (RadioButton)prikazGostiju.getChildren().get(0);
             dugme.fire();
 
             
@@ -239,13 +243,19 @@ public class PorudzbinaController extends FXMLDocumentController {
                 porudzbinaTrenutna = new Porudzbina(new Gost(brojNovogGosta), red.get("id"));
                 porudzbineStola.add(porudzbinaTrenutna);
 
-                Button b = new Button(brojNovogGosta);
+                RadioButton b = new RadioButton(brojNovogGosta);
+                
+                b.getStyleClass().remove("radio-button");
+                b.getStyleClass().add("toggle-button");
+                
+                b.setToggleGroup(gostiButtonGroup);
+                
                 b.setId(brojNovogGosta);
                 
                 b.setPrefSize(50, 50);
                 b.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {
-                                        String gost = ((Button)e.getSource()).getId();
+                                        String gost = ((RadioButton)e.getSource()).getId();
                                         Utils.postaviStil_ObrisiZaOstaleKontroleRoditelja(e, stilButtonGrupeSelektovana);
 //                                        if (novaTura != null) {
 //                                            novaTura = null;
@@ -1007,64 +1017,15 @@ public class PorudzbinaController extends FXMLDocumentController {
         this.total.setText(Utils.getStringFromDouble(tura.getVrednostTure()));
     }
     
-//    public void prikaziTotalPopustNaplataTura(List<Tura> listTure) {
-//        
-//        if (listTure.isEmpty()) {
-//            this.total.setText("0.00");
-//            this.popust.setText("0.00%");
-//            this.naplata.setText("0.00");
-//            return;
-//        }
-//
-//        List<Map<String, String>> totalPopustNaplata = new ArrayList<>();
-//        
-//        for (Tura tura : listTure) {
-//            List<Map<String, String>> listStavkeTure = tura.dajTuru();
-//            for (Map<String, String> red : listStavkeTure) {
-//                totalPopustNaplata.add(red);
-//            }
-//        }
-//        this.stampajTotalPopustNaplata(totalPopustNaplata);
-//    }
-    
-    
-//    public void prikaziTotalPopustNaplataStavke(List<StavkaTure> listaStavkiTure) {
-//        if (listaStavkiTure.isEmpty()) {
-//            this.total.setText("0.00");
-//            this.popust.setText("0.00%");
-//            this.naplata.setText("0.00");
-//            return;
-//        }
-//
-//        List<Map<String, String>> totalPopustNaplata = new ArrayList<>();
-//
-//        for (StavkaTure stavka : listaStavkiTure) {
-//               totalPopustNaplata.add(stavka.dajStavkuTure());
-//            }
-//        this.stampajTotalPopustNaplata(totalPopustNaplata);
-//    }
-//    
-//    public void stampajTotalPopustNaplata(List<Map<String, String>> totalPopustNaplata ) {
-//        
-//        double total = 0;
-//
-//        for(Map<String, String> red : totalPopustNaplata) {
-//            total += Utils.getDoubleFromString(red.get("cena"));
-//        }
-//
-//        //double popust = porudzbinaTrenutna.getGost().getProcenatPopusta();
-//        //double naplata = total * (100 - popust) / 100;
-//
-//        this.total.setText(Utils.getStringFromDouble(total));
-//        //this.popust.setText(Utils.getStringFromDouble(popust) + "%");
-//        //this.naplata.setText(Utils.getStringFromDouble(naplata));
-//    }
-//    
-    public void dodajNovogGosta(ActionEvent event) {
+    public void dodajNovogGosta(ActionEvent event) 
+    {
         
         ObservableList<Node> gostiButtons = prikazGostiju.getChildren();
-        Button noviGost = new Button();
-        
+        RadioButton noviGost = new RadioButton();
+        noviGost.getStyleClass().remove("radio-button");
+        noviGost.getStyleClass().add("toggle-button");
+
+        noviGost.setToggleGroup(gostiButtonGroup);
         //int brojNovogGosta = 1;
         
         //if (!gostiButtons.isEmpty()) {
@@ -1098,7 +1059,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         noviGost.setPrefSize(50, 50);
         noviGost.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {
-                                        String gost = ((Button)e.getSource()).getId();
+                                        String gost = ((RadioButton)e.getSource()).getId();
                                         Utils.postaviStil_ObrisiZaOstaleKontroleRoditelja(e, stilButtonGrupeSelektovana);
 //                                        if (novaTura != null) {
 //                                            novaTura = null;
