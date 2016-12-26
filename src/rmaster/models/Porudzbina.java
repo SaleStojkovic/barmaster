@@ -117,7 +117,7 @@ public class Porudzbina {
     private void popuniPorudzbinuIzBaze() 
     {
         
-        QueryBuilder query = new QueryBuilder();
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         query.setTableName("racun");
         query.addCriteriaColumns("id");
         query.addCriteria(QueryBuilder.IS_EQUAL);

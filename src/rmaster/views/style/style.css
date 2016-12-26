@@ -684,13 +684,22 @@ and open the template in the editor.
  
 #saleTabPane *.tab 
 {
-     -fx-background-color: -fx-tamno-crna;
+    -fx-background-color: -fx-tamno-crna;
+    -fx-border-color: -fx-siva;
 
 }
 #saleTabPane *.tab:selected 
 {
      -fx-background-color: -fx-svetlo-crna;
+     
 }
+
+#saleTabPane *.tab:selected .tab-label {
+     -fx-text-fill: white;
+     -fx-font-weight: bold;
+     -fx-font-size: 20px;
+     -fx-font-family: KlavikaBold;
+ }
 
 /** Kraj promene konobara V2 */
 

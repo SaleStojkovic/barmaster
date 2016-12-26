@@ -58,9 +58,9 @@ public class AdministracijaController extends FXMLDocumentController{
     public void initData(Object data) {
         List<Map<String, String>> listaRezultata = null;
         try {
-            QueryBuilder query = new QueryBuilder();
+            QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
             query.setTableName("posmeni");
-            query.setColumns("fxID");
+            query.setSelectColumns("fxID");
             query.addCriteriaColumns("korisnikID", "vrstaKorisnika");
             query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
             query.addOperators(QueryBuilder.LOGIC_AND);

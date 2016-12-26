@@ -93,7 +93,7 @@ public abstract class ModelBase extends Object {
     
     public void getInstance(String id) {
        
-        QueryBuilder query = new QueryBuilder();
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         query.setTableName(this.getTableName());
         query.addCriteriaColumns(this.getPrimaryKeyName());
         query.addCriteria(QueryBuilder.IS_EQUAL);

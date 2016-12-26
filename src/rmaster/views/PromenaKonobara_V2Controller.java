@@ -9,12 +9,16 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -27,6 +31,8 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.ScreenMap;
+import rmaster.models.Konobar;
 
 /**
  * FXML Controller class
@@ -38,7 +44,13 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
     @FXML
     private TabPane saleTabPane;
     
-    List<Map<String, String>> stoloviKonobara = new ArrayList<>();
+    @FXML
+    private Label casovnik;
+    
+    @FXML 
+    private Label imeKonobara;
+    
+    List<ToggleButton> stoloviZaPromenu = new ArrayList<>();
         
     double sirinaSale = 1024; 
     double visinaSale = 768; 
@@ -49,7 +61,11 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        List<Map<String, String>> sale = this.ulogovaniKonobar.saleOmoguceneKonobaru();
+        Timeline timeline = this.prikaziCasovnik(casovnik);
+        timeline.play();
+        this.imeKonobara.setText(ulogovaniKonobar.imeKonobara);
+        
+        List<Map<String, String>> sale = ulogovaniKonobar.saleOmoguceneKonobaru();
 
         for(Map<String, String> salaMap : sale){
             
@@ -126,7 +142,7 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
         visina = Double.parseDouble(stoMap.get("visina"));
         visina = visina * RMaster.visinaSaleNaEkranu / visinaSale;
 
-        noviSto.setId(stoMap.get("id"));
+        noviSto.setId(stoMap.get("broj"));
 
         naziv = stoMap.get("broj");
 
@@ -150,6 +166,9 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
         AnchorPane.setTopAnchor(okvir, y);
         AnchorPane.setRightAnchor(okvir, RMaster.sirinaSaleNaEkranu - x - sirina);
         AnchorPane.setBottomAnchor(okvir, RMaster.visinaSaleNaEkranu - y - visina);
+        
+        stoloviZaPromenu.add(noviSto);
+        
         return okvir;   
     }
     
@@ -163,5 +182,86 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
           }
             sto.setPrefSize(sirina, sirina);
             sto.setShape(new Circle(sirina/2));  
+    }
+    
+    public void nazadNaPrikazSale()
+    {
+        this.prikaziFormu(
+                new Object(), 
+                ScreenMap.PRIKAZ_SALA, 
+                true, 
+                casovnik, 
+                false
+        );
+    }
+    
+    public void promeniKonobora(ActionEvent event)
+    {
+        
+        List<String> brojeviStolova = new ArrayList<>();
+        
+        for (ToggleButton sto : stoloviZaPromenu) {
+            if (sto.isSelected()) {
+                brojeviStolova.add(sto.getId());
+            }
+        }
+      
+        if (brojeviStolova.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Greška!");
+            alert.setHeaderText("Greška pri promeni");
+            alert.setContentText("Niste izabrali nijedan sto za promenu.");
+            alert.showAndWait(); 
+            return;
+        }
+        
+        try {
+                NumerickaTastaturaController tastatura = new NumerickaTastaturaController(
+                        "Unesite lozinku",
+                        "Unesite lozinku",
+                        true,
+                        ""
+                );
+                    Optional<String> result = tastatura.showAndWait();
+
+                    if (!result.isPresent()){
+                        return;
+                    }
+
+                    Konobar noviKonobar = DBBroker.passwordCheck(result.get());
+                    
+                    if (noviKonobar == null) {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Greška!");
+                        alert.setHeaderText("Greška pri predstavljanju");
+                        alert.setContentText("Pogrešna lozinka! Unesite lozinku konobara na koga se prebacuju stolovi.");
+                        alert.showAndWait();
+                        
+                        return;
+                    }
+                    
+                    if (ulogovaniKonobar.konobarID == noviKonobar.konobarID) {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Greška!");
+                        alert.setHeaderText("Greška pri predstavljanju");
+                        alert.setContentText("Konobar je već ulogovan! Unesite lozinku konobara na koga se prebacuju stolovi.");
+                        alert.showAndWait(); 
+                        
+                        return;
+                    }
+                            
+                    //OVDE SE MENJAJU STOLOVI
+                    promeniStolove(noviKonobar, brojeviStolova);
+                
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void promeniStolove(Konobar noviKonobar, List<String> brojeviStolova)
+    {   
+        noviKonobar.promenaStolova(ulogovaniKonobar.konobarID + "", brojeviStolova);
+        
+        nazadNaPrikazSale();
     }
 }

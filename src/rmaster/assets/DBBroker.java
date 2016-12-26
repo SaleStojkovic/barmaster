@@ -347,16 +347,29 @@ public final class DBBroker {
         ResultSet setRezultata = null;
         List listaRezultata = null;
          
-        String selectQuery = query.toQueryString();
+        String queryString = query.toQueryString();
         
         try {
             dbConnection = poveziSaBazom();
             
-            selectStatement = dbConnection.createStatement();
- 
-            setRezultata = selectStatement.executeQuery(selectQuery);
- 
-            listaRezultata = prebaciUListu(setRezultata);
+            // select query
+            if (query.QUERY_TYPE.equals(QueryBuilder.SELECT)) {
+                
+                selectStatement = dbConnection.createStatement();
+                
+                setRezultata = selectStatement.executeQuery(queryString);
+
+                listaRezultata = prebaciUListu(setRezultata);
+            }
+            
+            //update query
+            if (query.QUERY_TYPE.equals(QueryBuilder.UPDATE)) 
+            {
+                PreparedStatement updateStatement = dbConnection.prepareStatement(queryString);
+                
+                updateStatement.executeUpdate();   
+            }
+            
         
         } catch (SQLException e) {
  
@@ -381,6 +394,71 @@ public final class DBBroker {
  
         return listaRezultata; 
     }
+    
+    /**
+     * 
+     * @param query
+     * @param otvorenaKonekcija
+     * @return 
+     */
+    public List runQuery(
+            QueryBuilder query,
+            Boolean otvorenaKonekcija
+    ) 
+    {
+        Connection dbConnection = null;
+        Statement selectStatement = null;
+        ResultSet setRezultata = null;
+        List listaRezultata = null;
+         
+        String queryString = query.toQueryString();
+        
+        try {
+            dbConnection = poveziSaBazom();
+            
+            // select query
+            if (query.QUERY_TYPE.equals(QueryBuilder.SELECT)) {
+                
+                selectStatement = dbConnection.createStatement();
+                
+                setRezultata = selectStatement.executeQuery(queryString);
+
+                listaRezultata = prebaciUListu(setRezultata);
+            }
+            
+            //update query
+            if (query.QUERY_TYPE.equals(QueryBuilder.UPDATE)) 
+            {
+                PreparedStatement updateStatement = dbConnection.prepareStatement(queryString);
+                
+                updateStatement.executeUpdate();   
+            }
+            
+        
+        } catch (SQLException e) {
+ 
+            System.out.println(e.getMessage());
+ 
+        } finally {
+            
+            if (setRezultata != null) {
+                try { setRezultata.close(); } catch (SQLException ignore) {}
+            }
+            
+            if (selectStatement != null) {
+                try { selectStatement.close(); } catch (SQLException ignore) {}
+            }
+            
+            if (dbConnection != null && !otvorenaKonekcija) {
+                try { dbConnection.close(); } catch (SQLException ignore) {}
+            }
+            
+           
+        }
+ 
+        return listaRezultata; 
+    }
+    
     
     /**
      * 
@@ -744,7 +822,7 @@ public final class DBBroker {
     
     public boolean passwordCheckZaMenadzera(String lozinkaText) throws Exception {
         boolean jesteMenadzer = false;
-        QueryBuilder query = new QueryBuilder();
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         query.setTableName("login");
         query.addCriteriaColumns("pass");
         query.addCriteria(QueryBuilder.IS_EQUAL);
@@ -781,7 +859,7 @@ public final class DBBroker {
     }
 
     public Konobar passwordCheck(String lozinkaText) throws Exception {
-        QueryBuilder query = new QueryBuilder();
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         query.setTableName("konobar");
         query.addCriteriaColumns("pin");
         query.addCriteria(QueryBuilder.IS_EQUAL);

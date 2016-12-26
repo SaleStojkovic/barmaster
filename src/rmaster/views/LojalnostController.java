@@ -49,6 +49,22 @@ import static java.lang.Math.round;
 import static java.lang.Math.round;
 import static java.lang.Math.round;
 import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
 
 /**
  * FXML Controller class
@@ -123,9 +139,9 @@ public class LojalnostController extends FXMLDocumentController {
     
     public List<Map<String, String>> getStalniGosti(String grupaId, String text, int offset) {
         
-        QueryBuilder query = new QueryBuilder();
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         query.setTableName(StalniGost.TABLE_NAME);
-        query.setColumns(StalniGost.PRIMARY_KEY, StalniGost.NAZIV, StalniGost.POPUST);
+        query.setSelectColumns(StalniGost.PRIMARY_KEY, StalniGost.NAZIV, StalniGost.POPUST);
         
         query.addCriteriaColumns(StalniGost.SIFRA, StalniGost.BLOKIRAN, StalniGost.GRUPA_ID);
         query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
@@ -160,7 +176,7 @@ public class LojalnostController extends FXMLDocumentController {
     
     public List<Map<String, String>> getGrupeGostiju()
     {
-        QueryBuilder query = new QueryBuilder();
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         query.setTableName("stalnigostigrupa");
         query.addCriteriaColumns("naziv", "naziv");
         query.addCriteria(QueryBuilder.IS_NOT_EQUAL, QueryBuilder.IS_NOT_EQUAL);
@@ -404,7 +420,7 @@ public class LojalnostController extends FXMLDocumentController {
                 return;
             }
             
-            QueryBuilder query = new QueryBuilder();
+            QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
 
             query.setTableName(StalniGost.TABLE_NAME);
             query.addCriteriaColumns(StalniGost.SIFRA);

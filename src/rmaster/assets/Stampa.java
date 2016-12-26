@@ -62,9 +62,9 @@ public final class Stampa {
     
     public void pokupiStampace() {
         
-        QueryBuilder query = new QueryBuilder();
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         query.setTableName(Stampac.TABLE_NAME);
-        query.setColumns(Stampac.PRIMARY_KEY, Stampac.NAZIV, Stampac.BROJ_KOPIJA_ZBIRNE, Stampac.KODNA_STRANA, Stampac.STAMPA_IZVESTAJE, Stampac.STAMPA_ZBIRNU, Stampac.TIP);
+        query.setSelectColumns(Stampac.PRIMARY_KEY, Stampac.NAZIV, Stampac.BROJ_KOPIJA_ZBIRNE, Stampac.KODNA_STRANA, Stampac.STAMPA_IZVESTAJE, Stampac.STAMPA_ZBIRNU, Stampac.TIP);
         //query.addCriteriaColumns(StalniGost.SIFRA, StalniGost.BLOKIRAN, StalniGost.GRUPA_ID);
         //query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
         //query.addOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);

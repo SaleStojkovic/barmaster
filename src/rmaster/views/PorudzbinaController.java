@@ -178,7 +178,7 @@ public class PorudzbinaController extends FXMLDocumentController {
 
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
-        QueryBuilder query = new QueryBuilder();
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         
         query.setTableName("stonaziv");
         query.addCriteriaColumns("id");
