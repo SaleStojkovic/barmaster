@@ -305,7 +305,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             );
             
             tabelaNoveTure.setSirineKolona(sirinaKolonaTabele);
-            tabelaNoveTure.formatirajTabelu(
+            tabelaNoveTure.setPodaci(
                     tura.dajTuru()
             );
             
@@ -356,7 +356,7 @@ public class PorudzbinaController extends FXMLDocumentController {
 
             tabelaNovaTuraGosta.getItems().clear();
             tabelaNovaTuraGosta.setSirineKolona(sirinaKolonaTabele);
-            tabelaNovaTuraGosta.formatirajTabelu(
+            tabelaNovaTuraGosta.setPodaci(
                         novaTura.dajTuru()
                 );
             tabelaNovaTuraGosta.getSelectionModel().select(novaTura.listStavkeTure.size() - 1);
@@ -1003,7 +1003,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         tabelaNovaTuraGosta.setSirineKolona(sirinaKolonaTabele);
         
-        tabelaNovaTuraGosta.formatirajTabelu(
+        tabelaNovaTuraGosta.setPodaci(
                     listTura
             );
         

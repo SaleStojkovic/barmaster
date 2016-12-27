@@ -63,7 +63,7 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
     public void prikaziRacune() {
         tabelaSaRacunimaZaNaplatu.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         
-        tabelaSaRacunimaZaNaplatu.formatirajTabelu(listRacuni);
+        tabelaSaRacunimaZaNaplatu.setPodaci(listRacuni);
 
         int brojRedova = listRacuni.size();
         tabelaSaRacunimaZaNaplatu.setFixedCellSize(30);

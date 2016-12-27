@@ -15,7 +15,6 @@ import java.util.Set;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -40,7 +39,7 @@ public class RM_TableView extends TableView<Map<String, String>> {
      * 
      * @param lista
      */
-    public void formatirajTabelu (
+    public void setPodaci (
             List<Map<String, String>> lista
         ) 
     {
@@ -159,7 +158,7 @@ public class RM_TableView extends TableView<Map<String, String>> {
             
             this.izbrisiSveIzTabele();
             
-            this.formatirajTabelu( 
+            this.setPodaci( 
                     listaPodataka
                     );
     }

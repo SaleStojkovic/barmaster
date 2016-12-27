@@ -100,7 +100,7 @@ public class RezervacijeController extends FXMLDocumentController {
         
         tabelaRezervacija.izbrisiSveIzTabele();
         tabelaRezervacija.setSirineKolona(sirinaKolonaTabele);
-        tabelaRezervacija.formatirajTabelu(
+        tabelaRezervacija.setPodaci(
                 listaZaPrikaz
         );
         
