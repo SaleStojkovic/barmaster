@@ -192,13 +192,6 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
     public void nazadNaPrikazSale()
     {
         imeKonobara.getScene().getWindow().hide();
-//        this.prikaziFormu(
-//                new Object(), 
-//                ScreenMap.PRIKAZ_SALA, 
-//                true, 
-//                casovnik, 
-//                false
-//        );
     }
     
     public void promeniKonobora(ActionEvent event)

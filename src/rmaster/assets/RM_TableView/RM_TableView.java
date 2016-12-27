@@ -21,11 +21,11 @@ import javafx.scene.control.TableView;
 
 public class RM_TableView extends TableView<Map<String, String>> {
 
-    public List<Integer> SIRINE_KOLONA =  new ArrayList<>();
+    public List<SirinaKolone> SIRINE_KOLONA =  new ArrayList<>();
     
     public List<RavnanjeKolone> RAVNANJA_KOLONA =  new ArrayList<>();
 
-    public void setSirineKolona(Integer... sirineKolona)
+    public void setSirineKolona(SirinaKolone... sirineKolona)
     {
         this.SIRINE_KOLONA.addAll(Arrays.asList(sirineKolona));
     }
@@ -44,24 +44,14 @@ public class RM_TableView extends TableView<Map<String, String>> {
         ) 
     {
         popuniTabelu(lista);
-        
-        if (!SIRINE_KOLONA.isEmpty()) {
-            
-            int brojac = 0;
-
-            for(int sirina : this.SIRINE_KOLONA) {
-
-                this.getColumns().get(brojac).setPrefWidth(SIRINE_KOLONA.get(brojac));
-
-
-                if (sirina == 0) {
-                    this.getColumns().get(brojac).setVisible(false);
-                }
-
-                brojac++;
+                    
+            for(SirinaKolone sirina : this.SIRINE_KOLONA) {
+                
+                this.getColumns().get(sirina.BROJ_KOLONE - 1).setVisible(true);
+                this.getColumns().get(sirina.BROJ_KOLONE - 1).setPrefWidth(sirina.SIRINA_KOLONE);
 
             }
-        }
+        
         
         if (!this.RAVNANJA_KOLONA.isEmpty()) {
                         
@@ -84,6 +74,9 @@ public class RM_TableView extends TableView<Map<String, String>> {
     public void popuniTabelu(
             List<Map<String, String>> listaPodataka
     ) {
+        
+        this.izbrisiSveIzTabele();
+        
         ObservableList<Map<String, String>> tableList = FXCollections.observableArrayList(listaPodataka);            
         
         if (!listaPodataka.isEmpty()) {
@@ -97,6 +90,8 @@ public class RM_TableView extends TableView<Map<String, String>> {
             for (int i = 0; i < keys.size(); i++) {
                  
                 TableColumn<Map<String, String>, String> column = new TableColumn<>();
+                
+                column.setVisible(false);
                 
                 column.setResizable(false);
                 

@@ -23,14 +23,17 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import rmaster.assets.DBBroker;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
@@ -59,6 +62,10 @@ public class NaplataController extends FXMLDocumentController {
     private Label casovnik;
     @FXML
     private Label imeKonobara;
+    
+    
+    @FXML
+    private TextField skenerKartice;
     
     @FXML
     private VBox fxID_PopustiZaNaplatu1;
@@ -110,7 +117,6 @@ public class NaplataController extends FXMLDocumentController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
         this.imeKonobara.setText(ulogovaniKonobar.imeKonobara);
@@ -510,5 +516,45 @@ public class NaplataController extends FXMLDocumentController {
     public void odustani(ActionEvent event) {
         Button b = (Button)event.getSource(); 
         b.getScene().getWindow().hide();
+    }
+    
+    public void keyListener(KeyEvent keyEvent) 
+    {   
+        if (keyEvent.getCharacter().isEmpty()) {
+            return;
+        }
+        String taster = keyEvent.getCharacter();
+        String tekst = skenerKartice.getText() + taster;
+        
+        skenerKartice.setText(tekst);
+    }
+    
+    public void proveriPin(KeyEvent keyEvent)
+    {
+        if (keyEvent.getCode().equals(KeyCode.ENTER))
+        {
+            String hotelGost = skenerKartice.getText();
+
+            if (hotelGost.isEmpty()) {
+                return;
+            }
+            
+            QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+
+            query.setTableName("hotelgost");
+            query.addCriteriaColumns("sifra");
+            query.addCriteria(QueryBuilder.IS_EQUAL);
+            query.addCriteriaValues(hotelGost);
+
+            List<Map<String, String>> rezultat = this.runQuery(query);
+
+            if (rezultat.isEmpty()) {
+                skenerKartice.setText("");
+                return;
+            }
+            
+            System.out.print(hotelGost + " Ima ga");
+            //ovde se sad radi sta vec ako postoji
+        }
     }
 }

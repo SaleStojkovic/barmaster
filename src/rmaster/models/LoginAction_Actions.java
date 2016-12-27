@@ -9,7 +9,7 @@ package rmaster.models;
  *
  * @author Arbor
  */
-public class LoginAction_Actions {
+public final class LoginAction_Actions {
     
     public static String ZAKLJUCENJE = "ZAKLJUCENJE";
     public static String PRESEK = "PRESEK";

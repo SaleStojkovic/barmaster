@@ -25,7 +25,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.FlowPane;
@@ -33,9 +32,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
-import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.RM_TableView.RM_TableView;
 import rmaster.assets.RM_TableView.RavnanjeKolone;
+import rmaster.assets.RM_TableView.SirinaKolone;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
@@ -184,8 +183,16 @@ public class PorudzbinaController extends FXMLDocumentController {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         tabelaNovaTuraGosta.addRavnjanje(
-            new RavnanjeKolone(3, RavnanjeKolone.ALIGN_RIGHT)
+            new RavnanjeKolone(7, RavnanjeKolone.ALIGN_RIGHT),
+            new RavnanjeKolone(5, RavnanjeKolone.ALIGN_LEFT)
         );
+        
+        tabelaNovaTuraGosta.setSirineKolona(
+                new SirinaKolone(3, sirinaKolonaTabele[2]),
+                new SirinaKolone(5, sirinaKolonaTabele[4]),
+                new SirinaKolone(7, sirinaKolonaTabele[6])
+            );
+        
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
         izabraniSto.setText("Sto: " + RMaster.izabraniStoNaziv);
@@ -306,10 +313,15 @@ public class PorudzbinaController extends FXMLDocumentController {
             }
             
             tabelaNoveTure.addRavnjanje(
-                    new RavnanjeKolone(3, RavnanjeKolone.ALIGN_RIGHT)
+                    new RavnanjeKolone(7, RavnanjeKolone.ALIGN_RIGHT),
+                    new RavnanjeKolone(5, RavnanjeKolone.ALIGN_LEFT)            
             );
             
-            tabelaNoveTure.setSirineKolona(sirinaKolonaTabele);
+            tabelaNoveTure.setSirineKolona(
+                new SirinaKolone(3, sirinaKolonaTabele[2]),
+                new SirinaKolone(5, sirinaKolonaTabele[4]),
+                new SirinaKolone(7, sirinaKolonaTabele[6])
+            );
             tabelaNoveTure.setPodaci(
                     tura.dajTuru()
             );
@@ -358,9 +370,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
 
         if (novaTura != null) {
-
-            tabelaNovaTuraGosta.getItems().clear();
-            tabelaNovaTuraGosta.setSirineKolona(sirinaKolonaTabele);
+            
             tabelaNovaTuraGosta.setPodaci(
                         novaTura.dajTuru()
                 );
@@ -1006,18 +1016,14 @@ public class PorudzbinaController extends FXMLDocumentController {
                 listTura.add(stavkaOpisni.dajStavkuTure());
             }
         }
-                       
-        tabelaNovaTuraGosta.getItems().clear();
-        
+                               
         if (listTura.isEmpty()) {
             return;
-        }
-        
-        tabelaNovaTuraGosta.setSirineKolona(sirinaKolonaTabele);
+        } 
         
         tabelaNovaTuraGosta.setPodaci(
                     listTura
-            );
+        );
         
         tabelaNovaTuraGosta.getSelectionModel().select(
                 getRowIndexOfStavka(tabelaNovaTuraGosta, selektovana)

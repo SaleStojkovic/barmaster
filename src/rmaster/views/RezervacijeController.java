@@ -35,6 +35,7 @@ import javafx.util.StringConverter;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.RM_TableView.RM_TableView;
+import rmaster.assets.RM_TableView.SirinaKolone;
 import rmaster.assets.ScreenMap;
 import rmaster.models.Rezervacija;
 
@@ -99,7 +100,15 @@ public class RezervacijeController extends FXMLDocumentController {
         List<Map<String, String>> listaZaPrikaz = getRezervacije();
         
         tabelaRezervacija.izbrisiSveIzTabele();
-        tabelaRezervacija.setSirineKolona(sirinaKolonaTabele);
+        tabelaRezervacija.setSirineKolona(
+                new SirinaKolone(1, sirinaKolonaTabele[0]),
+                new SirinaKolone(2, sirinaKolonaTabele[1]),
+                new SirinaKolone(3, sirinaKolonaTabele[2]),
+                new SirinaKolone(4, sirinaKolonaTabele[3]),
+                new SirinaKolone(5, sirinaKolonaTabele[4]),
+                new SirinaKolone(6, sirinaKolonaTabele[5]),
+                new SirinaKolone(7, sirinaKolonaTabele[6])
+        );
         tabelaRezervacija.setPodaci(
                 listaZaPrikaz
         );

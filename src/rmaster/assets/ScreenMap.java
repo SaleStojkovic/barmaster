@@ -12,9 +12,7 @@ package rmaster.assets;
 public class ScreenMap {
     
     public static String POCETNI_EKRAN = "pocetniEkran";
-    
-    public static String CONFIRM_FORM = "confirmForm";
-    
+        
     public static String LOJALNOST = "lojalnost";
     
     public static String NUMBER_KEYPAD = "numberKeypad";
