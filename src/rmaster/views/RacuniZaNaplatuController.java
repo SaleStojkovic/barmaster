@@ -7,7 +7,6 @@ package rmaster.views;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -17,8 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import rmaster.assets.FXMLDocumentController;
-import rmaster.assets.Stampa;
-import rmaster.models.Porudzbina;
+import rmaster.assets.RM_TableView.RM_TableView;
 
 /**
  * FXML Controller class
@@ -28,7 +26,7 @@ import rmaster.models.Porudzbina;
 public class RacuniZaNaplatuController extends FXMLDocumentController {
 
     @FXML
-    private TableView<Map<String, String>> tabelaSaRacunimaZaNaplatu;
+    private RM_TableView tabelaSaRacunimaZaNaplatu;
     
     @FXML
     public AnchorPane tabelaSaRacunima;
@@ -62,10 +60,9 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
     
     public void prikaziRacune() {
         tabelaSaRacunimaZaNaplatu.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        tabelaSaRacunimaZaNaplatu = tableHelper.popuniTabelu(
-                tabelaSaRacunimaZaNaplatu,
-                listRacuni
-        );
+        
+        tabelaSaRacunimaZaNaplatu.setPodaci(listRacuni);
+
         int brojRedova = listRacuni.size();
         tabelaSaRacunimaZaNaplatu.setFixedCellSize(30);
                                 

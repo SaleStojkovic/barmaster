@@ -22,16 +22,20 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
-import rmaster.assets.QueryBuilder;
+import rmaster.assets.QueryBuilder.QueryBuilder;
+import rmaster.assets.RM_TableView.RM_TableView;
+import rmaster.assets.RM_TableView.RavnanjeKolone;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
@@ -151,16 +155,18 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     //Lokalne varijable 
     public String idTrenutnoIzabranogGosta;
+    
+    ToggleGroup gostiButtonGroup = new ToggleGroup();
 
     public int popustTrenutnogGosta = 0;
     
     public Map<String,List> racuniStolaPoGostima = new HashMap<>();
     
-    public TableView<Map<String, String>> tabelaNovaTuraGosta = new TableView<>();
+    public RM_TableView tabelaNovaTuraGosta = new RM_TableView();
 
     private List<Porudzbina> porudzbineStola = new ArrayList<Porudzbina>();
     
-    int[] sirinaKolonaTabele = {0, 0, 322, 0, 40, 0, 61, 0, 0, 0};
+    Integer[] sirinaKolonaTabele = {0, 0, 322, 0, 40, 0, 61, 0, 0, 0};
     
     List<Map<String, String>> tureTrenutnoIzabranogGosta = new ArrayList<>();
     
@@ -177,8 +183,9 @@ public class PorudzbinaController extends FXMLDocumentController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        tabelaNovaTuraGosta.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
+        tabelaNovaTuraGosta.addRavnjanje(
+            new RavnanjeKolone(3, RavnanjeKolone.ALIGN_RIGHT)
+        );
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
         izabraniSto.setText("Sto: " + RMaster.izabraniStoNaziv);
@@ -214,7 +221,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             System.out.format("dodajNovogGosta(new ActionEvent()): %,10dms%n", ms);
 
             startTime = System.nanoTime();
-            Button dugme = (Button)prikazGostiju.getChildren().get(0);
+            RadioButton dugme = (RadioButton)prikazGostiju.getChildren().get(0);
             dugme.fire();
             ms = System.nanoTime() - startTime;
             System.out.format("dugme.fire(): %,10dms%n", ms);
@@ -241,13 +248,19 @@ public class PorudzbinaController extends FXMLDocumentController {
                 porudzbinaTrenutna = new Porudzbina(new Gost(brojNovogGosta), red.get("id"));
                 porudzbineStola.add(porudzbinaTrenutna);
 
-                Button b = new Button(brojNovogGosta);
+                RadioButton b = new RadioButton(brojNovogGosta);
+                
+                b.getStyleClass().remove("radio-button");
+                b.getStyleClass().add("toggle-button");
+                
+                b.setToggleGroup(gostiButtonGroup);
+                
                 b.setId(brojNovogGosta);
                 
                 b.setPrefSize(50, 50);
                 b.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {
-                                        String gost = ((Button)e.getSource()).getId();
+                                        String gost = ((RadioButton)e.getSource()).getId();
                                         Utils.postaviStil_ObrisiZaOstaleKontroleRoditelja(e, stilButtonGrupeSelektovana);
 //                                        if (novaTura != null) {
 //                                            novaTura = null;
@@ -285,14 +298,20 @@ public class PorudzbinaController extends FXMLDocumentController {
         paneTura.setPadding(new Insets(0, 0, 0, 0));
         
         for (Tura tura : porudzbina.getTure()) {
-            TableView<Map<String, String>> tabelaNoveTure = new TableView<>();
+            RM_TableView tabelaNoveTure = new RM_TableView();
             tabelaNoveTure.setSelectionModel(null);
-            if (tura.getTuraID() == 0)
+            
+            if (tura.getTuraID() == 0) {
                 novaTura = tura;
-            tabelaNoveTure = tableHelper.formatirajTabelu(
-                    tabelaNoveTure,
-                    tura.dajTuru(),
-                    sirinaKolonaTabele
+            }
+            
+            tabelaNoveTure.addRavnjanje(
+                    new RavnanjeKolone(3, RavnanjeKolone.ALIGN_RIGHT)
+            );
+            
+            tabelaNoveTure.setSirineKolona(sirinaKolonaTabele);
+            tabelaNoveTure.setPodaci(
+                    tura.dajTuru()
             );
             
             Button ponoviTuru = new Button();
@@ -340,12 +359,10 @@ public class PorudzbinaController extends FXMLDocumentController {
 
         if (novaTura != null) {
 
-            TableView<Map<String, String>> novaTabela = new TableView<>();
             tabelaNovaTuraGosta.getItems().clear();
-            tabelaNovaTuraGosta = tableHelper.formatirajTabelu(
-                        novaTabela,
-                        novaTura.dajTuru(),
-                        sirinaKolonaTabele
+            tabelaNovaTuraGosta.setSirineKolona(sirinaKolonaTabele);
+            tabelaNovaTuraGosta.setPodaci(
+                        novaTura.dajTuru()
                 );
             tabelaNovaTuraGosta.getSelectionModel().select(novaTura.listStavkeTure.size() - 1);
 
@@ -989,22 +1006,21 @@ public class PorudzbinaController extends FXMLDocumentController {
                 listTura.add(stavkaOpisni.dajStavkuTure());
             }
         }
-                
-        TableView<Map<String, String>> novaTabela = new TableView<>();
-        
+                       
         tabelaNovaTuraGosta.getItems().clear();
         
         if (listTura.isEmpty()) {
             return;
         }
-            
-        tabelaNovaTuraGosta = tableHelper.formatirajTabelu(novaTabela,
-                    listTura,
-                    sirinaKolonaTabele
+        
+        tabelaNovaTuraGosta.setSirineKolona(sirinaKolonaTabele);
+        
+        tabelaNovaTuraGosta.setPodaci(
+                    listTura
             );
         
         tabelaNovaTuraGosta.getSelectionModel().select(
-                tableHelper.getRowIndexOfStavka(tabelaNovaTuraGosta, selektovana)
+                getRowIndexOfStavka(tabelaNovaTuraGosta, selektovana)
         );
  
         prikazRacunaGosta.setContent(tabelaNovaTuraGosta);
@@ -1019,70 +1035,21 @@ public class PorudzbinaController extends FXMLDocumentController {
         this.total.setText(Utils.getStringFromDouble(tura.getVrednostTure()));
     }
     
-//    public void prikaziTotalPopustNaplataTura(List<Tura> listTure) {
-//        
-//        if (listTure.isEmpty()) {
-//            this.total.setText("0.00");
-//            this.popust.setText("0.00%");
-//            this.naplata.setText("0.00");
-//            return;
-//        }
-//
-//        List<Map<String, String>> totalPopustNaplata = new ArrayList<>();
-//        
-//        for (Tura tura : listTure) {
-//            List<Map<String, String>> listStavkeTure = tura.dajTuru();
-//            for (Map<String, String> red : listStavkeTure) {
-//                totalPopustNaplata.add(red);
-//            }
-//        }
-//        this.stampajTotalPopustNaplata(totalPopustNaplata);
-//    }
-    
-    
-//    public void prikaziTotalPopustNaplataStavke(List<StavkaTure> listaStavkiTure) {
-//        if (listaStavkiTure.isEmpty()) {
-//            this.total.setText("0.00");
-//            this.popust.setText("0.00%");
-//            this.naplata.setText("0.00");
-//            return;
-//        }
-//
-//        List<Map<String, String>> totalPopustNaplata = new ArrayList<>();
-//
-//        for (StavkaTure stavka : listaStavkiTure) {
-//               totalPopustNaplata.add(stavka.dajStavkuTure());
-//            }
-//        this.stampajTotalPopustNaplata(totalPopustNaplata);
-//    }
-//    
-//    public void stampajTotalPopustNaplata(List<Map<String, String>> totalPopustNaplata ) {
-//        
-//        double total = 0;
-//
-//        for(Map<String, String> red : totalPopustNaplata) {
-//            total += Utils.getDoubleFromString(red.get("cena"));
-//        }
-//
-//        //double popust = porudzbinaTrenutna.getGost().getProcenatPopusta();
-//        //double naplata = total * (100 - popust) / 100;
-//
-//        this.total.setText(Utils.getStringFromDouble(total));
-//        //this.popust.setText(Utils.getStringFromDouble(popust) + "%");
-//        //this.naplata.setText(Utils.getStringFromDouble(naplata));
-//    }
-//    
-    public void dodajNovogGosta(ActionEvent event) {
+    public void dodajNovogGosta(ActionEvent event) 
+    {
         
         ObservableList<Node> gostiButtons = prikazGostiju.getChildren();
-        Button noviGost = new Button();
-        
+        RadioButton noviGost = new RadioButton();
+        noviGost.getStyleClass().remove("radio-button");
+        noviGost.getStyleClass().add("toggle-button");
+
+        noviGost.setToggleGroup(gostiButtonGroup);
         //int brojNovogGosta = 1;
         
         //if (!gostiButtons.isEmpty()) {
         int najveciBrojGosta = 0;
         for (Node gostiButton : gostiButtons) {
-            int brojStola = Integer.parseInt(((Button)gostiButton).getText());
+            int brojStola = Integer.parseInt(((RadioButton)gostiButton).getText());
             if (brojStola > najveciBrojGosta)
                 najveciBrojGosta = brojStola;
         }
@@ -1110,7 +1077,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         noviGost.setPrefSize(50, 50);
         noviGost.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override public void handle(ActionEvent e) {
-                                        String gost = ((Button)e.getSource()).getId();
+                                        String gost = ((RadioButton)e.getSource()).getId();
                                         Utils.postaviStil_ObrisiZaOstaleKontroleRoditelja(e, stilButtonGrupeSelektovana);
 //                                        if (novaTura != null) {
 //                                            novaTura = null;

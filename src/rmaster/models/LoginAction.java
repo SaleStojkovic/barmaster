@@ -12,7 +12,7 @@ import java.util.Map;
 import javafx.application.Platform;
 import rmaster.assets.DBBroker;
 import rmaster.assets.ModelBase;
-import rmaster.assets.QueryBuilder;
+import rmaster.assets.QueryBuilder.QueryBuilder;
 
 /**
  *

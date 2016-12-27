@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import rmaster.assets.DBBroker;
-import rmaster.assets.QueryBuilder;
+import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.Utils;
 
 /**
