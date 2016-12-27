@@ -83,6 +83,11 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
             newTab.setContent(novaSala);
             
             saleTabPane.getTabs().add(newTab);
+            
+            if (RMaster.trenutnaSalaID == Long.parseLong(salaMap.get("id"))) {        
+                saleTabPane.getSelectionModel().select(newTab);
+            } else {
+            }        
         }
         
     } 
@@ -186,13 +191,14 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
     
     public void nazadNaPrikazSale()
     {
-        this.prikaziFormu(
-                new Object(), 
-                ScreenMap.PRIKAZ_SALA, 
-                true, 
-                casovnik, 
-                false
-        );
+        imeKonobara.getScene().getWindow().hide();
+//        this.prikaziFormu(
+//                new Object(), 
+//                ScreenMap.PRIKAZ_SALA, 
+//                true, 
+//                casovnik, 
+//                false
+//        );
     }
     
     public void promeniKonobora(ActionEvent event)

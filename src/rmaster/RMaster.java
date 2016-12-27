@@ -30,6 +30,7 @@ public class RMaster extends Application {
     public static String trenutnaSalaSlika;
     public static String izabraniStoID;
     public static int izabraniStoBroj;
+    public static String izabraniStoNaziv;
     public static Map<String,BackgroundImage> saleSlike = new HashMap();
     public static Map<String,String> saleNaziv = new HashMap();
     public static double visinaSaleNaEkranu = 768 - 150;

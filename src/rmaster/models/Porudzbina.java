@@ -230,18 +230,22 @@ public class Porudzbina {
             //java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             long result = 0;
             HashMap<String,String> mapa = new HashMap();
-            mapa.put("brojFakture", "" + this.brojFakture);
+            if (this.brojFakture!=0)
+                mapa.put("brojFakture", "" + this.brojFakture);
             mapa.put("brojRacuna", "" + this.brojRacuna);
-            mapa.put("brojFiskalnogIsecka", "" + this.brojFiskalnogIsecka);
+            if (this.brojFiskalnogIsecka!=0)
+                mapa.put("brojFiskalnogIsecka", "" + this.brojFiskalnogIsecka);
             mapa.put("popust", "" + this.popust);
             mapa.put("brojStola", "" + this.brojStolaBroj);
-            mapa.put("crnoPlacanje", "" + this.crnoPlacanje);
+            if (this.crnoPlacanje!=null && !(this.crnoPlacanje.equals("") || this.crnoPlacanje.equals("0") || this.crnoPlacanje.equals("null")))
+                mapa.put("crnoPlacanje", "" + this.crnoPlacanje);
             if (this.datum == null)
                 this.datum = new Date();
             mapa.put("datum", Utils.getStringFromDate(this.datum));
             mapa.put("fiskalniOdstampan", "" + this.fiskalniOdstampan);
     //        mapa.put("fiskalniOdstampan", "" + (this.fiskalniOdstampan ? "1" : "0"));
-            mapa.put("oznakaSobe", "" + this.oznakaSobe);
+            if (this.oznakaSobe!=null && !(this.oznakaSobe.equals("") || this.oznakaSobe.equals("0") || this.oznakaSobe.equals("null")))
+                mapa.put("oznakaSobe", "" + this.oznakaSobe);
             mapa.put("popust", "" + this.popust);
             mapa.put("storniran", "" + this.storniran);
     //        mapa.put("storniran", "" + (this.storniran ? "b'1'" : "b'0'"));

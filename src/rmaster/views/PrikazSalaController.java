@@ -37,6 +37,7 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.ScreenMap;
+import rmaster.assets.items.StoButton;
 
 /**
  * FXML Controller class
@@ -262,7 +263,7 @@ public class PrikazSalaController extends FXMLDocumentController {
                 Map<String, String> noviRed = listStolovi.get(i);
                 
                 StackPane okvir = new StackPane();
-                Button b = new Button();
+                StoButton b = new StoButton();
                 
                 x = Double.parseDouble(noviRed.get("x"));
                 x = x * RMaster.sirinaSaleNaEkranu / sirinaSale;
@@ -277,7 +278,7 @@ public class PrikazSalaController extends FXMLDocumentController {
                 visina = visina * RMaster.visinaSaleNaEkranu / visinaSale;
 
                 b.setId(noviRed.get("id"));
-                
+                b.setBrojStola(noviRed.get("broj"));
                 naziv = noviRed.get("broj");
                 
                 if (noviRed.get("naziv") != null) {
@@ -324,9 +325,10 @@ public class PrikazSalaController extends FXMLDocumentController {
                     b.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override public void handle(ActionEvent e) {
             long startTime = System.nanoTime();    
-                                            Button b = (Button)e.getSource();
+                                            StoButton b = (StoButton)e.getSource();
                                             RMaster.izabraniStoID = b.getId();
-                                            RMaster.izabraniStoBroj = Integer.parseInt(b.getText());
+                                            RMaster.izabraniStoBroj = Integer.parseInt(b.getBrojStola());
+                                            RMaster.izabraniStoNaziv = b.getText();
                                               prikaziFormu(newData,
                                                       ScreenMap.PORUDZBINA, 
                                                       true, 

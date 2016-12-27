@@ -120,31 +120,41 @@ public class Konobar {
 
     public void promenaStolova(String stariKonobarId, List<String> brojeviStolova)
     {
-        for (int i = 0; i < brojeviStolova.size() - 1; i++)
-        {
-            QueryBuilder query = new QueryBuilder(QueryBuilder.UPDATE);
-            query.setTableName("sto");
-            query.setUpdateColumns("KONOBAR_ID");
-            query.setUpdateColumnValues(this.konobarID + "");
-            query.addCriteriaColumns("KONOBAR_ID", "broj");
-            query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
-            query.addOperators(QueryBuilder.LOGIC_AND);
-            query.addCriteriaValues(stariKonobarId, brojeviStolova.get(i));
-            
-            dbBroker.runQuery(query, Boolean.TRUE);
-            
-        }
+        // Priprema argumenta za promenu stolova -> sto IN (11,22,33)
         
+        String stolovi = "";
+        for (String stoBroj : brojeviStolova) {
+            stolovi += stoBroj + ",";
+        }
+        stolovi = stolovi.substring(0, stolovi.length() - 1);
+        stolovi = "(" + stolovi + ")";
+        
+        // Promena konobara za stolove
         QueryBuilder query = new QueryBuilder(QueryBuilder.UPDATE);
         query.setTableName("sto");
         query.setUpdateColumns("KONOBAR_ID");
         query.setUpdateColumnValues(this.konobarID + "");
         query.addCriteriaColumns("KONOBAR_ID", "broj");
-        query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
+        query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_IN);
         query.addOperators(QueryBuilder.LOGIC_AND);
-        query.addCriteriaValues(stariKonobarId, brojeviStolova.get(brojeviStolova.size() - 1));
+        query.addCriteriaValues(stariKonobarId, stolovi);
 
         dbBroker.runQuery(query);
+
+
+        // Promena konobara za racune
+        query = new QueryBuilder(QueryBuilder.UPDATE);
+        query.setTableName("racun");
+        query.setUpdateColumns("KONOBAR_ID");
+        query.setUpdateColumnValues(this.konobarID + "");
+        query.addCriteriaColumns("KONOBAR_ID", "zatvoren", "brojStola");
+        query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_IN);
+        query.addOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
+        query.addCriteriaValues(stariKonobarId, QueryBuilder.BIT_0, stolovi);
+
+
+        dbBroker.runQuery(query);
+
     }
     
 }

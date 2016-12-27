@@ -181,28 +181,7 @@ public class PorudzbinaController extends FXMLDocumentController {
 
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
-        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
-        
-        query.setTableName("stonaziv");
-        query.addCriteriaColumns("id");
-        query.addCriteria(QueryBuilder.IS_EQUAL);
-        query.addCriteriaValues(rmaster.RMaster.izabraniStoID);
-        
-        List<Map<String, String>> resultList = this.runQuery(query);
-        
-        String imeStola = rmaster.RMaster.izabraniStoID;
-        
-        if (!resultList.isEmpty()) {
-            Map<String, String> red = resultList.get(0);
-
-            imeStola = resultList.get(0).get("naziv");
-
-            if (red.get("naziv").isEmpty()) {
-                imeStola = red.get("broj");
-            }
-        }
-        izabraniSto.setText("Sto: " + imeStola);
-       
+        izabraniSto.setText("Sto: " + RMaster.izabraniStoNaziv);
     }    
     
 
@@ -214,6 +193,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             refreshGrupeIliArtikla(this.ArtikalGrupe, GLAVNA_GRUPA);
             long ms;
             ms = System.nanoTime() - startTime;
+            
             System.out.format("refreshGrupeIliArtikla(this.ArtikalGrupe, GLAVNA_GRUPA): %,10dms%n", ms);
             startTime = System.nanoTime();
             refreshGrupeIliArtikla(this.Artikal, ARTIKAL_FAVORITE);
@@ -249,7 +229,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             prikazRacunaGosta.setHbarPolicy(ScrollBarPolicy.NEVER);
             
             long startTime = System.nanoTime();
-            List racuniStola = DBBroker.get_PorudzbineStolaIKonobara();
+            List racuniStola = DBBroker.get_PorudzbineStola();
             long ms = System.nanoTime() - startTime;
             System.out.format("prikaziPorudzbinu() - DBBroker.get_PorudzbineStolaIKonobara(): %,10dms%n", ms);
             for (Object racun : racuniStola) {

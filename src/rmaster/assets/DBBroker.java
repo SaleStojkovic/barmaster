@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.control.Alert;
+import rmaster.assets.items.ArtikalButton;
 import rmaster.models.Konobar;
  
 /**
@@ -33,6 +34,8 @@ public final class DBBroker {
        
     private long startTime;
     private long ms;
+    
+    private List<ArtikalButton> listaGlavnihGrupa;
 
     public DBBroker() {
     }
@@ -711,7 +714,7 @@ public final class DBBroker {
     }
     
     
-    public List get_PorudzbineStolaIKonobara()
+    public List get_PorudzbineStola()
     {    
         Connection dbConnection = null;
         ResultSet rs = null;
@@ -722,26 +725,27 @@ public final class DBBroker {
             startTime = System.nanoTime();
             dbConnection = poveziSaBazom();
             ms = System.nanoTime() - startTime;
-            System.out.format("get_PorudzbineStolaIKonobara() - poveziSaBazom(): %,10dms%n", ms);
+            System.out.format("get_PorudzbineStola() - poveziSaBazom(): %,10dms%n", ms);
             
             startTime = System.nanoTime();
-            cStmt = dbConnection.prepareCall("{CALL getPorudzbineStolaIKonobara(?,?)}");
-            cStmt.setLong("konobarID", rmaster.RMaster.ulogovaniKonobar.konobarID);
+            cStmt = dbConnection.prepareCall("{CALL getPorudzbineStola(?)}");
+            //cStmt.setLong("konobarID", rmaster.RMaster.ulogovaniKonobar.konobarID);
             cStmt.setString("stoID", rmaster.RMaster.izabraniStoID);
             cStmt.execute();
             rs = cStmt.getResultSet();
             ms = System.nanoTime() - startTime;
-            System.out.format("get_PorudzbineStolaIKonobara() - cStmt.execute(): %,10dms%n", ms);
+            System.out.format("get_PorudzbineStola() - cStmt.execute(): %,10dms%n", ms);
             
             startTime = System.nanoTime();
             listaRezultata = prebaciUListu(rs);
             ms = System.nanoTime() - startTime;
-            System.out.format("get_PorudzbineStolaIKonobara() - prebaciUListu(rs): %,10dms%n", ms);
+            System.out.format("get_PorudzbineStola() - prebaciUListu(rs): %,10dms%n", ms);
             
         } catch (Exception e) {
-            System.out.println("Store procedure \"getPorudzbineStolaIKonobara\" exec error! - " + e.toString());
+            System.out.println("Store procedure \"get_PorudzbineStola\" exec error! - " + e.toString());
         } finally {
-            
+            startTime = System.nanoTime();
+           
             if (rs != null) {
                 try { rs.close(); } catch (SQLException ignore) {}
             }
@@ -753,6 +757,8 @@ public final class DBBroker {
             if (dbConnection != null) {
                 try { dbConnection.close(); } catch (SQLException ignore) {}
             }
+            ms = System.nanoTime() - startTime;
+            System.out.format("get_PorudzbineStola() - finally - zatvaranje: %,10dms%n", ms);
         }
             
         return listaRezultata;

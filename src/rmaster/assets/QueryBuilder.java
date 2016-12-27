@@ -28,6 +28,10 @@ public class QueryBuilder {
     
     public static String FALSE = "false";
     
+    public static String BIT_0 = "b'0";
+    
+    public static String BIT_1 = "b'1";
+    
     public static String IS_EQUAL = " = '";
     
     public static String IS_NOT_EQUAL = " <> '";
@@ -271,45 +275,58 @@ public class QueryBuilder {
         
     }
     
+    private String deleteLastOccurance(String target, String whatToDelete) {
+        int index = target.lastIndexOf(whatToDelete);
+        return target.substring(0,index-1) + target.substring(index+1, target.length());
+    }
+    
     private void addWhereClauses() {
         
         if (CRITERIA_COLUMNS.size() > 1) {
 
-                queryString += " WHERE ";
+            queryString += " WHERE ";
 
-                for (int i = 0; i < CRITERIA_COLUMNS.size() - 1; i++) {
-
+            for (int i = 0; i < CRITERIA_COLUMNS.size() - 1; i++) {
+                if (CRITERIA_VALUES.get(i).equals(BIT_0) || CRITERIA_VALUES.get(i).equals(BIT_1)) {
+                    queryString += CRITERIA_COLUMNS.get(i)
+                            + CRITERIA.get(i);
+                    queryString = deleteLastOccurance(queryString, "\'");
+                    queryString += CRITERIA_VALUES.get(i) 
+                            + OPERATORS.get(i); 
+                }
+                if (!(CRITERIA_VALUES.get(i).equals(BIT_0) || CRITERIA_VALUES.get(i).equals(BIT_1))) {
                     queryString += CRITERIA_COLUMNS.get(i)
                             + CRITERIA.get(i)
                             + CRITERIA_VALUES.get(i) 
                             + OPERATORS.get(i); 
-
-                    if (CRITERIA.get(i).equals(IS_NOT_IN) && CRITERIA.get(i).equals(IS_IN)) {
-                        queryString = queryString.substring(0, queryString.length() - 1);
-                    }
                 }
 
-                queryString += CRITERIA_COLUMNS.get(CRITERIA_COLUMNS.size() - 1)
-                        + CRITERIA.get(CRITERIA.size() - 1)
-                        + CRITERIA_VALUES.get(CRITERIA_COLUMNS.size() - 1);
-
-                if (!CRITERIA.get(CRITERIA.size() - 1).equals(IS_NOT_IN) 
-                        && !CRITERIA.get(CRITERIA.size() - 1).equals(IS_IN)) {
-                        queryString += "'";
-                    }
+                if (CRITERIA.get(i).equals(IS_NOT_IN) && CRITERIA.get(i).equals(IS_IN)) {
+                    queryString = queryString.substring(0, queryString.length() - 1);
+                }
             }
 
-            if (CRITERIA_COLUMNS.size() == 1) {
-                queryString += " WHERE ";
+            queryString += CRITERIA_COLUMNS.get(CRITERIA_COLUMNS.size() - 1)
+                    + CRITERIA.get(CRITERIA.size() - 1)
+                    + CRITERIA_VALUES.get(CRITERIA_COLUMNS.size() - 1);
 
-                queryString += CRITERIA_COLUMNS.get(0) 
-                        + CRITERIA.get(0)
-                        + CRITERIA_VALUES.get(0);
-
-                if (!CRITERIA.get(CRITERIA.size() - 1).equals(IS_NOT_IN)
-                        && !CRITERIA.get(CRITERIA.size() - 1).equals(IS_IN)) {
-                        queryString += "'";
-                    }
+            if (!CRITERIA.get(CRITERIA.size() - 1).equals(IS_NOT_IN) 
+                    && !CRITERIA.get(CRITERIA.size() - 1).equals(IS_IN)) {
+                    queryString += "'";
             }
+        }
+
+        if (CRITERIA_COLUMNS.size() == 1) {
+            queryString += " WHERE ";
+
+            queryString += CRITERIA_COLUMNS.get(0) 
+                    + CRITERIA.get(0)
+                    + CRITERIA_VALUES.get(0);
+
+            if (!CRITERIA.get(CRITERIA.size() - 1).equals(IS_NOT_IN)
+                    && !CRITERIA.get(CRITERIA.size() - 1).equals(IS_IN)) {
+                    queryString += "'";
+                }
+        }
     }
 }
