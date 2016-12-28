@@ -43,8 +43,13 @@ public class RM_TableView extends TableView<Map<String, String>> {
             List<Map<String, String>> lista
         ) 
     {
+        if (lista.isEmpty()) {
+            return;
+        }
+        
         popuniTabelu(lista);
-                    
+                   
+
             for(SirinaKolone sirina : this.SIRINE_KOLONA) {
                 
                 this.getColumns().get(sirina.BROJ_KOLONE - 1).setVisible(true);

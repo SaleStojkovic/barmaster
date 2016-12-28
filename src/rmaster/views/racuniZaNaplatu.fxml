@@ -11,12 +11,7 @@
    <children>
       <VBox prefHeight="450.0" prefWidth="600.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
-            <AnchorPane fx:id="tabelaSaRacunima" prefHeight="300.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <TableView fx:id="tabelaSaRacunimaZaNaplatu" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    
-                  </TableView>
-               </children></AnchorPane>
+            <AnchorPane fx:id="tabelaSaRacunima" prefHeight="300.0" prefWidth="600.0" VBox.vgrow="ALWAYS"/>
             <Region VBox.vgrow="ALWAYS" />
             <HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0">
                <children>

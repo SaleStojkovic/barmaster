@@ -5,6 +5,7 @@
  */
 package rmaster.views;
 
+import static java.lang.ProcessBuilder.Redirect.to;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -15,8 +16,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
+import static jdk.nashorn.internal.runtime.Debug.id;
 import rmaster.assets.FXMLDocumentController;
+import static rmaster.assets.QueryBuilder.QueryBuilder.SELECT;
 import rmaster.assets.RM_TableView.RM_TableView;
+import rmaster.assets.RM_TableView.SirinaKolone;
 
 /**
  * FXML Controller class
@@ -25,8 +29,7 @@ import rmaster.assets.RM_TableView.RM_TableView;
  */
 public class RacuniZaNaplatuController extends FXMLDocumentController {
 
-    @FXML
-    private RM_TableView tabelaSaRacunimaZaNaplatu;
+    private RM_TableView tabelaSaRacunimaZaNaplatu = new RM_TableView();
     
     @FXML
     public AnchorPane tabelaSaRacunima;
@@ -39,6 +42,14 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
     @Override
     public void initData(Object data) {
         try {
+            tabelaSaRacunimaZaNaplatu.setSirineKolona(
+                    new SirinaKolone(2, 100),
+                    new SirinaKolone(3, 100),
+                    new SirinaKolone(4, 100),
+                    new SirinaKolone(5, 100),
+                    new SirinaKolone(6, 100)
+            );
+            
             String[] imenaArgumenata = {"konobarID"};
             String[] vrednostiArgumenata = {ulogovaniKonobar.konobarID + ""};
             listRacuni = runStoredProcedure("getZatvoreniRacuniKonobaraTogDanaZaStampu",
@@ -62,11 +73,13 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
         tabelaSaRacunimaZaNaplatu.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         
         tabelaSaRacunimaZaNaplatu.setPodaci(listRacuni);
-
+        
         int brojRedova = listRacuni.size();
         tabelaSaRacunimaZaNaplatu.setFixedCellSize(30);
                                 
         tabelaSaRacunimaZaNaplatu.setPrefHeight(brojRedova * tabelaSaRacunimaZaNaplatu.getFixedCellSize());
+        
+        tabelaSaRacunima.getChildren().add(tabelaSaRacunimaZaNaplatu);
         
         AnchorPane.setTopAnchor(tabelaSaRacunima, 5.);
         AnchorPane.setBottomAnchor(tabelaSaRacunima, 5.);
