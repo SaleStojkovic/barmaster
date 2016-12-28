@@ -78,6 +78,8 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
         tabelaSaRacunimaZaNaplatu.setFixedCellSize(30);
                                 
         tabelaSaRacunimaZaNaplatu.setPrefHeight(brojRedova * tabelaSaRacunimaZaNaplatu.getFixedCellSize());
+                
+        tabelaSaRacunimaZaNaplatu.setPrefSize(600, 450);
         
         tabelaSaRacunima.getChildren().add(tabelaSaRacunimaZaNaplatu);
         

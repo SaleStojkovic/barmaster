@@ -42,7 +42,7 @@ public class RM_TableView extends TableView<Map<String, String>> {
     public void setPodaci (
             List<Map<String, String>> lista
         ) 
-    {
+    {        
         if (lista.isEmpty()) {
             return;
         }
@@ -162,6 +162,4 @@ public class RM_TableView extends TableView<Map<String, String>> {
                     listaPodataka
                     );
     }
-
-    
 }
