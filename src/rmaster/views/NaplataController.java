@@ -224,7 +224,7 @@ public class NaplataController extends FXMLDocumentController {
                                         osveziPrikaz();
                                     }
                                 });
-           mapaPopusta.put(popust.get("id"), popust.get("popust"));
+            mapaPopusta.put(popust.get("id"), popust.get("popust"));
             if (brojac<4)
                 this.fxID_PopustiZaNaplatu1.getChildren().add(popustButton);
             else
@@ -527,6 +527,7 @@ public class NaplataController extends FXMLDocumentController {
         String tekst = skenerKartice.getText() + taster;
         
         skenerKartice.setText(tekst);
+        proveriPin(keyEvent);
     }
     
     public void proveriPin(KeyEvent keyEvent)
@@ -555,6 +556,14 @@ public class NaplataController extends FXMLDocumentController {
             
             System.out.print(hotelGost + " Ima ga");
             //ovde se sad radi sta vec ako postoji
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Naplata!");
+            alert.setHeaderText("CRNO PLACANJE PREPOZNATO!");
+            alert.setContentText("Funkcionalnost jos uvek nije zavrsena."
+                    + "Vrsta crnog placanja: "
+                    + rezultat.get(0).get("naziv"));
+            alert.showAndWait();
+
         }
     }
 }

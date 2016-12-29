@@ -9,4 +9,4 @@
  */
 
 ALTER TABLE `racun` 
-ADD INDEX `I_RACUN_BROJSTOLAKONOBARID` (`brojStola` ASC, `KONOBAR_ID` ASC);
+ADD INDEX `I_RACUN_BROJSTOLAKONOBARID` (`brojStola` ASC, `zatvoren` ASC, `storniran` ASC);
