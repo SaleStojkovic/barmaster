@@ -5,6 +5,7 @@
  */
 package rmaster.views;
 
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,6 +56,9 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     private long startTime;
     private long ms;
+    
+    @FXML
+    public VBox prikazRacunaGostaSadrzaj;
     
     @FXML
     public HBox ArtikalGrupe;
@@ -297,36 +301,49 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     }
     public void prikaziPorudzbinu(Porudzbina porudzbina) {
-        prikazRacunaGosta.setContent(null);  
+        List<Node> listaSadrzaja = prikazRacunaGostaSadrzaj.getChildren();
+
         prikazRacunaGosta.setFitToWidth(true);
                                                 
-        VBox sveTure = new VBox();
-        VBox paneTura = new VBox();
-        paneTura.setPadding(new Insets(0, 0, 0, 0));
+        prikazRacunaGostaSadrzaj.setPadding(new Insets(0, 0, 0, 0));
+        
+        int brojac = 0;
         
         for (Tura tura : porudzbina.getTure()) {
-            RM_TableView tabelaNoveTure = new RM_TableView();
-            tabelaNoveTure.setSelectionModel(null);
+            
+            RM_TableView novaTabela = new RM_TableView();
+            Button ponoviTuru = new Button();
+            
+            brojac++;
+            
+            if (brojac < 12) {
+                novaTabela = (RM_TableView) findNodeById(listaSadrzaja, "tura" + brojac);
+                novaTabela.setVisible(true);
+                ponoviTuru = (Button) findNodeById(listaSadrzaja, "ponoviTura" + brojac);
+                ponoviTuru.setVisible(true);
+            } 
+            
+            novaTabela.setSelectionModel(null);
             
             if (tura.getTuraID() == 0) {
                 novaTura = tura;
             }
             
-            tabelaNoveTure.addRavnjanje(
+            novaTabela.addRavnjanje(
                     new RavnanjeKolone(7, RavnanjeKolone.ALIGN_RIGHT),
                     new RavnanjeKolone(5, RavnanjeKolone.ALIGN_LEFT)            
             );
             
-            tabelaNoveTure.setSirineKolona(
+            novaTabela.setSirineKolona(
                 new SirinaKolone(3, sirinaKolonaTabele[2]),
                 new SirinaKolone(5, sirinaKolonaTabele[4]),
                 new SirinaKolone(7, sirinaKolonaTabele[6])
             );
-            tabelaNoveTure.setPodaci(
+            novaTabela.setPodaci(
                     tura.dajTuru()
             );
             
-            Button ponoviTuru = new Button();
+
             ponoviTuru.setPrefSize(427, 40);
             try {
                 String period = Utils.getDateDiff(tura.getVremeTure(), new Date(), TimeUnit.MINUTES);
@@ -341,13 +358,14 @@ public class PorudzbinaController extends FXMLDocumentController {
                                 ponoviTuru(turaId);
                             }
                         }); 
-            paneTura.getChildren().add(tabelaNoveTure);
-            paneTura.getChildren().add(ponoviTuru);
+            
+            if (brojac > 12) {
+                prikazRacunaGostaSadrzaj.getChildren().add(novaTabela);
+                prikazRacunaGostaSadrzaj.getChildren().add(ponoviTuru);
+            }
         }
-        sveTure.getChildren().add(paneTura);
         
         this.prikaziTotalPopustNaplataPorudzbina(porudzbina);
-        this.prikazRacunaGosta.setContent(sveTure);
     }
 
     public void ponoviTuru(String izabranaTuraIdString) {
@@ -357,6 +375,8 @@ public class PorudzbinaController extends FXMLDocumentController {
         //OVDE SE SADA PONAVLJA TURA
         long izabranaTuraID = Long.parseLong(izabranaTuraIdString);
         novaTura = null;
+        
+        //TODO ovde treba da se uradi remove iz svih tabela i da se odradi hide 
         prikazRacunaGosta.setContent(null);
 
         for (Tura tura : porudzbinaTrenutna.getTure()) {
@@ -833,6 +853,8 @@ public class PorudzbinaController extends FXMLDocumentController {
         if (porudzbinaTrenutna.getBlokiranaPorudzbina()) {
             return;
         }
+        
+        //TODO isto i ovde treba da se samo setuju sve tabele na empty i hide
         prikazRacunaGosta.setContent(null);
 
         String idArtikla = artikal.getId();

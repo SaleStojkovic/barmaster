@@ -445,5 +445,18 @@ public class FXMLDocumentController implements Initializable {
         return -1;
     }
 
-    
+    public Node findNodeById(List<Node> lista, String fxId) {
+        
+        Node zeljeniNode = null;
+        
+        for(Node noviNode : lista) {
+            if(noviNode.getId().equals(fxId))
+            {
+                zeljeniNode = noviNode;
+                break;
+            }
+        }
+        
+        return zeljeniNode;
+    }
 }
