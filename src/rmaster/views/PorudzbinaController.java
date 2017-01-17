@@ -5,6 +5,7 @@
  */
 package rmaster.views;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
@@ -108,6 +109,9 @@ public class PorudzbinaController extends FXMLDocumentController {
     @FXML
     public Button porudzbinaMedjuzbir;
     
+    @FXML
+    public RM_TableView tabelaNovaTuraGosta;
+    
     // Sirina dela u kome se prikazuju grupe, podgrupe i artikli
     public double roditeljSirina = 592.0;
     public final double defaultVisinaDugmeta = 68.0;
@@ -165,11 +169,11 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     public Map<String,List> racuniStolaPoGostima = new HashMap<>();
     
-    public RM_TableView tabelaNovaTuraGosta = new RM_TableView();
-
+    public List<Node> listaTabela = new VirtualFlow.ArrayLinkedList<>();
+            
     private List<Porudzbina> porudzbineStola = new ArrayList<Porudzbina>();
     
-    Integer[] sirinaKolonaTabele = {0, 0, 322, 0, 40, 0, 61, 0, 0, 0};
+    Integer[] sirinaKolonaTabele = {0, 0, 305, 0, 40, 0, 58, 0, 0, 0};
     
     List<Map<String, String>> tureTrenutnoIzabranogGosta = new ArrayList<>();
     
@@ -180,12 +184,16 @@ public class PorudzbinaController extends FXMLDocumentController {
     ArtikalButton selektovani = null;
     StavkaTure selektovana = null;
     
-
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        prikazRacunaGosta.setHbarPolicy(ScrollBarPolicy.NEVER);
+
+        listaTabela = prikazRacunaGostaSadrzaj.getChildren();
+        
         tabelaNovaTuraGosta.addRavnjanje(
             new RavnanjeKolone(7, RavnanjeKolone.ALIGN_RIGHT),
             new RavnanjeKolone(5, RavnanjeKolone.ALIGN_LEFT)
@@ -200,6 +208,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
         izabraniSto.setText("Sto: " + RMaster.izabraniStoNaziv);
+        
     }    
     
 
@@ -244,8 +253,6 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     public void prikaziPorudzbinu() {
            
-            prikazRacunaGosta.setHbarPolicy(ScrollBarPolicy.NEVER);
-            
             long startTime = System.nanoTime();
             List racuniStola = DBBroker.get_PorudzbineStola();
             long ms = System.nanoTime() - startTime;
@@ -301,6 +308,9 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     }
     public void prikaziPorudzbinu(Porudzbina porudzbina) {
+        
+        sakrijSveTabele();
+ 
         List<Node> listaSadrzaja = prikazRacunaGostaSadrzaj.getChildren();
 
         prikazRacunaGosta.setFitToWidth(true);
@@ -318,9 +328,9 @@ public class PorudzbinaController extends FXMLDocumentController {
             
             if (brojac < 12) {
                 novaTabela = (RM_TableView) findNodeById(listaSadrzaja, "tura" + brojac);
-                novaTabela.setVisible(true);
+                prikaziKomponentu(novaTabela);
                 ponoviTuru = (Button) findNodeById(listaSadrzaja, "ponoviTura" + brojac);
-                ponoviTuru.setVisible(true);
+                prikaziKomponentu(ponoviTuru);
             } 
             
             novaTabela.setSelectionModel(null);
@@ -344,7 +354,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             );
             
 
-            ponoviTuru.setPrefSize(427, 40);
+            ponoviTuru.setPrefSize(403, 40);
             try {
                 String period = Utils.getDateDiff(tura.getVremeTure(), new Date(), TimeUnit.MINUTES);
                 ponoviTuru.setText("Ponovi Turu (" + period + ")");
@@ -376,8 +386,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         long izabranaTuraID = Long.parseLong(izabranaTuraIdString);
         novaTura = null;
         
-        //TODO ovde treba da se uradi remove iz svih tabela i da se odradi hide 
-        prikazRacunaGosta.setContent(null);
+        sakrijSveTabele();
 
         for (Tura tura : porudzbinaTrenutna.getTure()) {
             if (tura.turaID == izabranaTuraID) {
@@ -395,8 +404,8 @@ public class PorudzbinaController extends FXMLDocumentController {
                         novaTura.dajTuru()
                 );
             tabelaNovaTuraGosta.getSelectionModel().select(novaTura.listStavkeTure.size() - 1);
-
-            prikazRacunaGosta.setContent(tabelaNovaTuraGosta);
+            
+            prikaziKomponentu(tabelaNovaTuraGosta);
             this.prikaziTotalPopustNaplataTura(novaTura);
         }
     }
@@ -790,7 +799,10 @@ public class PorudzbinaController extends FXMLDocumentController {
         if (porudzbinaTrenutna.getBlokiranaPorudzbina()) {
             return;
         }
-        prikazRacunaGosta.setContent(null);
+//        prikazRacunaGosta.setContent(null);
+        
+        sakrijSveTabele();
+        
         Map<String, String> novaGlavnaStavka = null;
         StavkaTure nova = null;
 
@@ -855,7 +867,9 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
         
         //TODO isto i ovde treba da se samo setuju sve tabele na empty i hide
-        prikazRacunaGosta.setContent(null);
+//        prikazRacunaGosta.setContent(null);
+
+        sakrijSveTabele();
 
         String idArtikla = artikal.getId();
         String nazivArtikla = artikal.getText();
@@ -1051,7 +1065,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                 getRowIndexOfStavka(tabelaNovaTuraGosta, selektovana)
         );
  
-        prikazRacunaGosta.setContent(tabelaNovaTuraGosta);
+        prikaziKomponentu(tabelaNovaTuraGosta);
         //tabelaNovaTuraGosta.getSelectionModel().select(selektovano);
     }
     
@@ -1248,9 +1262,22 @@ public class PorudzbinaController extends FXMLDocumentController {
         );    
     }
 
-//    public void medjuzbir(ActionEvent event) {
-//        //porudzbinaTrenutna.snimi();
-//        porudzbinaTrenutna.zatvoriRacun(null);
-//        Stampa.getInstance().stampajMedjuzbir(porudzbinaTrenutna);
-//    }
+    public void sakrijSveTabele() {
+        for(Node node : listaTabela) {
+            node.setVisible(false);
+            node.setManaged(false);
+            if (node instanceof Button) {
+                ((Button) node).setPrefSize(0, 0); 
+            }
+            if (node instanceof RM_TableView) {
+                ((RM_TableView) node).setPrefSize(0, 0);
+            }
+        }
+    }
+    
+    public void prikaziKomponentu(Node komponenta)
+    {
+        komponenta.setVisible(true);
+        komponenta.setManaged(true);
+    }
 }

@@ -99,30 +99,31 @@
                             <content>
                                 <VBox fx:id="prikazRacunaGostaSadrzaj" maxHeight="-Infinity" minHeight="-Infinity" prefWidth="424.0" >
                                     <children>
-                                        <RM_TableView id="tura1" visible="false" />
-                                        <Button id="ponoviTura1" visible="false"/>
-                                        <RM_TableView id="tura2" visible="false" />
-                                        <Button id="ponoviTura2" visible="false"/>
-                                        <RM_TableView id="tura3" visible="false" />
-                                        <Button id="ponoviTura3" visible="false"/>
-                                        <RM_TableView id="tura4" visible="false" />
-                                        <Button id="ponoviTura4" visible="false"/>
-                                        <RM_TableView id="tura5" visible="false" />
-                                        <Button id="ponoviTura5" visible="false"/>
-                                        <RM_TableView id="tura6" visible="false" />
-                                        <Button id="ponoviTura6" visible="false"/>
-                                        <RM_TableView id="tura7" visible="false"/>
-                                        <Button id="ponoviTura7" visible="false"/>
-                                        <RM_TableView id="tura8" visible="false" />
-                                        <Button id="ponoviTura8" visible="false"/>
-                                        <RM_TableView id="tura9" visible="false" />
-                                        <Button id="ponoviTura9" visible="false"/>
-                                        <RM_TableView id="tura10" visible="false"/>
-                                        <Button id="ponoviTura10" visible="false"/>
-                                        <RM_TableView id="tura11" visible="false"/>
-                                        <Button id="ponoviTura11" visible="false"/>
-                                        <RM_TableView id="tura12" visible="false"/>
-                                        <Button id="ponoviTura12" visible="false"/>
+                                        <RM_TableView fx:id="tabelaNovaTuraGosta" />
+                                        <RM_TableView id="tura1"  />
+                                        <Button id="ponoviTura1" />
+                                        <RM_TableView id="tura2"  />
+                                        <Button id="ponoviTura2" />
+                                        <RM_TableView id="tura3"  />
+                                        <Button id="ponoviTura3" />
+                                        <RM_TableView id="tura4"  />
+                                        <Button id="ponoviTura4" />
+                                        <RM_TableView id="tura5"  />
+                                        <Button id="ponoviTura5" />
+                                        <RM_TableView id="tura6" />
+                                        <Button id="ponoviTura6" />
+                                        <RM_TableView id="tura7" />
+                                        <Button id="ponoviTura7" />
+                                        <RM_TableView id="tura8" />
+                                        <Button id="ponoviTura8" />
+                                        <RM_TableView id="tura9" />
+                                        <Button id="ponoviTura9" />
+                                        <RM_TableView id="tura10" />
+                                        <Button id="ponoviTura10" />
+                                        <RM_TableView id="tura11" />
+                                        <Button id="ponoviTura11" />
+                                        <RM_TableView id="tura12" />
+                                        <Button id="ponoviTura12" />
                                     </children>
                                 </VBox>
                             </content>

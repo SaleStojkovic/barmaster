@@ -49,13 +49,17 @@ public class RM_TableView extends TableView<Map<String, String>> {
         
         popuniTabelu(lista);
                    
-
+        int ukupnaSirina = 0;
+        
             for(SirinaKolone sirina : this.SIRINE_KOLONA) {
                 
                 this.getColumns().get(sirina.BROJ_KOLONE - 1).setVisible(true);
                 this.getColumns().get(sirina.BROJ_KOLONE - 1).setPrefWidth(sirina.SIRINA_KOLONE);
-
+                ukupnaSirina += sirina.SIRINA_KOLONE;
             }
+        this.setPrefWidth(ukupnaSirina);
+        this.setMaxWidth(ukupnaSirina);
+        this.setMinWidth(ukupnaSirina);
         
         
         if (!this.RAVNANJA_KOLONA.isEmpty()) {
