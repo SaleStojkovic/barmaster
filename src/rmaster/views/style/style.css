@@ -428,8 +428,9 @@ and open the template in the editor.
 }
 
 #prikazRacunaGosta .table-view  {
-    -fx-background-color: -fx-siva;
-    -fx-border-width: 1, 1, 0, 1;
+    -fx-background-color: -fx-tamno-crna;
+    -fx-border-color: white;
+    -fx-border-width: 0.3;
 }
 
 #prikazRacunaGosta .table-view .table-cell {
@@ -464,15 +465,14 @@ and open the template in the editor.
 }
 
 
-#prikazRacunaGosta .scroll-bar .thumb { 
+#prikazRacunaGosta  .scroll-bar .thumb { 
     -fx-background-color: -fx-svetlo-crna;
 
 }
 
-#prikazRacunaGosta .scroll-bar {
+#prikazRacunaGosta  .scroll-bar {
     -fx-background-color: -fx-tamno-crna;
     prefWidth:5px; 
-
 }
 
 #prikazRacunaGosta > .scroll-bar:vertical > .increment-button,
@@ -491,10 +491,8 @@ and open the template in the editor.
 }
 
 #prikazRacunaGosta > .viewport {
-   -fx-background-color: transparent;
+   -fx-background-color: -fx-tamno-crna;
 }
-
-
 
 /* kraj porudzbine */
 
