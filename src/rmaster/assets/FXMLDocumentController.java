@@ -280,50 +280,116 @@ public class FXMLDocumentController implements Initializable {
              Node prethodnaForma, 
              boolean modalnaForma) 
      {
+        long startUK = System.nanoTime();
+        long startTimeUK = System.nanoTime();
+        long ms;
         Stage stage;
         String imeNoveForme = imeForme + ".fxml";
         try {
-            if (prozor!=null)
+            if (prozor!=null) {
                 stage = prozor;
+                ms = System.nanoTime() - startTimeUK;
+                System.out.format("FXMLDocController: --> stage = prozor: %,10dms%n", ms);
+           }
             else{
                 stage = new Stage(StageStyle.UNDECORATED);
                 prozor = stage;
+                ms = System.nanoTime() - startTimeUK;
+                System.out.format("FXMLDocController: --> stage = new Stage(StageStyle.UNDECORATED): %,10dms%n", ms);
             }
             
+            startTimeUK = System.nanoTime();
             Scene novaScena = otvoreneForme.get(imeForme);
+            ms = System.nanoTime() - startTimeUK;
+            System.out.format("FXMLDocController: --> novaScena = otvoreneForme.get(imeForme): %,10dms%n", ms);
+
+            startTimeUK = System.nanoTime();
             FXMLDocumentController controller = otvoreneFormeControllers.get(imeForme);
-            
+            ms = System.nanoTime() - startTimeUK;
+            System.out.format("FXMLDocController: --> controller = otvoreneFormeControllers.get(imeForme): %,10dms%n", ms);
+
+            startTimeUK = System.nanoTime();
             if (novaScena == null) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(imeNoveForme));
+                ms = System.nanoTime() - startTimeUK;
+                System.out.format("FXMLDocController: ----> novaScena == null? --> loader = new FXMLLoader: %,10dms%n", ms);
+
+                startTimeUK = System.nanoTime();
                 Pane pane = loader.load();
+                ms = System.nanoTime() - startTimeUK;
+                System.out.format("FXMLDocController: ----> novaScena == null? --> pane = loader.load(): %,10dms%n", ms);
+
+                startTimeUK = System.nanoTime();
                 novaScena = new Scene(pane);
+                ms = System.nanoTime() - startTimeUK;
+                System.out.format("FXMLDocController: ----> novaScena == null? --> novaScena = new Scene(pane): %,10dms%n", ms);
+
+                startTimeUK = System.nanoTime();
                 novaScena.getStylesheets().addAll(this.getClass().getResource("style/style.css").toExternalForm());
+                ms = System.nanoTime() - startTimeUK;
+                System.out.format("FXMLDocController: ----> novaScena == null? --> novaScena.getStylesheets().addAll: %,10dms%n", ms);
+
+                startTimeUK = System.nanoTime();
                 controller = loader.getController();
+                ms = System.nanoTime() - startTimeUK;
+                System.out.format("FXMLDocController: ----> novaScena == null? --> controller = loader.getController(): %,10dms%n", ms);
+
+                startTimeUK = System.nanoTime();
                 otvoreneForme.put(imeForme, novaScena);
                 otvoreneFormeControllers.put(imeForme, controller);
+                ms = System.nanoTime() - startTimeUK;
+                System.out.format("FXMLDocController: ----> novaScena == null? --> otvoreneForme.put: %,10dms%n", ms);
+
+                startTimeUK = System.nanoTime();
             }
-           
+            //stage.setScene(null);
+            ms = System.nanoTime() - startTimeUK;
+            System.out.format("FXMLDocController: ----> stage.setScene(null): %,10dms%n", ms);
+
+            startTimeUK = System.nanoTime();
             stage.setScene(novaScena);
+            ms = System.nanoTime() - startTimeUK;
+            System.out.format("FXMLDocController: ----> stage.setScene(novaScena): %,10dms%n", ms);
+
+            startTimeUK = System.nanoTime();
             if (modalnaForma) {
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.initOwner(prethodnaForma.getScene().getWindow());
+                ms = System.nanoTime() - startTimeUK;
+                System.out.format("FXMLDocController: ----> modalna? --> stage.initModality i initOwner: %,10dms%n", ms);
+
+                startTimeUK = System.nanoTime();
             }
             
             if (data != null) {
                 controller.initData(data);
+                ms = System.nanoTime() - startTimeUK;
+                System.out.format("FXMLDocController: ----> data != null? --> controller.initData(data): %,10dms%n", ms);
+
+                startTimeUK = System.nanoTime();
             } else {
                 Object newData = new Object();
                 controller.initData(newData);
+                ms = System.nanoTime() - startTimeUK;
+                System.out.format("FXMLDocController: ----> data == null? --> controller.initData(data): %,10dms%n", ms);
+
+                startTimeUK = System.nanoTime();
             }
 
             if (modalnaForma)
                 stage.showAndWait();
             else {
                 stage.show();
+                ms = System.nanoTime() - startTimeUK;
+                System.out.format("FXMLDocController: ----> nije modalnaForma? --> stage.show(): %,10dms%n", ms);
+
+                startTimeUK = System.nanoTime();
                 if (ugasiPrethodnuFormu) {
-                    prethodnaForma.getScene().getWindow().hide();
+                    //prethodnaForma.getScene().getWindow().hide();
                 }
             }
+        ms = System.nanoTime() - startUK;
+        System.out.format("FXMLDocController: UKUPNO: %,10dms%n", ms);
 
         } catch (Exception e){
             System.out.println("Greska pri otvaranju forme " + imeNoveForme + "! - " + e.toString());

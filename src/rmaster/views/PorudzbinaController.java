@@ -199,6 +199,7 @@ public class PorudzbinaController extends FXMLDocumentController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        long startTime = System.nanoTime();
         prikazRacunaGosta.setHbarPolicy(ScrollBarPolicy.NEVER);
 
         listaTabela = prikazRacunaGostaSadrzaj.getChildren();
@@ -217,7 +218,9 @@ public class PorudzbinaController extends FXMLDocumentController {
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
         izabraniSto.setText("Sto: " + RMaster.izabraniStoNaziv);
-        
+        long ms;
+        ms = System.nanoTime() - startTime;
+        System.out.format("Porudzbina(initialize): %,10dms%n", ms);
     }    
     
 
@@ -227,44 +230,48 @@ public class PorudzbinaController extends FXMLDocumentController {
         try {
             //refreshGrupeIliArtikla(this.ArtikalGrupe, GLAVNA_GRUPA);
             long startTimeUK = System.nanoTime();
+            long startUK = System.nanoTime();
             if (this.ArtikalGrupe.getChildren().isEmpty()) {
                 long startTime = System.nanoTime();
                 initArtikalPrikaz(GLAVNA_GRUPA);
                 long ms;
                 ms = System.nanoTime() - startTime;
-                System.out.format("refreshGrupeIliArtikla(this.ArtikalGrupe, GLAVNA_GRUPA): %,10dms%n", ms);
+                System.out.format("INIT: ----> initArtikalPrikaz(GLAVNA_GRUPA): %,10dms%n", ms);
 
                 startTime = System.nanoTime();
                 initArtikalPrikaz(ARTIKAL_FAVORITE);
                 ms = System.nanoTime() - startTime;
-                System.out.format("refreshGrupeIliArtikla(this.ArtikalGrupe, ARTIKAL_FAVORITE): %,10dms%n", ms);
+                System.out.format("INIT: ----> initArtikalPrikaz(ARTIKAL_FAVORITE): %,10dms%n", ms);
 
                 startTime = System.nanoTime();
                 initArtikalPrikaz(ARTIKAL_DODATNI);
                 ms = System.nanoTime() - startTime;
-                System.out.format("refreshGrupeIliArtikla(this.ArtikalGrupe, ARTIKAL_DODATNI): %,10dms%n", ms);
+                System.out.format("INIT: ----> initArtikalPrikaz(ARTIKAL_DODATNI): %,10dms%n", ms);
 
                 startTime = System.nanoTime();
                 initArtikalPrikaz(ARTIKAL_OPISNI);
                 ms = System.nanoTime() - startTime;
-                System.out.format("refreshGrupeIliArtikla(this.ArtikalGrupe, ARTIKAL_OPISNI): %,10dms%n", ms);
+                System.out.format("INIT: ----> initArtikalPrikaz(ARTIKAL_OPISNI): %,10dms%n", ms);
 
                 //startTime = System.nanoTime();
+                startTime = System.nanoTime();
                 this.ArtikalFavorite.setVisible(true);
                 this.Artikal_DvaDela.setVisible(false);
+                ms = System.nanoTime() - startTime;
+                System.out.format("INIT: ----> this.ArtikalFavorite.setVisible(true) + DvaDela.setVisible(false): %,10dms%n", ms);
             }
             ms = System.nanoTime() - startTimeUK;
-            System.out.format("refreshGrupeIliArtikla(UKUPNO): %,10dms%n", ms);
+            System.out.format("INIT: --> initArtikalPrikaz(UKUPNO): %,10dms%n", ms);
             
             startTimeUK = System.nanoTime();
             refreshGrupeIliArtikla_v2(this.ArtikalGrupe, GLAVNA_GRUPA);
             ms = System.nanoTime() - startTimeUK;
-            System.out.format("refreshFavorite(UKUPNO): %,10dms%n", ms);
+            System.out.format("INIT: --> refreshGrupeIliArtikla_v2(this.ArtikalGrupe, GLAVNA_GRUPA): %,10dms%n", ms);
             
             startTimeUK = System.nanoTime();
             refreshGrupeIliArtikla_v2(this.ArtikalFavorite, ARTIKAL_FAVORITE);
             ms = System.nanoTime() - startTimeUK;
-            System.out.format("refreshFavorite(UKUPNO): %,10dms%n", ms);
+            System.out.format("INIT: --> refreshGrupeIliArtikla_v2(this.ArtikalFavorite, ARTIKAL_FAVORITE): %,10dms%n", ms);
 
             //ms = System.nanoTime() - startTime;
             //System.out.format("refreshGrupeIliArtikla(this.Artikal, ARTIKAL_FAVORITE): %,10dms%n", ms);
@@ -272,7 +279,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             startTime = System.nanoTime();
             prikaziPorudzbinu();
             ms = System.nanoTime() - startTime;
-            System.out.format("prikaziPorudzbinu(): %,10dms%n", ms);
+            System.out.format("INIT: --> prikaziPorudzbinu(): %,10dms%n", ms);
 
             startTime = System.nanoTime();
             if (this.prikazGostiju.getChildren().isEmpty()) {
@@ -280,13 +287,15 @@ public class PorudzbinaController extends FXMLDocumentController {
                 dodajNovogGosta(new ActionEvent());
             }
             ms = System.nanoTime() - startTime;
-            System.out.format("dodajNovogGosta(new ActionEvent()): %,10dms%n", ms);
+            System.out.format("INIT: --> dodajNovogGosta(new ActionEvent()): %,10dms%n", ms);
 
             startTime = System.nanoTime();
             RadioButton dugme = (RadioButton)prikazGostiju.getChildren().get(0);
             dugme.fire();
             ms = System.nanoTime() - startTime;
-            System.out.format("dugme.fire(): %,10dms%n", ms);
+            System.out.format("INIT: --> dugme.fire(): %,10dms%n", ms);
+            ms = System.nanoTime() - startUK;
+            System.out.format("INIT: UKUPNO: %,10dms%n", ms);
 
         } catch (Exception e) {
             System.out.println("Greska u pozivu SP get_racuniKonobaraKojiNisuZatvoreni! - " + e.toString());
