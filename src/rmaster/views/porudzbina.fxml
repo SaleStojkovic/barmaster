@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
@@ -16,7 +23,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.PorudzbinaController">
+<AnchorPane id="AnchorPane" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.PorudzbinaController">
    <children>
       <BorderPane layoutX="46.0" layoutY="234.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          
@@ -151,8 +158,17 @@
             <VBox fx:id="porudzbinaArtikli" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="597.0" BorderPane.alignment="CENTER">
                <children>
                   <HBox fx:id="ArtikalGrupe" alignment="CENTER" maxHeight="64.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="64.0" prefWidth="597.0" />
-                  <FlowPane fx:id="ArtikalPodgrupe" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="192.0" prefWidth="597.0" />
-                  <FlowPane fx:id="Artikal" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="320.0" prefWidth="597.0" />
+                  <StackPane prefHeight="512.0" prefWidth="597.0">
+                     <children>
+                        <FlowPane fx:id="ArtikalFavorite" prefHeight="512.0" prefWidth="597.0" />
+                        <VBox fx:id="Artikal_DvaDela" prefHeight="512.0" prefWidth="597.0">
+                           <children>
+                              <FlowPane fx:id="ArtikalPodgrupe" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="192.0" prefWidth="597.0" />
+                              <FlowPane fx:id="Artikal" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="320.0" prefWidth="597.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </StackPane>
                </children>
                <opaqueInsets>
                   <Insets />

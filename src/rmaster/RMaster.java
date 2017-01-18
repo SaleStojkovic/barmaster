@@ -6,6 +6,7 @@
 package rmaster;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -36,6 +37,8 @@ public class RMaster extends Application {
     public static double visinaSaleNaEkranu = 768 - 150;
     public static double sirinaSaleNaEkranu = 1024;
     
+    public static List<Map<String, String>> listaGrupaArtikalaFront;
+    public static List<Map<String, String>> listaArtikalaFavorite;
     
     public Konobar getUlogovaniKonobar() {
         return ulogovaniKonobar;

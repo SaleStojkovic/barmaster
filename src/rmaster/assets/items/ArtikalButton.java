@@ -15,16 +15,19 @@ import javafx.scene.image.ImageView;
  * @author Bosko
  */
 public class ArtikalButton extends Button{
-    private String ImagePutanja;
-    private Image image;
-    private String prioritet;
-    private String skrNaziv;
-    private String NadredjenaGrupaID;
-    private String tip;
-    private VrsteGrupaIliArtikal vrstaZaPrikaz;
-    private double cenaJedinicna;
-    private boolean dozvoljenPopust;
-    private String stampacID;
+    public String ImagePutanja;
+    public Image image;
+    public String prioritet;
+    public String skrNaziv;
+    public String NadredjenaGrupaID;
+    public String tip;
+    public VrsteGrupaIliArtikal vrstaZaPrikaz;
+    public double cenaJedinicna;
+    public boolean dozvoljenPopust;
+    public String stampacID;
+    
+    public ArtikalButton() {      
+    }
     
     public ArtikalButton(
             String name, 
