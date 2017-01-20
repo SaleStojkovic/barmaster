@@ -5,17 +5,23 @@
  */
 package rmaster;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import rmaster.assets.DBBroker;
+import rmaster.assets.QueryBuilder.QueryBuilder;
+import rmaster.assets.ScreenMap;
+import rmaster.assets.items.Artikal;
+import rmaster.assets.items.GrupaArtikalaFront;
 import rmaster.models.Konobar;
 
 /**
@@ -39,6 +45,8 @@ public class RMaster extends Application {
     
     public static List<Map<String, String>> listaGrupaArtikalaFront;
     public static List<Map<String, String>> listaArtikalaFavorite;
+               
+    DBBroker dbBroker = new DBBroker();
     
     public Konobar getUlogovaniKonobar() {
         return ulogovaniKonobar;
@@ -52,8 +60,14 @@ public class RMaster extends Application {
         trenutnaSalaID = novaSala;
     }
     
+    
+
     @Override
     public void start(Stage stage) throws Exception {
+        
+        getGrupaArtikalaFront();
+        
+        getListaArtikalaFavorite();
         
         Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBold.otf").toExternalForm(), 10);
         Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBoldItalic.otf").toExternalForm(), 10);
@@ -63,14 +77,38 @@ public class RMaster extends Application {
         Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaMediumItalic.otf").toExternalForm(), 10);
         Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaRegular.otf").toExternalForm(), 10);
         Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaRegularItalic.otf").toExternalForm(), 10);
+        
 
-        Parent root = FXMLLoader.load(getClass().getResource(this.getMainScreen()));
-        root.getStylesheets().addAll(this.getClass().getResource("views/style/style.css").toExternalForm());
+       ScreenController mainContainer = new ScreenController(); 
 
-        Scene scene = new Scene(root);
+        ScreenMap scrMap = new ScreenMap();
+        
+        Class cls = scrMap.getClass();
+        
+        Field[] fields = cls.getDeclaredFields();
+            
+
+        for (Field field : fields) {
+
+            if (java.lang.reflect.Modifier.isStatic(field.getModifiers())){
+
+                String imeForme = field.get(null) + "";
+                String fxmlPutanja = "views/" + imeForme + ".fxml";
+                mainContainer.loadScreen(imeForme, fxmlPutanja);
+                
+            }
+        }
+        
+        mainContainer.setScreen(ScreenMap.POCETNI_EKRAN, null);
+        
+        Group root = new Group(); 
+       root.getChildren().addAll(mainContainer); 
         stage.initStyle(StageStyle.UNDECORATED);
-        stage.setScene(scene);
-        stage.show();
+       Scene scene = new Scene(root); 
+        scene.getStylesheets().addAll(this.getClass().getResource("views/style/style.css").toExternalForm()); 
+       stage.setScene(scene); 
+       stage.show(); 
+            
     }
 
     public void setResource(String resource) {
@@ -87,5 +125,65 @@ public class RMaster extends Application {
         launch(args);
     }
     
-   
+      public void getGrupaArtikalaFront() {
+        
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+        query.setTableName(GrupaArtikalaFront.TABLE_NAME);
+        //query.setSelectColumns(GrupaArtikalaFront.PRIMARY_KEY, GrupaArtikalaFront.NAZIV, GrupaArtikalaFront.PRIORITET);
+        
+        //query.addCriteriaColumns(StalniGost.SIFRA, StalniGost.BLOKIRAN, StalniGost.GRUPA_ID);
+        //query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
+        //query.addOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
+        //query.addCriteriaValues("", QueryBuilder.TRUE, grupaId);
+                
+        //if (text != null) {
+        //    query.addCriteriaColumns(StalniGost.NAZIV);
+        //    query.addCriteria(QueryBuilder.IS_LIKE);
+        //    query.addOperators(QueryBuilder.LOGIC_AND);
+        //    query.addCriteriaValues(text + "%");
+        //}
+        
+        query.setOrderBy(GrupaArtikalaFront.PRIORITET, QueryBuilder.SORT_ASC);
+        //query.setLimit(20);
+        //query.setOffset(offset);
+        
+        List<Map<String, String>> listaRezultata = dbBroker.runQuery(query);
+          
+        List<Map<String, String>> listaGrupaArtikalaFront = new ArrayList<>();
+        
+        for (Map mapGrupaArtikalaFront : listaRezultata) {
+            GrupaArtikalaFront noviGrupaArtikalaFront = new GrupaArtikalaFront();
+            noviGrupaArtikalaFront.makeFromHashMap((HashMap)mapGrupaArtikalaFront);
+            
+            listaGrupaArtikalaFront.add(noviGrupaArtikalaFront.makeMapForTableOutput());
+        }
+              
+        this.listaGrupaArtikalaFront = listaGrupaArtikalaFront;
+    }
+
+    public void getListaArtikalaFavorite() {
+        String imeStoreProcedure = "getArtikliFavorite";
+        String[] imenaArgumenata = new String[]{"brojPrvogZapisa", "brojZapisa"};
+        String[] vrednostiArgumenata = new String[]{"" + (1 - 1),"" + 32};
+        List<Map<String,String>> listaRezultata;
+        listaRezultata = dbBroker.runStoredProcedure(imeStoreProcedure, imenaArgumenata, vrednostiArgumenata);
+            
+//        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+//        query.setTableName(Artikal.TABLE_NAME);
+//        
+//        query.setOrderBy(Artikal.PRIORITET, QueryBuilder.SORT_ASC);
+//        
+//        List<Map<String, String>> listaRezultata = runQuery(query);
+//          
+        List<Map<String, String>> listaArtikalFront = new ArrayList<>();
+        
+        for (Map mapArtikalFront : listaRezultata) {
+            Artikal noviArtikalFront = new Artikal();
+            noviArtikalFront.makeFromHashMap((HashMap)mapArtikalFront);
+            
+            listaArtikalFront.add(noviArtikalFront.makeMapForTableOutput());
+        }
+              
+        this.listaArtikalaFavorite = listaArtikalFront;
+    }
 }

@@ -21,6 +21,7 @@ import rmaster.assets.FXMLDocumentController;
 import static rmaster.assets.QueryBuilder.QueryBuilder.SELECT;
 import rmaster.assets.RM_TableView.RM_TableView;
 import rmaster.assets.RM_TableView.SirinaKolone;
+import rmaster.ScreenController;
 
 /**
  * FXML Controller class
@@ -29,6 +30,13 @@ import rmaster.assets.RM_TableView.SirinaKolone;
  */
 public class RacuniZaNaplatuController extends FXMLDocumentController {
 
+        ScreenController myController; 
+     
+    @Override
+    public void setScreenParent(ScreenController screenParent){ 
+        myController = screenParent; 
+    } 
+    
     private RM_TableView tabelaSaRacunimaZaNaplatu = new RM_TableView();
     
     @FXML

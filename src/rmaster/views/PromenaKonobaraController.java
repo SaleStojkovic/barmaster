@@ -21,6 +21,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.ScreenController;
 import rmaster.models.Konobar;
 
 /**
@@ -30,6 +31,13 @@ import rmaster.models.Konobar;
  */
 public class PromenaKonobaraController  extends FXMLDocumentController {
 
+        ScreenController myController; 
+     
+    @Override
+    public void setScreenParent(ScreenController screenParent){ 
+        myController = screenParent; 
+    } 
+    
     @FXML
     public VBox stoloviZaPredaju;
 

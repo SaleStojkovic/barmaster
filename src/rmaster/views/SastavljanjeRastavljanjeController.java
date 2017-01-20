@@ -17,6 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
 
 /**
@@ -26,6 +27,12 @@ import rmaster.assets.ScreenMap;
  */
 public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
 
+        ScreenController myController; 
+     
+    @Override
+    public void setScreenParent(ScreenController screenParent){ 
+        myController = screenParent; 
+    } 
     
     @FXML
     private Label imeKonobara;
@@ -43,12 +50,17 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+    }    
+    
+    @Override
+    public void initData(Object data)
+    {
         imeKonobara.setText(ulogovaniKonobar.imeKonobara);
         
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
-    }    
-    
+    }
     
     public void nazadNaPrikazSale(ActionEvent event) 
     {
@@ -77,5 +89,10 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                
             }
         }
+    }
+    
+    public void odjava(ActionEvent event)
+    {            
+            myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
     }
 }

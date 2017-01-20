@@ -41,6 +41,7 @@ import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.RM_TableView.RM_TableView;
 import rmaster.assets.RM_TableView.RavnanjeKolone;
 import rmaster.assets.RM_TableView.SirinaKolone;
+import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
@@ -59,6 +60,13 @@ import rmaster.models.Tura;
  */
 public class PorudzbinaController extends FXMLDocumentController {
 
+        ScreenController myController; 
+     
+    @Override
+    public void setScreenParent(ScreenController screenParent){ 
+        myController = screenParent; 
+    } 
+    
     private long startTime;
     private long ms;
     
@@ -199,7 +207,6 @@ public class PorudzbinaController extends FXMLDocumentController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        long startTime = System.nanoTime();
         prikazRacunaGosta.setHbarPolicy(ScrollBarPolicy.NEVER);
 
         listaTabela = prikazRacunaGostaSadrzaj.getChildren();
@@ -214,92 +221,50 @@ public class PorudzbinaController extends FXMLDocumentController {
                 new SirinaKolone(5, sirinaKolonaTabele[4]),
                 new SirinaKolone(7, sirinaKolonaTabele[6])
             );
+       
         
-        imeKonobara.setText(ulogovaniKonobar.imeKonobara);
-        
-        izabraniSto.setText("Sto: " + RMaster.izabraniStoNaziv);
-        long ms;
-        ms = System.nanoTime() - startTime;
-        System.out.format("Porudzbina(initialize): %,10dms%n", ms);
+        try {
+
+             if (this.ArtikalGrupe.getChildren().isEmpty()) {
+                 initArtikalPrikaz(GLAVNA_GRUPA);
+
+                 initArtikalPrikaz(ARTIKAL_FAVORITE);
+
+                 initArtikalPrikaz(ARTIKAL_DODATNI);
+
+                 initArtikalPrikaz(ARTIKAL_OPISNI);
+
+
+                 this.ArtikalFavorite.setVisible(true);
+                 this.Artikal_DvaDela.setVisible(false);
+             }
+            
+            refreshGrupeIliArtikla_v2(this.ArtikalGrupe, GLAVNA_GRUPA);
+            
+            refreshGrupeIliArtikla_v2(this.ArtikalFavorite, ARTIKAL_FAVORITE);
+           
+        } catch (Exception e) {
+            System.out.println("Greska u pozivu SP get_racuniKonobaraKojiNisuZatvoreni! - " + e.toString());
+        }
     }    
     
 
     @Override
     public void initData(Object data) {
-
-        try {
-            //refreshGrupeIliArtikla(this.ArtikalGrupe, GLAVNA_GRUPA);
-            long startTimeUK = System.nanoTime();
-            long startUK = System.nanoTime();
-            if (this.ArtikalGrupe.getChildren().isEmpty()) {
-                long startTime = System.nanoTime();
-                initArtikalPrikaz(GLAVNA_GRUPA);
-                long ms;
-                ms = System.nanoTime() - startTime;
-                System.out.format("INIT: ----> initArtikalPrikaz(GLAVNA_GRUPA): %,10dms%n", ms);
-
-                startTime = System.nanoTime();
-                initArtikalPrikaz(ARTIKAL_FAVORITE);
-                ms = System.nanoTime() - startTime;
-                System.out.format("INIT: ----> initArtikalPrikaz(ARTIKAL_FAVORITE): %,10dms%n", ms);
-
-                startTime = System.nanoTime();
-                initArtikalPrikaz(ARTIKAL_DODATNI);
-                ms = System.nanoTime() - startTime;
-                System.out.format("INIT: ----> initArtikalPrikaz(ARTIKAL_DODATNI): %,10dms%n", ms);
-
-                startTime = System.nanoTime();
-                initArtikalPrikaz(ARTIKAL_OPISNI);
-                ms = System.nanoTime() - startTime;
-                System.out.format("INIT: ----> initArtikalPrikaz(ARTIKAL_OPISNI): %,10dms%n", ms);
-
-                //startTime = System.nanoTime();
-                startTime = System.nanoTime();
-                this.ArtikalFavorite.setVisible(true);
-                this.Artikal_DvaDela.setVisible(false);
-                ms = System.nanoTime() - startTime;
-                System.out.format("INIT: ----> this.ArtikalFavorite.setVisible(true) + DvaDela.setVisible(false): %,10dms%n", ms);
-            }
-            ms = System.nanoTime() - startTimeUK;
-            System.out.format("INIT: --> initArtikalPrikaz(UKUPNO): %,10dms%n", ms);
-            
-            startTimeUK = System.nanoTime();
-            refreshGrupeIliArtikla_v2(this.ArtikalGrupe, GLAVNA_GRUPA);
-            ms = System.nanoTime() - startTimeUK;
-            System.out.format("INIT: --> refreshGrupeIliArtikla_v2(this.ArtikalGrupe, GLAVNA_GRUPA): %,10dms%n", ms);
-            
-            startTimeUK = System.nanoTime();
-            refreshGrupeIliArtikla_v2(this.ArtikalFavorite, ARTIKAL_FAVORITE);
-            ms = System.nanoTime() - startTimeUK;
-            System.out.format("INIT: --> refreshGrupeIliArtikla_v2(this.ArtikalFavorite, ARTIKAL_FAVORITE): %,10dms%n", ms);
-
-            //ms = System.nanoTime() - startTime;
-            //System.out.format("refreshGrupeIliArtikla(this.Artikal, ARTIKAL_FAVORITE): %,10dms%n", ms);
-
-            startTime = System.nanoTime();
-            prikaziPorudzbinu();
-            ms = System.nanoTime() - startTime;
-            System.out.format("INIT: --> prikaziPorudzbinu(): %,10dms%n", ms);
-
-            startTime = System.nanoTime();
-            if (this.prikazGostiju.getChildren().isEmpty()) {
+        imeKonobara.setText(getUlogovaniKonobarIme());
+        
+        izabraniSto.setText("Sto: " + RMaster.izabraniStoNaziv);
+ 
+        prikaziPorudzbinu();
+        
+         if (this.prikazGostiju.getChildren().isEmpty()) {
                  //TODO: Dodaj prvog gosta i napravi porudzbinu za njega
                 dodajNovogGosta(new ActionEvent());
             }
-            ms = System.nanoTime() - startTime;
-            System.out.format("INIT: --> dodajNovogGosta(new ActionEvent()): %,10dms%n", ms);
-
-            startTime = System.nanoTime();
+           
             RadioButton dugme = (RadioButton)prikazGostiju.getChildren().get(0);
             dugme.fire();
-            ms = System.nanoTime() - startTime;
-            System.out.format("INIT: --> dugme.fire(): %,10dms%n", ms);
-            ms = System.nanoTime() - startUK;
-            System.out.format("INIT: UKUPNO: %,10dms%n", ms);
 
-        } catch (Exception e) {
-            System.out.println("Greska u pozivu SP get_racuniKonobaraKojiNisuZatvoreni! - " + e.toString());
-        }
     }
     
 
@@ -615,11 +580,7 @@ public class PorudzbinaController extends FXMLDocumentController {
     }
 
     public void prikaziSalu(ActionEvent event) {
-        prikaziFormu(new ArrayList<>(),
-                ScreenMap.PRIKAZ_SALA,
-                true, 
-                (Node)event.getSource(), false
-        );
+        myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
     }
     
     public void prikaziArtikleFavorite(ActionEvent event) {
@@ -768,7 +729,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                 default:
             }
         } catch (Exception e) {
-            System.out.println("View \"NEKA GRESKA" + "\" fetch error!");
+             e.printStackTrace();
         }
         //startTime = System.nanoTime();
         prikazArtikalIliGrupa_v2(rs, gdePrikazati, staSePrikazuje);

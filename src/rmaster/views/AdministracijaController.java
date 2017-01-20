@@ -16,9 +16,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.QueryBuilder.QueryBuilder;
+import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
-import rmaster.models.StalniGost;
 
 /**
  * FXML Controller class
@@ -50,6 +50,14 @@ public class AdministracijaController extends FXMLDocumentController{
         
     }    
 
+    
+    ScreenController myController; 
+     
+    @Override
+    public void setScreenParent(ScreenController screenParent){ 
+        myController = screenParent; 
+    } 
+    
     /**
      * 
      * @param data 

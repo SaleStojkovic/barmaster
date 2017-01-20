@@ -5,6 +5,11 @@
  */
 package rmaster.assets;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author Arbor
@@ -14,9 +19,7 @@ public class ScreenMap {
     public static String POCETNI_EKRAN = "pocetniEkran";
         
     public static String LOJALNOST = "lojalnost";
-    
-    public static String NUMBER_KEYPAD = "numberKeypad";
-    
+        
     public static String ADMINISTRACIJA = "administracija";
     
     public static String PORUDZBINA = "porudzbina";

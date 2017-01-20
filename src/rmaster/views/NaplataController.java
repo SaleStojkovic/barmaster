@@ -34,6 +34,7 @@ import javafx.scene.layout.VBox;
 import rmaster.assets.DBBroker;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.QueryBuilder.QueryBuilder;
+import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
@@ -48,6 +49,13 @@ import rmaster.models.StalniGost;
  */
 public class NaplataController extends FXMLDocumentController {
 
+        ScreenController myController; 
+     
+    @Override
+    public void setScreenParent(ScreenController screenParent){ 
+        myController = screenParent; 
+    } 
+    
     @FXML
     private Label fxID_Total;
     @FXML
@@ -117,7 +125,12 @@ public class NaplataController extends FXMLDocumentController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Timeline timeline = this.prikaziCasovnik(casovnik);
+
+    } 
+    
+    @Override
+    public void initData(Object data) {
+                Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
         this.imeKonobara.setText(ulogovaniKonobar.imeKonobara);
 
@@ -173,10 +186,7 @@ public class NaplataController extends FXMLDocumentController {
 
         popuniPopuste();
         popuniHotelGost();
-    } 
-    
-    /* BOSKO DODAO */
-    public void initData(Object data) {
+        
         List<Object> d = (List<Object>)data;
         StalniGost stalniGost = null;
 

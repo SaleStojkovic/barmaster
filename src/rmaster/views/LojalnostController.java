@@ -34,6 +34,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import static java.lang.Math.round;
+import rmaster.ScreenController;
 
 /**
  * FXML Controller class
@@ -42,6 +43,12 @@ import static java.lang.Math.round;
  */
 public class LojalnostController extends FXMLDocumentController {
 
+    ScreenController myController; 
+     
+    @Override
+    public void setScreenParent(ScreenController screenParent){ 
+        myController = screenParent; 
+    } 
     
     @FXML
     private Label casovnik;
@@ -83,18 +90,10 @@ public class LojalnostController extends FXMLDocumentController {
         if (data instanceof Porudzbina) {
                 porudzbina = (Porudzbina) data;
         }
-    }
-    
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        skenerKartice.setVisible(false);
-        lojalnostFlowPane.setOrientation(Orientation.VERTICAL);
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
-        this.imeKonobara.setText(ulogovaniKonobar.imeKonobara);
-
-        popuniSlova();
-
+        this.imeKonobara.setText(getUlogovaniKonobarIme());
+        
         popuniLojalnostGostiGrupe();
         
         ToggleButton dugme = (ToggleButton)lojalnostGostiGrupe.getChildren().get(0);
@@ -102,7 +101,14 @@ public class LojalnostController extends FXMLDocumentController {
         dugme.fire();
         
         dugme.setSelected(true);
-
+    }
+    
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        skenerKartice.setVisible(false);
+        lojalnostFlowPane.setOrientation(Orientation.VERTICAL);
+        
+        popuniSlova();
     } 
     
     
@@ -417,5 +423,10 @@ public class LojalnostController extends FXMLDocumentController {
                 (Node)keyEvent.getSource(), false
             );
         }
+    }
+    
+    public void odjava(ActionEvent event)
+    {            
+            myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
     }
 }

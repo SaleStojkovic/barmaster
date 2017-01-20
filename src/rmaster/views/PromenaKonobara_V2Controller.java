@@ -31,6 +31,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
 import rmaster.models.Konobar;
 
@@ -41,6 +42,13 @@ import rmaster.models.Konobar;
  */
 public class PromenaKonobara_V2Controller extends FXMLDocumentController {
 
+        ScreenController myController; 
+     
+    @Override
+    public void setScreenParent(ScreenController screenParent){ 
+        myController = screenParent; 
+    } 
+    
     @FXML
     private TabPane saleTabPane;
     
@@ -55,12 +63,9 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
     double sirinaSale = 1024; 
     double visinaSale = 768; 
     
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        
+    
+    public void initData()
+    {
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
         this.imeKonobara.setText(ulogovaniKonobar.imeKonobara);
@@ -86,9 +91,15 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
             
             if (RMaster.trenutnaSalaID == Long.parseLong(salaMap.get("id"))) {        
                 saleTabPane.getSelectionModel().select(newTab);
-            } else {
             }        
         }
+    }
+    
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
         
     } 
 

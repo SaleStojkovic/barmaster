@@ -34,6 +34,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import rmaster.RMaster;
+import rmaster.assets.DBBroker;
 import rmaster.assets.FXMLDocumentController;
 import static rmaster.views.PrikazSalaController.HALF_HOUR;
 
@@ -63,7 +64,6 @@ public class SalePopupController extends Dialog {
 
     public SalePopupController() {
         
-        fxmlController = new FXMLDocumentController();
         
         try {
             this.initStyle(StageStyle.UNDECORATED);
@@ -186,8 +186,8 @@ public class SalePopupController extends Dialog {
     private void vratiSaleList() {
         try {            
             String[] imenaArgumenata = {"KonobarID"};
-            String[] vrednostiArgumenata = {fxmlController.getUlogovaniKonobarID() + ""};
-            listSale = fxmlController.runStoredProcedure("get_SaleOmoguceneKonobaru",
+            String[] vrednostiArgumenata = {RMaster.ulogovaniKonobar.konobarID + ""};
+            listSale = DBBroker.runStoredProcedure("get_SaleOmoguceneKonobaru",
                     imenaArgumenata,
                     vrednostiArgumenata);
         } catch (Exception e) {

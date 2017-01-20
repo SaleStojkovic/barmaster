@@ -21,6 +21,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.QueryBuilder.QueryBuilder;
+import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.items.Artikal;
 import rmaster.assets.items.GrupaArtikalaFront;
@@ -40,13 +41,24 @@ public class PocetniEkranController extends FXMLDocumentController {
     @FXML
     private Label clock;
    
+    ScreenController myController; 
+
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-//        lozinka.requestFocus();
+    public void setScreenParent(ScreenController screenParent){ 
+        myController = screenParent; 
+     } 
+    
+    @Override
+    public void initData(Object data)
+    {
         Timeline timeline = this.prikaziCasovnik(clock);
         timeline.play();
-        RMaster.listaGrupaArtikalaFront = getGrupaArtikalaFront();
-        RMaster.listaArtikalaFavorite = getListaArtikalaFavorite();
+        
+    }
+    
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        
     }
     
    public void backButton(ActionEvent event) {
@@ -97,15 +109,9 @@ public class PocetniEkranController extends FXMLDocumentController {
             
             //zapamti KonobarID
             setUlogovaniKonobar(konobar);
-            
-            List<Object> newData = new ArrayList<>();
-                            
-            //sledeca stranica 
-            prikaziFormu(newData,
-                    ScreenMap.PRIKAZ_SALA, 
-                    true, 
-                    response, false
-            );
+                              
+            myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
+
             return;
         }
         
@@ -121,65 +127,5 @@ public class PocetniEkranController extends FXMLDocumentController {
         }
     }
     
-    public List<Map<String, String>> getGrupaArtikalaFront() {
-        
-        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
-        query.setTableName(GrupaArtikalaFront.TABLE_NAME);
-        //query.setSelectColumns(GrupaArtikalaFront.PRIMARY_KEY, GrupaArtikalaFront.NAZIV, GrupaArtikalaFront.PRIORITET);
-        
-        //query.addCriteriaColumns(StalniGost.SIFRA, StalniGost.BLOKIRAN, StalniGost.GRUPA_ID);
-        //query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
-        //query.addOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
-        //query.addCriteriaValues("", QueryBuilder.TRUE, grupaId);
-                
-        //if (text != null) {
-        //    query.addCriteriaColumns(StalniGost.NAZIV);
-        //    query.addCriteria(QueryBuilder.IS_LIKE);
-        //    query.addOperators(QueryBuilder.LOGIC_AND);
-        //    query.addCriteriaValues(text + "%");
-        //}
-        
-        query.setOrderBy(GrupaArtikalaFront.PRIORITET, QueryBuilder.SORT_ASC);
-        //query.setLimit(20);
-        //query.setOffset(offset);
-        
-        List<Map<String, String>> listaRezultata = runQuery(query);
-          
-        List<Map<String, String>> listaGrupaArtikalaFront = new ArrayList<>();
-        
-        for (Map mapGrupaArtikalaFront : listaRezultata) {
-            GrupaArtikalaFront noviGrupaArtikalaFront = new GrupaArtikalaFront();
-            noviGrupaArtikalaFront.makeFromHashMap((HashMap)mapGrupaArtikalaFront);
-            
-            listaGrupaArtikalaFront.add(noviGrupaArtikalaFront.makeMapForTableOutput());
-        }
-              
-        return listaGrupaArtikalaFront;
-    }
-
-    public List<Map<String, String>> getListaArtikalaFavorite() {
-        String imeStoreProcedure = "getArtikliFavorite";
-        String[] imenaArgumenata = new String[]{"brojPrvogZapisa", "brojZapisa"};
-        String[] vrednostiArgumenata = new String[]{"" + (1 - 1),"" + 32};
-        List<Map<String,String>> listaRezultata;
-        listaRezultata = runStoredProcedure(imeStoreProcedure, imenaArgumenata, vrednostiArgumenata);
-            
-//        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
-//        query.setTableName(Artikal.TABLE_NAME);
-//        
-//        query.setOrderBy(Artikal.PRIORITET, QueryBuilder.SORT_ASC);
-//        
-//        List<Map<String, String>> listaRezultata = runQuery(query);
-//          
-        List<Map<String, String>> listaArtikalFront = new ArrayList<>();
-        
-        for (Map mapArtikalFront : listaRezultata) {
-            Artikal noviArtikalFront = new Artikal();
-            noviArtikalFront.makeFromHashMap((HashMap)mapArtikalFront);
-            
-            listaArtikalFront.add(noviArtikalFront.makeMapForTableOutput());
-        }
-              
-        return listaArtikalFront;
-    }
+  
 }

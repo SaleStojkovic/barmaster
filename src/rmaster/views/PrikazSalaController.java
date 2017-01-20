@@ -36,6 +36,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import rmaster.assets.FXMLDocumentController;
+import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.items.StoButton;
 
@@ -48,6 +49,13 @@ public class PrikazSalaController extends FXMLDocumentController {
     public static final long HALF_HOUR = 30*60*1000; // in milli-seconds.
     private List<Map<String, String>> listStolovi = null;
     private List<Map<String, String>> listSale = null;
+    
+        ScreenController myController; 
+     
+    @Override
+    public void setScreenParent(ScreenController screenParent){ 
+        myController = screenParent; 
+    } 
     
     @FXML
     private StackPane imageViewSala;
@@ -86,14 +94,14 @@ public class PrikazSalaController extends FXMLDocumentController {
     public void initData(Object data) {
         try {
             String[] imenaArgumenata = {"KonobarID"};
-            String[] vrednostiArgumenata = {ulogovaniKonobar.konobarID + ""};
+            String[] vrednostiArgumenata = {getUlogovaniKonobarID() + ""};
             listSale = runStoredProcedure("get_SaleOmoguceneKonobaru",
                     imenaArgumenata,
                     vrednostiArgumenata);
         } catch (Exception e) {
             System.out.println("Greska u pozivu SP get_SaleOmoguceneKonobaru! - " + e.toString());
         }
-        imeKonobara.setText(ulogovaniKonobar.imeKonobara);
+        imeKonobara.setText(getUlogovaniKonobarIme());
         prikaziSale();
         timeline2 = this.prikaziRezervacije(this.listaRezervacija);
         timeline2.play();
@@ -197,12 +205,7 @@ public class PrikazSalaController extends FXMLDocumentController {
     
     public void odjava(ActionEvent event)
     {            
-            //sledeca stranica 
-            prikaziFormu(new ArrayList<>(),
-                    ScreenMap.POCETNI_EKRAN, 
-                    true, 
-                    (Node)event.getSource(), false
-            );
+            myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
     }
     
     public void prikaziRacuneZaStampu(ActionEvent event){
@@ -214,11 +217,6 @@ public class PrikazSalaController extends FXMLDocumentController {
                 (Node)event.getSource(), 
                 true
         );
-        //prikaziFormuModalno(
-        //        new ArrayList<>(),
-        //        ScreenMap.RACUNI_ZA_NAPLATU, 
-        //        (Node)(event.getSource())
-        //);
     }
     
     public void promeniKonobara(ActionEvent event){
@@ -329,10 +327,7 @@ public class PrikazSalaController extends FXMLDocumentController {
                                             RMaster.izabraniStoID = b.getId();
                                             RMaster.izabraniStoBroj = Integer.parseInt(b.getBrojStola());
                                             RMaster.izabraniStoNaziv = b.getText();
-                                              prikaziFormu(newData,
-                                                      ScreenMap.PORUDZBINA, 
-                                                      true, 
-                                                      (Node)e.getSource(), false);
+                                            myController.setScreen(ScreenMap.PORUDZBINA, null);
             long ms;
             ms = System.nanoTime() - startTime;
             System.out.format("OD POCETKA DO KRAJA: %,10d%n%n%n", ms);
@@ -419,12 +414,7 @@ public class PrikazSalaController extends FXMLDocumentController {
     
      
     public void otvoriRezervacije(ActionEvent event) {
-        Map<String, String> newData = new HashMap<>();
-
-        prikaziFormu(newData,
-            ScreenMap.REZERVACIJE, 
-            true, 
-            (Node)event.getSource(), false); 
+        myController.setScreen(ScreenMap.REZERVACIJE, null);
     }
     
     public void otvoriRastavljanjeSastavljanje(ActionEvent event) {

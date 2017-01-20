@@ -47,15 +47,15 @@ import rmaster.models.StavkaTure;
  *
  * @author Arbor
  */
-public class FXMLDocumentController implements Initializable {
+public abstract class FXMLDocumentController implements Initializable, ControlledScreen {
     
     public static String UPOZORENJE_NEISPRAVAN_UNOS_TITLE = "Neispravan unos!";
     public static String UPOZORENJE_BRISANJE_ZAPISA_TITLE = "Brisanje zapisa";
     public static String UPOZORENJE_BRISANJE_ZAPISA_CONTENT = "Da li ste sigurni da želite da obrišete ovaj zapis? " + 
             "Izabrani zapis biće trajno obrisan!";
     
-    public DBBroker DBBroker;
-    public RMaster RMaster;
+    public DBBroker DBBroker = new DBBroker();
+    public RMaster RMaster = new RMaster();
     
     public Konobar ulogovaniKonobar;
     public Object data;
@@ -63,27 +63,15 @@ public class FXMLDocumentController implements Initializable {
     public static Stage prozor; 
     public static Map<String,Scene> otvoreneForme = new HashMap<>();//FXMLDocumentController> otvoreneForme = new HashMap<>();
     public static Map<String,FXMLDocumentController> otvoreneFormeControllers = new HashMap<>();//FXMLDocumentController> otvoreneForme = new HashMap<>();
+         
     
-    public FXMLDocumentController() {
-        try {
-            DBBroker = new DBBroker();
-        } catch (Exception ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-   
-        RMaster = new RMaster();
-        ulogovaniKonobar = RMaster.getUlogovaniKonobar();
-        
-
-
-    } 
     
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
     }    
-     
+    
     /**
      * 
      * @param konobar 
@@ -283,20 +271,11 @@ public class FXMLDocumentController implements Initializable {
         long startUK = System.nanoTime();
         long startTimeUK = System.nanoTime();
         long ms;
-        Stage stage;
+        
+        Stage stage = (Stage) prethodnaForma.getScene().getWindow();
+        
         String imeNoveForme = imeForme + ".fxml";
         try {
-            if (prozor!=null) {
-                stage = prozor;
-                ms = System.nanoTime() - startTimeUK;
-                System.out.format("FXMLDocController: --> stage = prozor: %,10dms%n", ms);
-           }
-            else{
-                stage = new Stage(StageStyle.UNDECORATED);
-                prozor = stage;
-                ms = System.nanoTime() - startTimeUK;
-                System.out.format("FXMLDocController: --> stage = new Stage(StageStyle.UNDECORATED): %,10dms%n", ms);
-            }
             
             startTimeUK = System.nanoTime();
             Scene novaScena = otvoreneForme.get(imeForme);
@@ -311,6 +290,7 @@ public class FXMLDocumentController implements Initializable {
             startTimeUK = System.nanoTime();
             if (novaScena == null) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(imeNoveForme));
+                
                 ms = System.nanoTime() - startTimeUK;
                 System.out.format("FXMLDocController: ----> novaScena == null? --> loader = new FXMLLoader: %,10dms%n", ms);
 
@@ -339,13 +319,8 @@ public class FXMLDocumentController implements Initializable {
                 otvoreneFormeControllers.put(imeForme, controller);
                 ms = System.nanoTime() - startTimeUK;
                 System.out.format("FXMLDocController: ----> novaScena == null? --> otvoreneForme.put: %,10dms%n", ms);
-
-                startTimeUK = System.nanoTime();
             }
-            //stage.setScene(null);
-            ms = System.nanoTime() - startTimeUK;
-            System.out.format("FXMLDocController: ----> stage.setScene(null): %,10dms%n", ms);
-
+            
             startTimeUK = System.nanoTime();
             stage.setScene(novaScena);
             ms = System.nanoTime() - startTimeUK;
@@ -459,7 +434,7 @@ public class FXMLDocumentController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(imeNoveForme));
 
-            stage = new Stage(StageStyle.UNDECORATED);
+            stage = (Stage) prethodnaForma.getScene().getWindow();
             Pane pane = loader.load();
             stage.setScene(new Scene(pane));
 
@@ -513,20 +488,6 @@ public class FXMLDocumentController implements Initializable {
           timeline.setCycleCount(Animation.INDEFINITE);
           return timeline;
    }
-   
-    public void odjava(ActionEvent event)
-    {
-            //TODO da li treba upisati kada se konobar izlogovao
-        
-            List<Object> newData = new ArrayList<>();
-            
-            //sledeca stranica 
-            prikaziFormu(newData,
-                    ScreenMap.POCETNI_EKRAN, 
-                    true, 
-                    (Node)event.getSource(), false
-            );
-    }
     
     /**
      * 

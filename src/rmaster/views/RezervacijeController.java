@@ -36,12 +36,20 @@ import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.RM_TableView.RM_TableView;
 import rmaster.assets.RM_TableView.SirinaKolone;
+import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
 import rmaster.models.Rezervacija;
 
 
 public class RezervacijeController extends FXMLDocumentController {
 
+        ScreenController myController; 
+     
+    @Override
+    public void setScreenParent(ScreenController screenParent){ 
+        myController = screenParent; 
+    } 
+    
     @FXML
     private Label casovnik;
     
@@ -89,11 +97,8 @@ public class RezervacijeController extends FXMLDocumentController {
             
     public Integer[] sirinaKolonaTabele = {140, 100, 100, 100, 100, 100, 250, 0};
     
-    /**
-     * Initializes the controller class.
-     */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initData(Object data) {
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
         
@@ -151,18 +156,19 @@ public class RezervacijeController extends FXMLDocumentController {
             }
         }); 
         
-        tabelaRezervacija.getSelectionModel().select(tabelaRezervacija.getItems().size()-1);        
+        tabelaRezervacija.getSelectionModel().select(tabelaRezervacija.getItems().size()-1); 
+    }
+    
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+               
     }    
     
     public void nazadNaPrikazSale(ActionEvent event) {
-            Map<String, String> newData = new HashMap<>();
-            
-            //sledeca stranica 
-            prikaziFormu(newData,
-                    ScreenMap.PRIKAZ_SALA, 
-                    true, 
-                    (Node)event.getSource(), false
-            );
+        myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
     }
     
     
@@ -434,5 +440,10 @@ public class RezervacijeController extends FXMLDocumentController {
     
     public void pomeriScrollUp() {
         scrollPaneRezervacije.setVvalue((scrollPaneRezervacije.getVvalue() - 0.5 ) * 1);
+    }
+    
+    public void odjava(ActionEvent event)
+    {            
+            myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
     }
 }
