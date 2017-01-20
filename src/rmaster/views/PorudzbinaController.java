@@ -6,7 +6,6 @@
 package rmaster.views;
 
 import com.sun.javafx.scene.control.skin.VirtualFlow;
-import java.lang.reflect.Field;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
@@ -17,8 +16,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -66,6 +68,9 @@ public class PorudzbinaController extends FXMLDocumentController {
     public void setScreenParent(ScreenController screenParent){ 
         myController = screenParent; 
     } 
+    
+    private Executor exec;
+
     
     private long startTime;
     private long ms;
@@ -207,6 +212,7 @@ public class PorudzbinaController extends FXMLDocumentController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         prikazRacunaGosta.setHbarPolicy(ScrollBarPolicy.NEVER);
 
         listaTabela = prikazRacunaGostaSadrzaj.getChildren();
@@ -251,19 +257,18 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     @Override
     public void initData(Object data) {
+        
+        exec = Executors.newCachedThreadPool(runnable -> {
+            Thread t = new Thread(runnable);
+            t.setDaemon(true);
+            return t ;
+        });
+        
         imeKonobara.setText(getUlogovaniKonobarIme());
         
         izabraniSto.setText("Sto: " + RMaster.izabraniStoNaziv);
  
         prikaziPorudzbinu();
-        
-         if (this.prikazGostiju.getChildren().isEmpty()) {
-                 //TODO: Dodaj prvog gosta i napravi porudzbinu za njega
-                dodajNovogGosta(new ActionEvent());
-            }
-           
-            RadioButton dugme = (RadioButton)prikazGostiju.getChildren().get(0);
-            dugme.fire();
 
     }
     
@@ -421,12 +426,24 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     
     public void prikaziPorudzbinu() {
-           
-            long startTime = System.nanoTime();
-            List racuniStola = DBBroker.get_PorudzbineStola();
-            long ms = System.nanoTime() - startTime;
-            System.out.format("prikaziPorudzbinu() - DBBroker.get_PorudzbineStolaIKonobara(): %,10dms%n", ms);
-            for (Object racun : racuniStola) {
+
+        Task<List> porudzibaTask = new Task<List>() {
+            @Override
+            public List call() throws Exception {
+               List racuniStola = DBBroker.get_PorudzbineStola(); 
+               return racuniStola;
+            }
+        };
+            
+        porudzibaTask.setOnSucceeded(e -> 
+            prikaziPorudzbinuTask(porudzibaTask.getValue()));
+
+        exec.execute(porudzibaTask);
+    }
+    
+    public void prikaziPorudzbinuTask(List racuniStola)
+    {
+        for (Object racun : racuniStola) {
             
                 startTime = System.nanoTime();
                 Map<String, String> red = (Map<String, String>) racun;
@@ -474,8 +491,16 @@ public class PorudzbinaController extends FXMLDocumentController {
             
         }       
         prikazGostijuScrollPane.setContent(prikazGostiju);
-    
+        
+        if (this.prikazGostiju.getChildren().isEmpty()) {
+                 //TODO: Dodaj prvog gosta i napravi porudzbinu za njega
+                dodajNovogGosta(new ActionEvent());
+            }
+           
+        RadioButton dugme = (RadioButton)prikazGostiju.getChildren().get(0);
+        dugme.fire();
     }
+    
     public void prikaziPorudzbinu(Porudzbina porudzbina) {
         
         sakrijSveTabele();

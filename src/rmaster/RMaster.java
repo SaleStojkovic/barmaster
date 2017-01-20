@@ -43,8 +43,8 @@ public class RMaster extends Application {
     public static double visinaSaleNaEkranu = 768 - 150;
     public static double sirinaSaleNaEkranu = 1024;
     
-    public static List<Map<String, String>> listaGrupaArtikalaFront;
-    public static List<Map<String, String>> listaArtikalaFavorite;
+    public static List<Map<String, String>> listaGrupaArtikalaFront = new ArrayList<>();
+    public static List<Map<String, String>> listaArtikalaFavorite = new ArrayList<>();;
                
     DBBroker dbBroker = new DBBroker();
     
@@ -105,7 +105,7 @@ public class RMaster extends Application {
        root.getChildren().addAll(mainContainer); 
         stage.initStyle(StageStyle.UNDECORATED);
        Scene scene = new Scene(root); 
-        scene.getStylesheets().addAll(this.getClass().getResource("views/style/style.css").toExternalForm()); 
+        scene.getStylesheets().addAll(this.getClass().getResource("views/style/style.min.css").toExternalForm()); 
        stage.setScene(scene); 
        stage.show(); 
             
@@ -149,16 +149,13 @@ public class RMaster extends Application {
         
         List<Map<String, String>> listaRezultata = dbBroker.runQuery(query);
           
-        List<Map<String, String>> listaGrupaArtikalaFront = new ArrayList<>();
         
         for (Map mapGrupaArtikalaFront : listaRezultata) {
             GrupaArtikalaFront noviGrupaArtikalaFront = new GrupaArtikalaFront();
             noviGrupaArtikalaFront.makeFromHashMap((HashMap)mapGrupaArtikalaFront);
             
             listaGrupaArtikalaFront.add(noviGrupaArtikalaFront.makeMapForTableOutput());
-        }
-              
-        this.listaGrupaArtikalaFront = listaGrupaArtikalaFront;
+        } 
     }
 
     public void getListaArtikalaFavorite() {
@@ -175,15 +172,12 @@ public class RMaster extends Application {
 //        
 //        List<Map<String, String>> listaRezultata = runQuery(query);
 //          
-        List<Map<String, String>> listaArtikalFront = new ArrayList<>();
         
         for (Map mapArtikalFront : listaRezultata) {
             Artikal noviArtikalFront = new Artikal();
             noviArtikalFront.makeFromHashMap((HashMap)mapArtikalFront);
             
-            listaArtikalFront.add(noviArtikalFront.makeMapForTableOutput());
+            listaArtikalaFavorite.add(noviArtikalFront.makeMapForTableOutput());
         }
-              
-        this.listaArtikalaFavorite = listaArtikalFront;
     }
 }

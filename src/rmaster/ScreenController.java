@@ -7,6 +7,7 @@ package rmaster;
 
 import java.util.HashMap;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -36,6 +37,12 @@ public class ScreenController extends StackPane {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(resource));
        
        Pane loadScreen = (Pane) loader.load(); 
+       
+       loadScreen.setCache(true);
+       
+       loadScreen.setCacheShape(true);
+
+       loadScreen.setCacheHint(CacheHint.SPEED);
        
        ControlledScreen myScreenControler = 
               ((ControlledScreen) loader.getController()); 

@@ -112,7 +112,7 @@ public class PrikazSalaController extends FXMLDocumentController {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-
+        
     }
 
     private void prikaziSale() {
@@ -220,15 +220,9 @@ public class PrikazSalaController extends FXMLDocumentController {
     }
     
     public void promeniKonobara(ActionEvent event){
-        List<Object> data = new ArrayList<>();
-
-        prikaziFormu(data, 
-                ScreenMap.PROMENA_KONOBARA_V2, 
-                false, 
-                (Node)event.getSource(), 
-                true
-        );
         
+        myController.setScreen(ScreenMap.PROMENA_KONOBARA_V2, null);
+
         prikaziStolove();
     }
     

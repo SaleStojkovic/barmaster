@@ -60,17 +60,20 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
     
     List<ToggleButton> stoloviZaPromenu = new ArrayList<>();
         
+    private Konobar konobar;
+    
     double sirinaSale = 1024; 
     double visinaSale = 768; 
     
-    
-    public void initData()
+    @Override
+    public void initData(Object data)
     {
+        konobar = RMaster.getUlogovaniKonobar();
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
-        this.imeKonobara.setText(ulogovaniKonobar.imeKonobara);
+        this.imeKonobara.setText(getUlogovaniKonobarIme());
         
-        List<Map<String, String>> sale = ulogovaniKonobar.saleOmoguceneKonobaru();
+        List<Map<String, String>> sale = konobar.saleOmoguceneKonobaru();
 
         for(Map<String, String> salaMap : sale){
             
@@ -127,7 +130,7 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
     public void prikaziStoloveSale(AnchorPane sala, String salaId) 
     {
         List<Map<String, String>> stoloviZaPrikaz = 
-                ulogovaniKonobar.stoloviZaPrikazPromeneKonobara(salaId);
+                konobar.stoloviZaPrikazPromeneKonobara(salaId);
             
         for (Map<String, String> stoMap : stoloviZaPrikaz)
         {
@@ -202,7 +205,7 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
     
     public void nazadNaPrikazSale()
     {
-        imeKonobara.getScene().getWindow().hide();
+        myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
     }
     
     public void promeniKonobora(ActionEvent event)
