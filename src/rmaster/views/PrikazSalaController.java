@@ -48,7 +48,6 @@ import rmaster.assets.items.StoButton;
 public class PrikazSalaController extends FXMLDocumentController {
     public static final long HALF_HOUR = 30*60*1000; // in milli-seconds.
     private List<Map<String, String>> listStolovi = null;
-    private List<Map<String, String>> listSale = null;
     
         ScreenController myController; 
      
@@ -92,17 +91,11 @@ public class PrikazSalaController extends FXMLDocumentController {
      */
     @Override
     public void initData(Object data) {
-        try {
-            String[] imenaArgumenata = {"KonobarID"};
-            String[] vrednostiArgumenata = {getUlogovaniKonobarID() + ""};
-            listSale = runStoredProcedure("get_SaleOmoguceneKonobaru",
-                    imenaArgumenata,
-                    vrednostiArgumenata);
-        } catch (Exception e) {
-            System.out.println("Greska u pozivu SP get_SaleOmoguceneKonobaru! - " + e.toString());
+        //todo premestiti ovo u initialize
+        if (hBoxDugmiciSaSalama.getChildren().isEmpty()) {
+            prikaziSale();
         }
         imeKonobara.setText(getUlogovaniKonobarIme());
-        prikaziSale();
         timeline2 = this.prikaziRezervacije(this.listaRezervacija);
         timeline2.play();
         Timeline timeline = this.prikaziCasovnik(casovnik);
@@ -111,7 +104,7 @@ public class PrikazSalaController extends FXMLDocumentController {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        
         
     }
 
@@ -119,9 +112,9 @@ public class PrikazSalaController extends FXMLDocumentController {
         try {
             boolean prvi = true;
             if (RMaster.saleNaziv.isEmpty()) {
-                for (int i = 0; i < listSale.size(); i++)
+                for (int i = 0; i < RMaster.saleOmoguceneKonobaru.size(); i++)
                 {
-                    Map<String, String> novaSala = listSale.get(i);
+                    Map<String, String> novaSala = RMaster.saleOmoguceneKonobaru.get(i);
                     
                     RMaster.saleNaziv.put("" + novaSala.get("id"), novaSala.get("naziv"));
                     
@@ -150,7 +143,7 @@ public class PrikazSalaController extends FXMLDocumentController {
                     }
                 }
             }
-            if (RMaster.saleNaziv.size()<8) {
+            if (RMaster.saleNaziv.size() < 8) {
                 prikaziDodatneSale.setDisable(true);
             }
             else {
@@ -194,7 +187,7 @@ public class PrikazSalaController extends FXMLDocumentController {
             
             prikaziDodatneSale.setVisible(false);
 
-            if (listSale.size() > 7) {
+            if (RMaster.saleOmoguceneKonobaru.size() > 7) {
                 prikaziDodatneSale.setVisible(true);
             }
             
@@ -202,29 +195,7 @@ public class PrikazSalaController extends FXMLDocumentController {
             System.out.println("Greska u prikazu sale! - " + e.toString());
         }
     }
-    
-    public void odjava(ActionEvent event)
-    {            
-            myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
-    }
-    
-    public void prikaziRacuneZaStampu(ActionEvent event){
-        List<Object> data = new ArrayList<>();
-
-        prikaziFormu(data, 
-                ScreenMap.RACUNI_ZA_NAPLATU, 
-                false, 
-                (Node)event.getSource(), 
-                true
-        );
-    }
-    
-    public void promeniKonobara(ActionEvent event){
-        
-        myController.setScreen(ScreenMap.PROMENA_KONOBARA_V2, null);
-
-        prikaziStolove();
-    }
+   
     
     private void prikaziStolove() {
 
@@ -316,16 +287,11 @@ public class PrikazSalaController extends FXMLDocumentController {
                     //b.setDisable(false);
                     b.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override public void handle(ActionEvent e) {
-            long startTime = System.nanoTime();    
                                             StoButton b = (StoButton)e.getSource();
                                             RMaster.izabraniStoID = b.getId();
                                             RMaster.izabraniStoBroj = Integer.parseInt(b.getBrojStola());
                                             RMaster.izabraniStoNaziv = b.getText();
                                             myController.setScreen(ScreenMap.PORUDZBINA, null);
-            long ms;
-            ms = System.nanoTime() - startTime;
-            System.out.format("OD POCETKA DO KRAJA: %,10d%n%n%n", ms);
-//            System.out.println("Ukljuceno - refreshGrupeIliArtikla(this.ArtikalGrupe, GLAVNA_GRUPA): " + ms + "," + mcs);
                                         }
                                     });
                 }
@@ -388,35 +354,40 @@ public class PrikazSalaController extends FXMLDocumentController {
     }
     
     public void brzaNaplata(ActionEvent event){
-        Map<String, String> newData = new HashMap<>();
+
         RMaster.izabraniStoID = "0";
-        prikaziFormu(newData,
-                ScreenMap.PORUDZBINA, 
-                true, 
-                (Node)event.getSource(), false);
+        
+        myController.setScreen(ScreenMap.PORUDZBINA, null);
 
     }
     
     public void otvoriAdministraciju(ActionEvent event) {
-        Map<String, String> newData = new HashMap<>();
-
-        prikaziFormu(newData,
-            ScreenMap.ADMINISTRACIJA, 
-            true, 
-            (Node)event.getSource(), false); 
+        myController.setScreen(ScreenMap.ADMINISTRACIJA, null);
     }
     
-     
     public void otvoriRezervacije(ActionEvent event) {
         myController.setScreen(ScreenMap.REZERVACIJE, null);
     }
     
     public void otvoriRastavljanjeSastavljanje(ActionEvent event) {
-        Map<String, String> newData = new HashMap<>();
+        myController.setScreen(ScreenMap.SASTAVLJANJE_RASTAVLJANJE, null);
+    }
+    
+    public void odjava(ActionEvent event)
+    {            
+        myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
+    }
+    
+    public void prikaziRacuneZaStampu(ActionEvent event){
 
-        prikaziFormu(newData,
-            ScreenMap.SASTAVLJANJE_RASTAVLJANJE, 
-            true, 
-            (Node)event.getSource(), false); 
+        myController.setScreen(ScreenMap.RACUNI_ZA_NAPLATU, null);
+
+    }
+    
+    public void promeniKonobara(ActionEvent event){
+        
+        myController.setScreen(ScreenMap.PROMENA_KONOBARA_V2, null);
+
+        prikaziStolove();
     }
 }

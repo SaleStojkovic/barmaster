@@ -141,7 +141,7 @@ public class Porudzbina {
                         this.brojFakture = Integer.parseInt(porudzbina.get("brojFakture"));
                     if (porudzbina.get("brojRacuna") != null)
                         this.brojRacuna = Integer.parseInt(porudzbina.get("brojRacuna"));
-                    if (porudzbina.get("brojFiskalnogIsecka") != null)
+                    if (porudzbina.get("brojFiskalnogIsecka") != null && porudzbina.get("brojFiskalnogIsecka").equals(0))
                         this.brojFiskalnogIsecka = Long.parseLong(porudzbina.get("brojFiskalnogIsecka"));
                     if (porudzbina.get("brojStola") != null)
                         //this.brojStolaID = Integer.parseInt(porudzbina.get("brojStola"));

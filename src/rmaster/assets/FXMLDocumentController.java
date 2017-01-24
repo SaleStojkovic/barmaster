@@ -80,6 +80,11 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
         RMaster.ulogovaniKonobar = new Konobar(konobar);
     }
     
+    public Konobar getUlogovaniKonobar()
+    {
+        return RMaster.ulogovaniKonobar;
+    }
+    
     public long getUlogovaniKonobarID() {
         return RMaster.ulogovaniKonobar.konobarID;
     }
@@ -111,6 +116,11 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
     
     public void setUlogovaniKonobarPin(String konobarPin) {
         RMaster.ulogovaniKonobar.konobarPin = konobarPin;
+    }
+    
+    public void setSaleOmoguceneKonobaru(List<Map<String, String>> listaSala)
+    {
+        RMaster.saleOmoguceneKonobaru = listaSala;
     }
     
     /**

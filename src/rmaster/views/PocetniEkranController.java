@@ -6,8 +6,6 @@
 package rmaster.views;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -23,8 +21,6 @@ import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
-import rmaster.assets.items.Artikal;
-import rmaster.assets.items.GrupaArtikalaFront;
 import rmaster.models.LoginAction;
 /**
  *
@@ -105,11 +101,13 @@ public class PocetniEkranController extends FXMLDocumentController {
         
         if (!rezultat.isEmpty()) {
             
-            Map<String,String>  konobar = rezultat.get(0);
+            Map<String, String>  konobar = rezultat.get(0);
             
             //zapamti KonobarID
             setUlogovaniKonobar(konobar);
-                              
+                    
+            kesirajSaleOmoguceneKonobaru();
+            
             myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
 
             return;
@@ -127,5 +125,8 @@ public class PocetniEkranController extends FXMLDocumentController {
         }
     }
     
-  
+    private void kesirajSaleOmoguceneKonobaru()
+    {
+        setSaleOmoguceneKonobaru(getUlogovaniKonobar().saleOmoguceneKonobaru());
+    }
 }

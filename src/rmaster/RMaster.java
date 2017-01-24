@@ -44,7 +44,9 @@ public class RMaster extends Application {
     public static double sirinaSaleNaEkranu = 1024;
     
     public static List<Map<String, String>> listaGrupaArtikalaFront = new ArrayList<>();
-    public static List<Map<String, String>> listaArtikalaFavorite = new ArrayList<>();;
+    public static List<Map<String, String>> listaArtikalaFavorite = new ArrayList<>();
+    public static List<Map<String, String>> saleOmoguceneKonobaru = new ArrayList<>();
+    public static List<Map<String, String>> sveSale = new ArrayList<>();
                
     DBBroker dbBroker = new DBBroker();
     
@@ -129,24 +131,9 @@ public class RMaster extends Application {
         
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         query.setTableName(GrupaArtikalaFront.TABLE_NAME);
-        //query.setSelectColumns(GrupaArtikalaFront.PRIMARY_KEY, GrupaArtikalaFront.NAZIV, GrupaArtikalaFront.PRIORITET);
-        
-        //query.addCriteriaColumns(StalniGost.SIFRA, StalniGost.BLOKIRAN, StalniGost.GRUPA_ID);
-        //query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
-        //query.addOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
-        //query.addCriteriaValues("", QueryBuilder.TRUE, grupaId);
-                
-        //if (text != null) {
-        //    query.addCriteriaColumns(StalniGost.NAZIV);
-        //    query.addCriteria(QueryBuilder.IS_LIKE);
-        //    query.addOperators(QueryBuilder.LOGIC_AND);
-        //    query.addCriteriaValues(text + "%");
-        //}
-        
+
         query.setOrderBy(GrupaArtikalaFront.PRIORITET, QueryBuilder.SORT_ASC);
-        //query.setLimit(20);
-        //query.setOffset(offset);
-        
+
         List<Map<String, String>> listaRezultata = dbBroker.runQuery(query);
           
         
@@ -164,15 +151,7 @@ public class RMaster extends Application {
         String[] vrednostiArgumenata = new String[]{"" + (1 - 1),"" + 32};
         List<Map<String,String>> listaRezultata;
         listaRezultata = dbBroker.runStoredProcedure(imeStoreProcedure, imenaArgumenata, vrednostiArgumenata);
-            
-//        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
-//        query.setTableName(Artikal.TABLE_NAME);
-//        
-//        query.setOrderBy(Artikal.PRIORITET, QueryBuilder.SORT_ASC);
-//        
-//        List<Map<String, String>> listaRezultata = runQuery(query);
-//          
-        
+                    
         for (Map mapArtikalFront : listaRezultata) {
             Artikal noviArtikalFront = new Artikal();
             noviArtikalFront.makeFromHashMap((HashMap)mapArtikalFront);

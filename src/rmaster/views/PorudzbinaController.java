@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -443,10 +444,12 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     public void prikaziPorudzbinuTask(List racuniStola)
     {
+        List<Node> lista = new ArrayList<>();
+        
         for (Object racun : racuniStola) {
             
-                startTime = System.nanoTime();
                 Map<String, String> red = (Map<String, String>) racun;
+                
                 
                 String brojNovogGosta = red.get("gost");
                 porudzbinaTrenutna = new Porudzbina(new Gost(brojNovogGosta), red.get("id"));
@@ -485,11 +488,13 @@ public class PorudzbinaController extends FXMLDocumentController {
                                     }
                                 });
 
-                this.prikazGostiju.getChildren().add(b);
-                ms = System.nanoTime() - startTime;
-                System.out.format("prikaziPorudzbinu() - dinamicko kreiranje porudzbine: %,10dms%n", ms);
+                lista.add(b);
+        } 
+        
+        ObservableList<Node> listaDugmica = FXCollections.observableArrayList(lista);            
+        
+        this.prikazGostiju.getChildren().addAll(listaDugmica);
             
-        }       
         prikazGostijuScrollPane.setContent(prikazGostiju);
         
         if (this.prikazGostiju.getChildren().isEmpty()) {

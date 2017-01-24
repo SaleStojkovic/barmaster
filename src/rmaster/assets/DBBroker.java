@@ -36,8 +36,6 @@ public final class DBBroker {
     private long startTime;
     private long ms;
     
-    private List<ArtikalButton> listaGlavnihGrupa;
-
     public DBBroker() {
     }
     /**
@@ -723,24 +721,14 @@ public final class DBBroker {
         CallableStatement cStmt = null;
         
         try {
-            startTime = System.nanoTime();
             dbConnection = poveziSaBazom();
-            ms = System.nanoTime() - startTime;
-            System.out.format("get_PorudzbineStola() - poveziSaBazom(): %,10dms%n", ms);
-            
-            startTime = System.nanoTime();
             cStmt = dbConnection.prepareCall("{CALL getPorudzbineStola(?)}");
             //cStmt.setLong("konobarID", rmaster.RMaster.ulogovaniKonobar.konobarID);
             cStmt.setString("stoID", rmaster.RMaster.izabraniStoID);
             cStmt.execute();
             rs = cStmt.getResultSet();
-            ms = System.nanoTime() - startTime;
-            System.out.format("get_PorudzbineStola() - cStmt.execute(): %,10dms%n", ms);
             
-            startTime = System.nanoTime();
             listaRezultata = prebaciUListu(rs);
-            ms = System.nanoTime() - startTime;
-            System.out.format("get_PorudzbineStola() - prebaciUListu(rs): %,10dms%n", ms);
             
         } catch (Exception e) {
             System.out.println("Store procedure \"get_PorudzbineStola\" exec error! - " + e.toString());
