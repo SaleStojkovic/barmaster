@@ -183,11 +183,6 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
             sto.setShape(new Circle(sirina/2));  
     }
     
-    public void nazadNaPrikazSale()
-    {
-        myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
-    }
-    
     public void promeniKonobora(ActionEvent event)
     {
         
@@ -255,6 +250,14 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
     {   
         noviKonobar.promenaStolova(ulogovaniKonobar.konobarID + "", brojeviStolova);
         
-        nazadNaPrikazSale();
+        odjava(new ActionEvent());
+    }
+    
+    @Override
+    public void odjava(ActionEvent event)
+    {            
+        myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
+        RMaster.firstLogin = true;
+        RMaster.saleOmoguceneKonobaru.clear();
     }
 }

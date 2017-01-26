@@ -52,6 +52,8 @@ public class PocetniEkranController extends FXMLDocumentController {
         Timeline timeline = this.prikaziCasovnik(clock);
         timeline.play();
         
+        RMaster.firstLogin = true;
+        RMaster.saleOmoguceneKonobaru.clear();
     }
     
     @Override
@@ -130,5 +132,13 @@ public class PocetniEkranController extends FXMLDocumentController {
     private void kesirajSaleOmoguceneKonobaru()
     {
         setSaleOmoguceneKonobaru(getUlogovaniKonobar().saleOmoguceneKonobaru());
+    }
+    
+    @Override
+    public void odjava(ActionEvent event)
+    {            
+        myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
+        RMaster.firstLogin = true;
+        RMaster.saleOmoguceneKonobaru.clear();
     }
 }

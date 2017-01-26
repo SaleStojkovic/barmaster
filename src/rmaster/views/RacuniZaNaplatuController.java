@@ -22,6 +22,7 @@ import static rmaster.assets.QueryBuilder.QueryBuilder.SELECT;
 import rmaster.assets.RM_TableView.RM_TableView;
 import rmaster.assets.RM_TableView.SirinaKolone;
 import rmaster.ScreenController;
+import rmaster.assets.ScreenMap;
 
 /**
  * FXML Controller class
@@ -162,6 +163,14 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
         } catch (Exception e){
             System.out.println("Neuspelo zatvaranje forme - ConfirmFormController");
         }
+    }
+    
+    @Override
+    public void odjava(ActionEvent event)
+    {            
+        myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
+        RMaster.firstLogin = true;
+        RMaster.saleOmoguceneKonobaru.clear();
     }
 
 }

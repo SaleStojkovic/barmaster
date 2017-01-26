@@ -50,7 +50,8 @@ public class RMaster extends Application {
     public static List<Map<String, String>> saleOmoguceneKonobaru = new ArrayList<>();
     public static List<Map<String, String>> sveSale = new ArrayList<>();
     public static List<Map<String, String>> sviStolovi = new ArrayList<>();
-
+    
+    public static boolean firstLogin = true;
                
     DBBroker dbBroker = new DBBroker();
     
@@ -216,7 +217,9 @@ public class RMaster extends Application {
         
         query.setSelectColumns(
                 "stoprikaz.*", 
-                "stonaziv.naziv", 
+                "stonaziv.naziv",
+                "sto.KONOBAR_ID",
+                "sto.blokiran",
                 "rezervacija.datum",
                 "rezervacija.vreme",
                 "rezervacija.brOsoba"

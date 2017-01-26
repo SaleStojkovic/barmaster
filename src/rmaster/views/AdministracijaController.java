@@ -126,5 +126,12 @@ public class AdministracijaController extends FXMLDocumentController{
             true, 
             (Node)event.getSource(), false);
     }
-    
+      
+    @Override
+    public void odjava(ActionEvent event)
+    {            
+        myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
+        RMaster.firstLogin = true;
+        RMaster.saleOmoguceneKonobaru.clear();
+    }
 }

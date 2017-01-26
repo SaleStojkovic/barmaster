@@ -576,4 +576,12 @@ public class NaplataController extends FXMLDocumentController {
 
         }
     }
+    
+    @Override
+    public void odjava(ActionEvent event)
+    {            
+        myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
+        RMaster.firstLogin = true;
+        RMaster.saleOmoguceneKonobaru.clear();
+    }
 }

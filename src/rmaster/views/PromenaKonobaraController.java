@@ -22,6 +22,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.ScreenController;
+import rmaster.assets.ScreenMap;
 import rmaster.models.Konobar;
 
 /**
@@ -250,5 +251,13 @@ public class PromenaKonobaraController  extends FXMLDocumentController {
     
     public void pomeriScrollUpPredati() {
         predatiScrollPane.setVvalue((predatiScrollPane.getVvalue() - 0.3 ) * 1);
-    }    
+    }  
+    
+    @Override
+    public void odjava(ActionEvent event)
+    {            
+        myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
+        RMaster.firstLogin = true;
+        RMaster.saleOmoguceneKonobaru.clear();
+    }
 }

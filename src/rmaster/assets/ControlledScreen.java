@@ -5,6 +5,7 @@
  */
 package rmaster.assets;
 
+import javafx.event.ActionEvent;
 import rmaster.ScreenController;
 
 /**
@@ -18,4 +19,5 @@ public interface ControlledScreen {
      
      public void initData(Object data);
   
+     public void odjava(ActionEvent e);
 }

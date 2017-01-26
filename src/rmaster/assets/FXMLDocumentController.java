@@ -46,6 +46,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import rmaster.RMaster;
+import rmaster.ScreenController;
 import rmaster.models.Konobar;
 import rmaster.models.StavkaTure;
 
@@ -70,9 +71,8 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
     public static Map<String,Scene> otvoreneForme = new HashMap<>();//FXMLDocumentController> otvoreneForme = new HashMap<>();
     public static Map<String,FXMLDocumentController> otvoreneFormeControllers = new HashMap<>();//FXMLDocumentController> otvoreneForme = new HashMap<>();
          
-    
-    
-    
+    ScreenController myController; 
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
@@ -244,11 +244,6 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
     }   
      
      
-    /* BOSKO DODAO */
-     public void initData(Object data) {
-         this.data = data;
-     }
-     
     /**
      * 
      * @param imeProcedure
@@ -386,59 +381,6 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
             System.out.println("Greska pri otvaranju forme " + imeNoveForme + "! - " + e.toString());
         } 
     }    
-//     /**
-//      * 
-//      * @param imeForme
-//      * @param ugasiPrethodnuFormu
-//      * @param prethodnaForma
-//      */
-//     public void prikaziFormu(
-//             Object data, 
-//             String imeForme, 
-//             boolean ugasiPrethodnuFormu, 
-//             Node prethodnaForma, 
-//             boolean modalnaForma) 
-//     {
-//        Stage stage;
-//        String imeNoveForme = imeForme + ".fxml";
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource(imeNoveForme));
-//        
-//            stage = new Stage(StageStyle.UNDECORATED);
-//
-//            Pane pane = loader.load();
-//            Scene novaScena = new Scene(pane);
-//            novaScena.getStylesheets().addAll(this.getClass().getResource("style/style.css").toExternalForm());
-//
-//            stage.setScene(novaScena);
-//            if (modalnaForma) {
-//                stage.initModality(Modality.WINDOW_MODAL);
-//                stage.initOwner(prethodnaForma.getScene().getWindow());
-//            }
-//            
-//            FXMLDocumentController controller = loader.getController();
-//            if (data != null) {
-//                controller.initData(data);
-//            } else {
-//                Object newData = new Object();
-//                controller.initData(newData);
-//            }
-//
-//            if (modalnaForma)
-//                stage.showAndWait();
-//            else {
-//                stage.show();
-//                if (ugasiPrethodnuFormu) {
-//                    prethodnaForma.getScene().getWindow().hide();
-//                }
-//            }
-//
-//        } catch (Exception e){
-//            System.out.println("Greska pri otvaranju forme " + imeNoveForme + "! - " + e.toString());
-//        } 
-//    }
-     
-     
 
     public void prikaziFormuModalno(
             List<Object> data,

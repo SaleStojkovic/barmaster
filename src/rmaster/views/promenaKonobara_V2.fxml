@@ -11,7 +11,7 @@
 <AnchorPane fx:id="promenaKonobaraGlavni_V2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.PromenaKonobara_V2Controller">
    <children>
       <TabPane fx:id="saleTabPane" layoutY="47.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="1024.0" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="50.0" tabMaxWidth="120.0" tabMinHeight="50.0" tabMinWidth="120.0" />
-      <Button fx:id="odustani" layoutY="713.0" mnemonicParsing="false" onAction="#nazadNaPrikazSale" prefHeight="55.0" prefWidth="180.0" text="Odustani X" />
+      <Button fx:id="odustani" layoutY="713.0" mnemonicParsing="false" onAction="#odjava" prefHeight="55.0" prefWidth="180.0" text="Odustani X" />
       <Button fx:id="promeniKonobara" layoutX="844.0" layoutY="713.0" mnemonicParsing="false" onAction="#promeniKonobora" prefHeight="55.0" prefWidth="180.0" text="Potvrdi" />
       <Pane layoutX="186.0" layoutY="699.0" prefHeight="71.0" prefWidth="656.0">
          <children>

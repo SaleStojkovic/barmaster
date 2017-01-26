@@ -1723,4 +1723,12 @@ public class PorudzbinaController extends FXMLDocumentController {
         komponenta.setVisible(true);
         komponenta.setManaged(true);
     }
+    
+    @Override
+    public void odjava(ActionEvent event)
+    {            
+        myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
+        RMaster.firstLogin = true;
+        RMaster.saleOmoguceneKonobaru.clear();
+    }
 }
