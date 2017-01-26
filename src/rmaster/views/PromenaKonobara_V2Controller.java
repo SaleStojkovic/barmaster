@@ -14,8 +14,8 @@ import java.util.ResourceBundle;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Side;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -72,8 +72,16 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
         this.imeKonobara.setText(getUlogovaniKonobarIme());
+    }
+    
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        List<Map<String, String>> sale = RMaster.sveSale;
         
-        List<Map<String, String>> sale = konobar.saleOmoguceneKonobaru();
+        saleTabPane.setSide(Side.BOTTOM);
 
         for(Map<String, String> salaMap : sale){
             
@@ -96,41 +104,13 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
                 saleTabPane.getSelectionModel().select(newTab);
             }        
         }
-    }
-    
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        
     } 
 
-    public Background getBackground(String slikaURL)
-    {
-        Image image = new Image(
-                            getClass().getResourceAsStream("style/img/" + slikaURL),
-                            1024,
-                            608,
-                            false,
-                            true
-                    );
-                    
-        BackgroundImage newBackgroundImage = new BackgroundImage(
-                image,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT
-        );
-             
-        return new Background(newBackgroundImage);
-    }
+
     
     public void prikaziStoloveSale(AnchorPane sala, String salaId) 
     {
-        List<Map<String, String>> stoloviZaPrikaz = 
-                konobar.stoloviZaPrikazPromeneKonobara(salaId);
+        List<Map<String, String>> stoloviZaPrikaz = RMaster.getStoloveBySalaId(salaId);
             
         for (Map<String, String> stoMap : stoloviZaPrikaz)
         {

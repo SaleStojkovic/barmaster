@@ -19,6 +19,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import rmaster.assets.DBBroker;
 import rmaster.assets.QueryBuilder.QueryBuilder;
+import rmaster.assets.QueryBuilder.TableJoin;
+import rmaster.assets.QueryBuilder.TableJoinTypes;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.items.Artikal;
 import rmaster.assets.items.GrupaArtikalaFront;
@@ -47,6 +49,8 @@ public class RMaster extends Application {
     public static List<Map<String, String>> listaArtikalaFavorite = new ArrayList<>();
     public static List<Map<String, String>> saleOmoguceneKonobaru = new ArrayList<>();
     public static List<Map<String, String>> sveSale = new ArrayList<>();
+    public static List<Map<String, String>> sviStolovi = new ArrayList<>();
+
                
     DBBroker dbBroker = new DBBroker();
     
@@ -71,6 +75,10 @@ public class RMaster extends Application {
         
         getListaArtikalaFavorite();
         
+        ucitajSveSale();
+        
+        ucitajSveStolove();
+        
         Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBold.otf").toExternalForm(), 10);
         Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBoldItalic.otf").toExternalForm(), 10);
         Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaLight.otf").toExternalForm(), 10);
@@ -81,7 +89,7 @@ public class RMaster extends Application {
         Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaRegularItalic.otf").toExternalForm(), 10);
         
 
-       ScreenController mainContainer = new ScreenController(); 
+        ScreenController mainContainer = new ScreenController(); 
 
         ScreenMap scrMap = new ScreenMap();
         
@@ -158,5 +166,75 @@ public class RMaster extends Application {
             
             listaArtikalaFavorite.add(noviArtikalFront.makeMapForTableOutput());
         }
+    }
+    
+    public void ucitajSveSale(){
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+
+        query.setTableName("grafik_konobar");
+        
+        List<Map<String, String>> sale = dbBroker.runQuery(query);
+        
+        QueryBuilder query2 = new QueryBuilder(QueryBuilder.SELECT);
+        
+        query2.setTableName("grafiksale");
+        
+        if (!sale.isEmpty()) {
+            String saleString = query2.makeStringForInCriteriaFromListByParam(sale, "grafik_id");
+            query2.addCriteriaColumns("id");
+            query2.addCriteria(QueryBuilder.IS_NOT_IN);
+            query2.addCriteriaValues(saleString);
+        }
+
+        sveSale = dbBroker.runQuery(query2);
+    }
+    
+    public void ucitajSveStolove()
+    {
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+                
+        query.addTableJoins(
+                new TableJoin(
+                        "stoprikaz",
+                        "stonaziv",
+                        "broj",
+                        "broj",
+                        TableJoinTypes.LEFT_JOIN),
+                new TableJoin(
+                        "stoprikaz",
+                        "sto",
+                        "broj",
+                        "broj",
+                        TableJoinTypes.INNER_JOIN),
+                new TableJoin(
+                        "stoprikaz",
+                        "rezervacija",
+                        "broj",
+                        "brStola",
+                        TableJoinTypes.LEFT_JOIN) 
+        );
+        
+        query.setSelectColumns(
+                "stoprikaz.*", 
+                "stonaziv.naziv", 
+                "rezervacija.datum",
+                "rezervacija.vreme",
+                "rezervacija.brOsoba"
+        );
+        
+        sviStolovi = dbBroker.runQuery(query);
+    }
+    
+    public List<Map<String, String>> getStoloveBySalaId(String salaId)
+    {
+        List<Map<String, String>> listStolovi = new ArrayList<>();
+        
+        for (Map<String, String> sto : sviStolovi) {
+            if (sto.get("GRAFIK_ID").equals(salaId)) {
+                listStolovi.add(sto);
+            }
+        }
+        
+        return listStolovi;
     }
 }

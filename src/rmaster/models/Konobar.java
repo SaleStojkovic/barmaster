@@ -31,6 +31,24 @@ public class Konobar {
         this.imeKonobara = konobarMap.get("punoIme");
     }
     
+    public List<Map<String, String>> saleOmoguceneKonobaru(List<Map<String, String>> nizGrafikSale)
+    {
+        List<Map<String, String>> sale = nizGrafikSale;
+        
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+        
+        query.setTableName("grafiksale");
+        
+        if (!sale.isEmpty()) {
+            String saleString = query.makeStringForInCriteriaFromListByParam(sale, "grafik_id");
+            query.addCriteriaColumns("id");
+            query.addCriteria(QueryBuilder.IS_NOT_IN);
+            query.addCriteriaValues(saleString);
+        }
+
+        return dbBroker.runQuery(query);
+    }
+    
     public List<Map<String, String>> saleOmoguceneKonobaru()
     {
         List<Map<String, String>> sale = this.dajNizGrafikSale();

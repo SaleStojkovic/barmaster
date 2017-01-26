@@ -33,6 +33,12 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -562,5 +568,26 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
         }
         
         return zeljeniNode;
+    }
+    
+    public Background getBackground(String slikaURL)
+    {
+        Image image = new Image(
+                            getClass().getResourceAsStream("style/img/" + slikaURL),
+                            1024,
+                            608,
+                            false,
+                            true
+                    );
+                    
+        BackgroundImage newBackgroundImage = new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT
+        );
+             
+        return new Background(newBackgroundImage);
     }
 }

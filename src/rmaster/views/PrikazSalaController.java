@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -20,18 +19,14 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.geometry.Side;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Border;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
@@ -57,16 +52,14 @@ public class PrikazSalaController extends FXMLDocumentController {
     } 
     
     @FXML
-    private StackPane imageViewSala;
+    private TabPane saleTabPane;
     
-    @FXML
-    private AnchorPane salaPrikazPane;
+//    @FXML
+//    private AnchorPane salaPrikazPane;
     
-    @FXML
-    private HBox hBoxDugmiciSaSalama;
+//    @FXML
+//    private HBox hBoxDugmiciSaSalama;
     
-    @FXML
-    private Button prikaziDodatneSale;
     
     @FXML
     private Label casovnik;
@@ -91,10 +84,8 @@ public class PrikazSalaController extends FXMLDocumentController {
      */
     @Override
     public void initData(Object data) {
-        //todo premestiti ovo u initialize
-        if (hBoxDugmiciSaSalama.getChildren().isEmpty()) {
-            prikaziSale();
-        }
+        //todo ovde da se disableuju sale koje nisu dostupne konobaru
+
         imeKonobara.setText(getUlogovaniKonobarIme());
         timeline2 = this.prikaziRezervacije(this.listaRezervacija);
         timeline2.play();
@@ -104,102 +95,113 @@ public class PrikazSalaController extends FXMLDocumentController {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        
+        prikaziSale();
     }
 
     private void prikaziSale() {
-        try {
-            boolean prvi = true;
-            if (RMaster.saleNaziv.isEmpty()) {
-                for (int i = 0; i < RMaster.saleOmoguceneKonobaru.size(); i++)
-                {
-                    Map<String, String> novaSala = RMaster.saleOmoguceneKonobaru.get(i);
-                    
-                    RMaster.saleNaziv.put("" + novaSala.get("id"), novaSala.get("naziv"));
-                    
-                    Image image = new Image(
-                            getClass().getResourceAsStream("style/img/" + novaSala.get("slika")),
-                            RMaster.sirinaSaleNaEkranu,
-                            RMaster.visinaSaleNaEkranu,
-                            false,
-                            true
-                    );
-                    
-                    BackgroundImage myBI= new BackgroundImage(
-                            image,
-                            BackgroundRepeat.NO_REPEAT,
-                            BackgroundRepeat.NO_REPEAT,
-                            BackgroundPosition.DEFAULT,
-                            BackgroundSize.DEFAULT
-                    );
-                    
-                    RMaster.saleSlike.put("" + novaSala.get("id"), myBI);
-                    
-                    if (prvi && RMaster.trenutnaSalaID == 0) {
-                        
-                        RMaster.trenutnaSalaID = Long.parseLong(novaSala.get("id"));
-                        prvi = false;
-                    }
-                }
-            }
-            if (RMaster.saleNaziv.size() < 8) {
-                prikaziDodatneSale.setDisable(true);
-            }
-            else {
-                prikaziDodatneSale.setDisable(false);
-            }
-            
-            Iterator it = RMaster.saleNaziv.entrySet().iterator();
-            
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
-                Button newButton = new Button();
-                newButton.setId(pair.getKey().toString());
-                String naziv = pair.getValue().toString();
-                newButton.textProperty().set(naziv);
-                newButton.setPrefWidth(128);
-                newButton.setMinWidth(128);
-                newButton.setPrefHeight(hBoxDugmiciSaSalama.getPrefHeight());
-                newButton.setMinHeight(hBoxDugmiciSaSalama.getPrefHeight());
-                
-                // todo smisliti nacin da se ovo premesti u css.style
-                newButton.setStyle(""
-                        + "-fx-border-color: white; "
-                        + "-fx-border-width: 0.75;"
-                        + "-fx-border-radius: 0.2px;"
-                        + "-fx-border-width: 0 1 0 0;"
-                        + "-fx-background-color: -fx-tamno-crna;"
-                        + "-fx-text-fill: white;"
-                        + "-fx-font-family: KlavikaBold;"
-                        + "-fx-font-size: 16px;"
-                        + "");
-                
-                newButton.setOnAction(new EventHandler<ActionEvent>() {
-                                    @Override public void handle(ActionEvent e) {
-                                        RMaster.trenutnaSalaID = Integer.parseInt(((Button)e.getSource()).getId());
-                                        prikaziStolove();
-                                    }
-                                });
-                hBoxDugmiciSaSalama.getChildren().add(newButton);
-            }
-            prikaziStolove();
-            
-            prikaziDodatneSale.setVisible(false);
+        List<Map<String, String>> sale = RMaster.sveSale;
+        
+        saleTabPane.setSide(Side.BOTTOM);
 
-            if (RMaster.saleOmoguceneKonobaru.size() > 7) {
-                prikaziDodatneSale.setVisible(true);
-            }
+        for(Map<String, String> salaMap : sale){
             
-        } catch (Exception e) {
-            System.out.println("Greska u prikazu sale! - " + e.toString());
-        }
+            Tab newTab = new Tab();
+            newTab.setId(salaMap.get("id"));
+            
+            newTab.setText(salaMap.get("naziv"));
+            
+            AnchorPane novaSala = new AnchorPane();
+            
+            prikaziStoloveSale(novaSala, salaMap.get("id"));
+            
+            novaSala.setBackground(getBackground(salaMap.get("slika")));
+                    
+            newTab.setContent(novaSala);
+            
+            saleTabPane.getTabs().add(newTab);
+            
+            if (RMaster.trenutnaSalaID == Long.parseLong(salaMap.get("id"))) {        
+                saleTabPane.getSelectionModel().select(newTab);
+            }        
+        
+        }            
     }
    
+    public void prikaziStoloveSale(AnchorPane sala, String salaId) 
+    {
+        List<Map<String, String>> stoloviZaPrikaz = RMaster.getStoloveBySalaId(salaId);
+            
+        for (Map<String, String> stoMap : stoloviZaPrikaz)
+        {
+            StackPane okvir = this.napraviSto(stoMap);
+            sala.getChildren().add(okvir);
+        }
+    }
     
+    private StackPane napraviSto(Map<String, String> stoMap)
+    {
+        StackPane okvir = new StackPane();
+        
+        int vrstaStola = 0;
+        double x, y, sirina, visina;
+        String naziv = "";
+        
+        ToggleButton noviSto = new ToggleButton();
+        
+        x = Double.parseDouble(stoMap.get("x"));
+        x = x * RMaster.sirinaSaleNaEkranu / 1024;
+
+        y = Double.parseDouble(stoMap.get("y"));
+        y = y * RMaster.visinaSaleNaEkranu / 568;
+
+        sirina = Double.parseDouble(stoMap.get("sirina"));
+        sirina = sirina * RMaster.sirinaSaleNaEkranu / 1024;
+        visina = Double.parseDouble(stoMap.get("visina"));
+        visina = visina * RMaster.visinaSaleNaEkranu / 568;
+
+        noviSto.setId(stoMap.get("broj"));
+
+        naziv = stoMap.get("broj");
+
+        if (stoMap.get("naziv") != null) {
+            naziv = stoMap.get("naziv");
+        }
+
+        noviSto.setText(naziv);
+        vrstaStola = Integer.parseInt(stoMap.get("sto_VrstaStolaID"));
+
+        noviSto.setBorder(Border.EMPTY);
+        noviSto.setPrefSize(sirina, visina);
+        noviSto.setMaxSize(sirina, visina);
+        noviSto.setMinSize(sirina, visina);
+        okvir.setPrefSize(sirina, visina);
+        okvir.getChildren().add(noviSto);
+
+        this.setOblikStola(noviSto, vrstaStola, sirina);
+
+        AnchorPane.setLeftAnchor(okvir, x);
+        AnchorPane.setTopAnchor(okvir, y);
+        AnchorPane.setRightAnchor(okvir, RMaster.sirinaSaleNaEkranu - x - sirina);
+        AnchorPane.setBottomAnchor(okvir, RMaster.visinaSaleNaEkranu - y - visina);
+                
+        return okvir;   
+    }
+    
+    private void setOblikStola(
+            ToggleButton sto, 
+            int vrstaStola, 
+            double sirina)
+    {
+          if (vrstaStola == 2){
+              return;
+          }
+            sto.setPrefSize(sirina, sirina);
+            sto.setShape(new Circle(sirina/2));  
+    }    
+        
     private void prikaziStolove() {
 
-        salaPrikazPane.setBackground(new Background(RMaster.saleSlike.get("" + RMaster.trenutnaSalaID)));
+//        salaPrikazPane.setBackground(new Background(RMaster.saleSlike.get("" + RMaster.trenutnaSalaID)));
         try {
             String[] imenaArgumenata = {"GRAFIK_ID"};
             String[] vrednostiArgumenata = {RMaster.trenutnaSalaID + ""};
@@ -210,7 +212,7 @@ public class PrikazSalaController extends FXMLDocumentController {
             System.out.println("Greska u pozivu SP get_SaleOmoguceneKonobaru! - " + e.toString());
         }
         
-        salaPrikazPane.getChildren().clear();
+//        salaPrikazPane.getChildren().clear();
         
         try {
             
@@ -316,7 +318,7 @@ public class PrikazSalaController extends FXMLDocumentController {
                 AnchorPane.setTopAnchor(okvir, y);
                 AnchorPane.setRightAnchor(okvir, RMaster.sirinaSaleNaEkranu - x - sirina);
                 AnchorPane.setBottomAnchor(okvir, RMaster.visinaSaleNaEkranu - y - visina);
-                salaPrikazPane.getChildren().add(okvir);
+//                salaPrikazPane.getChildren().add(okvir);
             }
 
         } catch (Exception e) {

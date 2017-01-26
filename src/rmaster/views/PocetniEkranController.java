@@ -6,6 +6,7 @@
 package rmaster.views;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -47,6 +48,7 @@ public class PocetniEkranController extends FXMLDocumentController {
     @Override
     public void initData(Object data)
     {
+        lozinka.setText("");
         Timeline timeline = this.prikaziCasovnik(clock);
         timeline.play();
         
