@@ -205,7 +205,7 @@ public class RMaster extends Application {
                         "sto",
                         "broj",
                         "broj",
-                        TableJoinTypes.INNER_JOIN),
+                        TableJoinTypes.LEFT_JOIN),
                 new TableJoin(
                         "stoprikaz",
                         "rezervacija",

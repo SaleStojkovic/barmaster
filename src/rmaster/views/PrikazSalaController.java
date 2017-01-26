@@ -146,21 +146,22 @@ public class PrikazSalaController extends FXMLDocumentController {
         double x, y, sirina, visina;
         String naziv = "";
         
-        ToggleButton noviSto = new ToggleButton();
+        StoButton noviSto = new StoButton();
         
         x = Double.parseDouble(stoMap.get("x"));
         x = x * RMaster.sirinaSaleNaEkranu / 1024;
 
         y = Double.parseDouble(stoMap.get("y"));
-        y = y * RMaster.visinaSaleNaEkranu / 568;
+        y = y * RMaster.visinaSaleNaEkranu / 768;
 
         sirina = Double.parseDouble(stoMap.get("sirina"));
         sirina = sirina * RMaster.sirinaSaleNaEkranu / 1024;
         visina = Double.parseDouble(stoMap.get("visina"));
-        visina = visina * RMaster.visinaSaleNaEkranu / 568;
+        visina = visina * RMaster.visinaSaleNaEkranu / 768;
 
-        noviSto.setId(stoMap.get("broj"));
-
+        noviSto.setId(stoMap.get("id"));
+        noviSto.setBrojStola(stoMap.get("broj"));
+        
         naziv = stoMap.get("broj");
 
         if (stoMap.get("naziv") != null) {
@@ -168,6 +169,9 @@ public class PrikazSalaController extends FXMLDocumentController {
         }
 
         noviSto.setText(naziv);
+        
+        dodajAkcijuZaSto(noviSto);
+        
         vrstaStola = Integer.parseInt(stoMap.get("sto_VrstaStolaID"));
 
         noviSto.setBorder(Border.EMPTY);
@@ -188,7 +192,7 @@ public class PrikazSalaController extends FXMLDocumentController {
     }
     
     private void setOblikStola(
-            ToggleButton sto, 
+            Button sto, 
             int vrstaStola, 
             double sirina)
     {
@@ -198,6 +202,19 @@ public class PrikazSalaController extends FXMLDocumentController {
             sto.setPrefSize(sirina, sirina);
             sto.setShape(new Circle(sirina/2));  
     }    
+    
+    private void dodajAkcijuZaSto(StoButton sto)
+    {
+        sto.setOnAction(new EventHandler<ActionEvent>() {
+                                        @Override public void handle(ActionEvent e) {
+                                            StoButton b = (StoButton)e.getSource();
+                                            RMaster.izabraniStoID = b.getId();
+                                            RMaster.izabraniStoBroj = Integer.parseInt(b.getBrojStola());
+                                            RMaster.izabraniStoNaziv = b.getText();
+                                            myController.setScreen(ScreenMap.PORUDZBINA, null);
+                                        }
+                                    });
+    }
         
     private void prikaziStolove() {
 

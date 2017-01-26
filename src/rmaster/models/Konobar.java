@@ -110,7 +110,7 @@ public class Konobar {
                         "sto",
                         "broj",
                         "broj",
-                        TableJoinTypes.INNER_JOIN
+                        TableJoinTypes.LEFT_JOIN
                 ),
                 new TableJoin(
                         "stoprikaz",
