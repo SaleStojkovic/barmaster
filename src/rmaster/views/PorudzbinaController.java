@@ -136,6 +136,8 @@ public class PorudzbinaController extends FXMLDocumentController {
     @FXML
     public RM_TableView tabelaNovaTuraGosta;
     
+    public String izabraniStoId;
+    
     // Sirina dela u kome se prikazuju grupe, podgrupe i artikli
     public double roditeljSirina = 592.0;
     public final double defaultVisinaDugmeta = 68.0;
@@ -258,6 +260,10 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     @Override
     public void initData(Object data) {
+        
+        izabraniStoId = (String) data;
+        sakrijSveTabele();
+
         
         exec = Executors.newCachedThreadPool(runnable -> {
             Thread t = new Thread(runnable);
@@ -431,7 +437,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         Task<List> porudzibaTask = new Task<List>() {
             @Override
             public List call() throws Exception {
-               List racuniStola = DBBroker.get_PorudzbineStola(); 
+               List racuniStola = DBBroker.get_PorudzbineStola(izabraniStoId); 
                return racuniStola;
             }
         };
@@ -658,11 +664,9 @@ public class PorudzbinaController extends FXMLDocumentController {
                     vrednostiArgumenata = new String[]{"" + (this.prikazFavoriteRedniBrojPrvog - 1),"" + (this.prikazFavoriteBrojPrikazanihPlus1)};
                     break;
                 default:
-            };
-            startTime = System.nanoTime();
+            }
+            
             rs = runStoredProcedure(imeStoreProcedure, imenaArgumenata, vrednostiArgumenata);
-            ms = System.nanoTime() - startTime;
-            System.out.format("runStoredProcedure(" + imeStoreProcedure + ", " + imenaArgumenata.toString() + ", " + vrednostiArgumenata.toString() + ");: %,10dms%n", ms);
 
             switch(staSePrikazuje) {
                 case GLAVNA_GRUPA:
@@ -684,10 +688,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         } catch (Exception e) {
             System.out.println("View \"" + imeStoreProcedure + "\" fetch error!");
         }
-        startTime = System.nanoTime();
         prikazArtikalIliGrupa(rs, gdePrikazati, staSePrikazuje);
-        ms = System.nanoTime() - startTime;
-        System.out.format("prikazArtikalIliGrupa(" + gdePrikazati + ", " + staSePrikazuje + ");: %,10dms%n", ms);
     }
     
     protected void refreshGrupeIliArtikla_v2(Pane gdePrikazati, VrsteGrupaIliArtikal staSePrikazuje) {
@@ -734,7 +735,6 @@ public class PorudzbinaController extends FXMLDocumentController {
 //                    break;
           //      default:
           //  };
-            startTime = System.nanoTime();
             //rs = runStoredProcedure(imeStoreProcedure, imenaArgumenata, vrednostiArgumenata);
             //ms = System.nanoTime() - startTime;
             //System.out.format("runStoredProcedure(" + imeStoreProcedure + ", " + imenaArgumenata.toString() + ", " + vrednostiArgumenata.toString() + ");: %,10dms%n", ms);
@@ -761,10 +761,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         } catch (Exception e) {
              e.printStackTrace();
         }
-        //startTime = System.nanoTime();
         prikazArtikalIliGrupa_v2(rs, gdePrikazati, staSePrikazuje);
-        ms = System.nanoTime() - startTime;
-        System.out.format("prikazArtikalIliGrupa(" + gdePrikazati + ", " + staSePrikazuje + ");: %,10dms%n", ms);
     }
     
     public void popuniListuGrupa(List<Map<String,String>> rs, String uslov, int pocetak, int brojElemenata) {
@@ -1686,23 +1683,18 @@ public class PorudzbinaController extends FXMLDocumentController {
             }
             // Ovde resiti stampu po artiklima
             List<Object> newData = new ArrayList<>();
-            prikaziFormu(newData,
-                    ScreenMap.PRIKAZ_SALA,
-                    true, 
-                    (Node)event.getSource(), false
-            );    
+            
+            myController.setScreen(ScreenMap.PRIKAZ_SALA, newData);
+   
             return;
         }
         // TODO: Otvoriti formu za naplatu
         List<Object> newData = new ArrayList<>();
         newData.add(this.porudzbinaTrenutna);
         newData.add((Node)event.getSource());
-        prikaziFormu(newData,
-                ScreenMap.NAPLATA,
-                false, 
-                (Node)event.getSource(), 
-                true
-        );    
+        
+        myController.setScreen(ScreenMap.NAPLATA, newData);
+ 
     }
 
     public void sakrijSveTabele() {
@@ -1714,6 +1706,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             }
             if (node instanceof RM_TableView) {
                 ((RM_TableView) node).setPrefSize(0, 0);
+                ((RM_TableView) node).izbrisiSveIzTabele();
             }
         }
     }

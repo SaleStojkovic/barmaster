@@ -120,7 +120,7 @@ public class RezervacijeController extends FXMLDocumentController {
         
 
         scrollPaneRezervacije.setContent(tabelaRezervacija);
-        imeKonobara.setText(ulogovaniKonobar.imeKonobara);
+        imeKonobara.setText(getUlogovaniKonobarIme());
         
         this.izbrisiSvaPolja();
         

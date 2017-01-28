@@ -713,7 +713,7 @@ public final class DBBroker {
     }
     
     
-    public List get_PorudzbineStola()
+    public List get_PorudzbineStola(String izabraniStoId)
     {    
         Connection dbConnection = null;
         ResultSet rs = null;
@@ -724,7 +724,7 @@ public final class DBBroker {
             dbConnection = poveziSaBazom();
             cStmt = dbConnection.prepareCall("{CALL getPorudzbineStola(?)}");
             //cStmt.setLong("konobarID", rmaster.RMaster.ulogovaniKonobar.konobarID);
-            cStmt.setString("stoID", rmaster.RMaster.izabraniStoID);
+            cStmt.setString("stoID", izabraniStoId);
             cStmt.execute();
             rs = cStmt.getResultSet();
             

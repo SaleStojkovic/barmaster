@@ -349,12 +349,7 @@ public class NaplataController extends FXMLDocumentController {
 
     
     public void otvoriLojalnost(ActionEvent event) {
-        prikaziFormu(porudzbina, 
-                ScreenMap.LOJALNOST, 
-                false, 
-                (Node)event.getSource(), 
-                true
-        );
+        myController.setScreen(ScreenMap.LOJALNOST, porudzbina);
     }
     
     public void medjuzbir(ActionEvent event) {
@@ -391,12 +386,7 @@ public class NaplataController extends FXMLDocumentController {
             Stampa.getInstance().stampajGotovinskiRacun(porudzbina, placanja);
         }
         
-        prikaziFormu(null, 
-                ScreenMap.PRIKAZ_SALA, 
-                true, 
-                roditelj,
-                false
-        );
+        myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
 
     }
     
@@ -514,12 +504,7 @@ public class NaplataController extends FXMLDocumentController {
     
     @FXML
     public void prikaziRacun(ActionEvent event) {
-        prikaziFormu(new ArrayList<>(),
-                ScreenMap.PRIKAZ_SALA,
-                true, 
-                (Node)event.getSource(),
-                false
-        );
+        myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
     }
 
     @FXML
@@ -581,7 +566,5 @@ public class NaplataController extends FXMLDocumentController {
     public void odjava(ActionEvent event)
     {            
         myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
-        RMaster.firstLogin = true;
-        RMaster.saleOmoguceneKonobaru.clear();
     }
 }

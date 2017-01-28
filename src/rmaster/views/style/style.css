@@ -264,8 +264,15 @@ and open the template in the editor.
     -fx-font-size: 18px; 
 }
 
-#prikazSalaFooter *.button,
-#hBoxDugmiciSaSalama *.button {
+#prikazSalaFooter
+{
+    -fx-border-width: 1 0 1 0;
+    -fx-border-color: white;
+
+}
+
+#prikazSalaFooter *.button
+{
     -fx-background-color: -fx-tamno-crna;
     -fx-text-fill: white;
     -fx-font-family: KlavikaBold; 
@@ -283,17 +290,7 @@ and open the template in the editor.
     -fx-border-color: white;
     -fx-border-width: 0 0 0 1;
  }
-
- #prikaziDodatneSale {
-    -fx-font-size: 18;
-    -fx-font-weight: bold;
- }
  
-
-#hBoxDugmiciSaSalama *.button {
-    -fx-background-color: -fx-tamno-crna;
-    
-}
 /* porudzbina pocetak */
 
 #porudzbinaHeader, #sekcijaPorudzbina, #porudzbinaFooter, #porudzbinaArtikli, #ArtikalGrupe, #ArtikalPodgrupe, #Artikal {
@@ -577,78 +574,6 @@ and open the template in the editor.
     -fx-border-color: red;
 }
 
-/*Promena konobara*/
-
-#promenaKonobaraGlavni {
-    -fx-background-color: -fx-tamno-crna;  
-}
-
-#zaPredajuScrollPane,
-#predatiScrollPane {
-        -fx-border-color: -fx-zuta;
-}
-
-#zaPredajuScrollPane > .viewport,
-#predatiScrollPane > .viewport {
-    -fx-background-color: -fx-tamno-crna; 
-}
-
-#promenaKonobaraGlavni *.button {
-    -fx-background-color: -fx-tamno-crna;
-    -fx-font-family: KlavikaBold;
-    -fx-text-fill: white;
-    -fx-border-color: white;
-    -fx-border-width: 0.5;
-    -fx-font-size: 18; 
-}
-
-#stoloviZaPredaju,
-#stoloviPredati
-{
-    -fx-border-color: -fx-zuta;
-    -fx-border-width: 0.5px;
-    -fx-border-radius: 0.5px;
-}
-
-#stoloviZaPredaju *.button,
-#stoloviPredati *.button
-{
-    -fx-background-color: -fx-svetlo-crna;
-    -fx-text-fill: white;
-    -fx-font-family: KlavikaBold;
-    -fx-font-size: 18;
-}
-
-#promeniKonobaraSrednji *.button {
-    -fx-background-color: -fx-tamno-crna;
-    -fx-font-family: KlavikaBold;
-    -fx-text-fill: -fx-zuta;
-    -fx-border-color: -fx-zuta;
-    -fx-border-width: 0.5;
-    -fx-font-size: 18; 
-    -fx-font-weight: bold;
-
-}
-
-#promeniKonobaraAkcije *.button {
-    -fx-background-color: -fx-tamno-crna;
-    -fx-font-family: KlavikaBold;
-    -fx-text-fill: white;
-    -fx-border-color: white;
-    -fx-border-width: 0.5;
-    -fx-font-size: 18; 
-    -fx-font-weight: bold;
-}
-
-#promenaHeader *.label {
-     -fx-font-family: KlavikaBold;
-     -fx-text-fill: white;
-     -fx-font-size: 18;  
-}
-
-/*kraj promena konobara*/
-
-
 /** Promena konobara V2 */
 
 
@@ -662,11 +587,10 @@ and open the template in the editor.
 {
     -fx-background-color: -fx-tamno-crna;
     -fx-font-family: KlavikaBold;
-    -fx-text-fill: -fx-zuta;
+    -fx-text-fill: white;
     -fx-border-color: white;
     -fx-border-width: 0.5;
-    -fx-font-size: 18; 
-    -fx-font-weight: bold;
+    -fx-font-size: 13px; 
 }
 
 #promenaKonobaraGlavni_V2 *.toggle-button:selected
@@ -676,7 +600,9 @@ and open the template in the editor.
     -fx-text-fill: white;
     -fx-border-color: -fx-siva;
     -fx-border-width: 0.5;
-    -fx-font-size: 16; 
+    -fx-font-size: 13px; 
+    -fx-font-weight: bold;
+
 }
 
 #saleTabPane *.tab-header-background 
@@ -685,9 +611,8 @@ and open the template in the editor.
 }
 
 #saleTabPane *.tab .tab-label {
-     -fx-text-fill: -fx-zuta;
-     -fx-font-weight: bold;
-     -fx-font-size: 20px;
+     -fx-text-fill: white;
+     -fx-font-size: 13px;
      -fx-font-family: KlavikaBold;
  }
 
@@ -707,10 +632,15 @@ and open the template in the editor.
 #saleTabPane *.tab:selected .tab-label {
      -fx-text-fill: white;
      -fx-font-weight: bold;
-     -fx-font-size: 20px;
+     -fx-font-size: 13px;
      -fx-font-family: KlavikaBold;
  }
 
+#promenaKonobaraFooter
+{
+    -fx-border-width: 1 0 1 0;
+    -fx-border-color: white;
+}
 /** Kraj promene konobara V2 */
 
 

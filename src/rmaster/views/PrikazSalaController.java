@@ -29,6 +29,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
@@ -44,9 +45,8 @@ import rmaster.assets.items.StoButton;
  */
 public class PrikazSalaController extends FXMLDocumentController {
     public static final long HALF_HOUR = 30*60*1000; // in milli-seconds.
-    private List<Map<String, String>> listStolovi = null;
     
-        ScreenController myController; 
+    ScreenController myController; 
      
     @Override
     public void setScreenParent(ScreenController screenParent){ 
@@ -61,9 +61,6 @@ public class PrikazSalaController extends FXMLDocumentController {
     
     @FXML
     private Label imeKonobara;
-    
-    @FXML
-    private Button odjava;
     
     private List<Button> listaRezervacija = new ArrayList<>();
     
@@ -96,7 +93,9 @@ public class PrikazSalaController extends FXMLDocumentController {
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
         
-        new Timer().scheduleAtFixedRate(new TimerTask() {   
+        //osvezava stranicu na svakih 60s
+        new Timer().scheduleAtFixedRate(new TimerTask() { 
+        @Override
         public void run() {
             
             //refreshuje celu scenu
@@ -258,10 +257,12 @@ public class PrikazSalaController extends FXMLDocumentController {
         sto.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override public void handle(ActionEvent e) {
                                             StoButton b = (StoButton)e.getSource();
+                                            //TODO ovo ne bi trebalo ovako vec da se prosledjuje sve u porduzbinu
+                                            //predlazem da se napravi sto model
                                             RMaster.izabraniStoID = b.getId();
                                             RMaster.izabraniStoBroj = Integer.parseInt(b.getBrojStola());
                                             RMaster.izabraniStoNaziv = b.getText();
-                                            myController.setScreen(ScreenMap.PORUDZBINA, null);
+                                            myController.setScreen(ScreenMap.PORUDZBINA, b.getId());
                                         }
                                     });
     }

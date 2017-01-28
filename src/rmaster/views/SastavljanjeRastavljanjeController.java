@@ -63,15 +63,9 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     }
     
     public void nazadNaPrikazSale(ActionEvent event) 
-    {
-                    Map<String, String> newData = new HashMap<>();
-            
-            //sledeca stranica 
-            prikaziFormu(newData,
-                    ScreenMap.PRIKAZ_SALA, 
-                    true, 
-                    (Node)event.getSource(), false
-            );
+    {            
+        //sledeca stranica 
+        myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
     }
     
     public void pozivanjePrikazSalePopup(ActionEvent event) {
@@ -91,8 +85,9 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         }
     }
     
+    @Override
     public void odjava(ActionEvent event)
     {            
-            myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
+        myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
     }
 }

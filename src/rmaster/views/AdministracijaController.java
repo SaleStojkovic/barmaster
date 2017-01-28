@@ -121,17 +121,12 @@ public class AdministracijaController extends FXMLDocumentController{
 
     public void nazadNaPrikazSala(ActionEvent event) {
 
-        prikaziFormu(new Object(),
-            ScreenMap.PRIKAZ_SALA, 
-            true, 
-            (Node)event.getSource(), false);
+        myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
     }
       
     @Override
     public void odjava(ActionEvent event)
     {            
         myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
-        RMaster.firstLogin = true;
-        RMaster.saleOmoguceneKonobaru.clear();
     }
 }

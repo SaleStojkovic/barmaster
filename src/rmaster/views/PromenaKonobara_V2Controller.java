@@ -20,13 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
@@ -68,6 +62,9 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
     @Override
     public void initData(Object data)
     {
+        
+        //TODO samo njegove stolove prikazati
+        
         konobar = RMaster.getUlogovaniKonobar();
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
@@ -257,7 +254,10 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
     public void odjava(ActionEvent event)
     {            
         myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
-        RMaster.firstLogin = true;
-        RMaster.saleOmoguceneKonobaru.clear();
+    }
+    
+    public void nazadNaPrikazSala(ActionEvent event)
+    {            
+        myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
     }
 }

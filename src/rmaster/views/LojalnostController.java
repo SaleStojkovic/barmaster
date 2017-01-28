@@ -282,11 +282,8 @@ public class LojalnostController extends FXMLDocumentController {
         
         data.add(porudzbina);
         
-        prikaziFormu(data, 
-                ScreenMap.NAPLATA, 
-                true, 
-                (Node)event.getSource(), false
-        );
+        myController.setScreen(ScreenMap.NAPLATA, data);
+        
     }
     
     public void potvrdi(ActionEvent event) {
@@ -304,11 +301,7 @@ public class LojalnostController extends FXMLDocumentController {
         data.add(porudzbina);
         data.add(izabraniGost);
         
-        prikaziFormu(data, 
-                ScreenMap.NAPLATA, 
-                true, 
-                (Node)event.getSource(), false
-        );
+        myController.setScreen(ScreenMap.NAPLATA, data);
     }
     
     public void sortStalneGoste(ActionEvent event)
@@ -417,14 +410,12 @@ public class LojalnostController extends FXMLDocumentController {
             data.add(porudzbina);
             data.add(izabraniGost);
 
-            prikaziFormu(data, 
-                ScreenMap.NAPLATA, 
-                true, 
-                (Node)keyEvent.getSource(), false
-            );
+            myController.setScreen(ScreenMap.NAPLATA, data);
+            
         }
     }
     
+    @Override
     public void odjava(ActionEvent event)
     {            
             myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
