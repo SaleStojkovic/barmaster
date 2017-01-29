@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rmaster.assets.items;
+package rmaster.assets.RM_Button;
 
 import javafx.scene.control.Button;
 
@@ -11,15 +11,15 @@ import javafx.scene.control.Button;
  *
  * @author Bosko
  */
-public class StoButton extends Button{
-    private String brojStola = "";
+public class RM_Button extends Button{
+    private String podatak = "";
     
-    public void setBrojStola(String brojStola) {
-        this.brojStola = brojStola;
+    public void setPodatak(String brojStola) {
+        this.podatak = brojStola;
     }
     
-    public String getBrojStola() {
-        return this.brojStola;
+    public String getPodatak() {
+        return this.podatak;
     }
     
 }

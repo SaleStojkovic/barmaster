@@ -733,7 +733,6 @@ public final class DBBroker {
         } catch (Exception e) {
             System.out.println("Store procedure \"get_PorudzbineStola\" exec error! - " + e.toString());
         } finally {
-            startTime = System.nanoTime();
            
             if (rs != null) {
                 try { rs.close(); } catch (SQLException ignore) {}
@@ -746,8 +745,7 @@ public final class DBBroker {
             if (dbConnection != null) {
                 try { dbConnection.close(); } catch (SQLException ignore) {}
             }
-            ms = System.nanoTime() - startTime;
-            System.out.format("get_PorudzbineStola() - finally - zatvaranje: %,10dms%n", ms);
+            
         }
             
         return listaRezultata;

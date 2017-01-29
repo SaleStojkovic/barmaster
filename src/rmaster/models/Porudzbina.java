@@ -46,10 +46,15 @@ public class Porudzbina {
 
     private StalniGost stalniGost;
     
-    public Porudzbina(Gost gost) {
+    public Porudzbina(
+            Gost gost, 
+            String izabraniStoId, 
+            String izabraniStoBroj
+    )
+    {
         this.setGost(gost);
-        this.brojStolaID = Integer.parseInt(rmaster.RMaster.izabraniStoID);
-        this.brojStolaBroj = rmaster.RMaster.izabraniStoBroj;
+        this.brojStolaID = Integer.parseInt(izabraniStoId);
+        this.brojStolaBroj = Integer.parseInt(izabraniStoBroj);
     }
 
     public void setPopust(double popust) {
@@ -74,19 +79,29 @@ public class Porudzbina {
         return vrednostPorudzbine;
     }
     
-    public Porudzbina(Gost gost, long racunID) {
+    public Porudzbina(
+            Gost gost, 
+            long racunID, 
+            String izabraniStoId,
+            String izabraniStoBroj
+    ) {
         this.setGost(gost);
         this.racunID = racunID;
-        this.brojStolaID = Integer.parseInt(rmaster.RMaster.izabraniStoID);
-        this.brojStolaBroj = rmaster.RMaster.izabraniStoBroj;
+        this.brojStolaID = Integer.parseInt(izabraniStoId);
+        this.brojStolaBroj = Integer.parseInt(izabraniStoBroj);
         popuniPorudzbinuIzBaze();
     }
 
-    public Porudzbina(Gost gost, String racunIDstring) {
+    public Porudzbina(
+            Gost gost, 
+            String racunIDstring,
+            String izabraniStoId,
+            String izabraniStoBroj
+    ) {
         this.setGost(gost);
         this.racunID = Integer.parseInt(racunIDstring);
-        this.brojStolaID = Integer.parseInt(rmaster.RMaster.izabraniStoID);
-        this.brojStolaBroj = rmaster.RMaster.izabraniStoBroj;
+        this.brojStolaID = Integer.parseInt(izabraniStoId);
+        this.brojStolaBroj = Integer.parseInt(izabraniStoBroj);
         popuniPorudzbinuIzBaze();
     }
     
@@ -94,12 +109,9 @@ public class Porudzbina {
         String[] imenaArgumenata = {"idRacuna"};
         String[] vrednostiArgumenata = {"" + this.racunID};
         
-        long        startTime = System.nanoTime();
         List<Map<String, String>> tureJednogGosta = DBBroker.runStoredProcedure("getPorudzbinaTure", 
                 imenaArgumenata, 
                 vrednostiArgumenata);
-        long        ms = System.nanoTime() - startTime;
-        System.out.format("SP getPorudzbinaTure(): %,10dms%n", ms);
         
         for (Map<String, String> tura : tureJednogGosta) {
                 String turaId = tura.get("id");
@@ -110,10 +122,7 @@ public class Porudzbina {
                 } catch (ParseException e) {
                     System.out.println("Neuspela konverzija stringa u datum za vreme ture!");
                 }
-                startTime = System.nanoTime();
                 Tura turaModel = new Tura(turaId, datumD);
-                ms = System.nanoTime() - startTime;
-                System.out.format("new Tura(): %,10dms%n", ms);
         
                 this.turePorudzbine.add(turaModel);
         }

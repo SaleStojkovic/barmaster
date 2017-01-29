@@ -40,6 +40,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javax.rmi.CORBA.Stub;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.RM_TableView.RM_TableView;
 import rmaster.assets.RM_TableView.RavnanjeKolone;
@@ -49,6 +50,7 @@ import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
 import rmaster.assets.items.ArtikalButton;
+import rmaster.assets.RM_Button.RM_Button;
 import rmaster.assets.items.VrsteGrupaIliArtikal;
 import static rmaster.assets.items.VrsteGrupaIliArtikal.*;
 import rmaster.models.Gost;
@@ -138,6 +140,11 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     public String izabraniStoId;
     
+    public String izabraniStoBroj;
+    
+    public String izabraniStoNaziv;
+
+    
     // Sirina dela u kome se prikazuju grupe, podgrupe i artikli
     public double roditeljSirina = 592.0;
     public final double defaultVisinaDugmeta = 68.0;
@@ -219,19 +226,26 @@ public class PorudzbinaController extends FXMLDocumentController {
         prikazRacunaGosta.setHbarPolicy(ScrollBarPolicy.NEVER);
 
         listaTabela = prikazRacunaGostaSadrzaj.getChildren();
-        
-        tabelaNovaTuraGosta.addRavnjanje(
-            new RavnanjeKolone(7, RavnanjeKolone.ALIGN_RIGHT),
-            new RavnanjeKolone(5, RavnanjeKolone.ALIGN_LEFT)
-        );
-        
-        tabelaNovaTuraGosta.setSirineKolona(
+       
+         for (Node novaTabela : prikazRacunaGostaSadrzaj.getChildren()) {
+             
+             if (!(novaTabela instanceof RM_TableView)) {
+                 continue;
+             }
+             
+             
+             ((RM_TableView) novaTabela).addRavnjanje(
+                    new RavnanjeKolone(7, RavnanjeKolone.ALIGN_RIGHT),
+                    new RavnanjeKolone(5, RavnanjeKolone.ALIGN_LEFT)            
+            );
+            
+            ((RM_TableView) novaTabela).setSirineKolona(
                 new SirinaKolone(3, sirinaKolonaTabele[2]),
                 new SirinaKolone(5, sirinaKolonaTabele[4]),
                 new SirinaKolone(7, sirinaKolonaTabele[6])
             );
-       
-        
+         }
+
         try {
 
              if (this.ArtikalGrupe.getChildren().isEmpty()) {
@@ -261,9 +275,17 @@ public class PorudzbinaController extends FXMLDocumentController {
     @Override
     public void initData(Object data) {
         
-        izabraniStoId = (String) data;
-        sakrijSveTabele();
+        this.prikazGostiju.getChildren().clear();
 
+        this.total.setText("0.00");
+        
+        HashMap<String, String> stoMap = (HashMap) data;
+        
+        izabraniStoId = stoMap.get("stoId");
+        
+        izabraniStoBroj = stoMap.get("stoBroj");
+        
+        izabraniStoNaziv = stoMap.get("stoNaziv");
         
         exec = Executors.newCachedThreadPool(runnable -> {
             Thread t = new Thread(runnable);
@@ -273,7 +295,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         imeKonobara.setText(getUlogovaniKonobarIme());
         
-        izabraniSto.setText("Sto: " + RMaster.izabraniStoNaziv);
+        izabraniSto.setText("Sto: " + izabraniStoNaziv);
  
         prikaziPorudzbinu();
 
@@ -450,15 +472,31 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     public void prikaziPorudzbinuTask(List racuniStola)
     {
+        sakrijSveTabele();
+        
+        if (racuniStola.isEmpty())
+        {
+            //TODO: Dodaj prvog gosta i napravi porudzbinu za njega
+            dodajNovogGosta(new ActionEvent());
+            return;
+        }
+        
+        
         List<Node> lista = new ArrayList<>();
         
         for (Object racun : racuniStola) {
             
                 Map<String, String> red = (Map<String, String>) racun;
                 
-                
                 String brojNovogGosta = red.get("gost");
-                porudzbinaTrenutna = new Porudzbina(new Gost(brojNovogGosta), red.get("id"));
+                
+                porudzbinaTrenutna = new Porudzbina(
+                        new Gost(brojNovogGosta), 
+                        red.get("id"),
+                        izabraniStoId,
+                        izabraniStoBroj
+                );
+                
                 porudzbineStola.add(porudzbinaTrenutna);
 
                 RadioButton b = new RadioButton(brojNovogGosta);
@@ -498,15 +536,10 @@ public class PorudzbinaController extends FXMLDocumentController {
         } 
         
         ObservableList<Node> listaDugmica = FXCollections.observableArrayList(lista);            
-        
+                
         this.prikazGostiju.getChildren().addAll(listaDugmica);
             
         prikazGostijuScrollPane.setContent(prikazGostiju);
-        
-        if (this.prikazGostiju.getChildren().isEmpty()) {
-                 //TODO: Dodaj prvog gosta i napravi porudzbinu za njega
-                dodajNovogGosta(new ActionEvent());
-            }
            
         RadioButton dugme = (RadioButton)prikazGostiju.getChildren().get(0);
         dugme.fire();
@@ -527,14 +560,14 @@ public class PorudzbinaController extends FXMLDocumentController {
         for (Tura tura : porudzbina.getTure()) {
             
             RM_TableView novaTabela = new RM_TableView();
-            Button ponoviTuru = new Button();
+            RM_Button ponoviTuru = new RM_Button();
             
             brojac++;
             
             if (brojac < 12) {
                 novaTabela = (RM_TableView) findNodeById(listaSadrzaja, "tura" + brojac);
                 prikaziKomponentu(novaTabela);
-                ponoviTuru = (Button) findNodeById(listaSadrzaja, "ponoviTura" + brojac);
+                ponoviTuru = (RM_Button) findNodeById(listaSadrzaja, "ponoviTura" + brojac);
                 prikaziKomponentu(ponoviTuru);
             } 
             
@@ -544,16 +577,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                 novaTura = tura;
             }
             
-            novaTabela.addRavnjanje(
-                    new RavnanjeKolone(7, RavnanjeKolone.ALIGN_RIGHT),
-                    new RavnanjeKolone(5, RavnanjeKolone.ALIGN_LEFT)            
-            );
-            
-            novaTabela.setSirineKolona(
-                new SirinaKolone(3, sirinaKolonaTabele[2]),
-                new SirinaKolone(5, sirinaKolonaTabele[4]),
-                new SirinaKolone(7, sirinaKolonaTabele[6])
-            );
+
             novaTabela.setPodaci(
                     tura.dajTuru()
             );
@@ -566,10 +590,10 @@ public class PorudzbinaController extends FXMLDocumentController {
             } catch (Exception e) {
                 ponoviTuru.setText("Ponovi Turu");
             }
-            ponoviTuru.setId("" + tura.getTuraID());
+            ponoviTuru.setPodatak("" + tura.getTuraID());
             ponoviTuru.setOnAction(new EventHandler<ActionEvent>() {
                             @Override public void handle(ActionEvent e) {
-                                String turaId = ((Button)e.getSource()).getId();
+                                String turaId = ((RM_Button)e.getSource()).getPodatak();
                                 ponoviTuru(turaId);
                             }
                         }); 
@@ -1324,7 +1348,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         novaStavkaTure.put("naziv", nazivArtikla);
         novaStavkaTure.put("cena", cena);
         novaStavkaTure.put("cenaJedinicna", cena);
-        novaStavkaTure.put("brojStola", "" + rmaster.RMaster.izabraniStoBroj);
+        novaStavkaTure.put("brojStola", "" + izabraniStoBroj);
         novaStavkaTure.put("dozvoljenPopust", "" + artikal.getDozvoljenPopust());
         novaStavkaTure.put("procenatPopusta", this.porudzbinaTrenutna.getPopustString());
         novaStavkaTure.put("stampacID", artikal.getStampacID());
@@ -1539,7 +1563,13 @@ public class PorudzbinaController extends FXMLDocumentController {
 
         Gost gost = new Gost(najveciBrojGosta);
         idTrenutnoIzabranogGosta = "" + najveciBrojGosta;
-        this.porudzbinaTrenutna = new Porudzbina(gost);
+        
+        this.porudzbinaTrenutna = new Porudzbina(
+                gost, 
+                izabraniStoId,
+                izabraniStoBroj
+        );
+        
         this.porudzbineStola.add(porudzbinaTrenutna);
         this.racuniStolaPoGostima.put(
             "" + najveciBrojGosta, 
@@ -1697,24 +1727,34 @@ public class PorudzbinaController extends FXMLDocumentController {
  
     }
 
+    private void izbrisiSveIzTabela() {
+         for(Node node : listaTabela) {
+            if (!(node instanceof RM_TableView))  {
+                continue;
+            }
+            node.setManaged(true);
+            ((RM_TableView) node).izbrisiSveIzTabele();
+         }
+    }
+    
     public void sakrijSveTabele() {
+        izbrisiSveIzTabela();
         for(Node node : listaTabela) {
             node.setVisible(false);
             node.setManaged(false);
-            if (node instanceof Button) {
-                ((Button) node).setPrefSize(0, 0); 
+            if (node instanceof RM_Button) {
+                ((RM_Button) node).setPrefSize(0, 0); 
             }
             if (node instanceof RM_TableView) {
                 ((RM_TableView) node).setPrefSize(0, 0);
-                ((RM_TableView) node).izbrisiSveIzTabele();
             }
         }
     }
     
     public void prikaziKomponentu(Node komponenta)
     {
-        komponenta.setVisible(true);
         komponenta.setManaged(true);
+        komponenta.setVisible(true);
     }
     
     @Override

@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -36,7 +37,7 @@ import javafx.util.Duration;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
-import rmaster.assets.items.StoButton;
+import rmaster.assets.RM_Button.RM_Button;
 
 /**
  * FXML Controller class
@@ -195,7 +196,7 @@ public class PrikazSalaController extends FXMLDocumentController {
         double x, y, sirina, visina;
         String naziv = "";
         
-        StoButton noviSto = new StoButton();
+        RM_Button noviSto = new RM_Button();
         
         x = Double.parseDouble(stoMap.get("x"));
         x = x * RMaster.sirinaSaleNaEkranu / 1024;
@@ -209,7 +210,7 @@ public class PrikazSalaController extends FXMLDocumentController {
         visina = visina * RMaster.visinaSaleNaEkranu / 768;
 
         noviSto.setId(stoMap.get("id"));
-        noviSto.setBrojStola(stoMap.get("broj"));
+        noviSto.setPodatak(stoMap.get("broj"));
         
         naziv = stoMap.get("broj");
 
@@ -252,25 +253,24 @@ public class PrikazSalaController extends FXMLDocumentController {
             sto.setShape(new Circle(sirina/2));  
     }    
     
-    private void dodajAkcijuZaSto(StoButton sto)
+    private void dodajAkcijuZaSto(RM_Button sto)
     {
         sto.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override public void handle(ActionEvent e) {
-                                            StoButton b = (StoButton)e.getSource();
-                                            //TODO ovo ne bi trebalo ovako vec da se prosledjuje sve u porduzbinu
-                                            //predlazem da se napravi sto model
-                                            RMaster.izabraniStoID = b.getId();
-                                            RMaster.izabraniStoBroj = Integer.parseInt(b.getBrojStola());
-                                            RMaster.izabraniStoNaziv = b.getText();
-                                            myController.setScreen(ScreenMap.PORUDZBINA, b.getId());
+                                            RM_Button stoButton = (RM_Button)e.getSource();
+                                            HashMap<String, String> stoMap = new HashMap();
+                                            stoMap.put("stoId", stoButton.getId());
+                                            stoMap.put("stoBroj", stoButton.getPodatak());
+                                            stoMap.put("stoNaziv", stoButton.getText());                                            
+                                            myController.setScreen(ScreenMap.PORUDZBINA, stoMap);
                                         }
                                     });
     }
       
     
-    private List<StoButton> vratiListuStoButtonBySalaId(String salaId) {
+    private List<RM_Button> vratiListuStoButtonBySalaId(String salaId) {
         
-         List<StoButton> listaStolova = new ArrayList<>();
+         List<RM_Button> listaStolova = new ArrayList<>();
         
         for(Tab sala : saleTabPane.getTabs()) {
             AnchorPane salaAnchorPane = (AnchorPane) sala.getContent();
@@ -278,7 +278,7 @@ public class PrikazSalaController extends FXMLDocumentController {
             for (Node node : salaAnchorPane.getChildren()){
                 StackPane okvir = (StackPane) node;
 
-                listaStolova.add((StoButton) okvir.getChildren().get(0));
+                listaStolova.add((RM_Button) okvir.getChildren().get(0));
                 
             }
         }
@@ -286,7 +286,7 @@ public class PrikazSalaController extends FXMLDocumentController {
     }
     
     private void setujStoStil(
-            StoButton stoButton, 
+            RM_Button stoButton, 
             List<Map<String, String>> listaZaPrikaz) 
     {
         for (Map<String, String> stoMap : listaZaPrikaz) {
@@ -320,7 +320,7 @@ public class PrikazSalaController extends FXMLDocumentController {
     }
     
     private void dodajRezervaciju(
-            StoButton stoButton,
+            RM_Button stoButton,
             Map<String, String> stoMap
     ) {
         try {
@@ -343,10 +343,10 @@ public class PrikazSalaController extends FXMLDocumentController {
     }
     
     private void setujStoloveSale(
-            List<StoButton> listStoButton, 
+            List<RM_Button> listStoButton, 
             List<Map<String, String>> listaZaPrikaz) 
     {
-        for (StoButton stoButton : listStoButton) {
+        for (RM_Button stoButton : listStoButton) {
             
             setujStoStil(
                 stoButton,
@@ -400,9 +400,12 @@ public class PrikazSalaController extends FXMLDocumentController {
     
     public void brzaNaplata(ActionEvent event){
 
-        RMaster.izabraniStoID = "0";
+        HashMap<String, String> stoMap = new HashMap();
+        stoMap.put("stoId", "0");
+        stoMap.put("stoBroj", "0");
+        stoMap.put("stoNaziv", "0");  
         
-        myController.setScreen(ScreenMap.PORUDZBINA, null);
+        myController.setScreen(ScreenMap.PORUDZBINA, stoMap);
 
     }
     
