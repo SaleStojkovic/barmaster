@@ -275,6 +275,8 @@ public class PorudzbinaController extends FXMLDocumentController {
     @Override
     public void initData(Object data) {
         
+        this.porudzbineStola.clear();
+        
         this.prikazGostiju.getChildren().clear();
 
         this.total.setText("0.00");
