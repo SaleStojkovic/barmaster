@@ -298,14 +298,17 @@ public class PrikazSalaController extends FXMLDocumentController {
             String konobarID = stoMap.get("KONOBAR_ID") + "";
             
             if (konobarID.equals("null")) {
+                stoButton.getStyleClass().clear();
                 stoButton.getStyleClass().add("stoSlobodan");
             }
             
             if (konobarID.equals("" + RMaster.ulogovaniKonobar.konobarID)) {
+                stoButton.getStyleClass().clear();
                 stoButton.getStyleClass().add("stoKonobarov");
             } 
             
             if (!konobarID.equals("" + RMaster.ulogovaniKonobar.konobarID)) {
+                stoButton.getStyleClass().clear();
                 stoButton.getStyleClass().add("stoZauzet");
             } 
   
