@@ -302,12 +302,12 @@ public class PrikazSalaController extends FXMLDocumentController {
                 stoButton.getStyleClass().add("stoSlobodan");
             }
             
-            if (konobarID.equals("" + RMaster.ulogovaniKonobar.konobarID)) {
+            if (konobarID.equals("" + getUlogovaniKonobarID())) {
                 stoButton.getStyleClass().clear();
                 stoButton.getStyleClass().add("stoKonobarov");
             } 
             
-            if (!konobarID.equals("" + RMaster.ulogovaniKonobar.konobarID) && !konobarID.equals("null")) {
+            if (!konobarID.equals("" + getUlogovaniKonobarID()) && !konobarID.equals("null")) {
                 stoButton.getStyleClass().clear();
                 stoButton.getStyleClass().add("stoZauzet");
             } 
