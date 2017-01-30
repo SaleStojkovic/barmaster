@@ -307,7 +307,7 @@ public class PrikazSalaController extends FXMLDocumentController {
                 stoButton.getStyleClass().add("stoKonobarov");
             } 
             
-            if (!konobarID.equals("" + RMaster.ulogovaniKonobar.konobarID)) {
+            if (!konobarID.equals("" + RMaster.ulogovaniKonobar.konobarID) && !konobarID.equals("null")) {
                 stoButton.getStyleClass().clear();
                 stoButton.getStyleClass().add("stoZauzet");
             } 
