@@ -225,16 +225,48 @@ public class RMaster extends Application {
         
         sviStolovi = dbBroker.runQuery(query);
     }
-    
+
     public List<Map<String, String>> getStoloveBySalaId(String salaId)
     {
-        List<Map<String, String>> listStolovi = new ArrayList<>();
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+                
+        query.addTableJoins(
+                new TableJoin(
+                        "stoprikaz",
+                        "stonaziv",
+                        "broj",
+                        "broj",
+                        TableJoinTypes.LEFT_JOIN),
+                new TableJoin(
+                        "stoprikaz",
+                        "sto",
+                        "broj",
+                        "broj",
+                        TableJoinTypes.LEFT_JOIN),
+                new TableJoin(
+                        "stoprikaz",
+                        "rezervacija",
+                        "broj",
+                        "brStola",
+                        TableJoinTypes.LEFT_JOIN) 
+        );
         
-        for (Map<String, String> sto : sviStolovi) {
-            if (sto.get("GRAFIK_ID").equals(salaId)) {
-                listStolovi.add(sto);
-            }
-        }
+        query.setSelectColumns(
+                "stoprikaz.*", 
+                "stonaziv.naziv",
+                "sto.KONOBAR_ID",
+                "sto.blokiran",
+                "rezervacija.datum",
+                "rezervacija.vreme",
+                "rezervacija.brOsoba"
+        );
+
+        query.addCriteriaColumns("stoprikaz.GRAFIK_ID");
+        query.addCriteria(QueryBuilder.IS_EQUAL);
+        query.addCriteriaValues(salaId);
+        
+        List<Map<String, String>> listStolovi = dbBroker.runQuery(query);
+
         
         return listStolovi;
     }
