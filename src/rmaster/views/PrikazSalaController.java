@@ -294,10 +294,6 @@ public class PrikazSalaController extends FXMLDocumentController {
             if (!stoButton.getId().equals(stoMap.get("id"))) {
                 continue;
             }
-
-            if (stoMap.get("broj").equals("16")){
-                System.out.print( "Pre " + stoButton.getStyleClass().toString());
-            }
             
             stoButton.getStyleClass().clear();
             stoButton.getStyleClass().add("button");
@@ -321,9 +317,6 @@ public class PrikazSalaController extends FXMLDocumentController {
                 
                 dodajRezervaciju(stoButton, stoMap);
 
-            }
-            if (stoMap.get("broj").equals("16")){
-                System.out.print( "Posle " + stoButton.getStyleClass().toString());
             }
   
         }

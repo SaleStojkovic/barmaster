@@ -473,9 +473,7 @@ public class PorudzbinaController extends FXMLDocumentController {
     }
     
     public void prikaziPorudzbinuTask(List racuniStola)
-    {
-        sakrijSveTabele();
-        
+    {        
         if (racuniStola.isEmpty())
         {
             //TODO: Dodaj prvog gosta i napravi porudzbinu za njega

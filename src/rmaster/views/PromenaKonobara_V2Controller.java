@@ -15,8 +15,10 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
@@ -62,13 +64,21 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
     @Override
     public void initData(Object data)
     {
+        SingleSelectionModel<Tab> selectionModel = saleTabPane.getSelectionModel();
         
-        //TODO samo njegove stolove prikazati
+        selectionModel.select(0);
+        
+        sakrijSveStolove();
         
         konobar = RMaster.getUlogovaniKonobar();
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
         this.imeKonobara.setText(getUlogovaniKonobarIme());
+        
+        prikaziSamoSaleOmoguceneKonobaru();
+                        
+        prikaziStolove(); 
+
     }
     
     /**
@@ -225,7 +235,7 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
                         return;
                     }
                     
-                    if (ulogovaniKonobar.konobarID == noviKonobar.konobarID) {
+                    if (konobar.konobarID == noviKonobar.konobarID) {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.setTitle("Greška!");
                         alert.setHeaderText("Greška pri predstavljanju");
@@ -245,7 +255,7 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
     
     private void promeniStolove(Konobar noviKonobar, List<String> brojeviStolova)
     {   
-        noviKonobar.promenaStolova(ulogovaniKonobar.konobarID + "", brojeviStolova);
+        noviKonobar.promenaStolova(konobar.konobarID + "", brojeviStolova);
         
         odjava(new ActionEvent());
     }
@@ -259,5 +269,100 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
     public void nazadNaPrikazSala(ActionEvent event)
     {            
         myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
+    }
+    
+    public void prikaziSamoSaleOmoguceneKonobaru()
+    {
+       
+        boolean prekidac; 
+        
+            for (Tab salaTab : saleTabPane.getTabs()) {
+                
+                String salaTabId = salaTab.getId();
+                
+                prekidac = false;
+                
+                for (Map<String, String> salaMap : RMaster.saleOmoguceneKonobaru) {
+                    
+                    String salaMapId = salaMap.get("id");
+                    
+                    if (salaMapId.equals(salaTabId))
+                    {
+                        prekidac = true;
+                    }
+                }   
+                
+                if (!prekidac) {
+                    saleTabPane.getTabs().remove(salaTab);
+                }
+            }
+    }
+    
+    private void prikaziStolove() 
+    {        
+        for(Tab sala : saleTabPane.getTabs()) {         
+            
+            String salaId = sala.getId();
+            
+            setujStoloveSale(
+                vratiListuStoButtonBySalaId(salaId),
+                konobar.stoloviZaPrikazPromeneKonobara(salaId)  
+            );
+            
+        }
+    }
+    
+    private List<ToggleButton> vratiListuStoButtonBySalaId(String salaId) {
+        
+         List<ToggleButton> listaStolova = new ArrayList<>();
+        
+        for(Tab sala : saleTabPane.getTabs()) {
+            AnchorPane salaAnchorPane = (AnchorPane) sala.getContent();
+            
+            for (Node node : salaAnchorPane.getChildren()){
+                StackPane okvir = (StackPane) node;
+
+                listaStolova.add((ToggleButton) okvir.getChildren().get(0));
+                
+            }
+        }
+        return listaStolova;
+    }
+    
+    private void setujStoloveSale(
+            List<ToggleButton> listStoButton, 
+            List<Map<String, String>> listaZaPrikaz) 
+    {
+        for (ToggleButton stoButton : listStoButton) {
+            
+            setujSto(
+                stoButton,
+                listaZaPrikaz
+            );
+            
+        } 
+    }
+    
+    private void setujSto(
+            ToggleButton stoButton, 
+            List<Map<String, String>> listaZaPrikaz) 
+    {
+        for (Map<String, String> stoMap : listaZaPrikaz) {
+            
+            if (!stoButton.getId().equals(stoMap.get("broj"))) {
+                continue;
+            }
+            
+            stoButton.setVisible(true);
+
+        }
+    }
+    
+    private void sakrijSveStolove() 
+    {
+        for (ToggleButton noviSto : stoloviZaPromenu) {
+            noviSto.setSelected(false);
+            noviSto.setVisible(false);
+        }
     }
 }
