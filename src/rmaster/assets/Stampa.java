@@ -432,7 +432,7 @@ public final class Stampa {
         
     }
 
-    public final void stampajTuru(Tura tura) {
+    public final void stampajTuru(Tura tura, String izabraniStoId) {
         try {
             java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(Settings.getInstance().getFiscalniIzvestajiDnevniIzvestajFormatDatuma());
 
@@ -476,7 +476,7 @@ public final class Stampa {
 
                     // <sto>R 32</sto>
                     element = doc.createElement("sto");
-                    element.appendChild(doc.createTextNode(rmaster.RMaster.izabraniStoID));
+                    element.appendChild(doc.createTextNode(izabraniStoId));
                     porudzbina.appendChild(element);
                     
                     fajlStampac.put(stavkaTura.getStampacID(), doc);

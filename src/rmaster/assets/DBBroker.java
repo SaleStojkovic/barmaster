@@ -778,7 +778,7 @@ public final class DBBroker {
     }
     
         
-    public List getStavkePorudzbinaGosta(String brojGosta){
+    public List getStavkePorudzbinaGosta(String brojGosta, String izabraniStoId){
         Connection dbConnection = null;
         ResultSet rs = null;
         List listaRezultata = null;
@@ -788,7 +788,7 @@ public final class DBBroker {
             dbConnection = poveziSaBazom();
             cStmt = dbConnection.prepareCall("{CALL getPorudzbinaGosta(?,?,?)}");
             cStmt.setLong("konobarID", rmaster.RMaster.ulogovaniKonobar.konobarID);
-            cStmt.setString("stoID", rmaster.RMaster.izabraniStoID);
+            cStmt.setString("stoID", izabraniStoId);
             cStmt.setString("brojGosta", brojGosta);
             cStmt.execute();
             rs = cStmt.getResultSet();
@@ -879,7 +879,8 @@ public final class DBBroker {
      */
     public void zatvoriRacunIOslobodiSto(
             long RacunID,
-            Date vreme) 
+            Date vreme,
+            int izabraniStoBroj) 
     {
         Connection dbConnection;
         CallableStatement cStmt;
@@ -889,7 +890,7 @@ public final class DBBroker {
             cStmt = dbConnection.prepareCall("{CALL zatvoriRacunIOslobodiSto(?,?,?)}");
             cStmt.setLong("racunID", RacunID);
             cStmt.setTimestamp("vreme", java.sql.Timestamp.valueOf(Utils.getStringFromDate(vreme)));
-            cStmt.setInt("stoBroj", rmaster.RMaster.izabraniStoBroj);
+            cStmt.setInt("stoBroj", izabraniStoBroj);
             cStmt.execute();
             prekiniVezuSaBazom(dbConnection);
         } catch (Exception e) {

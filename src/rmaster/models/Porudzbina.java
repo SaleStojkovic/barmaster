@@ -228,7 +228,7 @@ public class Porudzbina {
     public void zatvoriRacun(Date vreme) {
         DBBroker db = new DBBroker();
         snimi();
-        db.zatvoriRacunIOslobodiSto(this.racunID, vreme);
+        db.zatvoriRacunIOslobodiSto(this.racunID, vreme, this.brojStolaID);
         this.zatvoren = true;
         this.vremeIzdavanjaRacuna = vreme;
     }

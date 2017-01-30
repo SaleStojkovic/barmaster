@@ -1710,7 +1710,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                 }
                 if (novaTura != null) {
                     porudzbina.snimi();
-                    Stampa.getInstance().stampajTuru(novaTura);
+                    Stampa.getInstance().stampajTuru(novaTura, izabraniStoId);
                 }
             }
             // Ovde resiti stampu po artiklima
