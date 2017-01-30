@@ -642,6 +642,8 @@ public class PorudzbinaController extends FXMLDocumentController {
     }
 
     public void prikaziSalu(ActionEvent event) {
+        novaTura = null;
+        sakrijSveTabele();
         myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
     }
     

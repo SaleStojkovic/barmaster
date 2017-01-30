@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Poruzbina>
+    <Datum>2017/01/30</Datum>
+    <Vreme>20:36:17</Vreme>
+    <ProdajnoMesto>Restoran CHEZ NIK</ProdajnoMesto>
+    <kasa>Kasa 1</kasa>
+    <sto>89</sto>
+    <Stavka>
+        <kolicina>1.0</kolicina>
+        <naziv>DOMAĆA KAFA</naziv>
+        <tip/>
+    </Stavka>
+    <Stavka>
+        <kolicina>1.0</kolicina>
+        <naziv>NES FRAPE SA SLADOLEDOM</naziv>
+        <tip/>
+    </Stavka>
+    <Konobar>KONOBAR 1</Konobar>
+</Poruzbina>

@@ -295,20 +295,20 @@ public class PrikazSalaController extends FXMLDocumentController {
                 continue;
             }
             
+            stoButton.getStyleClass().removeAll("stoSlobodan", "stoKonobarov", "stoZauzet");
+            
             String konobarID = stoMap.get("KONOBAR_ID") + "";
             
             if (konobarID.equals("null")) {
-                stoButton.getStyleClass().clear();
+                
                 stoButton.getStyleClass().add("stoSlobodan");
             }
             
             if (konobarID.equals("" + getUlogovaniKonobarID())) {
-                stoButton.getStyleClass().clear();
                 stoButton.getStyleClass().add("stoKonobarov");
             } 
             
             if (!konobarID.equals("" + getUlogovaniKonobarID()) && !konobarID.equals("null")) {
-                stoButton.getStyleClass().clear();
                 stoButton.getStyleClass().add("stoZauzet");
             } 
   
