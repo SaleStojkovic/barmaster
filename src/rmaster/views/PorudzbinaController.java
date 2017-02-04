@@ -79,7 +79,7 @@ public class PorudzbinaController extends FXMLDocumentController {
     public VBox prikazRacunaGostaSadrzaj;
     
     @FXML
-    public Pane ArtikalGrupe;
+    public HBox ArtikalGrupe;
     
     @FXML
     public FlowPane ArtikalPodgrupe;
@@ -251,44 +251,50 @@ public class PorudzbinaController extends FXMLDocumentController {
             );
          }
 
-         popuniGrupeArtikala();
+         popuniGrupe(0);
     }    
     
-    private void popuniGrupeArtikala() {
+    private void popuniGrupe(int offset) {
         
         List<RM_Button> listaGrupa = new ArrayList<>();
         
-        for(Node node : ArtikalGrupe.getChildren()) {
-            if (node instanceof RM_Button) {
-                listaGrupa.add((RM_Button)node);
-            }
+        for(int i = 0; i < 3; i++) {
+            RM_Button novoDugme = (RM_Button)findNodeById(ArtikalGrupe.getChildren(), "grupa_" + (i+1));
+            novoDugme.setText("");
+            novoDugme.setPodatak("");
+            listaGrupa.add(novoDugme);
         }
-        
-        int brojac = 0;
-        for(Grupa novaGrupa : rmaster.RMaster.grupeArtikala) {
-            
-            if(brojac == 3) {
+                
+        for(int i = 0; i < 3; i++) {
+                        
+            if (offset + i == rmaster.RMaster.grupeArtikala.size()) {
                 break;
             }
             
-            RM_Button dugmeGrupe = listaGrupa.get(brojac);
+            RM_Button dugmeGrupe = listaGrupa.get(i);
             
-            dugmeGrupe.setPodatak(novaGrupa);
+            dugmeGrupe.setPodatak(rmaster.RMaster.grupeArtikala.get(i + offset));
             
-            dugmeGrupe.setText(novaGrupa.naziv);
-             
-            brojac++;
-            
+            dugmeGrupe.setText(rmaster.RMaster.grupeArtikala.get(i + offset).naziv);
+                         
             setGroupButtonAction(dugmeGrupe);
             
         }
         
-        grupaPrevious.setPodatak("0");
-        grupaNext.setPodatak("3");
+        grupaNext.setPodatak("");
+        
+        grupaPrevious.setPodatak("");
+        
+        if (rmaster.RMaster.grupeArtikala.size() > offset + 3) {
+            grupaNext.setPodatak(offset + 3);
+        }
+            
+        if (offset - 2 > 0) {
+            grupaPrevious.setPodatak(offset - 3);
+        }
     }
     
     private void setGroupButtonAction(RM_Button dugmeGrupe) {
-        
         
         dugmeGrupe.setOnAction(new EventHandler<ActionEvent>() {               
                                     @Override public void handle(ActionEvent event) {
@@ -301,12 +307,28 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     @FXML
     public void grupaPrevious(ActionEvent event) {
+        String podatak = grupaPrevious.getPodatak() + "";
         
+        if(podatak.isEmpty()) {
+            return;
+        }
+        
+        int offset = Integer.parseInt(grupaPrevious.getPodatak() + "");
+                
+        popuniGrupe(offset);
     }
     
     @FXML
     public void grupaNext(ActionEvent event) {
+        String podatak = grupaNext.getPodatak() + "";
         
+        if(podatak.isEmpty()) {
+            return;
+        }
+        
+        int offset = Integer.parseInt(grupaNext.getPodatak() + "");
+                
+        popuniGrupe(offset);
     }
     
     @FXML
@@ -390,7 +412,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             podgrupaNext.setPodatak(offset + 11);
         }
             
-        if (offset - 11 >= 0) {
+        if (offset - 10 > 0) {
             podgrupaPrevious.setPodatak(offset - 11);
         }
         
