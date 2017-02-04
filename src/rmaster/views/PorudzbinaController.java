@@ -311,7 +311,13 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     @FXML
     public void podgrupaPrevious(ActionEvent event) {
-        int offset = Integer.parseInt(podgrupaPrevious.getPodatak() + "") - 11;
+        String podatak = podgrupaPrevious.getPodatak() + "";
+        
+        if(podatak.isEmpty()) {
+            return;
+        }
+        
+        int offset = Integer.parseInt(podgrupaPrevious.getPodatak() + "");
         
         Grupa izabranaGrupa = (Grupa)podgrupaPrevious.getVrsta();
         
@@ -320,6 +326,12 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     @FXML
     public void podgrupaNext(ActionEvent event) {
+        String podatak = podgrupaNext.getPodatak() + "";
+        
+        if(podatak.isEmpty()) {
+            return;
+        }
+        
         int offset = Integer.parseInt(podgrupaNext.getPodatak() + "");
         
         Grupa izabranaGrupa = (Grupa)podgrupaNext.getVrsta();
@@ -367,15 +379,21 @@ public class PorudzbinaController extends FXMLDocumentController {
         podgrupaPrevious.setVisible(true);
         podgrupaNext.setManaged(true);
         podgrupaNext.setVisible(true);
+            
         podgrupaNext.setPodatak("");
-        podgrupaNext.setVrsta("");
-        
-            
-        podgrupaNext.setPodatak(offset + 11);
         podgrupaNext.setVrsta(izabranaGrupa);
-            
-        podgrupaPrevious.setPodatak(offset);
+        
+        podgrupaPrevious.setPodatak("");
         podgrupaPrevious.setVrsta(izabranaGrupa);
+        
+        if (izabranaGrupa.podgrupe.size() > offset + 11) {
+            podgrupaNext.setPodatak(offset + 11);
+        }
+            
+        if (offset - 11 >= 0) {
+            podgrupaPrevious.setPodatak(offset - 11);
+        }
+        
     }
     
     private void izbrisiSvePodgrupe() {
