@@ -295,7 +295,8 @@ public class PrikazSalaController extends FXMLDocumentController {
                 continue;
             }
             
-            stoButton.getStyleClass().removeAll("stoSlobodan", "stoKonobarov", "stoZauzet");
+            stoButton.getStyleClass().clear();
+            stoButton.getStyleClass().add("button");
             
             String konobarID = stoMap.get("KONOBAR_ID") + "";
             
@@ -317,7 +318,6 @@ public class PrikazSalaController extends FXMLDocumentController {
                 dodajRezervaciju(stoButton, stoMap);
 
             }
-            
   
         }
     }

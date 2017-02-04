@@ -15,19 +15,19 @@
         <Label fx:id="clock" layoutX="58.0" layoutY="685.0" prefHeight="61.0" prefWidth="175.0" text="" />
         <Pane fx:id="loginForm" layoutX="11.0" layoutY="229.0" prefHeight="428.0" prefWidth="269.0">
          <children>
-            <PasswordField fx:id="lozinka" editable="true" layoutX="16.0" layoutY="61.0" minHeight="16" minWidth="69" prefHeight="48.0" prefWidth="238.0" onKeyPressed="#onEnter" />
-            <Button fx:id="buttonNine" layoutX="195.0" layoutY="129.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="9" />
-            <Button fx:id="buttonEight" layoutX="107.0" layoutY="129.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="8" />
-            <Button fx:id="buttonSeven" layoutX="18.0" layoutY="129.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="7" />
-            <Button fx:id="buttonSix" layoutX="195.0" layoutY="204.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="6" />
-            <Button fx:id="buttonFive" layoutX="107.0" layoutY="204.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="5" />
-            <Button fx:id="buttonFour" layoutX="18.0" layoutY="204.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="4" />
-            <Button fx:id="buttonThree" layoutX="195.0" layoutY="276.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="3" />
-            <Button fx:id="buttonTwo" layoutX="107.0" layoutY="276.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="2" />
-            <Button fx:id="buttonOne" layoutX="18.0" layoutY="276.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="1" />
-            <Button fx:id="backButton" layoutX="18.0" layoutY="349.0" mnemonicParsing="false" onAction="#backButton" prefHeight="65.0" prefWidth="62.0" text="«" />
-            <Button fx:id="buttonZero" layoutX="107.0" layoutY="349.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="0" />
-            <Button fx:id="buttonOk" layoutX="195.0" layoutY="349.0" mnemonicParsing="false" onAction="#passwordCheck" prefHeight="65.0" prefWidth="62.0" text="✓" />
+            <PasswordField fx:id="lozinka" editable="true" layoutX="16.0" layoutY="61.0" minHeight="16" minWidth="69" onKeyPressed="#onEnter" prefHeight="48.0" prefWidth="238.0" />
+            <Button fx:id="buttonNine" layoutX="191.0" layoutY="129.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="9" />
+            <Button fx:id="buttonEight" layoutX="104.0" layoutY="129.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="8" />
+            <Button fx:id="buttonSeven" layoutX="17.0" layoutY="129.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="7" />
+            <Button fx:id="buttonSix" layoutX="191.0" layoutY="204.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="6" />
+            <Button fx:id="buttonFive" layoutX="104.0" layoutY="204.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="5" />
+            <Button fx:id="buttonFour" layoutX="17.0" layoutY="204.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="4" />
+            <Button fx:id="buttonThree" layoutX="191.0" layoutY="276.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="3" />
+            <Button fx:id="buttonTwo" layoutX="104.0" layoutY="276.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="2" />
+            <Button fx:id="buttonOne" layoutX="17.0" layoutY="276.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="1" />
+            <Button fx:id="backButton" layoutX="17.0" layoutY="349.0" mnemonicParsing="false" onAction="#backButton" prefHeight="65.0" prefWidth="62.0" text="«" />
+            <Button fx:id="buttonZero" layoutX="104.0" layoutY="349.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="65.0" prefWidth="62.0" text="0" />
+            <Button fx:id="buttonOk" layoutX="191.0" layoutY="349.0" mnemonicParsing="false" onAction="#passwordCheck" prefHeight="65.0" prefWidth="62.0" text="✓" />
             <Label fx:id="response" layoutX="16.0" layoutY="6.0" prefHeight="48.0" prefWidth="238.0" text="" />
          </children>
         </Pane>

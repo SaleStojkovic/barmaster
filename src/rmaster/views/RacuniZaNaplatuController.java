@@ -60,7 +60,7 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
             );
             
             String[] imenaArgumenata = {"konobarID"};
-            String[] vrednostiArgumenata = {ulogovaniKonobar.konobarID + ""};
+            String[] vrednostiArgumenata = {getUlogovaniKonobarID() + ""};
             listRacuni = runStoredProcedure("getZatvoreniRacuniKonobaraTogDanaZaStampu",
                     imenaArgumenata,
                     vrednostiArgumenata);
@@ -158,11 +158,7 @@ public class RacuniZaNaplatuController extends FXMLDocumentController {
     }
 
     public void zatvoriOvuFormu(){
-        try {
-        cancelButton.getScene().getWindow().hide();
-        } catch (Exception e){
-            System.out.println("Neuspelo zatvaranje forme - ConfirmFormController");
-        }
+        myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
     }
     
     @Override

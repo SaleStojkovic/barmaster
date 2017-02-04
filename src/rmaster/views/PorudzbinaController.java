@@ -472,10 +472,46 @@ public class PorudzbinaController extends FXMLDocumentController {
         exec.execute(porudzibaTask);
     }
     
-    public void prikaziPorudzbinuTask(List racuniStola)
+    
+    private RadioButton prikaziPorudzbinuTaskSetButtonAction(
+            RadioButton noviGostButton, 
+            String brojNovogGosta)
     {
-        sakrijSveTabele();
-        
+            noviGostButton.getStyleClass().remove("radio-button");
+            noviGostButton.getStyleClass().add("toggle-button");
+
+            noviGostButton.setToggleGroup(gostiButtonGroup);
+
+            noviGostButton.setId(brojNovogGosta);
+
+            noviGostButton.setPrefSize(50, 50);
+            
+            noviGostButton.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override public void handle(ActionEvent e) {
+                                    String gost = ((RadioButton)e.getSource()).getId();
+                                    Utils.postaviStil_ObrisiZaOstaleKontroleRoditelja(e, stilButtonGrupeSelektovana);
+
+                                    for (Porudzbina porudzbina : porudzbineStola) {
+                                        if (porudzbina.getGost().getGostID() == Long.parseLong(gost)) {
+                                            porudzbinaTrenutna = porudzbina;
+                                            prikaziPorudzbinu(porudzbinaTrenutna);
+                                            novaTura = null;
+                                            for (Tura tura : porudzbinaTrenutna.getTure()) {
+                                                if (tura.getTuraID() == 0) {
+                                                    novaTura = tura;
+                                                }
+                                            }
+                                            break;
+                                        }
+                                    }
+                                }
+                            });
+            
+            return noviGostButton;
+    }
+    
+    public void prikaziPorudzbinuTask(List racuniStola)
+    {        
         if (racuniStola.isEmpty())
         {
             //TODO: Dodaj prvog gosta i napravi porudzbinu za njega
@@ -488,53 +524,22 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         for (Object racun : racuniStola) {
             
-                Map<String, String> red = (Map<String, String>) racun;
-                
-                String brojNovogGosta = red.get("gost");
-                
-                porudzbinaTrenutna = new Porudzbina(
-                        new Gost(brojNovogGosta), 
-                        red.get("id"),
-                        izabraniStoId,
-                        izabraniStoBroj
-                );
-                
-                porudzbineStola.add(porudzbinaTrenutna);
+            Map<String, String> red = (Map<String, String>) racun;
 
-                RadioButton b = new RadioButton(brojNovogGosta);
-                
-                b.getStyleClass().remove("radio-button");
-                b.getStyleClass().add("toggle-button");
-                
-                b.setToggleGroup(gostiButtonGroup);
-                
-                b.setId(brojNovogGosta);
-                
-                b.setPrefSize(50, 50);
-                b.setOnAction(new EventHandler<ActionEvent>() {
-                                    @Override public void handle(ActionEvent e) {
-                                        String gost = ((RadioButton)e.getSource()).getId();
-                                        Utils.postaviStil_ObrisiZaOstaleKontroleRoditelja(e, stilButtonGrupeSelektovana);
-//                                        if (novaTura != null) {
-//                                            novaTura = null;
-//                                        }
+            String brojNovogGosta = red.get("gost");
 
-                                        for (Porudzbina porudzbina : porudzbineStola) {
-                                            if (porudzbina.getGost().getGostID() == Long.parseLong(gost)) {
-                                                porudzbinaTrenutna = porudzbina;
-                                                prikaziPorudzbinu(porudzbinaTrenutna);
-                                                novaTura = null;
-                                                for (Tura tura : porudzbinaTrenutna.getTure()) {
-                                                    if (tura.getTuraID() == 0)
-                                                        novaTura = tura;
-                                                }
-                                                break;
-                                            }
-                                        }
-                                    }
-                                });
+            porudzbinaTrenutna = new Porudzbina(
+                    new Gost(brojNovogGosta), 
+                    red.get("id"),
+                    izabraniStoId,
+                    izabraniStoBroj
+            );
 
-                lista.add(b);
+            porudzbineStola.add(porudzbinaTrenutna);
+
+            RadioButton noviGostButton = new RadioButton(brojNovogGosta);
+
+            lista.add(prikaziPorudzbinuTaskSetButtonAction(noviGostButton, brojNovogGosta));
         } 
         
         ObservableList<Node> listaDugmica = FXCollections.observableArrayList(lista);            
@@ -547,7 +552,8 @@ public class PorudzbinaController extends FXMLDocumentController {
         dugme.fire();
     }
     
-    public void prikaziPorudzbinu(Porudzbina porudzbina) {
+    public void prikaziPorudzbinu(Porudzbina porudzbina) 
+    {
         
         sakrijSveTabele();
  
@@ -1561,9 +1567,12 @@ public class PorudzbinaController extends FXMLDocumentController {
         for (Node gostiButton : gostiButtons) {
             int brojStola = Integer.parseInt(((RadioButton)gostiButton).getText());
             if (brojStola > najveciBrojGosta)
+            { 
                 najveciBrojGosta = brojStola;
+            }
         }
-        najveciBrojGosta = najveciBrojGosta + 1;
+        
+        najveciBrojGosta++;
 
         Gost gost = new Gost(najveciBrojGosta);
         idTrenutnoIzabranogGosta = "" + najveciBrojGosta;
