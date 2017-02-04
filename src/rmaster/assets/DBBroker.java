@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.control.Alert;
-import rmaster.assets.items.ArtikalButton;
 import rmaster.models.Konobar;
  
 /**
@@ -32,9 +31,6 @@ public final class DBBroker {
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/barmaster";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "burek";
-       
-    private long startTime;
-    private long ms;
     
     public DBBroker() {
     }
@@ -74,7 +70,7 @@ public final class DBBroker {
             connection.close();
         }
         catch (Exception e) {
-            System.out.println("Prekid veze.");
+            e.printStackTrace();
         }
  
     }
@@ -614,53 +610,6 @@ public final class DBBroker {
         
         return rez;   
     }
-
-    /**
-     * 
-     * @param imeStoreProcedure
-     * @param imeArgumentaSP
-     * @return 
-     */
-    public List getRecordSetIzStoreProcedureZaKonobara(
-            String imeStoreProcedure, 
-            String imeArgumentaSP) 
-    {
-        
-        Connection dbConnection = null;
-        ResultSet rs = null;
-        List listaRezultata = null;
-        CallableStatement cStmt = null;
-        
-        try {
-            dbConnection = poveziSaBazom();
-            cStmt = dbConnection.prepareCall("{CALL " + imeStoreProcedure + "(?)}");
-            cStmt.setLong(imeArgumentaSP, rmaster.RMaster.ulogovaniKonobar.konobarID);
-            cStmt.execute();
-            rs = cStmt.getResultSet();
-            
-            listaRezultata = prebaciUListu(rs);
-            
-        } catch (Exception e) {
-            
-            System.out.println("Store procedure \"" + imeStoreProcedure + "\" exec error! - " + e.toString());
-        
-        } finally {
-            
-            if (rs != null) {
-                try { rs.close(); } catch (SQLException ignore) {}
-            }
-            
-            if (cStmt != null) {
-                try { cStmt.close(); } catch (SQLException ignore) {}
-            }
-            
-            if (dbConnection != null) {
-                try { dbConnection.close(); } catch (SQLException ignore) {}
-            }
-        } 
-        
-        return listaRezultata;
-    }
     
     
         /**
@@ -750,70 +699,7 @@ public final class DBBroker {
             
         return listaRezultata;
     }
-
-    /**
-     * 
-     * @param noviKonobarID
-     * @param stolovi
-     * @return 
-     */
-    public void promeniKonobaraZaStolove(
-            long noviKonobarID, 
-            String stolovi) 
-    {
-        Connection dbConnection;
-        CallableStatement cStmt;
-        
-        try {
-            dbConnection = poveziSaBazom();
-            cStmt = dbConnection.prepareCall("{CALL promeniKonobaraZaStolove(?,?,?)}");
-            cStmt.setLong("StariKonobarID", rmaster.RMaster.ulogovaniKonobar.konobarID);
-            cStmt.setLong("NoviKonobarID", noviKonobarID);
-            cStmt.setString("stolovi", stolovi);
-            cStmt.execute();
-            prekiniVezuSaBazom(dbConnection);
-        } catch (Exception e) {
-            System.out.println("Store procedure \"promeniKonobaraZaStolove\" exec error! - " + e.toString());
-        }
-    }
     
-        
-    public List getStavkePorudzbinaGosta(String brojGosta, String izabraniStoId){
-        Connection dbConnection = null;
-        ResultSet rs = null;
-        List listaRezultata = null;
-        CallableStatement cStmt = null;
-        
-        try {
-            dbConnection = poveziSaBazom();
-            cStmt = dbConnection.prepareCall("{CALL getPorudzbinaGosta(?,?,?)}");
-            cStmt.setLong("konobarID", rmaster.RMaster.ulogovaniKonobar.konobarID);
-            cStmt.setString("stoID", izabraniStoId);
-            cStmt.setString("brojGosta", brojGosta);
-            cStmt.execute();
-            rs = cStmt.getResultSet();
-            
-            listaRezultata = prebaciUListu(rs);
-            
-        } catch (Exception e) {
-            System.out.println("Store procedure \"getPorudzbinaGosta\" exec error! - " + e.toString());
-        } finally {
-            
-            if (rs != null) {
-                try { rs.close(); } catch (SQLException ignore) {}
-            }
-            
-            if (cStmt != null) {
-                try { cStmt.close(); } catch (SQLException ignore) {}
-            }
-            
-            if (dbConnection != null) {
-                try { dbConnection.close(); } catch (SQLException ignore) {}
-            }
-        }
-            
-        return listaRezultata;
-    }
     
     public boolean passwordCheckZaMenadzera(String lozinkaText) throws Exception {
         boolean jesteMenadzer = false;
