@@ -22,8 +22,9 @@ import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.QueryBuilder.TableJoin;
 import rmaster.assets.QueryBuilder.TableJoinTypes;
 import rmaster.assets.ScreenMap;
-import rmaster.assets.items.Artikal;
+import rmaster.models.Artikal_Favourite;
 import rmaster.assets.items.GrupaArtikalaFront;
+import rmaster.models.Grupa;
 import rmaster.models.Konobar;
 
 /**
@@ -49,7 +50,7 @@ public class RMaster extends Application {
     public static List<Map<String, String>> sveSale = new ArrayList<>();
     public static List<Map<String, String>> sviStolovi = new ArrayList<>();
     
-    public static List<Map<String, String>> grupeArtikala = new ArrayList<>();
+    public static List<Grupa> grupeArtikala = new ArrayList<>();
     
     public static List<Map<String, String>> podgrupeArtikala = new ArrayList<>();
 
@@ -83,8 +84,7 @@ public class RMaster extends Application {
         
         ucitajSveStolove();
         
-        ucitajSveArtikle();
-        
+        ucitajSveGrupe();           
         
         Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBold.otf").toExternalForm(), 10);
         Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBoldItalic.otf").toExternalForm(), 10);
@@ -168,7 +168,7 @@ public class RMaster extends Application {
         listaRezultata = dbBroker.runStoredProcedure(imeStoreProcedure, imenaArgumenata, vrednostiArgumenata);
                     
         for (Map mapArtikalFront : listaRezultata) {
-            Artikal noviArtikalFront = new Artikal();
+            Artikal_Favourite noviArtikalFront = new Artikal_Favourite();
             noviArtikalFront.makeFromHashMap((HashMap)mapArtikalFront);
             
             listaArtikalaFavorite.add(noviArtikalFront.makeMapForTableOutput());
@@ -278,30 +278,18 @@ public class RMaster extends Application {
         
         return listStolovi;
     }
-    
-    public void ucitajSveArtikle()
-    {
-        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
-        
-        query.setTableName("grupaartikala");
-        
-        grupeArtikala = dbBroker.runQuery(query);
-        
-        for(Map<String, String> nadredjenaGrupaMap : grupeArtikala) {
-            ucitajSvePodgrupe(nadredjenaGrupaMap.get("id"));
-        }
-    }
 
-    private void ucitajSvePodgrupe(String nadredjenaGrupaId) 
+
+    private void ucitajSveGrupe() 
     {
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
-        query.setTableName("grupaartikalafront");
+        query.setTableName(Grupa.TABLE_NAME);
         
-        query.addCriteriaColumns("prikazNaEkran", "GRUPA_ID");
+        query.addCriteriaColumns(Grupa.PRIKAZ_NA_EKRAN, Grupa.GRUPA_ID);
         query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
         query.addOperators(QueryBuilder.LOGIC_AND);
-        query.addCriteriaValues("1", nadredjenaGrupaId);
-        query.setOrderBy("prioritet", QueryBuilder.SORT_ASC);
+        query.addCriteriaValues("1", "0");
+        query.setOrderBy(Grupa.PRIORITET, QueryBuilder.SORT_ASC);
         
         List<Map<String, String>> podrgupaList = dbBroker.runQuery(query);
        
@@ -309,8 +297,15 @@ public class RMaster extends Application {
             return;
         }
         
-        for(Map<String, String> podgrupa : podrgupaList) {
-            podgrupeArtikala.add(podgrupa);
+        for(Map<String, String> grupa : podrgupaList) {
+            Grupa novaGrupa = new Grupa();
+            
+            novaGrupa.makeFromHashMap((HashMap)grupa);
+            
+            novaGrupa.setAllChildren();
+            
+            grupeArtikala.add(novaGrupa);
         }
     }
+    
 }

@@ -33,7 +33,7 @@ public class LoginAction extends ModelBase {
     
     @Override
     public String getPrimaryKeyName() {
-        return id;
+        return PRIMARY_KEY;
     }
     
     @Override

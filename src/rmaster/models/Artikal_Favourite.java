@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rmaster.assets.items;
+package rmaster.models;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -13,7 +13,7 @@ import rmaster.assets.ModelBase;
  *
  * @author Bosko
  */
-public class Artikal extends ModelBase {
+public class Artikal_Favourite extends ModelBase implements Child_Interface {
     public static String TABLE_NAME = "getArtikliFavorite";
  
     public static String PRIMARY_KEY = "id";

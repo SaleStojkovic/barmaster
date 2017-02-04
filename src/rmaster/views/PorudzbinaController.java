@@ -40,7 +40,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javax.rmi.CORBA.Stub;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.RM_TableView.RM_TableView;
 import rmaster.assets.RM_TableView.RavnanjeKolone;
@@ -53,7 +52,9 @@ import rmaster.assets.items.ArtikalButton;
 import rmaster.assets.RM_Button.RM_Button;
 import rmaster.assets.items.VrsteGrupaIliArtikal;
 import static rmaster.assets.items.VrsteGrupaIliArtikal.*;
+import rmaster.models.Artikal_Podgrupa;
 import rmaster.models.Gost;
+import rmaster.models.Grupa;
 import rmaster.models.Porudzbina;
 import rmaster.models.StavkaTure;
 import rmaster.models.Tura;
@@ -65,7 +66,7 @@ import rmaster.models.Tura;
  */
 public class PorudzbinaController extends FXMLDocumentController {
 
-        ScreenController myController; 
+    ScreenController myController; 
      
     @Override
     public void setScreenParent(ScreenController screenParent){ 
@@ -73,25 +74,18 @@ public class PorudzbinaController extends FXMLDocumentController {
     } 
     
     private Executor exec;
-
-    
-    private long startTime;
-    private long ms;
     
     @FXML
     public VBox prikazRacunaGostaSadrzaj;
     
     @FXML
-    public HBox ArtikalGrupe;
+    public Pane ArtikalGrupe;
     
     @FXML
     public FlowPane ArtikalPodgrupe;
     
     @FXML
     public FlowPane Artikal;
-    
-    @FXML
-    public FlowPane ArtikalFavorite;
     
     @FXML
     public VBox Artikal_DvaDela;
@@ -144,6 +138,17 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     public String izabraniStoNaziv;
 
+    @FXML
+    private RM_Button grupaPrevious;
+    
+    @FXML
+    private RM_Button grupaNext;
+    
+    @FXML
+    private RM_Button podgrupaPrevious;
+    
+    @FXML
+    private RM_Button podgrupaNext;
     
     // Sirina dela u kome se prikazuju grupe, podgrupe i artikli
     public double roditeljSirina = 592.0;
@@ -246,32 +251,150 @@ public class PorudzbinaController extends FXMLDocumentController {
             );
          }
 
-        try {
-
-             if (this.ArtikalGrupe.getChildren().isEmpty()) {
-                 initArtikalPrikaz(GLAVNA_GRUPA);
-
-                 initArtikalPrikaz(ARTIKAL_FAVORITE);
-
-                 initArtikalPrikaz(ARTIKAL_DODATNI);
-
-                 initArtikalPrikaz(ARTIKAL_OPISNI);
-
-
-                 this.ArtikalFavorite.setVisible(true);
-                 this.Artikal_DvaDela.setVisible(false);
-             }
-            
-            refreshGrupeIliArtikla_v2(this.ArtikalGrupe, GLAVNA_GRUPA);
-            
-            refreshGrupeIliArtikla_v2(this.ArtikalFavorite, ARTIKAL_FAVORITE);
-           
-        } catch (Exception e) {
-            System.out.println("Greska u pozivu SP get_racuniKonobaraKojiNisuZatvoreni! - " + e.toString());
-        }
+         popuniGrupeArtikala();
     }    
     
+    private void popuniGrupeArtikala() {
+        
+        List<RM_Button> listaGrupa = new ArrayList<>();
+        
+        for(Node node : ArtikalGrupe.getChildren()) {
+            if (node instanceof RM_Button) {
+                listaGrupa.add((RM_Button)node);
+            }
+        }
+        
+        int brojac = 0;
+        for(Grupa novaGrupa : rmaster.RMaster.grupeArtikala) {
+            
+            if(brojac == 3) {
+                break;
+            }
+            
+            RM_Button dugmeGrupe = listaGrupa.get(brojac);
+            
+            dugmeGrupe.setPodatak(novaGrupa);
+            
+            dugmeGrupe.setText(novaGrupa.naziv);
+             
+            brojac++;
+            
+            setGroupButtonAction(dugmeGrupe);
+            
+        }
+        
+        grupaPrevious.setPodatak("0");
+        grupaNext.setPodatak("3");
+    }
+    
+    private void setGroupButtonAction(RM_Button dugmeGrupe) {
+        
+        
+        dugmeGrupe.setOnAction(new EventHandler<ActionEvent>() {               
+                                    @Override public void handle(ActionEvent event) {
+                                        RM_Button pressedButton = (RM_Button)event.getSource();
+                                        prikaziPodgrupe((Grupa)pressedButton.getPodatak(), 0);
+                                        prikaziArtikleGrupe((Grupa)pressedButton.getPodatak());
+                                    }
+                                });
+    }
+    
+    @FXML
+    public void grupaPrevious(ActionEvent event) {
+        
+    }
+    
+    @FXML
+    public void grupaNext(ActionEvent event) {
+        
+    }
+    
+    @FXML
+    public void podgrupaPrevious(ActionEvent event) {
+        int offset = Integer.parseInt(podgrupaPrevious.getPodatak() + "") - 11;
+        
+        Grupa izabranaGrupa = (Grupa)podgrupaPrevious.getVrsta();
+        
+        prikaziPodgrupe(izabranaGrupa, offset);
+    }
+    
+    @FXML
+    public void podgrupaNext(ActionEvent event) {
+        int offset = Integer.parseInt(podgrupaNext.getPodatak() + "");
+        
+        Grupa izabranaGrupa = (Grupa)podgrupaNext.getVrsta();
+        
+        prikaziPodgrupe(izabranaGrupa, offset);
+        
+    }
+    
+    private void prikaziPodgrupe(Grupa izabranaGrupa, int offset) {
+                       
+        izbrisiSvePodgrupe();
+        
+        for (int i = 0; i < 12; i++) {
+            
+            RM_Button novoDugme = (RM_Button)findNodeById(
+                   ArtikalPodgrupe.getChildren(), 
+                    "podgrupa_" + (i + 1)
+            );
+            
+            if (offset + i == izabranaGrupa.podgrupe.size()) {
+                break;
+            }
+            
+            novoDugme.setPodatak(izabranaGrupa.podgrupe.get(offset + i).id);
+            novoDugme.setText(izabranaGrupa.podgrupe.get(offset + i).naziv);
+            
+            //TODO dodati akciju da se prikazu artikli Podgrupe
 
+        }
+
+        setPodgrupaNextAndPrevious(izabranaGrupa, offset);
+    }
+    
+    private void setPodgrupaNextAndPrevious(Grupa izabranaGrupa, int offset) {
+        
+        RM_Button novoDugme = (RM_Button)findNodeById(
+                   ArtikalPodgrupe.getChildren(), 
+                    "podgrupa_12"
+            );
+
+        novoDugme.setVisible(false);
+        novoDugme.setManaged(false);
+        
+        podgrupaPrevious.setManaged(true);
+        podgrupaPrevious.setVisible(true);
+        podgrupaNext.setManaged(true);
+        podgrupaNext.setVisible(true);
+        podgrupaNext.setPodatak("");
+        podgrupaNext.setVrsta("");
+        
+            
+        podgrupaNext.setPodatak(offset + 11);
+        podgrupaNext.setVrsta(izabranaGrupa);
+            
+        podgrupaPrevious.setPodatak(offset);
+        podgrupaPrevious.setVrsta(izabranaGrupa);
+    }
+    
+    private void izbrisiSvePodgrupe() {
+
+        for (int i = 1; i < 13; i++) {
+            RM_Button novoDugme = (RM_Button)findNodeById(
+                   ArtikalPodgrupe.getChildren(), 
+                    "podgrupa_" + i
+            );
+            
+            novoDugme.setPodatak("");
+            novoDugme.setText("");
+        }
+    }
+    
+    private void prikaziArtikleGrupe(Grupa izabranaGrupa) {
+        
+    }
+    
     @Override
     public void initData(Object data) {
         
@@ -343,7 +466,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                 prikazBrojPrikazanihPlus1 = prikazFavoriteBrojPrikazanihPlus1;
                 prikazBrojRedova = prikazFavoriteBrojRedova;
                 stilArtikalIliGrupa = stilArtikal;
-                gdePrikazati = this.ArtikalFavorite;
+//                gdePrikazati = this.ArtikalFavorite;
                 break;
             default:
         }
@@ -601,8 +724,8 @@ public class PorudzbinaController extends FXMLDocumentController {
             ponoviTuru.setPodatak("" + tura.getTuraID());
             ponoviTuru.setOnAction(new EventHandler<ActionEvent>() {
                             @Override public void handle(ActionEvent e) {
-                                String turaId = ((RM_Button)e.getSource()).getPodatak();
-                                ponoviTuru(turaId);
+//                                String turaId = ((RM_Button)e.getSource()).getPodatak();
+//                                ponoviTuru(turaId);
                             }
                         }); 
             
@@ -1053,7 +1176,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                 case POD_GRUPA:
                 case ARTIKAL_OPISNI:
                     this.Artikal_DvaDela.setVisible(true);
-                    this.ArtikalFavorite.setVisible(false);
+//                    this.ArtikalFavorite.setVisible(false);
                     if (rs.isEmpty()) {
                         prikazBrojPrikazanihPlus1 = 0;
                         prikazBrojRedova = 0;
@@ -1069,7 +1192,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                 case ARTIKAL_DODATNI:
                 case ARTIKAL_GLAVNI:
                     this.Artikal_DvaDela.setVisible(true);
-                    this.ArtikalFavorite.setVisible(false);
+//                    this.ArtikalFavorite.setVisible(false);
                     if (this.ArtikalPodgrupe.getPrefHeight() == 0) {
                         prikazBrojRedova = prikazFavoriteBrojRedova;
                         prikazBrojPrikazanihPlus1 = prikazFavoriteBrojPrikazanihPlus1;
@@ -1088,7 +1211,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                     stilArtikalIliGrupa = stilArtikal;
                     //this.ArtikalPodgrupe.getChildren().clear();
                     //this.ArtikalPodgrupe.setPrefHeight(0.0);
-                    this.ArtikalFavorite.setVisible(true);
+//                    this.ArtikalFavorite.setVisible(true);
                     this.Artikal_DvaDela.setVisible(false);
                     
                     break;
