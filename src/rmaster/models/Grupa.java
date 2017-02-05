@@ -119,6 +119,6 @@ public class Grupa extends ModelBase {
     
     private void uzmiSveArtikle()
     {
-        //TODO ucitati sve artikle
+
     }
 }

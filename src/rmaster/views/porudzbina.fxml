@@ -171,7 +171,7 @@
                                 <Button fx:id="izbrisi" layoutX="137.0" layoutY="52.0" mnemonicParsing="false" onAction="#izbrisiStavkuNoveTure" prefHeight="48.0" prefWidth="147.0" text="Izbriši" />
                                 <Button fx:id="smanjiKolicinu" layoutX="288.0" layoutY="-1.0" mnemonicParsing="false" onAction="#smanjiKolicinuZaJedan" prefHeight="100.0" prefWidth="140.0" text="Umanji količinu za 1" />
                                 <Button fx:id="porudzbinaNaplati" layoutX="880.0" mnemonicParsing="false" onAction="#naplataIliStampaPorudzbine" prefHeight="99.0" prefWidth="143.0" text="Naplati ✓" />
-                                <Button fx:id="favorites" layoutX="428.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#prikaziArtikleFavorite" prefHeight="100.0" prefWidth="147.0" text="★">
+                                <Button fx:id="favorites" layoutX="428.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#prikaziFavouriteAction" prefHeight="100.0" prefWidth="147.0" text="★">
                                     <font>
                                         <Font size="10.0" />
                                     </font>
@@ -213,7 +213,29 @@
                                         <RM_Button managed="false" visible="false" onAction="#podgrupaPrevious"  fx:id="podgrupaPrevious" text="«" prefHeight="64" prefWidth="73.5" />
                                         <RM_Button managed="false" visible="false" onAction="#podgrupaNext" fx:id="podgrupaNext" text="»" prefHeight="64" prefWidth="73.5" />
                               </FlowPane>        
-                              <FlowPane fx:id="Artikal" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="320.0" prefWidth="597.0" />
+                              <FlowPane fx:id="Artikal" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="320.0" prefWidth="597.0" >
+                                        <RM_Button id="artikal_1" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_2" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_3" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_4" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_5" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_6" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_7" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_8" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_9" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_10" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_11" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_12" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_13" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_14" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_15" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_16" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_17" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_18" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button id="artikal_19" prefHeight="64" prefWidth="147.5"/>
+                                        <RM_Button onAction="#artikalPrevious"  fx:id="artikalPrevious" text="«" prefHeight="64" prefWidth="73.5" />
+                                        <RM_Button onAction="#artikalNext" fx:id="artikalNext" text="»" prefHeight="64" prefWidth="73.5" />
+                              </FlowPane>
                            </children>
                         </VBox>
                      </children>

@@ -13,33 +13,9 @@ import rmaster.assets.ModelBase;
  *
  * @author Bosko
  */
-public class Artikal_Favourite extends ModelBase implements Child_Interface {
-    public static String TABLE_NAME = "getArtikliFavorite";
- 
-    public static String PRIMARY_KEY = "id";
-
-    public static String BAR_CODE = "barCode";
-    public static String CENA = "cena";
-    public static String DOZVOLJEN_POPUST = "dozvoljenPopust";
-    public static String JEDINICA_MERE = "jedinicaMere";
-    public static String NAZIV = "naziv";
-    public static String PRIORITET = "prioritet";
-    public static String SKRACENI_NAZIV = "skrNaziv";
-    public static String SLIKA = "slika";
-    public static String TIP = "tip";
-    public static String STAMPAC_ID = "stampacID";
+public class Artikal_Favourite extends Child_Abstract implements Child_Interface {
     
-    public String id;
-    public String barCode;
-    public String cena;
-    public String dozvoljenPopust;
-    public String jedinicaMere;
-    public String naziv;
-    public String prioritet;
-    public String skrNaziv;
-    public String slika;
-    public String tip;
-    public String stampacID;
+
     
     @Override
     public String getTableName()
@@ -65,8 +41,9 @@ public class Artikal_Favourite extends ModelBase implements Child_Interface {
         this.prioritet = artikalFrontMap.get(PRIORITET);
         this.skrNaziv = artikalFrontMap.get(SKRACENI_NAZIV);
         this.slika = artikalFrontMap.get(SLIKA);
-        this.tip = artikalFrontMap.get(TIP);
         this.stampacID = artikalFrontMap.get(STAMPAC_ID);
+        
+        this.setType(this.id);
     }
     
     @Override
@@ -82,7 +59,6 @@ public class Artikal_Favourite extends ModelBase implements Child_Interface {
         artikalFrontMap.put(PRIORITET, this.prioritet);
         artikalFrontMap.put(SKRACENI_NAZIV, this.skrNaziv);
         artikalFrontMap.put(SLIKA, this.slika);
-        artikalFrontMap.put(TIP, this.tip);
         artikalFrontMap.put(STAMPAC_ID, this.stampacID);
         
         if (includeId) {
@@ -104,7 +80,6 @@ public class Artikal_Favourite extends ModelBase implements Child_Interface {
         artikalFrontMap.put(PRIORITET, this.prioritet);
         artikalFrontMap.put(SKRACENI_NAZIV, this.skrNaziv);
         artikalFrontMap.put(SLIKA, this.slika);
-        artikalFrontMap.put(TIP, this.tip);
         artikalFrontMap.put(STAMPAC_ID, this.stampacID);
 
         return artikalFrontMap;

@@ -24,6 +24,7 @@ import rmaster.assets.QueryBuilder.TableJoinTypes;
 import rmaster.assets.ScreenMap;
 import rmaster.models.Artikal_Favourite;
 import rmaster.assets.items.GrupaArtikalaFront;
+import rmaster.models.Artikal_Podgrupa;
 import rmaster.models.Grupa;
 import rmaster.models.Konobar;
 
@@ -51,6 +52,7 @@ public class RMaster extends Application {
     public static List<Map<String, String>> sviStolovi = new ArrayList<>();
     
     public static List<Grupa> grupeArtikala = new ArrayList<>();
+    public static Artikal_Podgrupa favouriteArtikli = new Artikal_Podgrupa();
     
     public static List<Map<String, String>> podgrupeArtikala = new ArrayList<>();
 
@@ -84,7 +86,9 @@ public class RMaster extends Application {
         
         ucitajSveStolove();
         
-        ucitajSveGrupe();           
+        ucitajSveGrupe(); 
+        
+        ucitajFavourite();
         
         Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBold.otf").toExternalForm(), 10);
         Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBoldItalic.otf").toExternalForm(), 10);
@@ -305,6 +309,51 @@ public class RMaster extends Application {
             novaGrupa.setAllChildren();
             
             grupeArtikala.add(novaGrupa);
+        }
+    }
+    
+    
+    private void ucitajFavourite()
+    {
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+        
+        query.addTableJoins(
+                new TableJoin(
+                        "artikal", 
+                        "artikal_stampac", 
+                        "id", 
+                        "artikalID", 
+                        TableJoinTypes.INNER_JOIN
+                )
+                
+        );
+        
+        query.setSelectColumns(
+                "artikal.id",
+                "artikal.barCode",
+                "artikal.cena",
+                "artikal.dozvoljenPopust",
+                "artikal.jedinicaMere",
+                "artikal.name",
+                "artikal.prioritet",
+                "artikal.skrNaziv",
+                "artikal.slika",
+                "artikal_stampac.stampacID"
+        );
+        
+        query.addCriteriaColumns("artikal.blokiran", "artikal.favorite");
+        query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
+        query.addOperators(QueryBuilder.LOGIC_AND);
+        query.addCriteriaValues("0", "1");
+        query.setOrderBy("artikal.prioritet, artikal.name", QueryBuilder.SORT_ASC);
+        
+        List<Map<String, String>> listaArtikala = dbBroker.runQuery(query);
+        
+        for(Map<String, String> artikalMap : listaArtikala) {
+            Artikal_Favourite noviArtikal = new Artikal_Favourite();
+            noviArtikal.makeFromHashMap((HashMap)artikalMap);
+            
+            favouriteArtikli.artikli.add(noviArtikal);
         }
     }
     
