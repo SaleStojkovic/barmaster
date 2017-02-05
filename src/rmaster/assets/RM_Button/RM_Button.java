@@ -12,14 +12,23 @@ import javafx.scene.control.Button;
  * @author Bosko
  */
 public class RM_Button extends Button{
-    private String podatak = "";
+    private Object podatak = "";
     
-    public void setPodatak(String brojStola) {
-        this.podatak = brojStola;
+    private Object vrsta = "";
+    
+    public void setPodatak(Object podatak) {
+        this.podatak = podatak;
     }
     
-    public String getPodatak() {
+    public Object getPodatak() {
         return this.podatak;
     }
     
+    public void setVrsta(Object vrsta) {
+        this.vrsta = vrsta;
+    }
+    
+    public Object getVrsta() {
+        return this.vrsta;
+    }
 }

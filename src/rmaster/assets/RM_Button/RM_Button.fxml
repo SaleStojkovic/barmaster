@@ -6,5 +6,5 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Button  fx:controller="rmaster.assets.items.RM_Button" xmlns:fx="http://javafx.com/fxml">
+<Button  fx:controller="rmaster.assets.RM_Button.RM_Button" xmlns:fx="http://javafx.com/fxml">
 </Button>

@@ -260,7 +260,7 @@ public class PrikazSalaController extends FXMLDocumentController {
                                             RM_Button stoButton = (RM_Button)e.getSource();
                                             HashMap<String, String> stoMap = new HashMap();
                                             stoMap.put("stoId", stoButton.getId());
-                                            stoMap.put("stoBroj", stoButton.getPodatak());
+                                            stoMap.put("stoBroj", stoButton.getPodatak() + "");
                                             stoMap.put("stoNaziv", stoButton.getText());                                            
                                             myController.setScreen(ScreenMap.PORUDZBINA, stoMap);
                                         }

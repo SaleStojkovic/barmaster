@@ -6,8 +6,6 @@
 package rmaster.views;
 
 import com.sun.javafx.scene.control.skin.VirtualFlow;
-import java.io.File;
-import java.io.FileInputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,13 +32,10 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javax.rmi.CORBA.Stub;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.RM_TableView.RM_TableView;
 import rmaster.assets.RM_TableView.RavnanjeKolone;
@@ -51,9 +46,10 @@ import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
 import rmaster.assets.items.ArtikalButton;
 import rmaster.assets.RM_Button.RM_Button;
-import rmaster.assets.items.VrsteGrupaIliArtikal;
 import static rmaster.assets.items.VrsteGrupaIliArtikal.*;
+import rmaster.models.Artikal_Favourite;
 import rmaster.models.Gost;
+import rmaster.models.Grupa;
 import rmaster.models.Porudzbina;
 import rmaster.models.StavkaTure;
 import rmaster.models.Tura;
@@ -65,7 +61,7 @@ import rmaster.models.Tura;
  */
 public class PorudzbinaController extends FXMLDocumentController {
 
-        ScreenController myController; 
+    ScreenController myController; 
      
     @Override
     public void setScreenParent(ScreenController screenParent){ 
@@ -73,10 +69,6 @@ public class PorudzbinaController extends FXMLDocumentController {
     } 
     
     private Executor exec;
-
-    
-    private long startTime;
-    private long ms;
     
     @FXML
     public VBox prikazRacunaGostaSadrzaj;
@@ -89,9 +81,6 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     @FXML
     public FlowPane Artikal;
-    
-    @FXML
-    public FlowPane ArtikalFavorite;
     
     @FXML
     public VBox Artikal_DvaDela;
@@ -144,6 +133,17 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     public String izabraniStoNaziv;
 
+    @FXML
+    private RM_Button grupaPrevious;
+    
+    @FXML
+    private RM_Button grupaNext;
+    
+    @FXML
+    private RM_Button podgrupaPrevious;
+    
+    @FXML
+    private RM_Button podgrupaNext;
     
     // Sirina dela u kome se prikazuju grupe, podgrupe i artikli
     public double roditeljSirina = 592.0;
@@ -246,32 +246,12 @@ public class PorudzbinaController extends FXMLDocumentController {
             );
          }
 
-        try {
-
-             if (this.ArtikalGrupe.getChildren().isEmpty()) {
-                 initArtikalPrikaz(GLAVNA_GRUPA);
-
-                 initArtikalPrikaz(ARTIKAL_FAVORITE);
-
-                 initArtikalPrikaz(ARTIKAL_DODATNI);
-
-                 initArtikalPrikaz(ARTIKAL_OPISNI);
-
-
-                 this.ArtikalFavorite.setVisible(true);
-                 this.Artikal_DvaDela.setVisible(false);
-             }
-            
-            refreshGrupeIliArtikla_v2(this.ArtikalGrupe, GLAVNA_GRUPA);
-            
-            refreshGrupeIliArtikla_v2(this.ArtikalFavorite, ARTIKAL_FAVORITE);
-           
-        } catch (Exception e) {
-            System.out.println("Greska u pozivu SP get_racuniKonobaraKojiNisuZatvoreni! - " + e.toString());
-        }
-    }    
+         popuniGrupe(0);
+         
+         prikaziFavorite(0);
+    } 
     
-
+        
     @Override
     public void initData(Object data) {
         
@@ -303,158 +283,268 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     }
     
+    private void prikaziFavorite(int offset) {
+       
+        RM_Button novoDugme = (RM_Button)findNodeById(
+                   ArtikalPodgrupe.getChildren(), 
+                    "podgrupa_12"
+            );
 
-/***************************************************************/
-/**** KREIRAJ PRIKAZ ZA GRUPA, PODGRUPA I ARTIKAL, FAVORITE ****/
-/**
-     * @param staSePrikazuje*************************************************************/
-    public void initArtikalPrikaz(VrsteGrupaIliArtikal staSePrikazuje) {
-        Pane gdePrikazati = null;
-        switch(staSePrikazuje) {
-            case GLAVNA_GRUPA:
-                prikazRedniBrojPrvog = prikazGrupaRedniBrojPrvog;
-                prikazBrojPrikazanihPlus1 = prikazGrupaBrojPrikazanihPlus1;
-                prikazBrojRedova = prikazGrupaBrojRedova;
-                stilArtikalIliGrupa = stilGrupa;
-                gdePrikazati = this.ArtikalGrupe;
-                break;
-            // Za podgrupu i opisne artikle
-            case POD_GRUPA:
-            case ARTIKAL_OPISNI:
-                prikazBrojPrikazanihPlus1 = prikazPodgrupaBrojPrikazanihPlus1;
-                prikazBrojRedova = prikazPodgrupaBrojRedova;
-
-                prikazRedniBrojPrvog = prikazPodgrupaRedniBrojPrvog;
-                stilArtikalIliGrupa = stilPodgrupa;
-                gdePrikazati = this.Artikal;
-                break;
-            // Za artikle i dodatne artikle
-            case ARTIKAL_DODATNI:
-            case ARTIKAL_GLAVNI:
-                prikazBrojRedova = prikazArtikalBrojRedova;
-                prikazBrojPrikazanihPlus1 = prikazArtikalBrojPrikazanihPlus1;
-
-                prikazRedniBrojPrvog = prikazArtikalRedniBrojPrvog;
-                stilArtikalIliGrupa = stilArtikal;
-                gdePrikazati = this.ArtikalPodgrupe;
-                break;
-            case ARTIKAL_FAVORITE:
-                prikazRedniBrojPrvog = prikazFavoriteRedniBrojPrvog;
-                prikazBrojPrikazanihPlus1 = prikazFavoriteBrojPrikazanihPlus1;
-                prikazBrojRedova = prikazFavoriteBrojRedova;
-                stilArtikalIliGrupa = stilArtikal;
-                gdePrikazati = this.ArtikalFavorite;
-                break;
-            default:
+        novoDugme.setVisible(true);
+        novoDugme.setManaged(true);
+        
+        izbrisiSvePodgrupe();
+        izbrisiSveArtikle();
+        
+        podgrupaNext.setVisible(false);
+        podgrupaNext.setManaged(false);
+        podgrupaPrevious.setVisible(false);
+        podgrupaPrevious.setManaged(false);
+        
+        for (int i = 0; i < 12; i++) {
+            
+            RM_Button dugmeArtikal = (RM_Button)findNodeById(
+                   ArtikalPodgrupe.getChildren(), 
+                    "podgrupa_" + (i + 1)
+            );
+            
+            if (offset + i == rmaster.RMaster.favouriteArtikli.artikli.size()) {
+                return;
+            }
+            
+            
+            dugmeArtikal.setPodatak( rmaster.RMaster.favouriteArtikli.artikli.get(offset + i));
+            dugmeArtikal.setText(rmaster.RMaster.favouriteArtikli.artikli.get(offset + i).naziv);
+            
         }
-        gdePrikazati.getChildren().clear();
-        gdePrikazati.setPrefHeight(prikazBrojRedova*defaultVisinaDugmeta);
-
-        // Odredjivanje sirine dugmica za podgrupe artikala
-        //double roditeljSirina = gdePrikazati.getParent().getBoundsInParent().getWidth();
-        //Ovo sam uveo da bi radilo... vraca mi gore nula
-
-
-        double artikalPodgrupaSirina = (roditeljSirina/prikazBrojArtikalaUJednomRedu);
-        int brojac=0;
-        double sirina = 0.0;
+        
+        
+        for (int i = 12; i < 31; i++) {
+             RM_Button dugmeArtikal = (RM_Button)findNodeById(
+                   Artikal.getChildren(), 
+                    "artikal_" + (i - 11)
+            );
+             
+            if (offset + i == rmaster.RMaster.favouriteArtikli.artikli.size()) {
+                return;
+            }
             
-           
-        try {
-
-                int ostaloPraznihDugmica = this.prikazBrojPrikazanihPlus1 - 1;
-                while (ostaloPraznihDugmica>0) {
-                    ArtikalButton bPrazan = new ArtikalButton();
-                    //bPrazan.getStyleClass().add(stilArtikliPrazanButton);
-                    bPrazan.getStyleClass().add(stilArtikalIliGrupa);
-                    bPrazan.setVisible(true);
-                    bPrazan.setDisable(false);
-                    bPrazan.setPrefSize(artikalPodgrupaSirina, defaultVisinaDugmeta);
-                    bPrazan.setOnAction(new EventHandler<ActionEvent>() {               
-                                    @Override public void handle(ActionEvent e) {
-                                        //obradiIzabraniArtikalIliGrupu(e, gdePrikazati);
-                                    }
-                                });
-
-                    gdePrikazati.getChildren().add(bPrazan);
-                    ostaloPraznihDugmica--;
-                }
-            
-                Button bPrethodniArtikliIliGrupe = new Button("«");
-                bPrethodniArtikliIliGrupe.setPrefSize(artikalPodgrupaSirina/2, defaultVisinaDugmeta);
-                bPrethodniArtikliIliGrupe.getStyleClass().add(stilArtikalIliGrupa);
-                bPrethodniArtikliIliGrupe.setDisable(true);
-                bPrethodniArtikliIliGrupe.getStyleClass().add(stilArtikliGrupeNextPrev);
-                bPrethodniArtikliIliGrupe.setOnAction(new EventHandler<ActionEvent>() {
-                                    @Override public void handle(ActionEvent e) {
-                                        switch(staSePrikazuje) {
-                                            case GLAVNA_GRUPA:
-                                                prikazGrupaRedniBrojPrvog = prikazGrupaRedniBrojPrvog - prikazGrupaBrojPrikazanihPlus1 + 1;
-                                                break;
-                                            // Za podgrupu i opisne artikle
-                                            case POD_GRUPA:
-                                            case ARTIKAL_OPISNI:
-                                                prikazPodgrupaRedniBrojPrvog = prikazPodgrupaRedniBrojPrvog - prikazPodgrupaBrojPrikazanihPlus1 + 1;
-                                                break;
-                                            // Za artikle i dodatne artikle
-                                            case ARTIKAL_GLAVNI:
-                                            case ARTIKAL_DODATNI:
-                                                prikazArtikalRedniBrojPrvog = prikazArtikalRedniBrojPrvog - prikazArtikalBrojPrikazanihPlus1 + 1;
-                                                break;
-                                            case ARTIKAL_FAVORITE:
-                                                prikazFavoriteRedniBrojPrvog = prikazFavoriteRedniBrojPrvog - prikazFavoriteBrojPrikazanihPlus1 + 1;
-                                                break;
-                                            default:
-                                        }
-                                        //refreshGrupeIliArtikla_v2(gdePrikazati, staSePrikazuje);
-                                    }
-                                });
-                gdePrikazati.getChildren().add(bPrethodniArtikliIliGrupe);
-
-                sirina = roditeljSirina - (prikazBrojArtikalaUJednomRedu-1)*artikalPodgrupaSirina - artikalPodgrupaSirina/2;
-                Button bSledeciArtikliIliGrupe = new Button("»");
-                bSledeciArtikliIliGrupe.setPrefSize(sirina, defaultVisinaDugmeta);
-                bSledeciArtikliIliGrupe.getStyleClass().add(stilArtikalIliGrupa);
-                bSledeciArtikliIliGrupe.setDisable(true);
-                bSledeciArtikliIliGrupe.getStyleClass().add(stilArtikliGrupeNextPrev);
-                bSledeciArtikliIliGrupe.setOnAction(new EventHandler<ActionEvent>() {
-                                    @Override public void handle(ActionEvent e) {
-                                        switch(staSePrikazuje) {
-                                            case GLAVNA_GRUPA:
-                                                prikazGrupaRedniBrojPrvog = prikazGrupaRedniBrojPrvog + prikazGrupaBrojPrikazanihPlus1 - 1;
-                                                break;
-                                            // Za podgrupu i opisne artikle
-                                            case POD_GRUPA:
-                                            case ARTIKAL_OPISNI:
-                                                prikazPodgrupaRedniBrojPrvog = prikazPodgrupaRedniBrojPrvog + prikazPodgrupaBrojPrikazanihPlus1 - 1;
-                                                break;
-                                            // Za artikle i dodatne artikle
-                                            case ARTIKAL_GLAVNI:
-                                            case ARTIKAL_DODATNI:
-                                                prikazArtikalRedniBrojPrvog = prikazArtikalRedniBrojPrvog + prikazArtikalBrojPrikazanihPlus1 - 1;
-                                                break;
-                                            case ARTIKAL_FAVORITE:
-                                                prikazFavoriteRedniBrojPrvog = prikazFavoriteRedniBrojPrvog + prikazFavoriteBrojPrikazanihPlus1 - 1;
-                                                break;
-                                            default:
-                                        }
-                                        //refreshGrupeIliArtikla(gdePrikazati, staSePrikazuje);
-                                    }
-                                });
-                gdePrikazati.getChildren().add(bSledeciArtikliIliGrupe);
-
-        } catch (Exception e) {
-            System.out.println("Greska u prikazu artikala!");
-        } 
+            dugmeArtikal.setPodatak( rmaster.RMaster.favouriteArtikli.artikli.get(offset + i));
+            dugmeArtikal.setText(rmaster.RMaster.favouriteArtikli.artikli.get(offset + i).naziv);
+        }
+        
+        //todo set podgrupa Next i podgrupa previous 
+        
     }
-/***************************************************************/
-/************************ KRAJ *********************************/
-/**** KREIRAJ PRIKAZ ZA GRUPA, PODGRUPA I ARTIKAL, FAVORITE ****/
-/************************ KRAJ *********************************/
-/***************************************************************/
-
-
     
+    @FXML
+    public void prikaziFavouriteAction(ActionEvent event) {
+        prikaziFavorite(0);
+    }
+    
+    private void popuniGrupe(int offset) {
+        
+        List<RM_Button> listaGrupa = new ArrayList<>();
+        
+        for(int i = 0; i < 3; i++) {
+            RM_Button novoDugme = (RM_Button)findNodeById(ArtikalGrupe.getChildren(), "grupa_" + (i+1));
+            novoDugme.setText("");
+            novoDugme.setPodatak("");
+            listaGrupa.add(novoDugme);
+        }
+                
+        for(int i = 0; i < 3; i++) {
+                        
+            if (offset + i == rmaster.RMaster.grupeArtikala.size()) {
+                break;
+            }
+            
+            RM_Button dugmeGrupe = listaGrupa.get(i);
+            
+            dugmeGrupe.setPodatak(rmaster.RMaster.grupeArtikala.get(i + offset));
+            
+            dugmeGrupe.setText(rmaster.RMaster.grupeArtikala.get(i + offset).naziv);
+                         
+            setGroupButtonAction(dugmeGrupe);
+            
+        }
+        
+        grupaNext.setPodatak("");
+        
+        grupaPrevious.setPodatak("");
+        
+        if (rmaster.RMaster.grupeArtikala.size() > offset + 3) {
+            grupaNext.setPodatak(offset + 3);
+        }
+            
+        if (offset - 2 > 0) {
+            grupaPrevious.setPodatak(offset - 3);
+        }
+    }
+    
+    private void setGroupButtonAction(RM_Button dugmeGrupe) {
+        
+        dugmeGrupe.setOnAction(new EventHandler<ActionEvent>() {               
+                                    @Override public void handle(ActionEvent event) {
+                                        RM_Button pressedButton = (RM_Button)event.getSource();
+                                        prikaziPodgrupe((Grupa)pressedButton.getPodatak(), 0);
+                                        prikaziArtikleGrupe((Grupa)pressedButton.getPodatak());
+                                    }
+                                });
+    }
+    
+    @FXML
+    public void grupaPrevious(ActionEvent event) {
+        String podatak = grupaPrevious.getPodatak() + "";
+        
+        if(podatak.isEmpty()) {
+            return;
+        }
+        
+        int offset = Integer.parseInt(grupaPrevious.getPodatak() + "");
+                
+        popuniGrupe(offset);
+    }
+    
+    @FXML
+    public void grupaNext(ActionEvent event) {
+        String podatak = grupaNext.getPodatak() + "";
+        
+        if(podatak.isEmpty()) {
+            return;
+        }
+        
+        int offset = Integer.parseInt(grupaNext.getPodatak() + "");
+                
+        popuniGrupe(offset);
+    }
+    
+    @FXML
+    public void podgrupaPrevious(ActionEvent event) {
+        String podatak = podgrupaPrevious.getPodatak() + "";
+        
+        if(podatak.isEmpty()) {
+            return;
+        }
+        
+        int offset = Integer.parseInt(podgrupaPrevious.getPodatak() + "");
+        
+        Grupa izabranaGrupa = (Grupa)podgrupaPrevious.getVrsta();
+        
+        prikaziPodgrupe(izabranaGrupa, offset);
+    }
+    
+    @FXML
+    public void podgrupaNext(ActionEvent event) {
+        String podatak = podgrupaNext.getPodatak() + "";
+        
+        if(podatak.isEmpty()) {
+            return;
+        }
+        
+        int offset = Integer.parseInt(podgrupaNext.getPodatak() + "");
+        
+        Grupa izabranaGrupa = (Grupa)podgrupaNext.getVrsta();
+        
+        prikaziPodgrupe(izabranaGrupa, offset);
+        
+    }
+    
+    private void prikaziPodgrupe(Grupa izabranaGrupa, int offset) {
+                       
+        izbrisiSvePodgrupe();
+        izbrisiSveArtikle();
+        
+        for (int i = 0; i < 12; i++) {
+            
+            RM_Button novoDugme = (RM_Button)findNodeById(
+                   ArtikalPodgrupe.getChildren(), 
+                    "podgrupa_" + (i + 1)
+            );
+            
+            if (offset + i == izabranaGrupa.podgrupe.size()) {
+                break;
+            }
+            
+            novoDugme.setPodatak(izabranaGrupa.podgrupe.get(offset + i));
+            novoDugme.setText(izabranaGrupa.podgrupe.get(offset + i).naziv);
+            
+            //TODO dodati Button Action za prikaz artikla Podgrupe
+
+        }
+
+        setPodgrupaNextAndPrevious(izabranaGrupa, offset);
+    }
+    
+    private void setPodgrupaNextAndPrevious(Grupa izabranaGrupa, int offset) {
+        
+        RM_Button novoDugme = (RM_Button)findNodeById(
+                   ArtikalPodgrupe.getChildren(), 
+                    "podgrupa_12"
+            );
+
+        novoDugme.setVisible(false);
+        novoDugme.setManaged(false);
+        
+        podgrupaPrevious.setManaged(true);
+        podgrupaPrevious.setVisible(true);
+        podgrupaNext.setManaged(true);
+        podgrupaNext.setVisible(true);
+            
+        podgrupaNext.setPodatak("");
+        podgrupaNext.setVrsta(izabranaGrupa);
+        
+        podgrupaPrevious.setPodatak("");
+        podgrupaPrevious.setVrsta(izabranaGrupa);
+        
+        if (izabranaGrupa.podgrupe.size() > offset + 11) {
+            podgrupaNext.setPodatak(offset + 11);
+        }
+            
+        if (offset - 10 > 0) {
+            podgrupaPrevious.setPodatak(offset - 11);
+        }
+        
+    }
+    
+    private void izbrisiSvePodgrupe() {
+
+        for (int i = 1; i < 13; i++) {
+            RM_Button novoDugme = (RM_Button)findNodeById(
+                   ArtikalPodgrupe.getChildren(), 
+                    "podgrupa_" + i
+            );
+            
+            novoDugme.setPodatak("");
+            novoDugme.setText("");
+        }
+    }
+    
+    private void izbrisiSveArtikle() {
+            for (int i = 1; i < 20; i++) {
+            RM_Button novoDugme = (RM_Button)findNodeById(
+                   Artikal.getChildren(), 
+                    "artikal_" + i
+            );
+            
+            novoDugme.setPodatak("");
+            novoDugme.setText("");
+        }
+    }
+    
+    private void prikaziArtikleGrupe(Grupa izabranaGrupa) {
+        
+    }
+    
+    @FXML
+    public void artikalPrevious(ActionEvent event) {
+        
+    }
+    
+    @FXML
+    public void artikalNext(ActionEvent event) {
+        
+    }
     
     public void prikaziPorudzbinu() {
 
@@ -601,7 +691,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             ponoviTuru.setPodatak("" + tura.getTuraID());
             ponoviTuru.setOnAction(new EventHandler<ActionEvent>() {
                             @Override public void handle(ActionEvent e) {
-                                String turaId = ((RM_Button)e.getSource()).getPodatak();
+                                String turaId = ((RM_Button)e.getSource()).getPodatak() + "";
                                 ponoviTuru(turaId);
                             }
                         }); 
@@ -651,622 +741,6 @@ public class PorudzbinaController extends FXMLDocumentController {
         novaTura = null;
         sakrijSveTabele();
         myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
-    }
-    
-    public void prikaziArtikleFavorite(ActionEvent event) {
-        onButtonArtikalIliGrupa_click(event, this.Artikal);
-    }
-
-    protected void refreshGrupeIliArtikla(Pane gdePrikazati, VrsteGrupaIliArtikal staSePrikazuje) {
-        String imeStoreProcedure = "";
-        String[] imenaArgumenata = {"","",""};
-        String[] vrednostiArgumenata = {"","",""};
-        List rs = null;
-        try {
-           switch(staSePrikazuje) {
-                // Za grupu i podgrupu
-                case GLAVNA_GRUPA:
-                    imeStoreProcedure = "getArtikliPodgrupeOdGrupe";
-                    imenaArgumenata = new String[]{"nadredjenaGrupa", "brojPrvogZapisa", "brojZapisa"};
-                    vrednostiArgumenata = new String[]{"0","" + (this.prikazGrupaRedniBrojPrvog - 1),"" + (this.prikazGrupaBrojPrikazanihPlus1)};
-                    break;
-                case POD_GRUPA:
-                    imeStoreProcedure = "getArtikliPodgrupeOdGrupe";
-                    imenaArgumenata = new String[]{"nadredjenaGrupa", "brojPrvogZapisa", "brojZapisa"};
-                    vrednostiArgumenata = new String[]{"" + this.selektovanaGlavnaGrupaID,"" + (this.prikazPodgrupaRedniBrojPrvog - 1),"" + (this.prikazPodgrupaBrojPrikazanihPlus1)};
-                    break;
-                case ARTIKAL_GLAVNI:
-                    imeStoreProcedure = "getArtikliGrupe";
-                    imenaArgumenata = new String[]{"podgrupaID", "brojPrvogZapisa", "brojZapisa"};
-                    vrednostiArgumenata = new String[]{"" + this.selektovanaPodgrupaID,"" + (this.prikazArtikalRedniBrojPrvog - 1),"" + (this.prikazArtikalBrojPrikazanihPlus1)};
-                    break;
-                case ARTIKAL_OPISNI:
-                    imeStoreProcedure = "getArtikalAtributi";
-                    imenaArgumenata = new String[]{"ArtikalID", "brojPrvogZapisa", "brojZapisa"};
-                    // Opisni artikli idu u polje gde i podgrupe
-                    vrednostiArgumenata = new String[]{"" + this.selektovanArtikalID,"" + (this.prikazPodgrupaRedniBrojPrvog - 1),"" + (this.prikazPodgrupaBrojPrikazanihPlus1)};
-                    break;
-                case ARTIKAL_DODATNI:
-                    imeStoreProcedure = "getArtikalDodaci";
-                    imenaArgumenata = new String[]{"ArtikalID", "brojPrvogZapisa", "brojZapisa"};
-                    // Dodatni artikli idu u polje gde i artikli
-                    vrednostiArgumenata = new String[]{"" + this.selektovanArtikalID,"" + (this.prikazArtikalRedniBrojPrvog - 1),"" + (this.prikazArtikalBrojPrikazanihPlus1)};
-                    break;
-                case ARTIKAL_FAVORITE:
-                    imeStoreProcedure = "getArtikliFavorite";
-                    imenaArgumenata = new String[]{"brojPrvogZapisa", "brojZapisa"};
-                    vrednostiArgumenata = new String[]{"" + (this.prikazFavoriteRedniBrojPrvog - 1),"" + (this.prikazFavoriteBrojPrikazanihPlus1)};
-                    break;
-                default:
-            }
-            
-            rs = runStoredProcedure(imeStoreProcedure, imenaArgumenata, vrednostiArgumenata);
-
-            switch(staSePrikazuje) {
-                case GLAVNA_GRUPA:
-                    rsGrupe = rs;
-                    break;
-                // Za podgrupu i opisne artikle
-                case POD_GRUPA:
-                case ARTIKAL_OPISNI:
-                    rsPodgrupe = rs;
-                    break;
-                // Za artikle i dodatne artikle
-                case ARTIKAL_GLAVNI:
-                case ARTIKAL_DODATNI:
-                case ARTIKAL_FAVORITE:
-                    rsArtikli = rs;
-                    break;
-                default:
-            }
-        } catch (Exception e) {
-            System.out.println("View \"" + imeStoreProcedure + "\" fetch error!");
-        }
-        prikazArtikalIliGrupa(rs, gdePrikazati, staSePrikazuje);
-    }
-    
-    protected void refreshGrupeIliArtikla_v2(Pane gdePrikazati, VrsteGrupaIliArtikal staSePrikazuje) {
-//        String imeStoreProcedure = "";
-//        String[] imenaArgumenata = {"","",""};
-//        String[] vrednostiArgumenata = {"","",""};
-
-        List<Map<String,String>> rs = new ArrayList<>();
-        
-        try {
-           //switch(staSePrikazuje) {
-                // Za grupu i podgrupu
-          //      case GLAVNA_GRUPA:
-//                    imeStoreProcedure = "getArtikliPodgrupeOdGrupe";
-//                    imenaArgumenata = new String[]{"nadredjenaGrupa", "brojPrvogZapisa", "brojZapisa"};
-//                    vrednostiArgumenata = new String[]{"0","" + (this.prikazGrupaRedniBrojPrvog - 1),"" + (this.prikazGrupaBrojPrikazanihPlus1)};
-//                    break;
-//                case POD_GRUPA:
-//                    imeStoreProcedure = "getArtikliPodgrupeOdGrupe";
-//                    imenaArgumenata = new String[]{"nadredjenaGrupa", "brojPrvogZapisa", "brojZapisa"};
-//                    vrednostiArgumenata = new String[]{"" + this.selektovanaGlavnaGrupaID,"" + (this.prikazPodgrupaRedniBrojPrvog - 1),"" + (this.prikazPodgrupaBrojPrikazanihPlus1)};
-//                    break;
-//                case ARTIKAL_GLAVNI:
-//                    imeStoreProcedure = "getArtikliGrupe";
-//                    imenaArgumenata = new String[]{"podgrupaID", "brojPrvogZapisa", "brojZapisa"};
-//                    vrednostiArgumenata = new String[]{"" + this.selektovanaPodgrupaID,"" + (this.prikazArtikalRedniBrojPrvog - 1),"" + (this.prikazArtikalBrojPrikazanihPlus1)};
-//                    break;
-//                case ARTIKAL_OPISNI:
-//                    imeStoreProcedure = "getArtikalAtributi";
-//                    imenaArgumenata = new String[]{"ArtikalID", "brojPrvogZapisa", "brojZapisa"};
-//                    // Opisni artikli idu u polje gde i podgrupe
-//                    vrednostiArgumenata = new String[]{"" + this.selektovanArtikalID,"" + (this.prikazPodgrupaRedniBrojPrvog - 1),"" + (this.prikazPodgrupaBrojPrikazanihPlus1)};
-//                    break;
-//                case ARTIKAL_DODATNI:
-//                    imeStoreProcedure = "getArtikalDodaci";
-//                    imenaArgumenata = new String[]{"ArtikalID", "brojPrvogZapisa", "brojZapisa"};
-//                    // Dodatni artikli idu u polje gde i artikli
-//                    vrednostiArgumenata = new String[]{"" + this.selektovanArtikalID,"" + (this.prikazArtikalRedniBrojPrvog - 1),"" + (this.prikazArtikalBrojPrikazanihPlus1)};
-//                    break;
-//                case ARTIKAL_FAVORITE:
-//                    imeStoreProcedure = "getArtikliFavorite";
-//                    imenaArgumenata = new String[]{"brojPrvogZapisa", "brojZapisa"};
-//                    vrednostiArgumenata = new String[]{"" + (this.prikazFavoriteRedniBrojPrvog - 1),"" + (this.prikazFavoriteBrojPrikazanihPlus1)};
-//                    break;
-          //      default:
-          //  };
-            //rs = runStoredProcedure(imeStoreProcedure, imenaArgumenata, vrednostiArgumenata);
-            //ms = System.nanoTime() - startTime;
-            //System.out.format("runStoredProcedure(" + imeStoreProcedure + ", " + imenaArgumenata.toString() + ", " + vrednostiArgumenata.toString() + ");: %,10dms%n", ms);
-
-            switch(staSePrikazuje) {
-                case GLAVNA_GRUPA:
-                    popuniListuGrupa(rs, "", this.prikazGrupaRedniBrojPrvog - 1, this.prikazGrupaBrojPrikazanihPlus1);
-                    rsGrupe = rs;
-                    break;
-                // Za podgrupu i opisne artikle
-                case POD_GRUPA:
-                case ARTIKAL_OPISNI:
-                    rsPodgrupe = rs;
-                    break;
-                // Za artikle i dodatne artikle
-                case ARTIKAL_GLAVNI:
-                case ARTIKAL_DODATNI:
-                case ARTIKAL_FAVORITE:
-                    popuniListuArtikala(rs, (this.prikazFavoriteRedniBrojPrvog - 1), this.prikazFavoriteBrojPrikazanihPlus1);
-                    rsArtikli = rs;
-                    break;
-                default:
-            }
-        } catch (Exception e) {
-             e.printStackTrace();
-        }
-        prikazArtikalIliGrupa_v2(rs, gdePrikazati, staSePrikazuje);
-    }
-    
-    public void popuniListuGrupa(List<Map<String,String>> rs, String uslov, int pocetak, int brojElemenata) {
-        List<Map<String,String>> listaGrupa = RMaster.listaGrupaArtikalaFront;
-        int brojac = 0;
-        int kraj = pocetak + brojElemenata;
-        for (Map<String,String> grupa : listaGrupa) {
-            if ((grupa.get("GRUPA_ID") != null) && grupa.get("GRUPA_ID").equals(uslov)) {
-                brojac++;
-                if (brojac>=pocetak && brojac<kraj)
-                    rs.add(grupa);
-            }
-        }
-    }
-
-    public void popuniListuArtikala(List<Map<String,String>> rs, int pocetak, int brojElemenata) {
-        List<Map<String,String>> listaArtikalaFav = RMaster.listaArtikalaFavorite;
-        int brojac = 0;
-        int kraj = pocetak + brojElemenata;
-        for (Map<String,String> fav : listaArtikalaFav) {
-            brojac++;
-            if (brojac>=pocetak && brojac<kraj)
-                rs.add(fav);
-        }
-    }
-/***************************************************************/
-/************** PRIKAZ GRUPA, PODGRUPA I ARTIKALA **************/
-/***************************************************************/
-    public void prikazArtikalIliGrupa(List rs, Pane gdePrikazati, VrsteGrupaIliArtikal staSePrikazuje) {
-        try {
-//                    if (staSePrikazuje == VrsteGrupaIliArtikal.POD_GRUPA && rs.isEmpty()) {
-//                        this.ArtikalPodgrupe.getChildren().clear();
-//                        this.ArtikalPodgrupe.setPrefHeight(0);
-//                        this.Artikal.setPrefHeight((prikazPodgrupaBrojRedova+prikazArtikalBrojRedova)*defaultVisinaDugmeta);
-//                    } else {
-//                        this.ArtikalPodgrupe.getChildren().clear();
-//                        this.ArtikalPodgrupe.setPrefHeight(prikazBrojRedova*defaultVisinaDugmeta);
-//                        this.Artikal.setPrefHeight(prikazArtikalBrojRedova*defaultVisinaDugmeta);
-//                    }
-            
-            //this.ArtikalPodgrupe.setPrefHeight(prikazPodgrupaBrojRedova * defaultVisinaDugmeta);
-            //this.Artikal.setPrefHeight(prikazArtikalBrojRedova * defaultVisinaDugmeta);
-            switch(staSePrikazuje) {
-                case GLAVNA_GRUPA:
-                    prikazRedniBrojPrvog = prikazGrupaRedniBrojPrvog;
-                    prikazBrojPrikazanihPlus1 = prikazGrupaBrojPrikazanihPlus1;
-                    prikazBrojRedova = prikazGrupaBrojRedova;
-                    stilArtikalIliGrupa = stilGrupa;
-                    break;
-                // Za podgrupu i opisne artikle
-                case POD_GRUPA:
-                case ARTIKAL_OPISNI:
-                    if (rs.isEmpty()) {
-                        prikazBrojPrikazanihPlus1 = 0;
-                        prikazBrojRedova = 0;
-                    } else {
-                        prikazBrojPrikazanihPlus1 = prikazPodgrupaBrojPrikazanihPlus1;
-                        prikazBrojRedova = prikazPodgrupaBrojRedova;
-                    }
-                    
-                    prikazRedniBrojPrvog = prikazPodgrupaRedniBrojPrvog;
-                    stilArtikalIliGrupa = stilPodgrupa;
-                    break;
-                // Za artikle i dodatne artikle
-                case ARTIKAL_DODATNI:
-                case ARTIKAL_GLAVNI:
-                    if (this.ArtikalPodgrupe.getPrefHeight() == 0) {
-                        prikazBrojRedova = prikazFavoriteBrojRedova;
-                        prikazBrojPrikazanihPlus1 = prikazFavoriteBrojPrikazanihPlus1;
-                    } else {
-                        prikazBrojRedova = prikazArtikalBrojRedova;
-                        prikazBrojPrikazanihPlus1 = prikazArtikalBrojPrikazanihPlus1;
-                    }
-                    prikazRedniBrojPrvog = prikazArtikalRedniBrojPrvog;
-                    //prikazBrojRedova = prikazArtikalBrojRedova;
-                    stilArtikalIliGrupa = stilArtikal;
-                    break;
-                case ARTIKAL_FAVORITE:
-                    prikazRedniBrojPrvog = prikazFavoriteRedniBrojPrvog;
-                    prikazBrojPrikazanihPlus1 = prikazFavoriteBrojPrikazanihPlus1;
-                    prikazBrojRedova = prikazFavoriteBrojRedova;
-                    stilArtikalIliGrupa = stilArtikal;
-                    this.ArtikalPodgrupe.getChildren().clear();
-                    this.ArtikalPodgrupe.setPrefHeight(0.0);
-                    break;
-                default:
-            }
-            gdePrikazati.getChildren().clear();
-            gdePrikazati.setPrefHeight(prikazBrojRedova*defaultVisinaDugmeta);
-            
-            // Odredjivanje sirine dugmica za podgrupe artikala
-            //double roditeljSirina = gdePrikazati.getParent().getBoundsInParent().getWidth();
-            //Ovo sam uveo da bi radilo... vraca mi gore nula
-            
-            
-            double artikalPodgrupaSirina = (roditeljSirina/prikazBrojArtikalaUJednomRedu);
-            int brojac=0;
-            double sirina = 0.0;
-            
-            for(Object r : rs) {
-                brojac++;
-                Map<String, String> red = (Map<String, String>) r;
-                //long id = Long.parseLong(red.get("id"));
-                //String naziv = red.get("naziv");
-                double cena = 0;
-                try {
-                    cena = Double.parseDouble(red.get("cena"));
-                }catch (Exception e) {
-                }
-                
-                String dozvoljenPopust = red.get("dozvoljenPopust");
-                if(dozvoljenPopust == null) {
-                    dozvoljenPopust = "";
-                }
-                
-                String stampacID = red.get("stampacID");
-                
-                ArtikalButton buttonArtikalIliGrupa = 
-                        new ArtikalButton(
-                                red.get("naziv"),
-                                red.get("slika"),
-                                red.get("id"),
-                                red.get("prioritet"),
-                                red.get("skrNaziv"),
-                                red.get("GRUPA_ID"),
-                                red.get("tip"),
-                                staSePrikazuje,
-                                cena,
-                                dozvoljenPopust,
-                                stampacID
-                        );
-                
-                if ((brojac%prikazBrojArtikalaUJednomRedu)==0) {
-                    sirina = roditeljSirina - (prikazBrojArtikalaUJednomRedu-1)*artikalPodgrupaSirina;
-                    buttonArtikalIliGrupa.setPrefSize(sirina, defaultVisinaDugmeta);
-                }
-                else
-                    buttonArtikalIliGrupa.setPrefSize(artikalPodgrupaSirina, defaultVisinaDugmeta);
-                
-                buttonArtikalIliGrupa.getStyleClass().add(stilArtikalIliGrupa);
-                buttonArtikalIliGrupa.setOnAction(new EventHandler<ActionEvent>() {               
-                                    @Override public void handle(ActionEvent e) {
-                                        obradiIzabraniArtikalIliGrupu(e, gdePrikazati);
-                                    }
-                                });
-                gdePrikazati.getChildren().add((Node)buttonArtikalIliGrupa);
-                if (brojac == this.prikazBrojPrikazanihPlus1-1)
-                    break;
-            }
-            
-            if (!rs.isEmpty()) {
-                int ostaloPraznihDugmica = this.prikazBrojPrikazanihPlus1 - 1 - rs.size();
-                while (ostaloPraznihDugmica>0) {
-                    Button bPrazan = new Button();
-                    bPrazan.getStyleClass().add(stilArtikliPrazanButton);
-                    bPrazan.setDisable(true);
-                    bPrazan.setPrefSize(artikalPodgrupaSirina, defaultVisinaDugmeta);
-
-                    gdePrikazati.getChildren().add(bPrazan);
-                    ostaloPraznihDugmica--;
-                }
-            
-                Button bPrethodniArtikliIliGrupe = new Button("«");
-                bPrethodniArtikliIliGrupe.setPrefSize(artikalPodgrupaSirina/2, defaultVisinaDugmeta);
-                bPrethodniArtikliIliGrupe.getStyleClass().add(stilArtikalIliGrupa);
-                if (this.prikazRedniBrojPrvog==1)
-                    bPrethodniArtikliIliGrupe.setDisable(true);
-                else {
-                    bPrethodniArtikliIliGrupe.setDisable(false);
-                    bPrethodniArtikliIliGrupe.getStyleClass().add(stilArtikliGrupeNextPrev);
-                        }
-                bPrethodniArtikliIliGrupe.setOnAction(new EventHandler<ActionEvent>() {
-                                    @Override public void handle(ActionEvent e) {
-                                        switch(staSePrikazuje) {
-                                            case GLAVNA_GRUPA:
-                                                prikazGrupaRedniBrojPrvog = prikazGrupaRedniBrojPrvog - prikazGrupaBrojPrikazanihPlus1 + 1;
-                                                break;
-                                            // Za podgrupu i opisne artikle
-                                            case POD_GRUPA:
-                                            case ARTIKAL_OPISNI:
-                                                prikazPodgrupaRedniBrojPrvog = prikazPodgrupaRedniBrojPrvog - prikazPodgrupaBrojPrikazanihPlus1 + 1;
-                                                break;
-                                            // Za artikle i dodatne artikle
-                                            case ARTIKAL_GLAVNI:
-                                            case ARTIKAL_DODATNI:
-                                                prikazArtikalRedniBrojPrvog = prikazArtikalRedniBrojPrvog - prikazArtikalBrojPrikazanihPlus1 + 1;
-                                                break;
-                                            case ARTIKAL_FAVORITE:
-                                                prikazFavoriteRedniBrojPrvog = prikazFavoriteRedniBrojPrvog - prikazFavoriteBrojPrikazanihPlus1 + 1;
-                                                break;
-                                            default:
-                                        }
-                                        refreshGrupeIliArtikla(gdePrikazati, staSePrikazuje);
-                                    }
-                                });
-                gdePrikazati.getChildren().add(bPrethodniArtikliIliGrupe);
-
-                sirina = roditeljSirina - (prikazBrojArtikalaUJednomRedu-1)*artikalPodgrupaSirina - artikalPodgrupaSirina/2;
-                Button bSledeciArtikliIliGrupe = new Button("»");
-                bSledeciArtikliIliGrupe.setPrefSize(sirina, defaultVisinaDugmeta);
-                bSledeciArtikliIliGrupe.getStyleClass().add(stilArtikalIliGrupa);
-                if (this.prikazBrojPrikazanihPlus1 == rs.size()) {
-                    bSledeciArtikliIliGrupe.setDisable(false);
-                    bSledeciArtikliIliGrupe.getStyleClass().add(stilArtikliGrupeNextPrev);
-                }
-                else
-                    bSledeciArtikliIliGrupe.setDisable(true);
-                bSledeciArtikliIliGrupe.setOnAction(new EventHandler<ActionEvent>() {
-                                    @Override public void handle(ActionEvent e) {
-                                        switch(staSePrikazuje) {
-                                            case GLAVNA_GRUPA:
-                                                prikazGrupaRedniBrojPrvog = prikazGrupaRedniBrojPrvog + prikazGrupaBrojPrikazanihPlus1 - 1;
-                                                break;
-                                            // Za podgrupu i opisne artikle
-                                            case POD_GRUPA:
-                                            case ARTIKAL_OPISNI:
-                                                prikazPodgrupaRedniBrojPrvog = prikazPodgrupaRedniBrojPrvog + prikazPodgrupaBrojPrikazanihPlus1 - 1;
-                                                break;
-                                            // Za artikle i dodatne artikle
-                                            case ARTIKAL_GLAVNI:
-                                            case ARTIKAL_DODATNI:
-                                                prikazArtikalRedniBrojPrvog = prikazArtikalRedniBrojPrvog + prikazArtikalBrojPrikazanihPlus1 - 1;
-                                                break;
-                                            case ARTIKAL_FAVORITE:
-                                                prikazFavoriteRedniBrojPrvog = prikazFavoriteRedniBrojPrvog + prikazFavoriteBrojPrikazanihPlus1 - 1;
-                                                break;
-                                            default:
-                                        }
-                                        refreshGrupeIliArtikla(gdePrikazati, staSePrikazuje);
-                                    }
-                                });
-                gdePrikazati.getChildren().add(bSledeciArtikliIliGrupe);
-            }
-        } catch (Exception e) {
-            System.out.println("Greska u prikazu artikala!");
-        } 
-    }
-/***************************************************************/
-/********** KRAJ - PRIKAZ GRUPA, PODGRUPA I ARTIKALA ***********/
-/***************************************************************/
-
-/***************************************************************/
-/************** PRIKAZ GRUPA, PODGRUPA I ARTIKALA V2 ***********/
-/***************************************************************/
-    public void prikazArtikalIliGrupa_v2(List rs, Pane gdePrikazati, VrsteGrupaIliArtikal staSePrikazuje) {
-        try {
-            switch(staSePrikazuje) {
-                case GLAVNA_GRUPA:
-                    prikazRedniBrojPrvog = prikazGrupaRedniBrojPrvog;
-                    prikazBrojPrikazanihPlus1 = prikazGrupaBrojPrikazanihPlus1;
-                    prikazBrojRedova = prikazGrupaBrojRedova;
-                    stilArtikalIliGrupa = stilGrupa;
-                    break;
-                // Za podgrupu i opisne artikle
-                case POD_GRUPA:
-                case ARTIKAL_OPISNI:
-                    this.Artikal_DvaDela.setVisible(true);
-                    this.ArtikalFavorite.setVisible(false);
-                    if (rs.isEmpty()) {
-                        prikazBrojPrikazanihPlus1 = 0;
-                        prikazBrojRedova = 0;
-                    } else {
-                        prikazBrojPrikazanihPlus1 = prikazPodgrupaBrojPrikazanihPlus1;
-                        prikazBrojRedova = prikazPodgrupaBrojRedova;
-                    }
-                    
-                    prikazRedniBrojPrvog = prikazPodgrupaRedniBrojPrvog;
-                    stilArtikalIliGrupa = stilPodgrupa;
-                    break;
-                // Za artikle i dodatne artikle
-                case ARTIKAL_DODATNI:
-                case ARTIKAL_GLAVNI:
-                    this.Artikal_DvaDela.setVisible(true);
-                    this.ArtikalFavorite.setVisible(false);
-                    if (this.ArtikalPodgrupe.getPrefHeight() == 0) {
-                        prikazBrojRedova = prikazFavoriteBrojRedova;
-                        prikazBrojPrikazanihPlus1 = prikazFavoriteBrojPrikazanihPlus1;
-                    } else {
-                        prikazBrojRedova = prikazArtikalBrojRedova;
-                        prikazBrojPrikazanihPlus1 = prikazArtikalBrojPrikazanihPlus1;
-                    }
-                    prikazRedniBrojPrvog = prikazArtikalRedniBrojPrvog;
-                    //prikazBrojRedova = prikazArtikalBrojRedova;
-                    stilArtikalIliGrupa = stilArtikal;
-                    break;
-                case ARTIKAL_FAVORITE:
-                    prikazRedniBrojPrvog = prikazFavoriteRedniBrojPrvog;
-                    prikazBrojPrikazanihPlus1 = prikazFavoriteBrojPrikazanihPlus1;
-                    prikazBrojRedova = prikazFavoriteBrojRedova;
-                    stilArtikalIliGrupa = stilArtikal;
-                    //this.ArtikalPodgrupe.getChildren().clear();
-                    //this.ArtikalPodgrupe.setPrefHeight(0.0);
-                    this.ArtikalFavorite.setVisible(true);
-                    this.Artikal_DvaDela.setVisible(false);
-                    
-                    break;
-                default:
-            }
-            
-            int brojac=0;
-            
-            for(Object r : rs) {
-                Map<String, String> red = (Map<String, String>) r;
-
-                ArtikalButton buttonArtikalIliGrupa = (ArtikalButton)gdePrikazati.getChildren().get(brojac);
-
-                brojac++;
-                double cena = 0;
-                try {
-                    cena = Double.parseDouble(red.get("cena"));
-                }catch (Exception e) {
-                }
-                
-                String dozvoljenPopust = red.get("dozvoljenPopust");
-                if(dozvoljenPopust == null) {
-                    dozvoljenPopust = "";
-                }
-                
-                String stampacID = red.get("stampacID");
-                buttonArtikalIliGrupa.setId(red.get("id"));
-                buttonArtikalIliGrupa.setText(red.get("naziv"));
-                buttonArtikalIliGrupa.ImagePutanja = red.get("slika");
-                try {
-                    if (buttonArtikalIliGrupa.ImagePutanja != null && !buttonArtikalIliGrupa.ImagePutanja.equals("")) {
-                        Image image = new Image(new FileInputStream(new File("images/" + buttonArtikalIliGrupa.ImagePutanja)),50,50,true,true);
-                        buttonArtikalIliGrupa.setGraphic(new ImageView(image));
-                    }
-                } catch (Exception e) {
-                    System.out.println("Greska u otvaranju slike " + "../images/" + buttonArtikalIliGrupa.ImagePutanja + "!");
-                }
-                buttonArtikalIliGrupa.prioritet = red.get("prioritet");
-                buttonArtikalIliGrupa.skrNaziv = red.get("skrNaziv");
-                buttonArtikalIliGrupa.NadredjenaGrupaID = red.get("GRUPA_ID");
-                buttonArtikalIliGrupa.tip = red.get("tip");
-                buttonArtikalIliGrupa.vrstaZaPrikaz = staSePrikazuje;
-                buttonArtikalIliGrupa.cenaJedinicna = cena;
-                if (dozvoljenPopust.equals("1"))
-                    buttonArtikalIliGrupa.dozvoljenPopust = true;
-                buttonArtikalIliGrupa.stampacID = stampacID;
-
-                buttonArtikalIliGrupa.getStyleClass().add(stilArtikalIliGrupa);
-                buttonArtikalIliGrupa.setOnAction(new EventHandler<ActionEvent>() {               
-                                    @Override public void handle(ActionEvent e) {
-                                        obradiIzabraniArtikalIliGrupu(e, gdePrikazati);
-                                    }
-                                });
-                //gdePrikazati.getChildren().add((Node)buttonArtikalIliGrupa);
-                if (brojac == this.prikazBrojPrikazanihPlus1-1)
-                    break;
-            }
-            
-            if (!rs.isEmpty()) {
-                int ostaloPraznihDugmica = this.prikazBrojPrikazanihPlus1 - 1 - rs.size();
-                while (ostaloPraznihDugmica>0) {
-                    Button bPrazan = (ArtikalButton)gdePrikazati.getChildren().get(brojac);
-                    bPrazan.getStyleClass().add(stilArtikliPrazanButton);
-                    bPrazan.setDisable(true);
-                    
-                    ostaloPraznihDugmica--;
-                    brojac++;
-                }
-            
-                Button bPrethodniArtikliIliGrupe = (Button)gdePrikazati.getChildren().get(brojac);
-                bPrethodniArtikliIliGrupe.getStyleClass().add(stilArtikalIliGrupa);
-                if (this.prikazRedniBrojPrvog==1)
-                    bPrethodniArtikliIliGrupe.setDisable(true);
-                else {
-                    bPrethodniArtikliIliGrupe.setDisable(false);
-                    bPrethodniArtikliIliGrupe.getStyleClass().add(stilArtikliGrupeNextPrev);
-                        }
-
-                brojac++;
-                Button bSledeciArtikliIliGrupe = (Button)gdePrikazati.getChildren().get(brojac);
-                bSledeciArtikliIliGrupe.getStyleClass().add(stilArtikalIliGrupa);
-                if (this.prikazBrojPrikazanihPlus1 == rs.size()) {
-                    bSledeciArtikliIliGrupe.setDisable(false);
-                    bSledeciArtikliIliGrupe.getStyleClass().add(stilArtikliGrupeNextPrev);
-                }
-                else
-                    bSledeciArtikliIliGrupe.setDisable(true);
-            }
-        } catch (Exception e) {
-            System.out.println("Greska u prikazu artikala!");
-        } 
-    }
-/***************************************************************/
-/********** KRAJ - PRIKAZ GRUPA, PODGRUPA I ARTIKALA ***********/
-/***************************************************************/
-
-    protected void obradiIzabraniArtikalIliGrupu(ActionEvent izabraniArtikalIliGrupa, Pane gdePrikazati) {
-        Utils.postaviStil_ObrisiZaOstaleKontroleRoditelja(izabraniArtikalIliGrupa, stilButtonGrupeSelektovana);
-        //((Node)izabraniArtikalIliGrupa.getSource()).getScene().lookup("artikliFavorite").getStyleClass().removeAll("buttonGrupeSelektovana");
-        onButtonArtikalIliGrupa_click(izabraniArtikalIliGrupa, gdePrikazati);
-    }
-    
-    protected void onButtonArtikalIliGrupa_click(ActionEvent izabraniArtikalIliGrupa, Pane gdePrikazati) {
-        if (porudzbinaTrenutna.getBlokiranaPorudzbina()) {
-            return;
-        }
-        
-        VrsteGrupaIliArtikal vrstaZaPrikaz;
-        ArtikalButton noviArtikal = null;
-        
-        try {
-            noviArtikal = (ArtikalButton)izabraniArtikalIliGrupa.getSource();
-            vrstaZaPrikaz = noviArtikal.getVrstaGrupaIliArtikal();
-            if (!(vrstaZaPrikaz == ARTIKAL_DODATNI || vrstaZaPrikaz == ARTIKAL_OPISNI))
-                selektovani = noviArtikal;
-        } catch (Exception e) {
-            //selektovaniFavorite = (Button)izabraniArtikalIliGrupa.getSource();
-            vrstaZaPrikaz = ARTIKAL_FAVORITE;
-            selektovani = null;
-            selektovana = null;
-        }
-
-        //VrsteGrupaIliArtikal staSePrikazuje = ARTIKAL_GLAVNI;
-        /**********************************************
-         * Ovde obraditi promenu prikaza nakon klika za svakog pojedinacno
-        * 
-        * 
-        */
-        switch(vrstaZaPrikaz) {
-            case GLAVNA_GRUPA:
-//                prikazFavoriteMENJAJ = true;
-                selektovanaPodgrupaID = selektovanaGlavnaGrupaID = selektovani.getId();
-                prikazPodgrupaRedniBrojPrvog = 1;
-                prikazArtikalRedniBrojPrvog = 1;
-                refreshGrupeIliArtikla(this.ArtikalPodgrupe, POD_GRUPA);
-                refreshGrupeIliArtikla(this.Artikal, ARTIKAL_GLAVNI);
-                break;
-            case POD_GRUPA:
-                selektovanaPodgrupaID = selektovani.getId();
-                prikazArtikalRedniBrojPrvog = 1;
-                refreshGrupeIliArtikla(this.Artikal, ARTIKAL_GLAVNI);
-                break;
-            case ARTIKAL_GLAVNI:
-                dodajArtikalUNovuTuru(selektovani);
-                if (selektovani.getDaLiJeArtikalSlozen()) {
-                    // TODO : Mora da zapamti koji je da bi njemu dodao opisne i dodatne artikle
-                    selektovanArtikalID = selektovani.getId();
-                    prikazPodgrupaRedniBrojPrvog = 1;
-                    prikazArtikalRedniBrojPrvog = 1;
-                    refreshGrupeIliArtikla(this.ArtikalPodgrupe, ARTIKAL_OPISNI);
-                    refreshGrupeIliArtikla(this.Artikal, ARTIKAL_DODATNI);                    
-                }
-                break;
-            case ARTIKAL_OPISNI:
-            case ARTIKAL_DODATNI:
-                // TODO : Mora da pronadje koji je artikal zadnji dodat da bi njemu dodao opisne i dodatne artikle
-                //dodajArtikalUNovuTuru(selektovani);
-//                dodajOpisniDodatniArtikalUNovuTuru(selektovani, noviArtikal);
-                dodajOpisniDodatniArtikalUStavkuTure(selektovana, noviArtikal);
-                break;
-            case ARTIKAL_FAVORITE:
-                if (selektovani != null) {
-                    dodajArtikalUNovuTuru(selektovani);
-                    //if (prikazFavoriteMENJAJ) {
-                        if (selektovani.getDaLiJeArtikalSlozen()) {
-                            // TODO : Mora da zapamti koji je da bi njemu dodao opisne i dodatne artikle
-                            selektovanArtikalID = selektovani.getId();
-                            prikazPodgrupaRedniBrojPrvog = 1;
-                            prikazArtikalRedniBrojPrvog = 1;
-                            refreshGrupeIliArtikla(this.ArtikalPodgrupe, ARTIKAL_OPISNI);
-                            refreshGrupeIliArtikla(this.Artikal, ARTIKAL_DODATNI);                    
-                        }
-                    //}
-                } else
-                    refreshGrupeIliArtikla(this.Artikal, ARTIKAL_FAVORITE);
-                break;
-            default:
-        }
     }
     
     public void dodajOpisniDodatniArtikalUStavkuTure(StavkaTure poslednjaDodataStavka, ArtikalButton artikalOpisniDodatni) {
