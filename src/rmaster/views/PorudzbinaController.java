@@ -380,6 +380,9 @@ public class PorudzbinaController extends FXMLDocumentController {
         if (offset - 2 > 0) {
             grupaPrevious.setPodatak(offset - 3);
         }
+        
+        grupaPrevious.setDisable(offset == 0);
+        grupaNext.setDisable(rmaster.RMaster.grupeArtikala.size() <= offset + 3);
     }
     
     private void setGroupButtonAction(RM_Button dugmeGrupe) {
@@ -504,7 +507,9 @@ public class PorudzbinaController extends FXMLDocumentController {
         if (offset - 10 > 0) {
             podgrupaPrevious.setPodatak(offset - 11);
         }
-        
+
+        podgrupaPrevious.setDisable(offset == 0);
+        podgrupaNext.setDisable(izabranaGrupa.podgrupe.size() <= offset + 11);
     }
     
     private void izbrisiSvePodgrupe() {
