@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rmaster.models;
+package rmaster.models.Artikal;
 
 /**
  *
  * @author Arbor
  */
-public class Artikal_Dodatni {
+public class Artikal_Opisni extends Child_Abstract implements Child_Interface {
     
 }

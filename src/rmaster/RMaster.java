@@ -22,10 +22,8 @@ import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.QueryBuilder.TableJoin;
 import rmaster.assets.QueryBuilder.TableJoinTypes;
 import rmaster.assets.ScreenMap;
-import rmaster.models.Artikal_Favourite;
-import rmaster.assets.items.GrupaArtikalaFront;
-import rmaster.models.Artikal_Podgrupa;
-import rmaster.models.Grupa;
+import rmaster.models.Artikal.Artikal_Podgrupa;
+import rmaster.models.Artikal.Grupa;
 import rmaster.models.Konobar;
 
 /**
@@ -45,8 +43,6 @@ public class RMaster extends Application {
     public static double visinaSaleNaEkranu = 768 - 150;
     public static double sirinaSaleNaEkranu = 1024;
     
-    public static List<Map<String, String>> listaGrupaArtikalaFront = new ArrayList<>();
-    public static List<Map<String, String>> listaArtikalaFavorite = new ArrayList<>();
     public static List<Map<String, String>> saleOmoguceneKonobaru = new ArrayList<>();
     public static List<Map<String, String>> sveSale = new ArrayList<>();
     public static List<Map<String, String>> sviStolovi = new ArrayList<>();
@@ -54,8 +50,6 @@ public class RMaster extends Application {
     public static List<Grupa> grupeArtikala = new ArrayList<>();
     public static Artikal_Podgrupa favouriteArtikli = new Artikal_Podgrupa();
     
-    public static List<Map<String, String>> podgrupeArtikala = new ArrayList<>();
-
     
     public static boolean firstLogin = true;
                
@@ -72,16 +66,10 @@ public class RMaster extends Application {
     public void promeniSalu(long novaSala) {
         trenutnaSalaID = novaSala;
     }
-    
-    
 
     @Override
     public void start(Stage stage) throws Exception {
-        
-        getGrupaArtikalaFront();
-        
-        getListaArtikalaFavorite();
-        
+           
         ucitajSveSale();
         
         ucitajSveStolove();
@@ -123,13 +111,14 @@ public class RMaster extends Application {
         mainContainer.setScreen(ScreenMap.POCETNI_EKRAN, null);
         
         Group root = new Group(); 
-       root.getChildren().addAll(mainContainer); 
+        root.getChildren().addAll(mainContainer); 
         stage.initStyle(StageStyle.UNDECORATED);
-       Scene scene = new Scene(root); 
+        Scene scene = new Scene(root); 
         scene.getStylesheets().addAll(this.getClass().getResource("views/style/style.min.css").toExternalForm()); 
-       stage.setScene(scene); 
-       stage.show(); 
-            
+        stage.setScene(scene); 
+        stage.show(); 
+
+        dbBroker.prekiniVezuSaBazom(dbBroker.poveziSaBazom());
     }
 
     public void setResource(String resource) {
@@ -145,40 +134,7 @@ public class RMaster extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
-      public void getGrupaArtikalaFront() {
-        
-        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
-        query.setTableName(GrupaArtikalaFront.TABLE_NAME);
-
-        query.setOrderBy(GrupaArtikalaFront.PRIORITET, QueryBuilder.SORT_ASC);
-
-        List<Map<String, String>> listaRezultata = dbBroker.runQuery(query);
-          
-        
-        for (Map mapGrupaArtikalaFront : listaRezultata) {
-            GrupaArtikalaFront noviGrupaArtikalaFront = new GrupaArtikalaFront();
-            noviGrupaArtikalaFront.makeFromHashMap((HashMap)mapGrupaArtikalaFront);
-            
-            listaGrupaArtikalaFront.add(noviGrupaArtikalaFront.makeMapForTableOutput());
-        } 
-    }
-
-    public void getListaArtikalaFavorite() {
-        String imeStoreProcedure = "getArtikliFavorite";
-        String[] imenaArgumenata = new String[]{"brojPrvogZapisa", "brojZapisa"};
-        String[] vrednostiArgumenata = new String[]{"" + (1 - 1),"" + 32};
-        List<Map<String,String>> listaRezultata;
-        listaRezultata = dbBroker.runStoredProcedure(imeStoreProcedure, imenaArgumenata, vrednostiArgumenata);
-                    
-        for (Map mapArtikalFront : listaRezultata) {
-            Artikal_Favourite noviArtikalFront = new Artikal_Favourite();
-            noviArtikalFront.makeFromHashMap((HashMap)mapArtikalFront);
-            
-            listaArtikalaFavorite.add(noviArtikalFront.makeMapForTableOutput());
-        }
-    }
-    
+ 
     public void ucitajSveSale(){
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
 
@@ -347,13 +303,11 @@ public class RMaster extends Application {
         query.addCriteriaValues("0", "1");
         query.setOrderBy("artikal.prioritet, artikal.name", QueryBuilder.SORT_ASC);
         
-        List<Map<String, String>> listaArtikala = dbBroker.runQuery(query);
+        List<HashMap<String, String>> listaArtikala = dbBroker.runQuery(query);
         
-        for(Map<String, String> artikalMap : listaArtikala) {
-            Artikal_Favourite noviArtikal = new Artikal_Favourite();
-            noviArtikal.makeFromHashMap((HashMap)artikalMap);
-            
-            favouriteArtikli.artikli.add(noviArtikal);
+        for(HashMap<String, String> artikalMap : listaArtikala) {
+            String rezultat = favouriteArtikli.getType(artikalMap.get("id"));
+            favouriteArtikli.addChild(rezultat, artikalMap);
         }
     }
     
