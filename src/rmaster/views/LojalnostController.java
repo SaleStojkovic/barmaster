@@ -130,7 +130,9 @@ public class LojalnostController extends FXMLDocumentController {
             query.addCriteriaValues(text + "%");
         }
         
-        query.setOrderBy(StalniGost.NAZIV, QueryBuilder.SORT_ASC);
+        query.addOrderByColumns(StalniGost.NAZIV);
+        query.addOrderByCriterias(QueryBuilder.SORT_ASC);
+        //query.setOrderBy(StalniGost.NAZIV, QueryBuilder.SORT_ASC);
         query.setLimit(20);
         query.setOffset(offset);
         

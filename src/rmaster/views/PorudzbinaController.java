@@ -47,6 +47,7 @@ import rmaster.assets.Utils;
 import rmaster.assets.items.ArtikalButton;
 import rmaster.assets.RM_Button.RM_Button;
 import static rmaster.assets.items.VrsteGrupaIliArtikal.*;
+import rmaster.models.Artikal.Artikal_Podgrupa;
 import rmaster.models.Gost;
 import rmaster.models.Artikal.Grupa;
 import rmaster.models.Porudzbina;
@@ -143,6 +144,12 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     @FXML
     private RM_Button podgrupaNext;
+
+    @FXML
+    private RM_Button artikalPrevious;
+    
+    @FXML
+    private RM_Button artikalNext;
     
     // Sirina dela u kome se prikazuju grupe, podgrupe i artikli
     public double roditeljSirina = 592.0;
@@ -246,8 +253,6 @@ public class PorudzbinaController extends FXMLDocumentController {
          }
 
          popuniGrupe(0);
-         
-         prikaziFavorite(0);
     } 
     
         
@@ -277,7 +282,9 @@ public class PorudzbinaController extends FXMLDocumentController {
         imeKonobara.setText(getUlogovaniKonobarIme());
         
         izabraniSto.setText("Sto: " + izabraniStoNaziv);
- 
+        
+        prikaziFavorite(0);
+        
         prikaziPorudzbinu();
 
     }
@@ -307,33 +314,45 @@ public class PorudzbinaController extends FXMLDocumentController {
                     "podgrupa_" + (i + 1)
             );
             
-            if (offset + i == rmaster.RMaster.favouriteArtikli.artikli.size()) {
-                return;
+            if (offset + i >= rmaster.RMaster.favouriteArtikli.artikli.size()) {
+                dugmeArtikal.setDisable(true);
+                continue;
             }
-            
             
             dugmeArtikal.setPodatak( rmaster.RMaster.favouriteArtikli.artikli.get(offset + i));
             dugmeArtikal.setText(rmaster.RMaster.favouriteArtikli.artikli.get(offset + i).naziv);
-            
+            dugmeArtikal.setDisable(false);
         }
-        
         
         for (int i = 12; i < 31; i++) {
              RM_Button dugmeArtikal = (RM_Button)findNodeById(
                    Artikal.getChildren(), 
                     "artikal_" + (i - 11)
             );
-             
-            if (offset + i == rmaster.RMaster.favouriteArtikli.artikli.size()) {
-                return;
+
+            if (offset + i >= rmaster.RMaster.favouriteArtikli.artikli.size()) {
+                dugmeArtikal.setDisable(true);
+                continue;
             }
-            
+
             dugmeArtikal.setPodatak( rmaster.RMaster.favouriteArtikli.artikli.get(offset + i));
             dugmeArtikal.setText(rmaster.RMaster.favouriteArtikli.artikli.get(offset + i).naziv);
+            dugmeArtikal.setDisable(false);
+        }
+
+        if (rmaster.RMaster.favouriteArtikli.artikli.size() > offset + 31) {
+            artikalNext.setPodatak(offset + 31);
+        }
+            
+        if (offset - 30 > 0) {
+            artikalPrevious.setPodatak(offset - 31);
         }
         
-        //todo set podgrupa Next i podgrupa previous 
         
+        //todo set podgrupa Next i podgrupa previous 
+        artikalPrevious.setDisable(offset == 0);
+        artikalNext.setDisable(rmaster.RMaster.favouriteArtikli.artikli.size() <= offset + 31);
+
     }
     
     @FXML
@@ -351,8 +370,9 @@ public class PorudzbinaController extends FXMLDocumentController {
             novoDugme.setPodatak("");
             listaGrupa.add(novoDugme);
         }
-                
-        for(int i = 0; i < 3; i++) {
+           
+        int i = 0;
+        for(; i < 3; i++) {
                         
             if (offset + i == rmaster.RMaster.grupeArtikala.size()) {
                 break;
@@ -363,13 +383,20 @@ public class PorudzbinaController extends FXMLDocumentController {
             dugmeGrupe.setPodatak(rmaster.RMaster.grupeArtikala.get(i + offset));
             
             dugmeGrupe.setText(rmaster.RMaster.grupeArtikala.get(i + offset).naziv);
-                         
+            
+            dugmeGrupe.setDisable(false);
+            
             setGroupButtonAction(dugmeGrupe);
             
         }
         
-        grupaNext.setPodatak("");
+        for (; i < 3; i++) {
+            RM_Button dugmeGrupe = listaGrupa.get(i);
+            dugmeGrupe.setDisable(true);
+        }
+            
         
+        grupaNext.setPodatak("");
         grupaPrevious.setPodatak("");
         
         if (rmaster.RMaster.grupeArtikala.size() > offset + 3) {
@@ -394,6 +421,17 @@ public class PorudzbinaController extends FXMLDocumentController {
                                     }
                                 });
     }
+    
+//    private void setPodgrupaButtonAction(RM_Button dugmePodgrupe) {
+//        
+//        dugmePodgrupe.setOnAction(new EventHandler<ActionEvent>() {               
+//                                    @Override public void handle(ActionEvent event) {
+//                                        RM_Button pressedButton = (RM_Button)event.getSource();
+//                                        //prikaziPodgrupe((Grupa)pressedButton.getPodatak(), 0);
+//                                        prikaziArtiklePodgrupe((Artikal_Podgrupa)pressedButton.getPodatak());
+//                                    }
+//                                });
+//    }
     
     @FXML
     public void grupaPrevious(ActionEvent event) {
@@ -452,6 +490,34 @@ public class PorudzbinaController extends FXMLDocumentController {
         
     }
     
+    @FXML
+    public void artikalPrevious(ActionEvent event) {
+        String podatak = artikalPrevious.getPodatak() + "";
+        
+        if(podatak.isEmpty()) {
+            return;
+        }
+        
+        int offset = Integer.parseInt(artikalPrevious.getPodatak() + "");
+                
+// Ovo treba obraditi u zavisnosti od toga sta se prikazuje, da li artikal, opisni artikal ili favorite        
+        prikaziFavorite(offset);
+    }
+    
+    @FXML
+    public void artikalNext(ActionEvent event) {
+        String podatak = artikalNext.getPodatak() + "";
+        
+        if(podatak.isEmpty()) {
+            return;
+        }
+        
+        int offset = Integer.parseInt(artikalNext.getPodatak() + "");
+        
+// Ovo treba obraditi u zavisnosti od toga sta se prikazuje, da li artikal, opisni artikal ili favorite        
+        prikaziFavorite(offset);
+    }
+    
     private void prikaziPodgrupe(Grupa izabranaGrupa, int offset) {
                        
         izbrisiSvePodgrupe();
@@ -470,6 +536,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             
             novoDugme.setPodatak(izabranaGrupa.podgrupe.get(offset + i));
             novoDugme.setText(izabranaGrupa.podgrupe.get(offset + i).naziv);
+            //setPodgrupaButtonAction(novoDugme);
             
             //TODO dodati Button Action za prikaz artikla Podgrupe
 
@@ -536,17 +603,11 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
     }
     
-    private void prikaziArtikleGrupe(Grupa izabranaGrupa) {
+    private void prikaziArtikleGrupe(Grupa izabranaPodrupa) {
         
     }
-    
-    @FXML
-    public void artikalPrevious(ActionEvent event) {
-        
-    }
-    
-    @FXML
-    public void artikalNext(ActionEvent event) {
+
+    private void prikaziArtiklePodgrupe(Artikal_Podgrupa izabranaPodrupa) {
         
     }
     

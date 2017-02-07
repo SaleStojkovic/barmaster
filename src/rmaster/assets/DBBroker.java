@@ -30,7 +30,11 @@ public final class DBBroker {
     private static final String DB_NAME = "barmaster";
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/barmaster";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "burek";
+    
+    //private static final String PASSWORD = "burek";
+    private static final String PASSWORD = "";
+    
+    private static Connection dbConnection = null;
     
     public DBBroker() {
     }
@@ -40,23 +44,29 @@ public final class DBBroker {
      */
     public static Connection poveziSaBazom() {
         
-        Connection dbConnection = null;
+        try {
+            if (dbConnection != null && !dbConnection.isClosed())
+                return dbConnection;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
         
-            try {
-                Class.forName(DATABASE_DRIVER);
-            } catch (ClassNotFoundException e) {
+        try {
+            Class.forName(DATABASE_DRIVER);
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            dbConnection = DriverManager.getConnection(
+                    URL, 
+                    USERNAME,
+                    PASSWORD
+            );
+        } catch (SQLException e) {
                 System.out.println(e.getMessage());
-            }
-            try {
-                dbConnection = DriverManager.getConnection(
-                        URL, 
-                        USERNAME,
-                        PASSWORD
-                );
-            } catch (SQLException e) {
-                    System.out.println(e.getMessage());
-            }
+        }
 
+        
         return dbConnection;
     }
      
@@ -72,6 +82,14 @@ public final class DBBroker {
         catch (Exception e) {
             e.printStackTrace();
         }
+        
+        try {
+            dbConnection.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        dbConnection = null;
  
     }
     
@@ -376,9 +394,9 @@ public final class DBBroker {
                 try { selectStatement.close(); } catch (SQLException ignore) {}
             }
             
-            if (dbConnection != null) {
-                try { dbConnection.close(); } catch (SQLException ignore) {}
-            }
+//            if (dbConnection != null) {
+//                try { dbConnection.close(); } catch (SQLException ignore) {}
+//            }
             
            
         }

@@ -115,8 +115,10 @@ public class Artikal_Podgrupa extends ModelBase implements Child_Interface {
         query.addCriteriaColumns("artikal.blokiran", "artikal_grupa.grupaID", "artikal.artikalVrstaID");
         query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
         query.addOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
-        query.addCriteriaValues("0", this.id, "1");
-        query.setOrderBy("artikal.prioritet, artikal.name", QueryBuilder.SORT_ASC);
+        query.addCriteriaValues(QueryBuilder.BIT_0, this.id, "1");
+        query.addOrderByColumns("artikal.prioritet", "artikal.name");
+        query.addOrderByCriterias(QueryBuilder.SORT_ASC, QueryBuilder.SORT_ASC);
+        //query.setOrderBy("artikal.prioritet, artikal.name", QueryBuilder.SORT_ASC);
         
         List<HashMap<String, String>> listaArtikala = dbBroker.runQuery(query);
         
@@ -134,10 +136,10 @@ public class Artikal_Podgrupa extends ModelBase implements Child_Interface {
         DBBroker dbBroker = new DBBroker();
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         
-        query.setTableName("artikal_dodaci");
+        query.setTableName("artikal_slozeni");
         query.setSelectColumns("COUNT(id)");
         
-        query.addCriteriaColumns("ArtikalIDGlavni");
+        query.addCriteriaColumns("artikalID");
         query.addCriteria(QueryBuilder.IS_EQUAL);
         query.addCriteriaValues(artikalId);
         
@@ -145,22 +147,9 @@ public class Artikal_Podgrupa extends ModelBase implements Child_Interface {
         
         int prviKriterijum = Integer.parseInt(listaRezultata.get(0).get("COUNT(id)"));
                 
-        QueryBuilder query2 = new QueryBuilder(QueryBuilder.SELECT);
-        
-        query2.setTableName("artikal_atribut");
-        query2.setSelectColumns("COUNT(id)");
-        
-        query2.addCriteriaColumns("artikalID");
-        query2.addCriteria(QueryBuilder.IS_EQUAL);
-        query2.addCriteriaValues(artikalId);
-        
-        List<Map<String, String>> listaRezultata2 = dbBroker.runQuery(query2);
-        
-        int drugiKriterijum = Integer.parseInt(listaRezultata2.get(0).get("COUNT(id)"));
-        
         String tipArtikla = "PROST";
 
-        if (prviKriterijum + drugiKriterijum > 0) {
+        if (prviKriterijum > 0) {
             tipArtikla = "SLOZEN";
         }
         

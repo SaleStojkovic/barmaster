@@ -249,7 +249,9 @@ public class RMaster extends Application {
         query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
         query.addOperators(QueryBuilder.LOGIC_AND);
         query.addCriteriaValues("1", "0");
-        query.setOrderBy(Grupa.PRIORITET, QueryBuilder.SORT_ASC);
+        query.addOrderByColumns(Grupa.PRIORITET);
+        query.addOrderByCriterias(QueryBuilder.SORT_ASC);
+        //query.setOrderBy(Grupa.PRIORITET, QueryBuilder.SORT_ASC);
         
         List<Map<String, String>> podrgupaList = dbBroker.runQuery(query);
        
@@ -300,8 +302,10 @@ public class RMaster extends Application {
         query.addCriteriaColumns("artikal.blokiran", "artikal.favorite");
         query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
         query.addOperators(QueryBuilder.LOGIC_AND);
-        query.addCriteriaValues("0", "1");
-        query.setOrderBy("artikal.prioritet, artikal.name", QueryBuilder.SORT_ASC);
+        query.addCriteriaValues(QueryBuilder.BIT_0, "1");
+        query.addOrderByColumns("artikal.prioritet", "artikal.name");
+        query.addOrderByCriterias(QueryBuilder.SORT_ASC, QueryBuilder.SORT_ASC);
+        //query.setOrderBy("artikal.prioritet, artikal.name", QueryBuilder.SORT_ASC);
         
         List<HashMap<String, String>> listaArtikala = dbBroker.runQuery(query);
         

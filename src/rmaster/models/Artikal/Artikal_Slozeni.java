@@ -45,9 +45,22 @@ public class Artikal_Slozeni extends Child_Abstract implements Child_Interface {
         
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         
+        query.setSelectColumns(
+                "artikal.id",
+                "artikal.barCode",
+                "artikal.cena",
+                "artikal.dozvoljenPopust",
+                "artikal.jedinicaMere",
+                "artikal.name",
+                "artikal.prioritet",
+                "artikal.skrNaziv",
+                "artikal.slika",
+                "artikal_stampac.stampacID"
+        );
+
         query.addTableJoins(
                 new TableJoin("artikal", "artikal_slozeni", "id", "opisniDodatniArtikalID", TableJoinTypes.INNER_JOIN),
-                new TableJoin("artikal", "artikal_stampac", "id", "artikalID", TableJoinTypes.INNER_JOIN)
+                new TableJoin("artikal", "artikal_stampac", "id", "artikalID", TableJoinTypes.LEFT_JOIN)
         );
         
         query.addCriteriaColumns("artikal.artikalVrstaID", "artikal_slozeni.artikalID");
@@ -64,19 +77,10 @@ public class Artikal_Slozeni extends Child_Abstract implements Child_Interface {
             this.opisniArtikli.add(noviOpisni);
         }
         
-        QueryBuilder query2 = new QueryBuilder(QueryBuilder.SELECT);
+        query.CRITERIA_VALUES.clear();
+        query.addCriteriaValues("3", this.id);
         
-        query2.addTableJoins(
-                new TableJoin("artikal", "artikal_slozeni", "id", "opisniDodatniArtikalID", TableJoinTypes.INNER_JOIN),
-                new TableJoin("artikal", "artikal_stampac", "id", "artikalID", TableJoinTypes.INNER_JOIN)
-        );
-        
-        query2.addCriteriaColumns("artikal.artikalVrstaID", "artikal_slozeni.artikalID");
-        query2.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
-        query2.addOperators(QueryBuilder.LOGIC_AND);
-        query2.addCriteriaValues("3", this.id);
-        
-        List<HashMap<String, String>> listaDodatnih  = dbBroker.runQuery(query2);
+        List<HashMap<String, String>> listaDodatnih  = dbBroker.runQuery(query);
 
         for (HashMap mapaDodatni : listaDodatnih) {
             Artikal_Dodatni noviDodatni = new Artikal_Dodatni();
