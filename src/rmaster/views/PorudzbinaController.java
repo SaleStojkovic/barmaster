@@ -41,6 +41,7 @@ import rmaster.assets.RM_TableView.RM_TableView;
 import rmaster.assets.RM_TableView.RavnanjeKolone;
 import rmaster.assets.RM_TableView.SirinaKolone;
 import rmaster.ScreenController;
+import rmaster.assets.ModelBase;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
@@ -48,6 +49,7 @@ import rmaster.assets.items.ArtikalButton;
 import rmaster.assets.RM_Button.RM_Button;
 import static rmaster.assets.items.VrsteGrupaIliArtikal.*;
 import rmaster.models.Artikal.Artikal_Podgrupa;
+import rmaster.models.Artikal.Artikal_Slozeni;
 import rmaster.models.Gost;
 import rmaster.models.Artikal.Grupa;
 import rmaster.models.Porudzbina;
@@ -252,7 +254,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             );
          }
 
-         popuniGrupe(0);
+         prikaziGrupe(0);
     } 
     
         
@@ -365,7 +367,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         prikaziFavorite(0);
     }
     
-    private void popuniGrupe(int offset) {
+    private void prikaziGrupe(int offset) {
         
         List<RM_Button> listaGrupa = new ArrayList<>();
         
@@ -422,7 +424,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                                     @Override public void handle(ActionEvent event) {
                                         RM_Button pressedButton = (RM_Button)event.getSource();
                                         prikaziPodgrupe((Grupa)pressedButton.getPodatak(), 0);
-                                        prikaziArtikleGrupe((Grupa)pressedButton.getPodatak());
+                                        prikaziArtikleGrupe((Grupa)pressedButton.getPodatak(), 0);
                                     }
                                 });
     }
@@ -437,7 +439,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         int offset = Integer.parseInt(grupaPrevious.getPodatak() + "");
                 
-        popuniGrupe(offset);
+        prikaziGrupe(offset);
     }
     
     @FXML
@@ -450,7 +452,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         int offset = Integer.parseInt(grupaNext.getPodatak() + "");
                 
-        popuniGrupe(offset);
+        prikaziGrupe(offset);
     }
     
     @FXML
@@ -504,13 +506,19 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         if(model instanceof Grupa) {
             //prikaz grupe
+            
             return;
         }
 
         if(model instanceof Artikal_Podgrupa) {
             //prikaz artikala podgrupe
             return;
-        }    
+        }
+        
+        if(model instanceof Artikal_Slozeni) {
+            //prikaz slozenog artikala
+            return;
+        }  
     }
     
     @FXML
@@ -540,6 +548,11 @@ public class PorudzbinaController extends FXMLDocumentController {
             //prikaz artikala podgrupe
             return;
         }
+        
+        if(model instanceof Artikal_Slozeni) {
+            //prikaz slozenog artikala
+            return;
+        } 
     }
     
     private void prikaziPodgrupe(Grupa izabranaGrupa, int offset) {
@@ -627,7 +640,12 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
     }
     
-    private void prikaziArtikleGrupe(Grupa izabranaPodrupa) {
+    private void prikaziArtikleGrupe(Grupa izabranaGrupa, int offset) {
+         
+        if (izabranaGrupa.podgrupe.isEmpty()) {
+            //todo
+        }
+        
         
     }
 
