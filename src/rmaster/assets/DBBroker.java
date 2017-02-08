@@ -31,8 +31,8 @@ public final class DBBroker {
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/barmaster";
     private static final String USERNAME = "root";
     
-    //private static final String PASSWORD = "burek";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "burek";
+//    private static final String PASSWORD = "";
     
     private static Connection dbConnection = null;
     
@@ -45,8 +45,9 @@ public final class DBBroker {
     public static Connection poveziSaBazom() {
         
         try {
-            if (dbConnection != null && !dbConnection.isClosed())
+            if (dbConnection != null && !dbConnection.isClosed()) {
                 return dbConnection;
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

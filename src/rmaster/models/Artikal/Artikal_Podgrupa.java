@@ -118,7 +118,6 @@ public class Artikal_Podgrupa extends ModelBase implements Child_Interface {
         query.addCriteriaValues(QueryBuilder.BIT_0, this.id, "1");
         query.addOrderByColumns("artikal.prioritet", "artikal.name");
         query.addOrderByCriterias(QueryBuilder.SORT_ASC, QueryBuilder.SORT_ASC);
-        //query.setOrderBy("artikal.prioritet, artikal.name", QueryBuilder.SORT_ASC);
         
         List<HashMap<String, String>> listaArtikala = dbBroker.runQuery(query);
         

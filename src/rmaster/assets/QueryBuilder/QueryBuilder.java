@@ -80,10 +80,8 @@ public class QueryBuilder {
     public String GROUP_BY;
     
     public ArrayList<String> ORDER_BY_COLUMNS = new ArrayList<>();
-    public String ORDER_BY_COLUMN;
     
     public ArrayList<String> ORDER_BY_CRITERIAS = new ArrayList<>();
-    public String ORDER_BY_CRITERIA;
     
     public Integer LIMIT;
     
@@ -135,10 +133,6 @@ public class QueryBuilder {
         this.ORDER_BY_COLUMNS.addAll(Arrays.asList(orderByColumns));
     }
     
-//    public void setOrderBy(String orderByColumn, String orderCriteria) {
-//        this.ORDER_BY_COLUMN = orderByColumn;
-//        this.ORDER_BY_CRITERIA = orderCriteria;
-//    }
     
     public void setLimit(int limit) {
         this.LIMIT = limit;
@@ -236,9 +230,6 @@ public class QueryBuilder {
         if (!ORDER_BY_COLUMNS.isEmpty()) {
             this.addOrderByClauses();
         }
-        //if (ORDER_BY_COLUMN != null && !ORDER_BY_COLUMN.isEmpty()) {
-        //    queryString += " ORDER BY " + ORDER_BY_COLUMN + " " + ORDER_BY_CRITERIA;
-        //}
 
         if (LIMIT != null) {
             queryString += " LIMIT " + LIMIT;

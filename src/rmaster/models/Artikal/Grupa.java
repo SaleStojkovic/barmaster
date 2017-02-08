@@ -105,7 +105,6 @@ public class Grupa extends ModelBase {
         query.addCriteriaValues("1", this.id);
         query.addOrderByColumns(Artikal_Podgrupa.PRIORITET);
         query.addOrderByCriterias(QueryBuilder.SORT_ASC);
-        //query.setOrderBy(Artikal_Podgrupa.PRIORITET, QueryBuilder.SORT_ASC);
         
         List<Map<String, String>> podrgupaList = dbBroker.runQuery(query);
         
@@ -150,7 +149,6 @@ public class Grupa extends ModelBase {
         query.addCriteriaValues("0", this.id, "1");
         query.addOrderByColumns("artikal.prioritet", "artikal.name");
         query.addOrderByCriterias(QueryBuilder.SORT_ASC, QueryBuilder.SORT_ASC);
-        //query.setOrderBy("artikal.prioritet, artikal.name", QueryBuilder.SORT_ASC);
         
         List<HashMap<String, String>> listaArtikala = dbBroker.runQuery(query);
         

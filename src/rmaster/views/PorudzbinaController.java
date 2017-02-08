@@ -340,12 +340,17 @@ public class PorudzbinaController extends FXMLDocumentController {
             dugmeArtikal.setDisable(false);
         }
 
+        artikalNext.setPodatak("");
+        artikalPrevious.setPodatak("");
+        
         if (rmaster.RMaster.favouriteArtikli.artikli.size() > offset + 31) {
-            artikalNext.setPodatak(offset + 31);
+            artikalNext.setPodatak(offset + 30);
+            artikalNext.setVrsta("FAV");
         }
             
-        if (offset - 30 > 0) {
-            artikalPrevious.setPodatak(offset - 31);
+        if (offset - 29 > 0) {
+            artikalPrevious.setPodatak(offset - 30);
+            artikalPrevious.setVrsta("FAV");
         }
         
         
@@ -422,17 +427,6 @@ public class PorudzbinaController extends FXMLDocumentController {
                                 });
     }
     
-//    private void setPodgrupaButtonAction(RM_Button dugmePodgrupe) {
-//        
-//        dugmePodgrupe.setOnAction(new EventHandler<ActionEvent>() {               
-//                                    @Override public void handle(ActionEvent event) {
-//                                        RM_Button pressedButton = (RM_Button)event.getSource();
-//                                        //prikaziPodgrupe((Grupa)pressedButton.getPodatak(), 0);
-//                                        prikaziArtiklePodgrupe((Artikal_Podgrupa)pressedButton.getPodatak());
-//                                    }
-//                                });
-//    }
-    
     @FXML
     public void grupaPrevious(ActionEvent event) {
         String podatak = grupaPrevious.getPodatak() + "";
@@ -493,29 +487,59 @@ public class PorudzbinaController extends FXMLDocumentController {
     @FXML
     public void artikalPrevious(ActionEvent event) {
         String podatak = artikalPrevious.getPodatak() + "";
+        Object model = artikalPrevious.getVrsta();
         
         if(podatak.isEmpty()) {
             return;
         }
         
         int offset = Integer.parseInt(artikalPrevious.getPodatak() + "");
-                
-// Ovo treba obraditi u zavisnosti od toga sta se prikazuje, da li artikal, opisni artikal ili favorite        
-        prikaziFavorite(offset);
+           
+        if(model instanceof String) 
+        {
+            //favourites
+            prikaziFavorite(offset);
+            return;
+        }
+        
+        if(model instanceof Grupa) {
+            //prikaz grupe
+            return;
+        }
+
+        if(model instanceof Artikal_Podgrupa) {
+            //prikaz artikala podgrupe
+            return;
+        }    
     }
     
     @FXML
     public void artikalNext(ActionEvent event) {
         String podatak = artikalNext.getPodatak() + "";
-        
+        Object model = artikalPrevious.getVrsta();
+
         if(podatak.isEmpty()) {
             return;
         }
         
         int offset = Integer.parseInt(artikalNext.getPodatak() + "");
         
-// Ovo treba obraditi u zavisnosti od toga sta se prikazuje, da li artikal, opisni artikal ili favorite        
-        prikaziFavorite(offset);
+        if(model instanceof String) 
+        {
+            //favourites
+            prikaziFavorite(offset);
+            return;
+        }
+        
+        if(model instanceof Grupa) {
+            //prikaz grupe
+            return;
+        }
+
+        if(model instanceof Artikal_Podgrupa) {
+            //prikaz artikala podgrupe
+            return;
+        }
     }
     
     private void prikaziPodgrupe(Grupa izabranaGrupa, int offset) {
