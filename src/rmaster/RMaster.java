@@ -48,8 +48,8 @@ public class RMaster extends Application {
     public static List<Map<String, String>> sveSale = new ArrayList<>();
     public static List<Map<String, String>> sviStolovi = new ArrayList<>();
     
-    public static List<Grupa> grupeArtikala = new ArrayList<>();
-    public static Podgrupa favouriteArtikli = new Podgrupa();
+    public static List<Grupa> grupeArtikala;
+    public static Podgrupa favouriteArtikli;
     
     
     public static boolean firstLogin = true;
@@ -239,6 +239,10 @@ public class RMaster extends Application {
 
     public void ucitajSveArtikle() 
     {
+        grupeArtikala = new ArrayList<>();
+        
+        favouriteArtikli = new Podgrupa();
+        
         Thread noviThread = new Thread() {
             @Override
             public void start() {
