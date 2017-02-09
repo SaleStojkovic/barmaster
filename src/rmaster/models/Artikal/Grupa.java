@@ -89,19 +89,9 @@ public class Grupa extends ModelBase implements Child_Interface {
     
     @Override
     public void setAllChildren() {
-        new Thread(){
-            @Override
-            public void start(){
-                uzmiSvePodgrupe();
-            }
-        }.start();
-        
-        new Thread(){
-            @Override
-            public void start(){
-                uzmiSveArtikle();   
-            }
-        }.start();
+
+        uzmiSvePodgrupe();
+        uzmiSveArtikle();   
     }
     
     private void uzmiSvePodgrupe() {
@@ -123,9 +113,7 @@ public class Grupa extends ModelBase implements Child_Interface {
             Podgrupa novaPodgrupa = new Podgrupa();
             
             novaPodgrupa.makeFromHashMap((HashMap)podgrupaMap);
-            
-            novaPodgrupa.setAllChildren();
-            
+                        
             Runnable thread = new Podgrupa_Thread(this, novaPodgrupa);
             
             thread.run();
@@ -219,10 +207,8 @@ public class Grupa extends ModelBase implements Child_Interface {
             this.artikli.add(noviProst);
             return;
         }
-        
-        
+
         Artikal_Slozeni noviSlozeni = new Artikal_Slozeni(artikalMap);
         this.artikli.add(noviSlozeni);
-
     }
 }

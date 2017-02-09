@@ -164,8 +164,8 @@ public class Podgrupa extends ModelBase implements Child_Interface {
             return;
         }
         
-        Runnable thread = new Slozeni_Thread(this, artikalMap);
-        thread.run();
+        Artikal_Slozeni noviSlozeni = new Artikal_Slozeni(artikalMap);
+        this.artikli.add(noviSlozeni);
 
     }
 }
