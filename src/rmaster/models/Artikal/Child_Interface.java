@@ -11,4 +11,6 @@ package rmaster.models.Artikal;
  */
 public interface Child_Interface {
     
+    public void setAllChildren();
+    
 }

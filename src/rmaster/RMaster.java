@@ -22,7 +22,8 @@ import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.QueryBuilder.TableJoin;
 import rmaster.assets.QueryBuilder.TableJoinTypes;
 import rmaster.assets.ScreenMap;
-import rmaster.models.Artikal.Artikal_Podgrupa;
+import rmaster.models.Artikal.Podgrupa;
+import rmaster.models.Artikal.Grupa_Thread;
 import rmaster.models.Artikal.Grupa;
 import rmaster.models.Konobar;
 
@@ -48,7 +49,7 @@ public class RMaster extends Application {
     public static List<Map<String, String>> sviStolovi = new ArrayList<>();
     
     public static List<Grupa> grupeArtikala = new ArrayList<>();
-    public static Artikal_Podgrupa favouriteArtikli = new Artikal_Podgrupa();
+    public static Podgrupa favouriteArtikli = new Podgrupa();
     
     
     public static boolean firstLogin = true;
@@ -73,10 +74,6 @@ public class RMaster extends Application {
         ucitajSveSale();
         
         ucitajSveStolove();
-        
-        ucitajSveGrupe(); 
-        
-        ucitajFavourite();
         
         Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBold.otf").toExternalForm(), 10);
         Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBoldItalic.otf").toExternalForm(), 10);
@@ -240,8 +237,17 @@ public class RMaster extends Application {
     }
 
 
-    private void ucitajSveGrupe() 
+    public void ucitajSveArtikle() 
     {
+        Thread noviThread = new Thread() {
+            @Override
+            public void start() {
+                 ucitajFavourite();
+            }
+        };
+        
+        noviThread.start();
+        
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         query.setTableName(Grupa.TABLE_NAME);
         
@@ -251,7 +257,6 @@ public class RMaster extends Application {
         query.addCriteriaValues("1", "0");
         query.addOrderByColumns(Grupa.PRIORITET);
         query.addOrderByCriterias(QueryBuilder.SORT_ASC);
-        //query.setOrderBy(Grupa.PRIORITET, QueryBuilder.SORT_ASC);
         
         List<Map<String, String>> podrgupaList = dbBroker.runQuery(query);
        
@@ -260,13 +265,14 @@ public class RMaster extends Application {
         }
         
         for(Map<String, String> grupa : podrgupaList) {
+            
             Grupa novaGrupa = new Grupa();
             
             novaGrupa.makeFromHashMap((HashMap)grupa);
+           
+            Runnable thread = new Grupa_Thread(novaGrupa);
             
-            novaGrupa.setAllChildren();
-            
-            grupeArtikala.add(novaGrupa);
+            thread.run();                             
         }
     }
     

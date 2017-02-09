@@ -20,7 +20,7 @@ import rmaster.assets.QueryBuilder.TableJoinTypes;
  *
  * @author Arbor
  */
-public class Grupa extends ModelBase {
+public class Grupa extends ModelBase implements Child_Interface {
 
     public static String TABLE_NAME = "grupaartikalafront";
     public static String PRIMARY_KEY = "id";
@@ -40,7 +40,7 @@ public class Grupa extends ModelBase {
     public String slika;
     
     
-    public List<Artikal_Podgrupa> podgrupe = new ArrayList<>();
+    public List<Podgrupa> podgrupe = new ArrayList<>();
     public List<Child_Abstract> artikli = new ArrayList<>();
 
     
@@ -87,35 +87,48 @@ public class Grupa extends ModelBase {
         return grupa;
     }
     
-    
+    @Override
     public void setAllChildren() {
-        uzmiSvePodgrupe();
-        uzmiSveArtikle();
+        new Thread(){
+            @Override
+            public void start(){
+                uzmiSvePodgrupe();
+            }
+        }.start();
+        
+        new Thread(){
+            @Override
+            public void start(){
+                uzmiSveArtikle();   
+            }
+        }.start();
     }
     
     private void uzmiSvePodgrupe() {
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         DBBroker dbBroker = new DBBroker();
         
-        query.setTableName(Artikal_Podgrupa.TABLE_NAME);
+        query.setTableName(Podgrupa.TABLE_NAME);
         
-        query.addCriteriaColumns(Artikal_Podgrupa.PRIKAZ_NA_EKRAN, Artikal_Podgrupa.NADREDJENA_GRUPA_ID);
+        query.addCriteriaColumns(Podgrupa.PRIKAZ_NA_EKRAN, Podgrupa.NADREDJENA_GRUPA_ID);
         query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
         query.addOperators(QueryBuilder.LOGIC_AND);
         query.addCriteriaValues("1", this.id);
-        query.addOrderByColumns(Artikal_Podgrupa.PRIORITET);
+        query.addOrderByColumns(Podgrupa.PRIORITET);
         query.addOrderByCriterias(QueryBuilder.SORT_ASC);
         
         List<Map<String, String>> podrgupaList = dbBroker.runQuery(query);
         
         for(Map<String, String> podgrupaMap : podrgupaList) {
-            Artikal_Podgrupa novaPodgrupa = new Artikal_Podgrupa();
+            Podgrupa novaPodgrupa = new Podgrupa();
             
             novaPodgrupa.makeFromHashMap((HashMap)podgrupaMap);
             
-            novaPodgrupa.ucitajSveArtikle();
+            novaPodgrupa.setAllChildren();
             
-            this.podgrupe.add(novaPodgrupa);
+            Runnable thread = new Podgrupa_Thread(this, novaPodgrupa);
+            
+            thread.run();
         }
     }
     

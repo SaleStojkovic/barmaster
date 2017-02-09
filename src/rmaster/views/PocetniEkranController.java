@@ -111,6 +111,14 @@ public class PocetniEkranController extends FXMLDocumentController {
             setUlogovaniKonobar(konobar);
                     
             kesirajSaleOmoguceneKonobaru();
+
+            new Thread(){
+                @Override
+                public void start(){
+                   RMaster.ucitajSveArtikle();  
+                }
+            }.start();
+            
             
             myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
 

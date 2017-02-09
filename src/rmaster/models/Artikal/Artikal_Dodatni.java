@@ -9,6 +9,6 @@ package rmaster.models.Artikal;
  *
  * @author Arbor
  */
-public class Artikal_Dodatni extends Child_Abstract implements Child_Interface {
+public class Artikal_Dodatni extends Child_Abstract {
     
 }

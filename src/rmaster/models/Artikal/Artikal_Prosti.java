@@ -21,7 +21,7 @@ import static rmaster.models.Artikal.Child_Abstract.STAMPAC_ID;
  *
  * @author Arbor
  */
-public class Artikal_Prosti extends Child_Abstract implements Child_Interface {
+public class Artikal_Prosti extends Child_Abstract {
     
     public Artikal_Prosti(HashMap<String, String> artikalFrontMap) {
         this.id = artikalFrontMap.get(PRIMARY_KEY);

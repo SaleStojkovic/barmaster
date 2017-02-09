@@ -20,7 +20,7 @@ import rmaster.assets.QueryBuilder.TableJoinTypes;
  *
  * @author Arbor
  */
-public class Artikal_Podgrupa extends ModelBase implements Child_Interface {
+public class Podgrupa extends ModelBase implements Child_Interface {
 
     public static String TABLE_NAME = "grupaartikalafront";
     public static String PRIMARY_KEY = "id";
@@ -88,7 +88,8 @@ public class Artikal_Podgrupa extends ModelBase implements Child_Interface {
         return podgrupa;
     }
     
-    public void ucitajSveArtikle() {
+    @Override
+    public void setAllChildren() {
         
         DBBroker dbBroker = new DBBroker();
         
@@ -163,9 +164,8 @@ public class Artikal_Podgrupa extends ModelBase implements Child_Interface {
             return;
         }
         
-        
-        Artikal_Slozeni noviSlozeni = new Artikal_Slozeni(artikalMap);
-        this.artikli.add(noviSlozeni);
+        Runnable thread = new Slozeni_Thread(this, artikalMap);
+        thread.run();
 
     }
 }

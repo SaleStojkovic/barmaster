@@ -48,7 +48,7 @@ import rmaster.assets.Utils;
 import rmaster.assets.items.ArtikalButton;
 import rmaster.assets.RM_Button.RM_Button;
 import static rmaster.assets.items.VrsteGrupaIliArtikal.*;
-import rmaster.models.Artikal.Artikal_Podgrupa;
+import rmaster.models.Artikal.Podgrupa;
 import rmaster.models.Artikal.Artikal_Slozeni;
 import rmaster.models.Gost;
 import rmaster.models.Artikal.Grupa;
@@ -254,7 +254,6 @@ public class PorudzbinaController extends FXMLDocumentController {
             );
          }
 
-         prikaziGrupe(0);
     } 
     
         
@@ -289,6 +288,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         prikaziPorudzbinu();
 
+        prikaziGrupe(0);
     }
     
     private void prikaziFavorite(int offset) {
@@ -317,13 +317,13 @@ public class PorudzbinaController extends FXMLDocumentController {
             );
             
             if (offset + i >= rmaster.RMaster.favouriteArtikli.artikli.size()) {
-                dugmeArtikal.setDisable(true);
+                dugmeArtikal.setVisible(false);
                 continue;
             }
             
             dugmeArtikal.setPodatak( rmaster.RMaster.favouriteArtikli.artikli.get(offset + i));
             dugmeArtikal.setText(rmaster.RMaster.favouriteArtikli.artikli.get(offset + i).naziv);
-            dugmeArtikal.setDisable(false);
+            dugmeArtikal.setVisible(true);
         }
         
         for (int i = 12; i < 31; i++) {
@@ -333,13 +333,13 @@ public class PorudzbinaController extends FXMLDocumentController {
             );
 
             if (offset + i >= rmaster.RMaster.favouriteArtikli.artikli.size()) {
-                dugmeArtikal.setDisable(true);
+                dugmeArtikal.setVisible(false);
                 continue;
             }
 
             dugmeArtikal.setPodatak( rmaster.RMaster.favouriteArtikli.artikli.get(offset + i));
             dugmeArtikal.setText(rmaster.RMaster.favouriteArtikli.artikli.get(offset + i).naziv);
-            dugmeArtikal.setDisable(false);
+            dugmeArtikal.setVisible(true);
         }
 
         artikalNext.setPodatak("");
@@ -510,7 +510,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             return;
         }
 
-        if(model instanceof Artikal_Podgrupa) {
+        if(model instanceof Podgrupa) {
             //prikaz artikala podgrupe
             return;
         }
@@ -544,7 +544,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             return;
         }
 
-        if(model instanceof Artikal_Podgrupa) {
+        if(model instanceof Podgrupa) {
             //prikaz artikala podgrupe
             return;
         }
@@ -617,6 +617,7 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     private void izbrisiSvePodgrupe() {
 
+        
         for (int i = 1; i < 13; i++) {
             RM_Button novoDugme = (RM_Button)findNodeById(
                    ArtikalPodgrupe.getChildren(), 
@@ -649,7 +650,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         
     }
 
-    private void prikaziArtiklePodgrupe(Artikal_Podgrupa izabranaPodrupa) {
+    private void prikaziArtiklePodgrupe(Podgrupa izabranaPodrupa) {
         
     }
     

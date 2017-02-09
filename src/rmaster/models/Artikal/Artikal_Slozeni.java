@@ -35,11 +35,11 @@ public class Artikal_Slozeni extends Child_Abstract implements Child_Interface {
         this.slika = artikalFrontMap.get(SLIKA);
         this.stampacID = artikalFrontMap.get(STAMPAC_ID);
         
-        getAllChildren();    
+        setAllChildren();    
     }
     
-
-    private void getAllChildren()
+    @Override
+    public void setAllChildren()
     {
         DBBroker dbBroker = new DBBroker();
         
