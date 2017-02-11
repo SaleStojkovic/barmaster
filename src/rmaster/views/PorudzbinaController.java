@@ -48,8 +48,12 @@ import rmaster.assets.Utils;
 import rmaster.assets.items.ArtikalButton;
 import rmaster.assets.RM_Button.RM_Button;
 import static rmaster.assets.items.VrsteGrupaIliArtikal.*;
+import rmaster.models.Artikal.Artikal_Dodatni;
+import rmaster.models.Artikal.Artikal_Opisni;
+import rmaster.models.Artikal.Artikal_Prosti;
 import rmaster.models.Artikal.Podgrupa;
 import rmaster.models.Artikal.Artikal_Slozeni;
+import rmaster.models.Artikal.Child_Abstract;
 import rmaster.models.Gost;
 import rmaster.models.Artikal.Grupa;
 import rmaster.models.Porudzbina;
@@ -259,13 +263,6 @@ public class PorudzbinaController extends FXMLDocumentController {
         
     @Override
     public void initData(Object data) {
-        
-        this.porudzbineStola.clear();
-        
-        this.prikazGostiju.getChildren().clear();
-
-        this.total.setText("0.00");
-        
         HashMap<String, String> stoMap = (HashMap) data;
         
         izabraniStoId = stoMap.get("stoId");
@@ -274,21 +271,43 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         izabraniStoNaziv = stoMap.get("stoNaziv");
         
+        imeKonobara.setText(getUlogovaniKonobarIme());
+        
+        izabraniSto.setText("Sto: " + izabraniStoNaziv);
+        
+        this.porudzbineStola.clear();
+        
+        this.prikazGostiju.getChildren().clear();
+
+        this.total.setText("0.00");
+
         exec = Executors.newCachedThreadPool(runnable -> {
             Thread t = new Thread(runnable);
             t.setDaemon(true);
             return t ;
         });
-        
-        imeKonobara.setText(getUlogovaniKonobarIme());
-        
-        izabraniSto.setText("Sto: " + izabraniStoNaziv);
-        
-        prikaziFavorite(0);
-        
-        prikaziPorudzbinu();
 
-        prikaziGrupe(0);
+        new Thread() {
+            @Override
+            public void start() {
+                prikaziFavorite(0);
+            }
+        }.start();
+        
+        new Thread() {
+            @Override
+            public void start() {
+                prikaziPorudzbinu();
+            }
+        }.start();
+       
+        new Thread() {
+            @Override
+            public void start() {
+                prikaziGrupe(0);
+            }
+        }.start();
+        
     }
     
     private void prikaziFavorite(int offset) {
@@ -300,9 +319,6 @@ public class PorudzbinaController extends FXMLDocumentController {
 
         novoDugme.setVisible(true);
         novoDugme.setManaged(true);
-        
-        izbrisiSvePodgrupe();
-        izbrisiSveArtikle();
         
         podgrupaNext.setVisible(false);
         podgrupaNext.setManaged(false);
@@ -322,7 +338,14 @@ public class PorudzbinaController extends FXMLDocumentController {
             }
             
             dugmeArtikal.setPodatak( rmaster.RMaster.favouriteArtikli.artikli.get(offset + i));
+            
             dugmeArtikal.setText(rmaster.RMaster.favouriteArtikli.artikli.get(offset + i).naziv);
+            
+            //dodaje akciju artiklu
+            dodajAkcijuArtikla(dugmeArtikal, rmaster.RMaster.favouriteArtikli.artikli.get(offset + i));
+
+            setujStill(dugmeArtikal, "ArtikalStil");
+            
             dugmeArtikal.setVisible(true);
         }
         
@@ -338,7 +361,13 @@ public class PorudzbinaController extends FXMLDocumentController {
             }
 
             dugmeArtikal.setPodatak( rmaster.RMaster.favouriteArtikli.artikli.get(offset + i));
+            
             dugmeArtikal.setText(rmaster.RMaster.favouriteArtikli.artikli.get(offset + i).naziv);
+            
+            dodajAkcijuArtikla(dugmeArtikal, rmaster.RMaster.favouriteArtikli.artikli.get(offset + i));
+
+            setujStill(dugmeArtikal, "ArtikalStil");
+
             dugmeArtikal.setVisible(true);
         }
 
@@ -364,41 +393,42 @@ public class PorudzbinaController extends FXMLDocumentController {
     
     @FXML
     public void prikaziFavouriteAction(ActionEvent event) {
+        setujSveGrupeStill("");
         prikaziFavorite(0);
     }
     
     private void prikaziGrupe(int offset) {
-        
-        List<RM_Button> listaGrupa = new ArrayList<>();
-        
-        for(int i = 0; i < 3; i++) {
-            RM_Button novoDugme = (RM_Button)findNodeById(ArtikalGrupe.getChildren(), "grupa_" + (i+1));
-            novoDugme.setText("");
-            novoDugme.setPodatak("");
-            listaGrupa.add(novoDugme);
-        }
            
         int i = 0;
         for(; i < 3; i++) {
-                        
-            if (offset + i == rmaster.RMaster.grupeArtikala.size()) {
-                break;
+            
+            RM_Button dugmeGrupe = (RM_Button)findNodeById(
+                    ArtikalGrupe.getChildren(), 
+                    "grupa_" + (i+1)
+            );
+
+            if (offset + i >= rmaster.RMaster.grupeArtikala.size()) {
+                dugmeGrupe.setVisible(false);
+                continue;
             }
             
-            RM_Button dugmeGrupe = listaGrupa.get(i);
-            
+            dugmeGrupe.setVisible(true);
+
             dugmeGrupe.setPodatak(rmaster.RMaster.grupeArtikala.get(i + offset));
             
             dugmeGrupe.setText(rmaster.RMaster.grupeArtikala.get(i + offset).naziv);
-            
-            dugmeGrupe.setDisable(false);
+
+            setujStill(dugmeGrupe, "GrupaPodgrupaStill");
             
             setGroupButtonAction(dugmeGrupe);
             
         }
         
         for (; i < 3; i++) {
-            RM_Button dugmeGrupe = listaGrupa.get(i);
+            RM_Button dugmeGrupe = (RM_Button)findNodeById(
+                    ArtikalGrupe.getChildren(), 
+                    "grupa_" + (i+1)
+            );
             dugmeGrupe.setDisable(true);
         }
             
@@ -423,8 +453,21 @@ public class PorudzbinaController extends FXMLDocumentController {
         dugmeGrupe.setOnAction(new EventHandler<ActionEvent>() {               
                                     @Override public void handle(ActionEvent event) {
                                         RM_Button pressedButton = (RM_Button)event.getSource();
-                                        prikaziPodgrupe((Grupa)pressedButton.getPodatak(), 0);
-                                        prikaziArtikleGrupe((Grupa)pressedButton.getPodatak(), 0);
+                                        Grupa izabranaGrupa = (Grupa)pressedButton.getPodatak();
+                                        
+                                        pressedButton.getStyleClass().add(
+                                                "GrupaPodgrupaSelected"
+                                        );
+                                        
+                                        setujSveGrupeStill(pressedButton.getId());
+                                        
+                                        if (izabranaGrupa.podgrupe.isEmpty()) {
+                                            prikaziArtikleGrupeKojaNemaPodgrupe(izabranaGrupa, 0);
+                                            return;
+                                        }
+                                        
+                                        prikaziPodgrupe(izabranaGrupa, 0);
+                                        prikaziArtikleGrupe(izabranaGrupa, 0);
                                     }
                                 });
     }
@@ -464,10 +507,25 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
         
         int offset = Integer.parseInt(podgrupaPrevious.getPodatak() + "");
+
+        Object model = podgrupaPrevious.getVrsta();
+
+        if (model instanceof Grupa) {
+                    
+            Grupa izabranaGrupa = (Grupa)model;
+
+            prikaziPodgrupe(izabranaGrupa, offset);
+            
+            return;
+        }
         
-        Grupa izabranaGrupa = (Grupa)podgrupaPrevious.getVrsta();
+        if (model instanceof Artikal_Slozeni) {
+            //prikaz slozenog artikla
+            Artikal_Slozeni artikal = (Artikal_Slozeni)model;
+            
+            prikaziSlozeniArtikal(artikal, offset);
+        }
         
-        prikaziPodgrupe(izabranaGrupa, offset);
     }
     
     @FXML
@@ -479,10 +537,24 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
         
         int offset = Integer.parseInt(podgrupaNext.getPodatak() + "");
+
+        Object model = podgrupaNext.getVrsta();
+
+        if (model instanceof Grupa) {
+
+            Grupa izabranaGrupa = (Grupa)model;
+
+            prikaziPodgrupe(izabranaGrupa, offset);
+            
+            return;
+        }
         
-        Grupa izabranaGrupa = (Grupa)podgrupaNext.getVrsta();
-        
-        prikaziPodgrupe(izabranaGrupa, offset);
+        if (model instanceof Artikal_Slozeni) {
+            //todo
+            Artikal_Slozeni artikal = (Artikal_Slozeni)model;
+            
+            prikaziSlozeniArtikal(artikal, offset);
+        }
         
     }
     
@@ -507,24 +579,32 @@ public class PorudzbinaController extends FXMLDocumentController {
         if(model instanceof Grupa) {
             //prikaz grupe
             
+            if (((Grupa) model).podgrupe.isEmpty()) {
+                prikaziArtikleGrupeKojaNemaPodgrupe((Grupa)model, offset);
+                return;
+            }
+            
+            prikaziArtikleGrupe((Grupa) model, offset);
+            
             return;
         }
 
         if(model instanceof Podgrupa) {
             //prikaz artikala podgrupe
+            prikaziArtiklePodgrupe((Podgrupa)model, offset);
             return;
         }
         
         if(model instanceof Artikal_Slozeni) {
             //prikaz slozenog artikala
-            return;
+            prikaziSlozeniArtikal((Artikal_Slozeni)model, offset);
         }  
     }
     
     @FXML
     public void artikalNext(ActionEvent event) {
         String podatak = artikalNext.getPodatak() + "";
-        Object model = artikalPrevious.getVrsta();
+        Object model = artikalNext.getVrsta();
 
         if(podatak.isEmpty()) {
             return;
@@ -541,45 +621,389 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         if(model instanceof Grupa) {
             //prikaz grupe
+             if (((Grupa) model).podgrupe.isEmpty()) {
+                prikaziArtikleGrupeKojaNemaPodgrupe((Grupa)model, offset);
+                return;
+            }
+            
+            prikaziArtikleGrupe((Grupa) model, offset);
             return;
         }
 
         if(model instanceof Podgrupa) {
             //prikaz artikala podgrupe
+            prikaziArtiklePodgrupe((Podgrupa)model, offset);
             return;
         }
         
         if(model instanceof Artikal_Slozeni) {
             //prikaz slozenog artikala
-            return;
+            prikaziSlozeniArtikal((Artikal_Slozeni)model, offset);
         } 
     }
     
     private void prikaziPodgrupe(Grupa izabranaGrupa, int offset) {
-                       
-        izbrisiSvePodgrupe();
-        izbrisiSveArtikle();
+        
+        if (izabranaGrupa.podgrupe.isEmpty()) {
+            return;
+        }
         
         for (int i = 0; i < 12; i++) {
             
-            RM_Button novoDugme = (RM_Button)findNodeById(
+            RM_Button dugmePodgrupa = (RM_Button)findNodeById(
                    ArtikalPodgrupe.getChildren(), 
                     "podgrupa_" + (i + 1)
             );
             
-            if (offset + i == izabranaGrupa.podgrupe.size()) {
-                break;
+            if (offset + i >= izabranaGrupa.podgrupe.size()) {
+                dugmePodgrupa.setVisible(false);
+                continue;
             }
             
-            novoDugme.setPodatak(izabranaGrupa.podgrupe.get(offset + i));
-            novoDugme.setText(izabranaGrupa.podgrupe.get(offset + i).naziv);
-            //setPodgrupaButtonAction(novoDugme);
-            
-            //TODO dodati Button Action za prikaz artikla Podgrupe
+            dugmePodgrupa.setVisible(true);
 
+            dugmePodgrupa.setPodatak(izabranaGrupa.podgrupe.get(offset + i));
+            
+            setujStill(dugmePodgrupa, "GrupaPodgrupaStill");
+
+            dugmePodgrupa.setText(izabranaGrupa.podgrupe.get(offset + i).naziv);
+            
+            setPodgrupaButtonAction(dugmePodgrupa);
         }
 
         setPodgrupaNextAndPrevious(izabranaGrupa, offset);
+    }
+    
+    private void setPodgrupaButtonAction(RM_Button podgrupaDugme) {
+         podgrupaDugme.setOnAction(new EventHandler<ActionEvent>() {               
+                                    @Override public void handle(ActionEvent event) {
+                                        RM_Button pressedButton = (RM_Button)event.getSource();
+                                        Podgrupa izabranaPodgrupa = (Podgrupa)pressedButton.getPodatak();
+                                        
+                                        pressedButton.getStyleClass().add("GrupaPodgrupaSelected");
+                                        
+                                        setujSvePodgrupeStill(pressedButton.getId());
+                                        
+                                        prikaziArtiklePodgrupe(izabranaPodgrupa, 0);
+                                    }
+                                });
+    }
+    
+    private void setujStill(RM_Button dugme, String stil) 
+    {
+        
+        dugme.getStyleClass().clear();
+        
+        dugme.getStyleClass().add("button");
+        
+        dugme.getStyleClass().add(stil);
+    }
+    
+    private void setujSveGrupeStill(String skipStil) 
+    {
+        for(int i = 0; i < 3; i++) {
+            
+            RM_Button dugmeGrupa = (RM_Button)findNodeById(
+                   ArtikalGrupe.getChildren(), 
+                    "grupa_" + (i + 1)
+            );
+            
+            if (dugmeGrupa.getId().equals(skipStil)) {
+                continue;
+            }
+
+            dugmeGrupa.getStyleClass().clear();
+
+            dugmeGrupa.getStyleClass().add("button");    
+            
+            dugmeGrupa.getStyleClass().add("GrupaPodgrupaStill");
+        }
+    }
+    
+    private void setujSvePodgrupeStill(String skipStil)
+    {
+         for(int i = 0; i < 12; i++) {
+            
+            RM_Button podgrupa = (RM_Button)findNodeById(
+                   ArtikalPodgrupe.getChildren(), 
+                    "podgrupa_" + (i + 1)
+            );
+            
+            if (podgrupa.getId().equals(skipStil)) {
+                continue;
+            }
+
+            podgrupa.getStyleClass().clear();
+
+            podgrupa.getStyleClass().add("button");    
+            
+            podgrupa.getStyleClass().add("GrupaPodgrupaStill");
+        }
+    }
+    
+    private void prikaziArtiklePodgrupe(Podgrupa izabranaPodgrupa, int offset) 
+    {
+        for (int i = 0; i < 19; i++) {
+             RM_Button dugmeArtikal = (RM_Button)findNodeById(
+                   Artikal.getChildren(), 
+                    "artikal_" + (i + 1)
+            );
+
+            if (offset + i >= izabranaPodgrupa.artikli.size()) {
+                dugmeArtikal.setVisible(false);
+                continue;
+            }
+
+            dugmeArtikal.setPodatak(izabranaPodgrupa.artikli.get(offset + i));
+            
+            dugmeArtikal.setText(izabranaPodgrupa.artikli.get(offset + i).naziv);
+            
+             //dodaje akciju svakom artiklu
+            dodajAkcijuArtikla(dugmeArtikal, izabranaPodgrupa.artikli.get(offset + i));
+            
+            setujStill(dugmeArtikal, "ArtikalStil");
+
+            dugmeArtikal.setVisible(true);
+        }
+
+        artikalNext.setPodatak("");
+        artikalPrevious.setPodatak("");
+        
+        if (izabranaPodgrupa.artikli.size() > offset + 31) {
+            artikalNext.setPodatak(offset + 30);
+            artikalNext.setVrsta(izabranaPodgrupa);
+        }
+            
+        if (offset - 29 > 0) {
+            artikalPrevious.setPodatak(offset - 30);
+            artikalPrevious.setVrsta(izabranaPodgrupa);
+        }
+        
+        artikalPrevious.setDisable(offset == 0);
+        artikalNext.setDisable(izabranaPodgrupa.artikli.size() <= offset + 31);
+    }
+    
+    
+    
+    private void prikaziArtikleGrupe(Grupa izabranaGrupa, int offset) 
+    {
+        for (int i = 0; i < 19; i++) {
+             RM_Button dugmeArtikal = (RM_Button)findNodeById(
+                   Artikal.getChildren(), 
+                    "artikal_" + (i + 1)
+            );
+
+            if (offset + i >= izabranaGrupa.artikli.size()) {
+                dugmeArtikal.setVisible(false);
+                continue;
+            }
+
+            dugmeArtikal.setPodatak(izabranaGrupa.artikli.get(offset + i));
+            
+            //dodaje akciju artikla
+            dodajAkcijuArtikla(dugmeArtikal, izabranaGrupa.artikli.get(offset + i));
+            
+            dugmeArtikal.setText(izabranaGrupa.artikli.get(offset + i).naziv);
+
+            setujStill(dugmeArtikal, "ArtikalStil");
+
+            dugmeArtikal.setVisible(true);
+        }
+
+        artikalNext.setPodatak("");
+        artikalPrevious.setPodatak("");
+        
+        if (izabranaGrupa.artikli.size() > offset + 31) {
+            artikalNext.setPodatak(offset + 30);
+            artikalNext.setVrsta("FAV");
+        }
+            
+        if (offset - 29 > 0) {
+            artikalPrevious.setPodatak(offset - 30);
+            artikalPrevious.setVrsta("FAV");
+        }
+        
+        
+        //todo set podgrupa Next i podgrupa previous 
+        artikalPrevious.setDisable(offset == 0);
+        artikalNext.setDisable(izabranaGrupa.artikli.size() <= offset + 31);
+    }
+    
+    public void prikaziSlozeniArtikal(Artikal_Slozeni slozeniArtikal, int offset)
+    {   
+        for (int i = 0; i < 12; i++) {
+            
+            RM_Button dugmeArtikal = (RM_Button)findNodeById(
+                   ArtikalPodgrupe.getChildren(), 
+                    "podgrupa_" + (i + 1)
+            );
+            
+            if (offset + i >= slozeniArtikal.opisniArtikli.size()) {
+                dugmeArtikal.setVisible(false);
+                continue;
+            }
+            
+            dugmeArtikal.setVisible(true);
+
+            dugmeArtikal.setPodatak(slozeniArtikal.opisniArtikli.get(offset + i));
+            dugmeArtikal.setText(slozeniArtikal.opisniArtikli.get(offset + i).naziv);
+            
+            //dodaje akciju opisnom artiklu    
+            dodajAkcijuArtikla(dugmeArtikal, slozeniArtikal.opisniArtikli.get(offset + i));
+
+            setujStill(dugmeArtikal, "ArtikalStil");
+        }
+        
+        podgrupaNext.setPodatak("");
+        podgrupaNext.setVrsta(slozeniArtikal);
+        
+        podgrupaPrevious.setPodatak("");
+        podgrupaPrevious.setVrsta(slozeniArtikal);
+        
+        if (slozeniArtikal.opisniArtikli.size() > offset + 11) {
+            podgrupaNext.setPodatak(offset + 11);
+        }
+            
+        if (offset - 10 > 0) {
+            podgrupaPrevious.setPodatak(offset - 11);
+        }
+
+        podgrupaPrevious.setDisable(offset == 0);
+        podgrupaNext.setDisable(slozeniArtikal.opisniArtikli.size() <= offset + 11);
+
+ 
+        for (int i = 12; i < 31; i++) {
+             RM_Button dugmeArtikal = (RM_Button)findNodeById(
+                   Artikal.getChildren(), 
+                    "artikal_" + (i - 11)
+            );
+
+            if (offset + i >= slozeniArtikal.dodatniArtikli.size()) {
+                dugmeArtikal.setVisible(false);
+                continue;
+            }
+            
+            dugmeArtikal.setVisible(true);
+
+            dugmeArtikal.setPodatak(slozeniArtikal.dodatniArtikli.get(offset + i));
+            
+            dugmeArtikal.setText(slozeniArtikal.dodatniArtikli.get(offset + i).naziv);
+            
+            setujStill(dugmeArtikal, "ArtikalStil");
+
+            //dodaje akciju dodatnom artiklu    
+            dodajAkcijuArtikla(dugmeArtikal, slozeniArtikal.dodatniArtikli.get(offset + i));
+        }
+        
+        artikalNext.setPodatak("");
+        artikalPrevious.setPodatak("");
+        
+        if (slozeniArtikal.dodatniArtikli.size() > offset + 20) {
+            artikalNext.setPodatak(offset + 19);
+            artikalNext.setVrsta(slozeniArtikal);
+        }
+            
+        if (offset - 18 > 0) {
+            artikalPrevious.setPodatak(offset - 19);
+            artikalPrevious.setVrsta(slozeniArtikal);
+        }
+        
+        artikalPrevious.setDisable(offset == 0);
+        artikalNext.setDisable(slozeniArtikal.dodatniArtikli.size() <= offset + 20);
+        
+        //todo dodati opisni next i dodatni next
+    }
+    
+    public void dodajAkcijuArtikla(RM_Button dugmeArtikal, Child_Abstract artikal) 
+    {
+        dugmeArtikal.setPodatak(artikal);
+
+        if (artikal instanceof Artikal_Slozeni) {
+            
+            akcijaZaSlozeniArtikal(dugmeArtikal);
+        }
+        
+        if (artikal instanceof Artikal_Prosti) {
+            
+            akcijaZaProstiArtikal(dugmeArtikal);
+        }
+        
+        if (artikal instanceof Artikal_Dodatni) {
+            
+            akcijaZaDodatniArtikal(dugmeArtikal);
+        }
+        
+        if (artikal instanceof Artikal_Opisni) {
+            
+            akcijaZaOpisniArtikal(dugmeArtikal);
+        }
+    }
+    
+    private void akcijaZaSlozeniArtikal(RM_Button artikalDugme) 
+    {
+        artikalDugme.setOnAction(new EventHandler<ActionEvent>() {               
+                                    @Override public void handle(ActionEvent event) {
+                                        
+                                        RM_Button pressedButton = (RM_Button)event.getSource();
+                                        
+                                        Artikal_Slozeni slozeniArtikal = 
+                                                (Artikal_Slozeni)pressedButton.getPodatak();
+                                        
+                                        prikaziSlozeniArtikal(slozeniArtikal, 0);
+                                        
+                                        System.out.print("SLOZENI");
+                                    }
+                                });
+        
+    }
+    
+    private void akcijaZaProstiArtikal(RM_Button artikalDugme) 
+    {
+        artikalDugme.setOnAction(new EventHandler<ActionEvent>() {               
+                                    @Override public void handle(ActionEvent event) {
+                                        
+                                        RM_Button pressedButton = (RM_Button)event.getSource();
+                                        
+                                        Artikal_Prosti prostiArtikal = 
+                                                (Artikal_Prosti)pressedButton.getPodatak();
+                                        
+                                        //TODO
+                                        
+                                        System.out.print("PROSTI");
+                                    }
+                                });
+    }
+    
+    private void akcijaZaDodatniArtikal(RM_Button artikalDugme)
+    {
+        artikalDugme.setOnAction(new EventHandler<ActionEvent>() {               
+                                    @Override public void handle(ActionEvent event) {
+                                        
+                                        RM_Button pressedButton = (RM_Button)event.getSource();
+                                        
+                                        Artikal_Dodatni dodatniArtikal = 
+                                                (Artikal_Dodatni)pressedButton.getPodatak();
+                                        
+                                        
+                                        System.out.print("DODATNI");
+                                    }
+                                });
+    }
+    
+    private void akcijaZaOpisniArtikal(RM_Button artikalDugme)
+    {
+        artikalDugme.setOnAction(new EventHandler<ActionEvent>() {               
+                                    @Override public void handle(ActionEvent event) {
+                                        
+                                        RM_Button pressedButton = (RM_Button)event.getSource();
+                                        
+                                        Artikal_Opisni opisniArtikal = 
+                                                (Artikal_Opisni)pressedButton.getPodatak();
+                                        
+                                        
+                                        System.out.print("OPISNI");
+                                    }
+                                });
     }
     
     private void setPodgrupaNextAndPrevious(Grupa izabranaGrupa, int offset) {
@@ -615,42 +1039,84 @@ public class PorudzbinaController extends FXMLDocumentController {
         podgrupaNext.setDisable(izabranaGrupa.podgrupe.size() <= offset + 11);
     }
     
-    private void izbrisiSvePodgrupe() {
-
-        
-        for (int i = 1; i < 13; i++) {
-            RM_Button novoDugme = (RM_Button)findNodeById(
-                   ArtikalPodgrupe.getChildren(), 
-                    "podgrupa_" + i
-            );
-            
-            novoDugme.setPodatak("");
-            novoDugme.setText("");
-        }
-    }
-    
-    private void izbrisiSveArtikle() {
-            for (int i = 1; i < 20; i++) {
-            RM_Button novoDugme = (RM_Button)findNodeById(
-                   Artikal.getChildren(), 
-                    "artikal_" + i
-            );
-            
-            novoDugme.setPodatak("");
-            novoDugme.setText("");
-        }
-    }
-    
-    private void prikaziArtikleGrupe(Grupa izabranaGrupa, int offset) {
+    private void prikaziArtikleGrupeKojaNemaPodgrupe(Grupa izabranaGrupa, int offset) {
          
-        if (izabranaGrupa.podgrupe.isEmpty()) {
-            //todo
+        RM_Button novoDugme = (RM_Button)findNodeById(
+                   ArtikalPodgrupe.getChildren(), 
+                    "podgrupa_12"
+            );
+
+        novoDugme.setVisible(true);
+        novoDugme.setManaged(true);
+        
+        podgrupaNext.setVisible(false);
+        podgrupaNext.setManaged(false);
+        podgrupaPrevious.setVisible(false);
+        podgrupaPrevious.setManaged(false);
+        
+        for (int i = 0; i < 12; i++) {
+            
+            RM_Button dugmeArtikal = (RM_Button)findNodeById(
+                   ArtikalPodgrupe.getChildren(), 
+                    "podgrupa_" + (i + 1)
+            );
+            
+            if (offset + i >= izabranaGrupa.artikli.size()) {
+                dugmeArtikal.setVisible(false);
+                continue;
+            }
+            
+            dugmeArtikal.setVisible(true);
+            
+            dugmeArtikal.setPodatak(izabranaGrupa.artikli.get(offset + i));
+
+            dugmeArtikal.setText(izabranaGrupa.artikli.get(offset + i).naziv);
+
+            dodajAkcijuArtikla(dugmeArtikal, izabranaGrupa.artikli.get(offset + i));
+            
+            setujStill(dugmeArtikal, "ArtikalStil");
+            
+        }
+        
+        for (int i = 12; i < 31; i++) {
+             RM_Button dugmeArtikal = (RM_Button)findNodeById(
+                   Artikal.getChildren(), 
+                    "artikal_" + (i - 11)
+            );
+
+            if (offset + i >= izabranaGrupa.artikli.size()) {
+                dugmeArtikal.setVisible(false);
+                continue;
+            }
+
+            dugmeArtikal.setPodatak(izabranaGrupa.artikli.get(offset + i));
+            
+            dugmeArtikal.setText(izabranaGrupa.artikli.get(offset + i).naziv);
+            
+            setujStill(dugmeArtikal, "ArtikalStil");
+
+            dodajAkcijuArtikla(dugmeArtikal, izabranaGrupa.artikli.get(offset + i));
+            
+            dugmeArtikal.setVisible(true);
+        }
+
+        artikalNext.setPodatak("");
+        artikalPrevious.setPodatak("");
+        
+        if (izabranaGrupa.artikli.size() > offset + 31) {
+            artikalNext.setPodatak(offset + 30);
+            artikalNext.setVrsta("FAV");
+        }
+            
+        if (offset - 29 > 0) {
+            artikalPrevious.setPodatak(offset - 30);
+            artikalPrevious.setVrsta("FAV");
         }
         
         
-    }
-
-    private void prikaziArtiklePodgrupe(Podgrupa izabranaPodrupa) {
+        //todo set podgrupa Next i podgrupa previous 
+        artikalPrevious.setDisable(offset == 0);
+        artikalNext.setDisable(izabranaGrupa.artikli.size() <= offset + 31);
         
     }
     

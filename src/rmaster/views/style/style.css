@@ -361,68 +361,46 @@ and open the template in the editor.
     -fx-font-size: 20px;
 }
 
-#idGrupeArtikalaNext {
-    -fx-background-color: -fx-tamno-crna;
-    -fx-font-family: KlavikaMedium;
-    -fx-text-fill: white;
-    -fx-font-size: 18;
-    -fx-font-weight: bold;
-    -fx-border-color: grey;
-}
-
-.button.buttonArtikliGrupe {
-    -fx-background-color: -fx-tamno-crna;
-    -fx-font-family: KlavikaMedium;
-    -fx-text-fill: white;
-    -fx-font-size: 18;
-    -fx-border-color: grey;
-    -fx-border-width: 2 0.5 2 0.5;
-    height: 64px;
-    width : 192px;
-    min-height: 64px;
-    min-width: 192px;
-    max-height: 64px;
-    max-width: 192px;
-}
-
-.button.buttonArtikliPodgrupe {
-    -fx-background-color: -fx-svetlo-crna;
-    -fx-font-family: KlavikaMedium;
-    -fx-text-fill: white;
-    -fx-font-size: 16;
-    prefHeight : 64px;
-    prefWidth : 192px;
-    -fx-border-color: grey;
-    -fx-border-width: 0.5px;
-}
-
-.button.buttonArtikli {
+.button.GrupaPodgrupaStill
+{
     -fx-background-color: -fx-siva;
     -fx-font-family: KlavikaMedium;
     -fx-text-fill: white;
-    -fx-font-size: 14;
-    prefHeight : 64px;
-    prefWidth : 192px;
+    -fx-font-size: 16;
     -fx-border-color: grey;
     -fx-border-width: 0.5px;
 }
 
-.button.buttonArtikliPrazan {
-    -fx-background-color: transparent;
-    prefHeight : 64px;
+.button.ArtikalStil
+{
+    -fx-background-color: -fx-tamno-crna;
+    -fx-font-family: KlavikaMedium;
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-border-color: grey;
+    -fx-border-width: 2 0.5 2 0.5;
 }
 
-.button.buttonGrupeSelektovana {
+.button.GrupaPodgrupaSelected {
     -fx-border-color : -fx-zuta gray gray gray;
     -fx-text-fill: -fx-zuta;
     -fx-border-width : 2 0.5 2 0.5;
 }
 
-.button.buttonArtikliGrupeNextPrev {
-    -fx-font-size: 18;
+#grupaPrevious,
+#grupaNext,
+#podgrupaPrevious,
+#podgrupaNext,
+#artikalPrevious,
+#artikalNext
+{
+    -fx-background-color: -fx-svetlo-crna;
+    -fx-border-color: grey;
     -fx-text-fill: firebrick;
     -fx-font-weight: bold;
+    -fx-font-size: 18;
 }
+
 
 #prikazRacunaGosta .table-view  {
     -fx-background-color: -fx-tamno-crna;
