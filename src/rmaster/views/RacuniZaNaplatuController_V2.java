@@ -10,6 +10,7 @@ import java.util.Map;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.TableView;
 import javafx.stage.StageStyle;
 import rmaster.assets.DBBroker;
 import rmaster.assets.QueryBuilder.QueryBuilder;
@@ -40,7 +41,18 @@ public class RacuniZaNaplatuController_V2 extends Dialog {
         
         List<Map<String, String>> racuniZaNaplatu = this.ucitajRacuneZaNaplatu();
         
+        tabelaSaRacunimaZaNaplatu.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         
+        tabelaSaRacunimaZaNaplatu.setPodaci(racuniZaNaplatu);
+        
+        int brojRedova = racuniZaNaplatu.size();
+        tabelaSaRacunimaZaNaplatu.setFixedCellSize(30);
+                                
+        tabelaSaRacunimaZaNaplatu.setPrefHeight(brojRedova * tabelaSaRacunimaZaNaplatu.getFixedCellSize());
+                
+        tabelaSaRacunimaZaNaplatu.setPrefSize(600, 450);
+        
+        this.getDialogPane().setContent(tabelaSaRacunimaZaNaplatu);
     }
     
     private List<Map<String, String>> ucitajRacuneZaNaplatu()
