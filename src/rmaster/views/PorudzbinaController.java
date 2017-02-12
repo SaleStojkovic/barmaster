@@ -41,7 +41,6 @@ import rmaster.assets.RM_TableView.RM_TableView;
 import rmaster.assets.RM_TableView.RavnanjeKolone;
 import rmaster.assets.RM_TableView.SirinaKolone;
 import rmaster.ScreenController;
-import rmaster.assets.ModelBase;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
@@ -344,7 +343,12 @@ public class PorudzbinaController extends FXMLDocumentController {
             //dodaje akciju artiklu
             dodajAkcijuArtikla(dugmeArtikal, rmaster.RMaster.favouriteArtikli.artikli.get(offset + i));
 
-            setujStill(dugmeArtikal, "ArtikalStil");
+            if (!dugmeArtikal.getStyleClass().contains("ArtikalStil")) {
+
+                setujStill(dugmeArtikal, "ArtikalStil");
+
+            }
+            
             
             dugmeArtikal.setVisible(true);
         }
@@ -366,8 +370,11 @@ public class PorudzbinaController extends FXMLDocumentController {
             
             dodajAkcijuArtikla(dugmeArtikal, rmaster.RMaster.favouriteArtikli.artikli.get(offset + i));
 
-            setujStill(dugmeArtikal, "ArtikalStil");
+            if (!dugmeArtikal.getStyleClass().contains("ArtikalStil")) {
 
+                setujStill(dugmeArtikal, "ArtikalStil");
+
+            }
             dugmeArtikal.setVisible(true);
         }
 
@@ -418,7 +425,11 @@ public class PorudzbinaController extends FXMLDocumentController {
             
             dugmeGrupe.setText(rmaster.RMaster.grupeArtikala.get(i + offset).naziv);
 
-            setujStill(dugmeGrupe, "GrupaPodgrupaStill");
+            if (!dugmeGrupe.getStyleClass().contains("GrupaPodgrupaStill")) {
+
+                setujStill(dugmeGrupe, "GrupaPodgrupaStill");
+
+            }  
             
             setGroupButtonAction(dugmeGrupe);
             
@@ -461,6 +472,8 @@ public class PorudzbinaController extends FXMLDocumentController {
                                         
                                         setujSveGrupeStill(pressedButton.getId());
                                         
+                                        setujSvePodgrupeStill("");
+                                        
                                         if (izabranaGrupa.podgrupe.isEmpty()) {
                                             prikaziArtikleGrupeKojaNemaPodgrupe(izabranaGrupa, 0);
                                             return;
@@ -482,6 +495,8 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         int offset = Integer.parseInt(grupaPrevious.getPodatak() + "");
                 
+        setujSveGrupeStill("");
+        
         prikaziGrupe(offset);
     }
     
@@ -494,6 +509,8 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
         
         int offset = Integer.parseInt(grupaNext.getPodatak() + "");
+        
+        setujSveGrupeStill("");
                 
         prikaziGrupe(offset);
     }
@@ -515,6 +532,8 @@ public class PorudzbinaController extends FXMLDocumentController {
             Grupa izabranaGrupa = (Grupa)model;
 
             prikaziPodgrupe(izabranaGrupa, offset);
+            
+            setujSvePodgrupeStill("");
             
             return;
         }
@@ -545,6 +564,8 @@ public class PorudzbinaController extends FXMLDocumentController {
             Grupa izabranaGrupa = (Grupa)model;
 
             prikaziPodgrupe(izabranaGrupa, offset);
+            
+            setujSvePodgrupeStill("");
             
             return;
         }
@@ -664,8 +685,12 @@ public class PorudzbinaController extends FXMLDocumentController {
 
             dugmePodgrupa.setPodatak(izabranaGrupa.podgrupe.get(offset + i));
             
-            setujStill(dugmePodgrupa, "GrupaPodgrupaStill");
+            if (!dugmePodgrupa.getStyleClass().contains("GrupaPodgrupaStill")) {
 
+                setujStill(dugmePodgrupa, "GrupaPodgrupaStill");
+
+            }  
+                        
             dugmePodgrupa.setText(izabranaGrupa.podgrupe.get(offset + i).naziv);
             
             setPodgrupaButtonAction(dugmePodgrupa);
@@ -761,8 +786,12 @@ public class PorudzbinaController extends FXMLDocumentController {
              //dodaje akciju svakom artiklu
             dodajAkcijuArtikla(dugmeArtikal, izabranaPodgrupa.artikli.get(offset + i));
             
-            setujStill(dugmeArtikal, "ArtikalStil");
+            if (!dugmeArtikal.getStyleClass().contains("ArtikalStil")) {
 
+                setujStill(dugmeArtikal, "ArtikalStil");
+
+            } 
+            
             dugmeArtikal.setVisible(true);
         }
 
@@ -805,7 +834,11 @@ public class PorudzbinaController extends FXMLDocumentController {
             
             dugmeArtikal.setText(izabranaGrupa.artikli.get(offset + i).naziv);
 
-            setujStill(dugmeArtikal, "ArtikalStil");
+            if (!dugmeArtikal.getStyleClass().contains("ArtikalStil")) {
+
+                setujStill(dugmeArtikal, "ArtikalStil");
+
+            } 
 
             dugmeArtikal.setVisible(true);
         }
@@ -851,7 +884,11 @@ public class PorudzbinaController extends FXMLDocumentController {
             //dodaje akciju opisnom artiklu    
             dodajAkcijuArtikla(dugmeArtikal, slozeniArtikal.opisniArtikli.get(offset + i));
 
-            setujStill(dugmeArtikal, "ArtikalStil");
+            if (!dugmeArtikal.getStyleClass().contains("ArtikalStil")) {
+
+                setujStill(dugmeArtikal, "ArtikalStil");
+
+            } 
         }
         
         podgrupaNext.setPodatak("");
@@ -889,8 +926,11 @@ public class PorudzbinaController extends FXMLDocumentController {
             
             dugmeArtikal.setText(slozeniArtikal.dodatniArtikli.get(offset + i).naziv);
             
-            setujStill(dugmeArtikal, "ArtikalStil");
+            if (!dugmeArtikal.getStyleClass().contains("ArtikalStil")) {
 
+                setujStill(dugmeArtikal, "ArtikalStil");
+
+            } 
             //dodaje akciju dodatnom artiklu    
             dodajAkcijuArtikla(dugmeArtikal, slozeniArtikal.dodatniArtikli.get(offset + i));
         }
@@ -951,6 +991,8 @@ public class PorudzbinaController extends FXMLDocumentController {
                                         
                                         prikaziSlozeniArtikal(slozeniArtikal, 0);
                                         
+                                        //TODO
+                                        
                                         System.out.print("SLOZENI");
                                     }
                                 });
@@ -984,7 +1026,8 @@ public class PorudzbinaController extends FXMLDocumentController {
                                         Artikal_Dodatni dodatniArtikal = 
                                                 (Artikal_Dodatni)pressedButton.getPodatak();
                                         
-                                        
+                                        //TODO
+
                                         System.out.print("DODATNI");
                                     }
                                 });
@@ -1000,7 +1043,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                                         Artikal_Opisni opisniArtikal = 
                                                 (Artikal_Opisni)pressedButton.getPodatak();
                                         
-                                        
+                                        //TODO
                                         System.out.print("OPISNI");
                                     }
                                 });
@@ -1074,8 +1117,12 @@ public class PorudzbinaController extends FXMLDocumentController {
 
             dodajAkcijuArtikla(dugmeArtikal, izabranaGrupa.artikli.get(offset + i));
             
-            setujStill(dugmeArtikal, "ArtikalStil");
-            
+            if (!dugmeArtikal.getStyleClass().contains("ArtikalStil")) {
+
+                setujStill(dugmeArtikal, "ArtikalStil");
+
+            } 
+                        
         }
         
         for (int i = 12; i < 31; i++) {
@@ -1093,8 +1140,11 @@ public class PorudzbinaController extends FXMLDocumentController {
             
             dugmeArtikal.setText(izabranaGrupa.artikli.get(offset + i).naziv);
             
-            setujStill(dugmeArtikal, "ArtikalStil");
+            if (!dugmeArtikal.getStyleClass().contains("ArtikalStil")) {
 
+                setujStill(dugmeArtikal, "ArtikalStil");
+
+            } 
             dodajAkcijuArtikla(dugmeArtikal, izabranaGrupa.artikli.get(offset + i));
             
             dugmeArtikal.setVisible(true);

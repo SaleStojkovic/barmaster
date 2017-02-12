@@ -74,7 +74,7 @@ public class SalePopupController extends Dialog {
         this.getDialogPane().getButtonTypes().addAll(odustaniButtonType);
         
         this.getDialogPane().getStylesheets().
-                addAll(this.getClass().getResource("style/style.css").toExternalForm());
+                addAll(this.getClass().getResource("style/style.min.css").toExternalForm());
         
         this.getDialogPane().getStyleClass().add("myDialog");
         

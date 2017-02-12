@@ -70,7 +70,7 @@ public class AlfaNumerickaTastaturaController extends Dialog {
         this.getDialogPane().getButtonTypes().addAll(potvrdiButtonType, odustaniButtonType);
         
         this.getDialogPane().getStylesheets().
-                addAll(this.getClass().getResource("style/style.css").toExternalForm());
+                addAll(this.getClass().getResource("style/style.min.css").toExternalForm());
         
         this.getDialogPane().getStyleClass().add("alphaNumeric");
         

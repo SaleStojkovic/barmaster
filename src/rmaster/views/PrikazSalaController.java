@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,6 +29,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.Pane;
@@ -426,8 +429,15 @@ public class PrikazSalaController extends FXMLDocumentController {
     
     public void prikaziRacuneZaStampu(ActionEvent event){
 
-        myController.setScreen(ScreenMap.RACUNI_ZA_NAPLATU, null);
+//        myController.setScreen(ScreenMap.RACUNI_ZA_NAPLATU, null);
 
+        RacuniZaNaplatuController_V2 racuniPopUp = new RacuniZaNaplatuController_V2();
+        
+        Optional<String> result = racuniPopUp.showAndWait();
+                
+        if (result.isPresent()){
+            
+        }
     }
     
     public void promeniKonobara(ActionEvent event){
