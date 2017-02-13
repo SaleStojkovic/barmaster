@@ -6,8 +6,6 @@
 package rmaster.assets;
  
 import rmaster.assets.QueryBuilder.QueryBuilder;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -27,8 +23,10 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -43,7 +41,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import rmaster.RMaster;
 import rmaster.ScreenController;
@@ -414,5 +411,14 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
         );
              
         return new Background(newBackgroundImage);
+    }
+    
+    protected static void addAllDescendentsNodes(Parent parent, ArrayList<Node> nodes) {
+        for (Node node : parent.getChildrenUnmodifiable()) {
+            if (node instanceof Button)
+                nodes.add(node);
+            if (node instanceof Parent)
+                addAllDescendentsNodes((Parent)node, nodes);
+        }
     }
 }

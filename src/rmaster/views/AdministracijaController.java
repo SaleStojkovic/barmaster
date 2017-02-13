@@ -6,6 +6,7 @@
 package rmaster.views;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -72,12 +73,21 @@ public class AdministracijaController extends FXMLDocumentController{
             query.addCriteriaColumns("korisnikID", "vrstaKorisnika");
             query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
             query.addOperators(QueryBuilder.LOGIC_AND);
-            query.addCriteriaValues(ulogovaniKonobar.konobarID + "", "1");
+            query.addCriteriaValues(RMaster.getUlogovaniKonobar().konobarID + "", "1");
 
             listaRezultata = runQuery(query);
         } catch (Exception e) {
             System.out.println("Greska u pozivu SP getAdministracijaMeni! - " + e.toString());
         }
+        
+        ArrayList<Node> nodes = new ArrayList<>();
+        addAllDescendentsNodes(fxID_Izlaz.getParent().getParent(), nodes);
+
+        for (Node node : nodes) {
+            node.setDisable(true);
+        }
+        fxID_Izlaz.setDisable(false);
+
         for (Map mapPrivilegija : listaRezultata) {
             try {
                 Button button = (Button) fxID_Izlaz.getScene().lookup("#" + mapPrivilegija.get("fxID"));

@@ -382,12 +382,12 @@ public class PorudzbinaController extends FXMLDocumentController {
         artikalPrevious.setPodatak("");
         
         if (rmaster.RMaster.favouriteArtikli.artikli.size() > offset + 31) {
-            artikalNext.setPodatak(offset + 30);
+            artikalNext.setPodatak(offset + 31);
             artikalNext.setVrsta("FAV");
         }
             
-        if (offset - 29 > 0) {
-            artikalPrevious.setPodatak(offset - 30);
+        if (offset - 31 >= 0) {
+            artikalPrevious.setPodatak(offset - 31);
             artikalPrevious.setVrsta("FAV");
         }
         
@@ -451,7 +451,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             grupaNext.setPodatak(offset + 3);
         }
             
-        if (offset - 2 > 0) {
+        if (offset - 3 >= 0) {
             grupaPrevious.setPodatak(offset - 3);
         }
         
@@ -798,18 +798,18 @@ public class PorudzbinaController extends FXMLDocumentController {
         artikalNext.setPodatak("");
         artikalPrevious.setPodatak("");
         
-        if (izabranaPodgrupa.artikli.size() > offset + 31) {
-            artikalNext.setPodatak(offset + 30);
+        if (izabranaPodgrupa.artikli.size() > offset + 19) {
+            artikalNext.setPodatak(offset + 19);
             artikalNext.setVrsta(izabranaPodgrupa);
         }
             
-        if (offset - 29 > 0) {
-            artikalPrevious.setPodatak(offset - 30);
+        if (offset - 19 >= 0) {
+            artikalPrevious.setPodatak(offset - 19);
             artikalPrevious.setVrsta(izabranaPodgrupa);
         }
         
         artikalPrevious.setDisable(offset == 0);
-        artikalNext.setDisable(izabranaPodgrupa.artikli.size() <= offset + 31);
+        artikalNext.setDisable(izabranaPodgrupa.artikli.size() <= offset + 19);
     }
     
     
@@ -846,20 +846,20 @@ public class PorudzbinaController extends FXMLDocumentController {
         artikalNext.setPodatak("");
         artikalPrevious.setPodatak("");
         
-        if (izabranaGrupa.artikli.size() > offset + 31) {
-            artikalNext.setPodatak(offset + 30);
+        if (izabranaGrupa.artikli.size() > offset + 19) {
+            artikalNext.setPodatak(offset + 19);
             artikalNext.setVrsta("FAV");
         }
             
-        if (offset - 29 > 0) {
-            artikalPrevious.setPodatak(offset - 30);
+        if (offset - 19 >= 0) {
+            artikalPrevious.setPodatak(offset - 19);
             artikalPrevious.setVrsta("FAV");
         }
         
         
         //todo set podgrupa Next i podgrupa previous 
         artikalPrevious.setDisable(offset == 0);
-        artikalNext.setDisable(izabranaGrupa.artikli.size() <= offset + 31);
+        artikalNext.setDisable(izabranaGrupa.artikli.size() <= offset + 19);
     }
     
     public void prikaziSlozeniArtikal(Artikal_Slozeni slozeniArtikal, int offset)
@@ -901,7 +901,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             podgrupaNext.setPodatak(offset + 11);
         }
             
-        if (offset - 10 > 0) {
+        if (offset - 11 >= 0) {
             podgrupaPrevious.setPodatak(offset - 11);
         }
 
@@ -909,10 +909,10 @@ public class PorudzbinaController extends FXMLDocumentController {
         podgrupaNext.setDisable(slozeniArtikal.opisniArtikli.size() <= offset + 11);
 
  
-        for (int i = 12; i < 31; i++) {
+        for (int i = 0; i < 19; i++) {
              RM_Button dugmeArtikal = (RM_Button)findNodeById(
                    Artikal.getChildren(), 
-                    "artikal_" + (i - 11)
+                    "artikal_" + (i+1)
             );
 
             if (offset + i >= slozeniArtikal.dodatniArtikli.size()) {
@@ -938,18 +938,18 @@ public class PorudzbinaController extends FXMLDocumentController {
         artikalNext.setPodatak("");
         artikalPrevious.setPodatak("");
         
-        if (slozeniArtikal.dodatniArtikli.size() > offset + 20) {
+        if (slozeniArtikal.dodatniArtikli.size() > offset + 19) {
             artikalNext.setPodatak(offset + 19);
             artikalNext.setVrsta(slozeniArtikal);
         }
             
-        if (offset - 18 > 0) {
+        if (offset - 19 >= 0) {
             artikalPrevious.setPodatak(offset - 19);
             artikalPrevious.setVrsta(slozeniArtikal);
         }
         
         artikalPrevious.setDisable(offset == 0);
-        artikalNext.setDisable(slozeniArtikal.dodatniArtikli.size() <= offset + 20);
+        artikalNext.setDisable(slozeniArtikal.dodatniArtikli.size() <= offset + 19);
         
         //todo dodati opisni next i dodatni next
     }
@@ -1074,7 +1074,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             podgrupaNext.setPodatak(offset + 11);
         }
             
-        if (offset - 10 > 0) {
+        if (offset - 11 >= 0) {
             podgrupaPrevious.setPodatak(offset - 11);
         }
 
@@ -1154,12 +1154,12 @@ public class PorudzbinaController extends FXMLDocumentController {
         artikalPrevious.setPodatak("");
         
         if (izabranaGrupa.artikli.size() > offset + 31) {
-            artikalNext.setPodatak(offset + 30);
+            artikalNext.setPodatak(offset + 31);
             artikalNext.setVrsta("FAV");
         }
             
-        if (offset - 29 > 0) {
-            artikalPrevious.setPodatak(offset - 30);
+        if (offset - 31 >= 0) {
+            artikalPrevious.setPodatak(offset - 31);
             artikalPrevious.setVrsta("FAV");
         }
         
