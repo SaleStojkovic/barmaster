@@ -68,6 +68,8 @@ public class RacuniZaNaplatuController_V2 extends Dialog {
         
         VBox content = new VBox();
         
+        content.setSpacing(10);
+        
         Button stampaj = new Button("Štampaj");
         
         stampaj.setOnAction(new EventHandler<ActionEvent>() {               
