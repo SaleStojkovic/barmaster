@@ -416,9 +416,13 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
     protected static void addAllDescendentsNodes(Parent parent, ArrayList<Node> nodes) {
         for (Node node : parent.getChildrenUnmodifiable()) {
             if (node instanceof Button)
+            {
                 nodes.add(node);
+            }
             if (node instanceof Parent)
+            {
                 addAllDescendentsNodes((Parent)node, nodes);
+            }
         }
     }
 }
