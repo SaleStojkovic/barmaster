@@ -10,7 +10,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.BackgroundImage;
@@ -32,6 +35,7 @@ import rmaster.models.Konobar;
  * @author Arbor
  */
 public class RMaster extends Application {
+    private Executor exec;
     
     public String resource;
     public String mainScreen = "views/pocetniEkran.fxml";
@@ -70,19 +74,74 @@ public class RMaster extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+
+        exec = Executors.newCachedThreadPool(runnable -> {
+            Thread t = new Thread(runnable);
+            t.setDaemon(true);
+            return t ;
+        });
            
-        ucitajSveSale();
-        
-        ucitajSveStolove();
-        
-        Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBold.otf").toExternalForm(), 10);
-        Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBoldItalic.otf").toExternalForm(), 10);
-        Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaLight.otf").toExternalForm(), 10);
-        Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaLightItalic.otf").toExternalForm(), 10);
-        Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaMedium.otf").toExternalForm(), 10);
-        Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaMediumItalic.otf").toExternalForm(), 10);
-        Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaRegular.otf").toExternalForm(), 10);
-        Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaRegularItalic.otf").toExternalForm(), 10);
+        Task<Void> startUpTask;
+        startUpTask = new Task<Void>() {
+            @Override
+            public Void call() throws Exception {
+                
+                long startTimeT = System.nanoTime();
+                System.out.println("ucitajSveSale() - pocetak: " + startTimeT);
+                
+                ucitajSveSale();
+                
+                long estimatedTimeT = System.nanoTime() - startTimeT;
+                System.out.println("ucitajSveSale() - kraj: " + System.nanoTime());
+                System.out.println("ucitajSveSale(): " + estimatedTimeT);
+                
+                return null;
+            }
+        };
+        exec.execute(startUpTask);
+
+        startUpTask = new Task<Void>() {
+            @Override
+            public Void call() throws Exception {
+                
+                long startTimeT = System.nanoTime();
+                System.out.println("ucitajSveStolove() - pocetak: " + startTimeT);
+                
+                ucitajSveStolove();
+                
+                long estimatedTimeT = System.nanoTime() - startTimeT;
+                System.out.println("ucitajSveStolove() - kraj: " + System.nanoTime());
+                System.out.println("ucitajSveStolove(): " + estimatedTimeT);
+                
+                return null;
+            }
+        };
+        exec.execute(startUpTask);
+
+//        startUpTask = new Task<Void>() {
+//            @Override
+//            public Void call() throws Exception {
+//                
+                long startTimeF = System.nanoTime();
+                System.out.println("FONTOVI - pocetak: " + startTimeF);
+                
+                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBold.otf").toExternalForm(), 10);
+                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBoldItalic.otf").toExternalForm(), 10);
+                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaLight.otf").toExternalForm(), 10);
+                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaLightItalic.otf").toExternalForm(), 10);
+                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaMedium.otf").toExternalForm(), 10);
+                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaMediumItalic.otf").toExternalForm(), 10);
+                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaRegular.otf").toExternalForm(), 10);
+                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaRegularItalic.otf").toExternalForm(), 10);
+
+                long estimatedTimeF = System.nanoTime() - startTimeF;
+                System.out.println("FONTOVI - kraj: " + System.nanoTime());
+                System.out.println("FONTOVI: " + estimatedTimeF);
+                
+//                return null;
+//            }
+//        };
+//        exec.execute(startUpTask);
         
 
         ScreenController mainContainer = new ScreenController(); 
@@ -92,21 +151,65 @@ public class RMaster extends Application {
         Class cls = scrMap.getClass();
         
         Field[] fields = cls.getDeclaredFields();
-            
+  
 
+long startTime = System.nanoTime();
+System.out.println("Ucitavanja - pocetak: " + startTime);        
         for (Field field : fields) {
-
             if (java.lang.reflect.Modifier.isStatic(field.getModifiers())){
-
                 String imeForme = field.get(null) + "";
                 String fxmlPutanja = "views/" + imeForme + ".fxml";
-                mainContainer.loadScreen(imeForme, fxmlPutanja);
                 
+                if (imeForme.equals("pocetniEkran")) {
+        
+                    long startTimeT = System.nanoTime();
+                    System.out.println("Ucitavanja - " + imeForme + " - pocetak: " + startTimeT);
+                    
+                    mainContainer.loadScreen(imeForme, fxmlPutanja);
+                    
+                    long estimatedTimeT = System.nanoTime() - startTimeT;
+                    System.out.println("Ucitavanja - " + imeForme + " - kraj: " + System.nanoTime());
+                    System.out.println("Ucitavanja - " + imeForme + ": " + estimatedTimeT);
+                }
+                else {
+                    startUpTask = new Task<Void>() {
+                        @Override
+                        public Void call() throws Exception {
+                            
+                            long startTimeT = System.nanoTime();
+                            System.out.println("Ucitavanja - " + imeForme + " - pocetak: " + startTimeT);
+                            
+                            mainContainer.loadScreen(imeForme, fxmlPutanja);
+                            
+                            long estimatedTimeT = System.nanoTime() - startTimeT;
+                            System.out.println("Ucitavanja - " + imeForme + " - kraj: " + System.nanoTime());
+                            System.out.println("Ucitavanja - " + imeForme + ": " + estimatedTimeT);
+                            
+                            return null;
+                        }
+                    };
+
+                    exec.execute(startUpTask);
+                }
+
             }
         }
-        
+
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Ucitavanja - kraj: " + System.nanoTime());
+        System.out.println("Ucitavanja: " + estimatedTime);
+
         mainContainer.setScreen(ScreenMap.POCETNI_EKRAN, null);
         
+        estimatedTime = System.nanoTime() - startTime - estimatedTime;
+        System.out.println("Otvaranje - kraj - POCETNI_EKRAN: " + System.nanoTime());
+        System.out.println("Otvaranje POCETNI_EKRAN: " + estimatedTime);
+        
+
+
+        long startTimeP = System.nanoTime();
+        System.out.println("Prikaz - POCETNI_EKRAN - pocetak: " + startTimeP);
+
         Group root = new Group(); 
         root.getChildren().addAll(mainContainer); 
         stage.initStyle(StageStyle.UNDECORATED);
@@ -114,6 +217,8 @@ public class RMaster extends Application {
         scene.getStylesheets().addAll(this.getClass().getResource("views/style/style.min.css").toExternalForm()); 
         stage.setScene(scene); 
         stage.show(); 
+        System.out.println("Prikaz - POCETNI_EKRAN - kraj: " + System.nanoTime());
+        System.out.println("Prikaz - POCETNI_EKRAN: " + (System.nanoTime() - startTimeP));
 
         dbBroker.prekiniVezuSaBazom(dbBroker.poveziSaBazom());
     }

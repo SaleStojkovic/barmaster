@@ -167,6 +167,8 @@ public class LojalnostController extends FXMLDocumentController {
     
     public void popuniLojalnostGostiGrupe() {
         
+        lojalnostGostiGrupe.getChildren().clear();
+        
         List<Map<String, String>> listaGrupaGostiju = getGrupeGostiju();
                 
         int sirina = round(1024/listaGrupaGostiju.size());

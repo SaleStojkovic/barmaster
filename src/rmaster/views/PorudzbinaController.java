@@ -262,51 +262,54 @@ public class PorudzbinaController extends FXMLDocumentController {
         
     @Override
     public void initData(Object data) {
-        HashMap<String, String> stoMap = (HashMap) data;
-        
-        izabraniStoId = stoMap.get("stoId");
-        
-        izabraniStoBroj = stoMap.get("stoBroj");
-        
-        izabraniStoNaziv = stoMap.get("stoNaziv");
-        
-        imeKonobara.setText(getUlogovaniKonobarIme());
-        
-        izabraniSto.setText("Sto: " + izabraniStoNaziv);
-        
-        this.porudzbineStola.clear();
-        
-        this.prikazGostiju.getChildren().clear();
+        if (data != null) {
+            HashMap<String, String> stoMap = (HashMap) data;
 
-        this.total.setText("0.00");
+            izabraniStoId = stoMap.get("stoId");
 
-        exec = Executors.newCachedThreadPool(runnable -> {
-            Thread t = new Thread(runnable);
-            t.setDaemon(true);
-            return t ;
-        });
+            izabraniStoBroj = stoMap.get("stoBroj");
 
-        new Thread() {
-            @Override
-            public void start() {
-                prikaziFavorite(0);
-            }
-        }.start();
-        
-        new Thread() {
-            @Override
-            public void start() {
-                prikaziPorudzbinu();
-            }
-        }.start();
-       
-        new Thread() {
-            @Override
-            public void start() {
-                prikaziGrupe(0);
-            }
-        }.start();
-        
+            izabraniStoNaziv = stoMap.get("stoNaziv");
+
+            imeKonobara.setText(getUlogovaniKonobarIme());
+
+            izabraniSto.setText("Sto: " + izabraniStoNaziv);
+
+            this.porudzbineStola.clear();
+            this.porudzbinaTrenutna = null;
+            this.novaTura = null;
+
+            this.prikazGostiju.getChildren().clear();
+
+            this.total.setText("0.00");
+
+            exec = Executors.newCachedThreadPool(runnable -> {
+                Thread t = new Thread(runnable);
+                t.setDaemon(true);
+                return t ;
+            });
+
+            new Thread() {
+                @Override
+                public void start() {
+                    prikaziFavorite(0);
+                }
+            }.start();
+
+            new Thread() {
+                @Override
+                public void start() {
+                    prikaziPorudzbinu();
+                }
+            }.start();
+
+            new Thread() {
+                @Override
+                public void start() {
+                    prikaziGrupe(0);
+                }
+            }.start();
+        }
     }
     
     private void prikaziFavorite(int offset) {
@@ -1639,6 +1642,9 @@ public class PorudzbinaController extends FXMLDocumentController {
         }
                                
         if (listTura.isEmpty()) {
+            tabelaNovaTuraGosta.izbrisiSveIzTabele();
+            tabelaNovaTuraGosta.setManaged(false);
+            tabelaNovaTuraGosta.setVisible(false);
             return;
         } 
         
@@ -1818,29 +1824,34 @@ public class PorudzbinaController extends FXMLDocumentController {
 
     
     public void naplataIliStampaPorudzbine(ActionEvent event) {
-        if (novaTura != null) {
-            // TODO: Ovo treba preraditi da snimi nove ture svih porudzbina i da ih odstampa po stampacima
-            
-            // Ovo je valjda resilo snimanje
-            for (Porudzbina porudzbina : porudzbineStola) {
-                novaTura = null;
-                for (Tura tura : porudzbina.getTure()) {
-                    if (tura.getTuraID() == 0) {
-                        novaTura = tura;
-                        break;
+        if (novaTura != null && novaTura.listStavkeTure.size()>0) {
+            if (this.izabraniStoBroj.equals("0"))
+                // SNIMANJE BRZE NAPLATE
+                porudzbinaTrenutna.snimi();
+            else {
+                for (Porudzbina porudzbina : porudzbineStola) {
+                    novaTura = null;
+                    for (Tura tura : porudzbina.getTure()) {
+                        if (tura.getTuraID() == 0) {
+                            novaTura = tura;
+                            break;
+                        }
+                    }
+                    if (novaTura != null) {
+                        porudzbina.snimi();
+                        Stampa.getInstance().stampajTuru(novaTura, izabraniStoId);
                     }
                 }
-                if (novaTura != null) {
-                    porudzbina.snimi();
-                    Stampa.getInstance().stampajTuru(novaTura, izabraniStoId);
-                }
+    // Ovde resiti stampu po artiklima po stampacima
+    // Ovde resiti stampu po artiklima po stampacima
+    // Ovde resiti stampu po artiklima po stampacima
+
+                List<Object> newData = new ArrayList<>();
+
+                myController.setScreen(ScreenMap.PRIKAZ_SALA, newData);
+
+                return;
             }
-            // Ovde resiti stampu po artiklima
-            List<Object> newData = new ArrayList<>();
-            
-            myController.setScreen(ScreenMap.PRIKAZ_SALA, newData);
-   
-            return;
         }
         // TODO: Otvoriti formu za naplatu
         List<Object> newData = new ArrayList<>();
