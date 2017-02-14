@@ -79,7 +79,8 @@ public abstract class Child_Abstract extends ModelBase {
         artikalFrontMap.put(CENA, this.cena);
         artikalFrontMap.put(DOZVOLJEN_POPUST, this.dozvoljenPopust);
         artikalFrontMap.put(JEDINICA_MERE, this.jedinicaMere);
-        artikalFrontMap.put(NAZIV, this.naziv);
+//        artikalFrontMap.put(NAZIV, this.naziv);
+        artikalFrontMap.put("naziv", this.naziv);
         artikalFrontMap.put(PRIORITET, this.prioritet);
         artikalFrontMap.put(SKRACENI_NAZIV, this.skrNaziv);
         artikalFrontMap.put(SLIKA, this.slika);
@@ -87,7 +88,8 @@ public abstract class Child_Abstract extends ModelBase {
         artikalFrontMap.put(TIP_ARTIKLA, this.tip);
         
         if (includeId) {
-            artikalFrontMap.put(PRIMARY_KEY, this.id);
+//            artikalFrontMap.put(PRIMARY_KEY, this.id);
+            artikalFrontMap.put("ARTIKAL_ID", this.id);
         }
         
         return artikalFrontMap;
