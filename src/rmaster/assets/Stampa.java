@@ -8,6 +8,7 @@ package rmaster.assets;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -413,19 +417,60 @@ public final class Stampa {
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
             DOMSource source = new DOMSource(doc);
 
-            StreamResult result = new StreamResult(new File(
-                    Settings.getInstance().getFiscalniPrinterPath() + 
-                    "\\" + dateFormat.format(new Date()) + 
-                    ".xml")
-            );
-            transformer.transform(source, result);
-            System.out.println("File saved!");
+            String imeFajla = dateFormat.format(new Date()) + ".xml";
+            String putanjaFajla = Settings.getInstance().getFiscalniPrinterPath() + 
+                    "\\" + imeFajla;
+            StreamResult result = new StreamResult(new File(putanjaFajla));
+            transformer.transform(source, result); 
+            
+            Timer timer = new Timer();
+            timer.schedule(
+                new TimerTask() {
+                    long start = System.nanoTime();
+                    long PET_SEKUNDI = 25000000000l;
+                    String putanja = Settings.getInstance().getValueString("fiskal.putanja.fromFP") + imeFajla;
+                    String porudzbinaID = "" + porudzbina.getID();
+
+                    @Override
+                    public void run() {
+                        boolean racunOdstampan = false;
+                        racunOdstampan = pokupiBrojFiskalnogRacunaIzFajla(putanja, porudzbinaID);
+                        if (racunOdstampan || System.nanoTime() - start > PET_SEKUNDI)
+                            this.cancel();
+                    }
+                }, 0, 1000);
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
         } catch (TransformerException tfe) {
             tfe.printStackTrace();
         }        
         
+    }
+    
+    private boolean pokupiBrojFiskalnogRacunaIzFajla(String putanja, String porudzbinaID) {
+        boolean rezultat = false;
+        
+        try {
+            File f = new File(putanja);
+            Scanner s = new Scanner(f);
+            if (s.hasNextLong()) {
+                HashMap<String, String> elementi = new HashMap<>();
+                elementi.put("brojFiskalnogIsecka", "" + s.nextLong());
+                new DBBroker().izmeni("racun", "id", porudzbinaID, elementi, true);
+                s.close();
+                s = null;
+                rezultat = f.delete();
+                f = null;
+            }
+        } catch (FileNotFoundException ex) {
+            //System.err.println(ex);
+        } catch (Exception ex) {
+            System.err.println(ex);
+        }         
+
+        // 4. obrisi fajl
+        
+        return rezultat;
     }
     
     public final void stampajFakturu(Porudzbina porudzbina) {

@@ -1510,7 +1510,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                 "Unesite količinu", 
                 "Unesite količinu", 
                 false, 
-                kolicina
+                ""  //kolicina
         );
         Optional<String> result = tastatura.showAndWait();
         

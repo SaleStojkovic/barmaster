@@ -120,7 +120,7 @@ public class RMaster extends Application {
             
         }.start();
         
-        dbBroker.prekiniVezuSaBazom(dbBroker.poveziSaBazom());
+        dbBroker.prekiniVezuSaBazom();
     }
 
     private void initializeForms() throws Exception
@@ -129,7 +129,7 @@ public class RMaster extends Application {
 
         ucitajSveSale();
         ucitajSveStolove();
-        
+
         ScreenMap scrMap = new ScreenMap();
         
         Class cls = scrMap.getClass();
@@ -196,7 +196,7 @@ public class RMaster extends Application {
         query.setTableName("grafik_konobar");
         
         List<Map<String, String>> sale = dbBroker.runQuery(query);
-        
+
         QueryBuilder query2 = new QueryBuilder(QueryBuilder.SELECT);
         
         query2.setTableName("grafiksale");

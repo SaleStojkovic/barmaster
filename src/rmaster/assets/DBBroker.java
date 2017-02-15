@@ -70,7 +70,23 @@ public final class DBBroker {
         
         return dbConnection;
     }
-     
+
+    /**
+     * 
+     * @throws Exception 
+     */
+    public void prekiniVezuSaBazom() throws Exception {
+        try {
+            if (dbConnection != null)
+                dbConnection.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        dbConnection = null;
+    }
+    
     /**
      * 
      * @param connection
@@ -361,7 +377,7 @@ public final class DBBroker {
         
         try {
             dbConnection = poveziSaBazom();
-            
+
             // select query
             if (query.QUERY_TYPE.equals(QueryBuilder.SELECT)) {
                 
