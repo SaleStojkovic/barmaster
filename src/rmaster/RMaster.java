@@ -52,6 +52,9 @@ public class RMaster extends Application {
     public static List<Map<String, String>> sveSale = new ArrayList<>();
     public static List<Map<String, String>> sviStolovi = new ArrayList<>();
     
+    public static Group root = new Group(); 
+    public static ScreenController mainContainer = new ScreenController(); 
+
     public static List<Grupa> grupeArtikala;
     public static Podgrupa favouriteArtikli;
     
@@ -75,96 +78,104 @@ public class RMaster extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+        long startTimeT = System.nanoTime();
+        System.out.println("Ucitavanja - pocetniEkran - pocetak: " + startTimeT);
+        
+        mainContainer.loadScreen("pocetniEkran", "views/pocetniEkran.fxml");
+        
+        long estimatedTimeT = System.nanoTime() - startTimeT;
+        
+        System.out.println("Ucitavanja - pocetniEkran - kraj: " + System.nanoTime());
+        System.out.println("Ucitavanja - pocetniEkran: " + estimatedTimeT);
+                            
+        mainContainer.setScreen(ScreenMap.POCETNI_EKRAN, null);
+        
+        root.getChildren().addAll(mainContainer); 
+        
+        stage.initStyle(StageStyle.UNDECORATED);
+        
+        Scene scene = new Scene(root); 
+        
+        scene.getStylesheets().addAll(this.getClass().getResource("views/style/style.min.css").toExternalForm()); 
+        
+        stage.setScene(scene); 
+        
+        stage.show(); 
+
+        new Thread() {
+            
+            @Override
+            public void start()
+            {
+                try {
+                    initializeForms();
+                    
+                } catch(Exception e) {
+                    
+                    e.printStackTrace();
+                
+                }
+
+            }
+            
+        }.start();
+        
+        dbBroker.prekiniVezuSaBazom(dbBroker.poveziSaBazom());
+    }
+
+    private void initializeForms() throws Exception
+    {
+        Task<Void> startUpTask;
+
         ucitajSveSale();
         ucitajSveStolove();
+        
+        ScreenMap scrMap = new ScreenMap();
+        
+        Class cls = scrMap.getClass();
+        
+        Field[] fields = cls.getDeclaredFields();
         
         exec = Executors.newCachedThreadPool(runnable -> {
             Thread t = new Thread(runnable);
             t.setDaemon(true);
             return t ;
         });
-                
-        Task<Void> startUpTask;
-
-        ScreenController mainContainer = new ScreenController(); 
-
-        ScreenMap scrMap = new ScreenMap();
         
-        Class cls = scrMap.getClass();
-        
-        Field[] fields = cls.getDeclaredFields();
-  
-
-long startTime = System.nanoTime();
-System.out.println("Ucitavanja - pocetak: " + startTime);        
         for (Field field : fields) {
             if (java.lang.reflect.Modifier.isStatic(field.getModifiers())){
                 String imeForme = field.get(null) + "";
                 String fxmlPutanja = "views/" + imeForme + ".fxml";
                 
                 if (imeForme.equals("pocetniEkran")) {
-        
-                    long startTimeT = System.nanoTime();
-                    System.out.println("Ucitavanja - " + imeForme + " - pocetak: " + startTimeT);
-                    
-                    mainContainer.loadScreen(imeForme, fxmlPutanja);
-                    
-                    long estimatedTimeT = System.nanoTime() - startTimeT;
-                    System.out.println("Ucitavanja - " + imeForme + " - kraj: " + System.nanoTime());
-                    System.out.println("Ucitavanja - " + imeForme + ": " + estimatedTimeT);
+                    continue;
                 }
-                else {
+                    
+                    
                     startUpTask = new Task<Void>() {
                         @Override
                         public Void call() throws Exception {
                             
                             long startTimeT = System.nanoTime();
                             System.out.println("Ucitavanja - " + imeForme + " - pocetak: " + startTimeT);
-                            
+                           
                             mainContainer.loadScreen(imeForme, fxmlPutanja);
                             
                             long estimatedTimeT = System.nanoTime() - startTimeT;
                             System.out.println("Ucitavanja - " + imeForme + " - kraj: " + System.nanoTime());
                             System.out.println("Ucitavanja - " + imeForme + ": " + estimatedTimeT);
-                            
+
                             return null;
                         }
                     };
 
-                    exec.execute(startUpTask);
-                }
-
+                exec.execute(startUpTask);
             }
         }
-
-        long estimatedTime = System.nanoTime() - startTime;
-        System.out.println("Ucitavanja - kraj: " + System.nanoTime());
-        System.out.println("Ucitavanja: " + estimatedTime);
-
-        mainContainer.setScreen(ScreenMap.POCETNI_EKRAN, null);
-        
-        estimatedTime = System.nanoTime() - startTime - estimatedTime;
-        System.out.println("Otvaranje - kraj - POCETNI_EKRAN: " + System.nanoTime());
-        System.out.println("Otvaranje POCETNI_EKRAN: " + estimatedTime);
         
 
-
-        long startTimeP = System.nanoTime();
-        System.out.println("Prikaz - POCETNI_EKRAN - pocetak: " + startTimeP);
-
-        Group root = new Group(); 
-        root.getChildren().addAll(mainContainer); 
-        stage.initStyle(StageStyle.UNDECORATED);
-        Scene scene = new Scene(root); 
-        scene.getStylesheets().addAll(this.getClass().getResource("views/style/style.min.css").toExternalForm()); 
-        stage.setScene(scene); 
-        stage.show(); 
-        System.out.println("Prikaz - POCETNI_EKRAN - kraj: " + System.nanoTime());
-        System.out.println("Prikaz - POCETNI_EKRAN: " + (System.nanoTime() - startTimeP));
-
-        dbBroker.prekiniVezuSaBazom(dbBroker.poveziSaBazom());
     }
-
+    
     public void setResource(String resource) {
         this.resource = resource;
     }

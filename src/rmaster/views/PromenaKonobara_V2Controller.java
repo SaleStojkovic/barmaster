@@ -92,28 +92,38 @@ public class PromenaKonobara_V2Controller extends FXMLDocumentController {
 
         for(Map<String, String> salaMap : sale){
             
-            Tab newTab = new Tab();
-            newTab.setId(salaMap.get("id"));
-            
-            newTab.setText(salaMap.get("naziv"));
-            
-            AnchorPane novaSala = new AnchorPane();
-            
-            prikaziStoloveSale(novaSala, salaMap.get("id"));
-            
-            novaSala.setBackground(getBackground(salaMap.get("slika")));
-                    
-            newTab.setContent(novaSala);
-            
-            saleTabPane.getTabs().add(newTab);
-            
-            if (RMaster.trenutnaSalaID == Long.parseLong(salaMap.get("id"))) {        
-                saleTabPane.getSelectionModel().select(newTab);
-            }        
+             new Thread() {
+                 @Override
+                 public void start()
+                 {
+                     prikaziSalu(salaMap);
+                 }
+             }.start();
         }
     } 
 
+    private void prikaziSalu(Map<String, String> salaMap)
+    {
+        Tab newTab = new Tab();
+        
+        newTab.setId(salaMap.get("id"));
 
+        newTab.setText(salaMap.get("naziv"));
+
+        AnchorPane novaSala = new AnchorPane();
+
+        prikaziStoloveSale(novaSala, salaMap.get("id"));
+
+        novaSala.setBackground(getBackground(salaMap.get("slika")));
+
+        newTab.setContent(novaSala);
+
+        saleTabPane.getTabs().add(newTab);
+
+        if (RMaster.trenutnaSalaID == Long.parseLong(salaMap.get("id"))) {        
+            saleTabPane.getSelectionModel().select(newTab);
+        }       
+    }
     
     public void prikaziStoloveSale(AnchorPane sala, String salaId) 
     {

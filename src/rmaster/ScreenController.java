@@ -85,7 +85,7 @@ public class ScreenController extends StackPane {
        
        return true; 
         } else { 
-         System.out.println("screen hasn't been loaded!\n"); 
+         System.out.println("Forma nije jos uvek ucitana!\n"); 
          return false; 
         }
    }
@@ -94,7 +94,7 @@ public class ScreenController extends StackPane {
 
    public boolean unloadScreen(String name) { 
      if(screens.remove(name) == null) { 
-       System.out.println("Screen didn't exist"); 
+       System.out.println("Forma ne postoji"); 
        return false; 
      } else { 
        return true; 
