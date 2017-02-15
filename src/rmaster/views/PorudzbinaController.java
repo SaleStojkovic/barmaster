@@ -1839,7 +1839,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         newData.add((Node)event.getSource());
         
         myController.setScreen(ScreenMap.NAPLATA, newData);
- 
+                
     }
 
     private void izbrisiSveIzTabela() {

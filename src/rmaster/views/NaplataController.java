@@ -31,6 +31,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.swing.JRViewer;
 import rmaster.assets.DBBroker;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.QueryBuilder.QueryBuilder;
@@ -171,6 +176,7 @@ public class NaplataController extends FXMLDocumentController {
                     switch (chk.getId()) {
                         case "fxID_Faktura":
                             setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.FAKTURA);
+                            
                             break;
                         case "fxID_Cek":
                             setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.CEK);

@@ -27,6 +27,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.swing.JRViewer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -429,7 +434,20 @@ public final class Stampa {
     }
     
     public final void stampajFakturu(Porudzbina porudzbina) {
-        
+        //        try {
+//            
+//            JasperReport jasperReport = (JasperReport)JRLoader.loadObject(getClass().getResourceAsStream("reports/faktura.jasper"));
+//            
+//            JasperPrint print = JasperFillManager.fillReport(jasperReport, null, DBBroker.poveziSaBazom());
+//            
+//            JRViewer viewer = new JRViewer(print);
+//
+//            viewer.setVisible(true);
+//
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//        }
+//        myController.setScreen(ScreenMap.NAPLATA, newData);
     }
 
     public final void stampajTuru(Tura tura, String izabraniStoId) {
