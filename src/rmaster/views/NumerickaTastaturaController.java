@@ -124,7 +124,7 @@ public class NumerickaTastaturaController extends Dialog {
 
         vBoxTastatura.getChildren().add(redSaTekstom);
 
-        for(int i=1; i<4; i++) {
+        for(int i=3; i>0; i--) {
             HBox redSaBrojevima = new HBox();
 
             for (int j=1; j<4; j++) {
@@ -218,7 +218,7 @@ public class NumerickaTastaturaController extends Dialog {
         try {
         cancelButton.getScene().getWindow().hide();
         } catch (Exception e){
-            System.out.println("Neuspelo zatvaranje forme - TastaturaController");
+            System.out.println("Neuspelo zatvaranje forme - NumerickaTastaturaController");
         }
     }
     
