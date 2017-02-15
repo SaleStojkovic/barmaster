@@ -992,12 +992,10 @@ public class PorudzbinaController extends FXMLDocumentController {
                                         Artikal_Slozeni slozeniArtikal = 
                                                 (Artikal_Slozeni)pressedButton.getPodatak();
                                         
-                                        //TODO
                                         dodajArtikalUNovuTuru(pressedButton);
                                         
                                         prikaziSlozeniArtikal(slozeniArtikal, 0);
                                         
-                                        //System.out.print("SLOZENI");
                                     }
                                 });
         
@@ -1010,13 +1008,8 @@ public class PorudzbinaController extends FXMLDocumentController {
                                         
                                         RM_Button pressedButton = (RM_Button)event.getSource();
                                         
-                                        //Artikal_Prosti prostiArtikal = 
-                                        //        (Artikal_Prosti)pressedButton.getPodatak();
-                                        
-                                        //TODO
                                         dodajArtikalUNovuTuru(pressedButton);
                                         
-                                        //System.out.print("PROSTI");
                                     }
                                 });
     }
@@ -1028,13 +1021,7 @@ public class PorudzbinaController extends FXMLDocumentController {
                                         
                                         RM_Button pressedButton = (RM_Button)event.getSource();
                                         
-//                                        Artikal_Dodatni dodatniArtikal = 
-//                                                (Artikal_Dodatni)pressedButton.getPodatak();
-                                        
-                                        //TODO
                                        dodajOpisniDodatniArtikalUStavkuTure(selektovana, pressedButton);
-
-//                                        System.out.print("DODATNI");
                                     }
                                 });
     }
@@ -1045,15 +1032,8 @@ public class PorudzbinaController extends FXMLDocumentController {
                                     @Override public void handle(ActionEvent event) {
                                         
                                         RM_Button pressedButton = (RM_Button)event.getSource();
-                                        
-//                                        Artikal_Opisni opisniArtikal = 
-//                                                (Artikal_Opisni)pressedButton.getPodatak();
-                                        
-                                        
-                                        //TODO
-                                       dodajOpisniDodatniArtikalUStavkuTure(selektovana, pressedButton);
+                                        dodajOpisniDodatniArtikalUStavkuTure(selektovana, pressedButton);
 
-//                                       System.out.print("OPISNI");
                                     }
                                 });
     }

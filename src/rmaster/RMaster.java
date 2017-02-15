@@ -75,74 +75,16 @@ public class RMaster extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+        ucitajSveSale();
+        ucitajSveStolove();
+        
         exec = Executors.newCachedThreadPool(runnable -> {
             Thread t = new Thread(runnable);
             t.setDaemon(true);
             return t ;
         });
-           
+                
         Task<Void> startUpTask;
-        startUpTask = new Task<Void>() {
-            @Override
-            public Void call() throws Exception {
-                
-                long startTimeT = System.nanoTime();
-                System.out.println("ucitajSveSale() - pocetak: " + startTimeT);
-                
-                ucitajSveSale();
-                
-                long estimatedTimeT = System.nanoTime() - startTimeT;
-                System.out.println("ucitajSveSale() - kraj: " + System.nanoTime());
-                System.out.println("ucitajSveSale(): " + estimatedTimeT);
-                
-                return null;
-            }
-        };
-        exec.execute(startUpTask);
-
-        startUpTask = new Task<Void>() {
-            @Override
-            public Void call() throws Exception {
-                
-                long startTimeT = System.nanoTime();
-                System.out.println("ucitajSveStolove() - pocetak: " + startTimeT);
-                
-                ucitajSveStolove();
-                
-                long estimatedTimeT = System.nanoTime() - startTimeT;
-                System.out.println("ucitajSveStolove() - kraj: " + System.nanoTime());
-                System.out.println("ucitajSveStolove(): " + estimatedTimeT);
-                
-                return null;
-            }
-        };
-        exec.execute(startUpTask);
-
-//        startUpTask = new Task<Void>() {
-//            @Override
-//            public Void call() throws Exception {
-//                
-                long startTimeF = System.nanoTime();
-                System.out.println("FONTOVI - pocetak: " + startTimeF);
-                
-                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBold.otf").toExternalForm(), 10);
-                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaBoldItalic.otf").toExternalForm(), 10);
-                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaLight.otf").toExternalForm(), 10);
-                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaLightItalic.otf").toExternalForm(), 10);
-                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaMedium.otf").toExternalForm(), 10);
-                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaMediumItalic.otf").toExternalForm(), 10);
-                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaRegular.otf").toExternalForm(), 10);
-                Font.loadFont(RMaster.class.getResource("views/style/fonts/KlavikaRegularItalic.otf").toExternalForm(), 10);
-
-                long estimatedTimeF = System.nanoTime() - startTimeF;
-                System.out.println("FONTOVI - kraj: " + System.nanoTime());
-                System.out.println("FONTOVI: " + estimatedTimeF);
-                
-//                return null;
-//            }
-//        };
-//        exec.execute(startUpTask);
-        
 
         ScreenController mainContainer = new ScreenController(); 
 
@@ -420,7 +362,6 @@ System.out.println("Ucitavanja - pocetak: " + startTime);
         query.addCriteriaValues(QueryBuilder.BIT_0, "1");
         query.addOrderByColumns("artikal.prioritet", "artikal.name");
         query.addOrderByCriterias(QueryBuilder.SORT_ASC, QueryBuilder.SORT_ASC);
-        //query.setOrderBy("artikal.prioritet, artikal.name", QueryBuilder.SORT_ASC);
         
         List<HashMap<String, String>> listaArtikala = dbBroker.runQuery(query);
         

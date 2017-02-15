@@ -18,6 +18,45 @@ and open the template in the editor.
     broj-dugmica-artikla: 19;
     -fx-boja-rezervacije1: yellow;
     -fx-boja-rezervacije2: blue;
-    
 
+}
+
+@font-face {
+    font-family: KlavikaBold;
+    src: url("fonts/KlavikaBold.otf");
+}
+
+@font-face {
+    font-family: KlavikaBoldItalic;
+    src: url("fonts/KlavikaBoldItalic.otf");
+}
+
+@font-face {
+    font-family: KlavikaLight;
+    src: url("fonts/KlavikaLight.otf");
+}
+
+@font-face {
+    font-family: KlavikaLightItalic;
+    src: url("fonts/KlavikaLightItalic.otf");
+}
+
+@font-face {
+    font-family: KlavikaMedium;
+    src: url("fonts/KlavikaMedium.otf");
+}
+
+@font-face {
+    font-family: KlavikaMediumItalic;
+    src: url("fonts/KlavikaMediumItalic.otf");
+}
+
+@font-face {
+    font-family: KlavikaRegular;
+    src: url("fonts/KlavikaRegular.otf");
+}
+
+@font-face {
+    font-family: KlavikaRegularItalic;
+    src: url("fonts/KlavikaRegularItalic.otf");
 }
