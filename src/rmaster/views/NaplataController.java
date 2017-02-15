@@ -125,25 +125,38 @@ public class NaplataController extends FXMLDocumentController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        popuniPopuste();
+        popuniHotelGost();
 
     } 
     
     @Override
     public void initData(Object data) {
-                Timeline timeline = this.prikaziCasovnik(casovnik);
+        
+        Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
-        this.imeKonobara.setText(ulogovaniKonobar.imeKonobara);
+        
+        
+        //this.fxID_Uplaceno.setText("0.00");
+        
+        this.imeKonobara.setText(RMaster.getUlogovaniKonobar().imeKonobara);
 
         this.fxID_Faktura.setDisable(!Settings.getInstance().getValueBoolean("faktura"));
         this.fxID_Cek.setDisable(!Settings.getInstance().getValueBoolean("cek"));
         this.fxID_Kartica.setDisable(!Settings.getInstance().getValueBoolean("kartica"));
         this.fxID_Gotovina.setDisable(!Settings.getInstance().getValueBoolean("gotovina"));
         
-        placanja.add(new NacinPlacanja(NacinPlacanja.VrstePlacanja.FAKTURA));
-        placanja.add(new NacinPlacanja(NacinPlacanja.VrstePlacanja.CEK));
-        placanja.add(new NacinPlacanja(NacinPlacanja.VrstePlacanja.KARTICA));
-        aktivnoPlacanje = new NacinPlacanja(NacinPlacanja.VrstePlacanja.GOTOVINA);
-        placanja.add(aktivnoPlacanje);
+        if (placanja.size()==0) {
+            placanja.add(new NacinPlacanja(NacinPlacanja.VrstePlacanja.FAKTURA));
+            placanja.add(new NacinPlacanja(NacinPlacanja.VrstePlacanja.CEK));
+            placanja.add(new NacinPlacanja(NacinPlacanja.VrstePlacanja.KARTICA));
+            aktivnoPlacanje = new NacinPlacanja(NacinPlacanja.VrstePlacanja.GOTOVINA);
+            placanja.add(aktivnoPlacanje);
+        }
+        
+        for (NacinPlacanja nacinPlacanja : placanja) {
+            nacinPlacanja.setVrednostString("");
+        }
         
         tgVrstaPlacanja.selectedToggleProperty().addListener(new ChangeListener<Toggle>()
             {
@@ -154,28 +167,18 @@ public class NaplataController extends FXMLDocumentController {
                         chk = (ToggleButton)t1.getToggleGroup().getSelectedToggle();
                     else
                         chk = (ToggleButton)t;
-//                    String bojaDefault = "color:yellow";
-//                    String bojaPressed = "color:red";
-//                    fxID_Faktura.setStyle(bojaDefault);
-//                    fxID_Cek.setStyle(bojaDefault);
-//                    fxID_Kartica.setStyle(bojaDefault);
-//                    fxID_Gotovina.setStyle(bojaDefault);
 
                     switch (chk.getId()) {
                         case "fxID_Faktura":
-//                            fxID_Faktura.setStyle(bojaPressed);
                             setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.FAKTURA);
                             break;
                         case "fxID_Cek":
-//                            fxID_Cek.setStyle(bojaPressed);
                             setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.CEK);
                             break;
                         case "fxID_Kartica":
-//                            fxID_Kartica.setStyle(bojaPressed);
                             setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.KARTICA);
                             break;
                         case "fxID_Gotovina":
-//                            fxID_Gotovina.setStyle(bojaPressed);
                             setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.GOTOVINA);
                             break;
                     }
@@ -184,15 +187,13 @@ public class NaplataController extends FXMLDocumentController {
         
         this.fxID_Gotovina.fire();
 
-        popuniPopuste();
-        popuniHotelGost();
-        
         List<Object> d = (List<Object>)data;
         StalniGost stalniGost = null;
 
         for (Object object : d) {
             if (object instanceof Porudzbina) {
                 porudzbina = (Porudzbina) object;
+                stalniGost = porudzbina.getStalniGost();
             }
             if (object instanceof StalniGost) {
                stalniGost = (StalniGost)object;
@@ -202,16 +203,17 @@ public class NaplataController extends FXMLDocumentController {
             }
         }
         this.total = porudzbina.getVrednostPorudzbine();
+        this.fxID_Total.setText(Utils.getStringFromDouble(this.total));
         
         if (stalniGost != null) {
             porudzbina.setStalniGost(stalniGost);
             porudzbina.setPopust(Utils.getDoubleFromString(stalniGost.popust));
         }
         
-        this.fxID_Total.setText(Utils.getStringFromDouble(this.total));
-
         this.data = data;
 
+        this.skenerKartice.setText("");
+        
         osveziPrikaz();
     }
     
@@ -297,12 +299,7 @@ public class NaplataController extends FXMLDocumentController {
     private void osveziPrikaz() {
         this.zaUplatu = this.porudzbina.getVrednostPorudzbineSaObracunatimPopustom();
         this.fxID_ZaUplatu.setText(Utils.getStringFromDouble(this.zaUplatu));
-//        if (this.porudzbina != null) {
-//            double zaNaplatu = this.porudzbina.getVrednostPorudzbineSaObracunatimPopustom();
-            this.fxID_Popust.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) - this.zaUplatu));
-//        }
-//        else
-//            this.fxID_Popust.setText(Utils.getStringFromDouble(0.));
+        this.fxID_Popust.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(this.fxID_Total.getText()) - this.zaUplatu));
         this.fxID_Uplaceno.setText(Utils.getStringFromDouble(this.getUplaceno()));
         this.fxID_Kusur.setText(Utils.getStringFromDouble(this.getKusur()));
         
@@ -515,8 +512,10 @@ public class NaplataController extends FXMLDocumentController {
 
     @FXML
     public void odustani(ActionEvent event) {
-        Button b = (Button)event.getSource(); 
-        b.getScene().getWindow().hide();
+//        myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
+        myController.setScreen(ScreenMap.PORUDZBINA, null);
+//        Button b = (Button)event.getSource(); 
+//        b.getScene().getWindow().hide();
     }
     
     public void keyListener(KeyEvent keyEvent) 

@@ -228,7 +228,7 @@ public class Porudzbina {
     public void zatvoriRacun(Date vreme) {
         DBBroker db = new DBBroker();
         snimi();
-        db.zatvoriRacunIOslobodiSto(this.racunID, vreme, this.brojStolaID);
+        db.zatvoriRacunIOslobodiSto(this.racunID, vreme, this.brojStolaBroj);
         this.zatvoren = true;
         this.vremeIzdavanjaRacuna = vreme;
     }
@@ -338,8 +338,10 @@ public class Porudzbina {
     
     public void setStalniGost(StalniGost stalniGost) {
         this.stalniGost = stalniGost;
-        //this.STALNIGOST_ID = Long.valueOf(stalniGost.id);
-        //this.popust = Double.parseDouble(stalniGost.popust);
+    }
+
+    public StalniGost getStalniGost() {
+        return this.stalniGost;
     }
 }
  
