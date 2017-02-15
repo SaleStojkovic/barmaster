@@ -332,10 +332,15 @@ public class NaplataController extends FXMLDocumentController {
     
     public void obradiFakturu(boolean jeFaktura) {
         if (!jeFaktura && (this.getUplaceno() != 0)) {
+            
             this.fxID_Faktura.setDisable(true);
+            
             for (NacinPlacanja nacinPlacanja : placanja) {
-                if (nacinPlacanja.getNacinPlacanja() == NacinPlacanja.VrstePlacanja.FAKTURA)
+                
+                if (nacinPlacanja.getNacinPlacanja() == NacinPlacanja.VrstePlacanja.FAKTURA) {
+                    
                     nacinPlacanja.setVrednost(0);
+                }
             }
             return;
         }
@@ -344,6 +349,7 @@ public class NaplataController extends FXMLDocumentController {
         
         // TODO
         // Otvoriti formu ili izvestaj za fakturu
+
     }
 
 
