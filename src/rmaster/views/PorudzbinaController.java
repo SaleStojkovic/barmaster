@@ -36,17 +36,23 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import main.jrprintpreview.JRPrintPreview;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.RM_TableView.RM_TableView;
 import rmaster.assets.RM_TableView.RavnanjeKolone;
 import rmaster.assets.RM_TableView.SirinaKolone;
 import rmaster.ScreenController;
+import rmaster.assets.DBBroker;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
 import rmaster.assets.items.ArtikalButton;
 import rmaster.assets.RM_Button.RM_Button;
-import static rmaster.assets.items.VrsteGrupaIliArtikal.*;
 import rmaster.models.Artikal.Artikal_Dodatni;
 import rmaster.models.Artikal.Artikal_Opisni;
 import rmaster.models.Artikal.Artikal_Prosti;
@@ -1833,13 +1839,33 @@ public class PorudzbinaController extends FXMLDocumentController {
                 return;
             }
         }
-        // TODO: Otvoriti formu za naplatu
+
         List<Object> newData = new ArrayList<>();
         newData.add(this.porudzbinaTrenutna);
         newData.add((Node)event.getSource());
         
         myController.setScreen(ScreenMap.NAPLATA, newData);
-                
+        
+        
+          //OVO RADI!!! :D
+//        String reportFileName = "/rmaster/views/reports/faktura.jrxml";
+//             
+//        try {
+//        Map<String, Object> mapa = new HashMap<>();   
+//        JasperReport jasperReport = JasperCompileManager.compileReport(getClass().getResourceAsStream(reportFileName));
+////        JasperReport report = (JasperReport) JRLoader.loadObject(JRLoader.getResourceInputStream(reportFileName));
+//        
+//        JasperPrint print = (JasperPrint) JasperFillManager.fillReport(jasperReport, mapa, DBBroker.poveziSaBazom());
+//
+//        JRPrintPreview printPreview = new JRPrintPreview(print);
+//        printPreview.show();
+//        
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        
+        
+        
     }
 
     private void izbrisiSveIzTabela() {

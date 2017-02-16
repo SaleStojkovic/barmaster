@@ -382,4 +382,9 @@ public class RMaster extends Application {
         }
     }
     
+    private void compileReports()
+    {
+        
+    }
+    
 }

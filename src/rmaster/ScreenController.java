@@ -9,8 +9,10 @@ import java.util.HashMap;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Window;
 import rmaster.assets.ControlledScreen;
 import rmaster.assets.FXMLDocumentController;
 
