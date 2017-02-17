@@ -51,7 +51,6 @@ import rmaster.assets.DBBroker;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
-import rmaster.assets.items.ArtikalButton;
 import rmaster.assets.RM_Button.RM_Button;
 import rmaster.models.Artikal.Artikal_Dodatni;
 import rmaster.models.Artikal.Artikal_Opisni;
@@ -231,7 +230,6 @@ public class PorudzbinaController extends FXMLDocumentController {
     Tura novaTura;
     Porudzbina porudzbinaTrenutna = null;
     
-    ArtikalButton selektovani = null;
     StavkaTure selektovana = null;
     
     /**
