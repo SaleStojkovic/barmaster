@@ -35,6 +35,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import static java.lang.Math.round;
 import rmaster.ScreenController;
+import static java.lang.Math.round;
 
 /**
  * FXML Controller class

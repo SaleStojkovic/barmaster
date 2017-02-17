@@ -22,7 +22,7 @@ public class ScreenMap {
     
     public static String PRIKAZ_SALA = "prikazSala";
         
-    public static String PROMENA_KONOBARA_V2 = "promenaKonobara_V2";
+    public static String PROMENA_KONOBARA = "promenaKonobara";
         
     public static String REZERVACIJE = "rezervacije";
     

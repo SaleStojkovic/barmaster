@@ -17,7 +17,6 @@ import javafx.concurrent.Task;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.BackgroundImage;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import rmaster.assets.DBBroker;
@@ -78,6 +77,9 @@ public class RMaster extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+        System.setProperty("javax.xml.transform.TransformerFactory",
+                "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+        
         long startTimeT = System.nanoTime();
         System.out.println("Ucitavanja - pocetniEkran - pocetak: " + startTimeT);
         
