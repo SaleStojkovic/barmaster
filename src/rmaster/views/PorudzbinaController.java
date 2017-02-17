@@ -51,7 +51,6 @@ import rmaster.assets.DBBroker;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
-import rmaster.assets.items.ArtikalButton;
 import rmaster.assets.RM_Button.RM_Button;
 import rmaster.models.Artikal.Artikal_Dodatni;
 import rmaster.models.Artikal.Artikal_Opisni;
@@ -231,7 +230,6 @@ public class PorudzbinaController extends FXMLDocumentController {
     Tura novaTura;
     Porudzbina porudzbinaTrenutna = null;
     
-    ArtikalButton selektovani = null;
     StavkaTure selektovana = null;
     
     /**
@@ -1840,29 +1838,29 @@ public class PorudzbinaController extends FXMLDocumentController {
             }
         }
 
-        List<Object> newData = new ArrayList<>();
-        newData.add(this.porudzbinaTrenutna);
-        newData.add((Node)event.getSource());
-        
-        myController.setScreen(ScreenMap.NAPLATA, newData);
+//        List<Object> newData = new ArrayList<>();
+//        newData.add(this.porudzbinaTrenutna);
+//        newData.add((Node)event.getSource());
+//        
+//        myController.setScreen(ScreenMap.NAPLATA, newData);
         
         
           //OVO RADI!!! :D
-//        String reportFileName = "/rmaster/views/reports/faktura.jrxml";
-//             
-//        try {
-//        Map<String, Object> mapa = new HashMap<>();   
-//        JasperReport jasperReport = JasperCompileManager.compileReport(getClass().getResourceAsStream(reportFileName));
-////        JasperReport report = (JasperReport) JRLoader.loadObject(JRLoader.getResourceInputStream(reportFileName));
-//        
-//        JasperPrint print = (JasperPrint) JasperFillManager.fillReport(jasperReport, mapa, DBBroker.poveziSaBazom());
-//
-//        JRPrintPreview printPreview = new JRPrintPreview(print);
-//        printPreview.show();
-//        
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        String reportFileName = "/rmaster/views/reports/faktura.jrxml";
+             
+        try {
+        Map<String, Object> mapa = new HashMap<>();   
+        JasperReport jasperReport = JasperCompileManager.compileReport(getClass().getResourceAsStream(reportFileName));
+        
+        JasperPrint print = (JasperPrint) JasperFillManager.fillReport(jasperReport, mapa, DBBroker.poveziSaBazom());
+        
+        JRPrintPreview printPreview = new JRPrintPreview(print);
+       
+        printPreview.show();
+        
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         
         
         

@@ -36,7 +36,7 @@ import rmaster.models.Konobar;
  *
  * @author Arbor
  */
-public class PromenaKonobara_V2Controller extends FXMLDocumentController {
+public class PromenaKonobaraController extends FXMLDocumentController {
 
         ScreenController myController; 
      

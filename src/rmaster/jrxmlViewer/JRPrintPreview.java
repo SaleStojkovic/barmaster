@@ -116,43 +116,43 @@ public class JRPrintPreview extends Stage {
 
     btnPrint.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/net/sf/jasperreports/view/images/print.GIF")))); // NOI18N
     btnPrint.setTooltip(new Tooltip(resourceBundle.getString("print")));
-    btnPrint.setPrefSize(23, 23);
+    btnPrint.setPrefSize(33, 33);
     btnPrint.setOnAction(e -> onBtnPrint());
     btnPrint.setFocusTraversable(false);
 
     btnFirst.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/net/sf/jasperreports/view/images/first.GIF")))); // NOI18N
     btnFirst.setTooltip(new Tooltip(resourceBundle.getString("first.page")));
-    btnFirst.setPrefSize(23, 23);
+    btnFirst.setPrefSize(33, 33);
     btnFirst.setOnAction(e -> onBtnFirstPressed());
     btnFirst.setFocusTraversable(false);
 
     btnPrevious.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/net/sf/jasperreports/view/images/previous.GIF")))); // NOI18N
     btnPrevious.setTooltip(new Tooltip(resourceBundle.getString("previous.page")));
-    btnPrevious.setPrefSize(23, 23);
+    btnPrevious.setPrefSize(33, 33);
     btnPrevious.setOnAction(e -> onBtnPreviousPressed());
     btnPrevious.setFocusTraversable(false);
 
     btnNext.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/net/sf/jasperreports/view/images/next.GIF")))); // NOI18N
     btnNext.setTooltip(new Tooltip(resourceBundle.getString("next.page")));
-    btnNext.setPrefSize(23, 23);
+    btnNext.setPrefSize(33, 33);
     btnNext.setOnAction(e -> onBtnNextPressed());
     btnNext.setFocusTraversable(false);
 
     btnLast.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/net/sf/jasperreports/view/images/last.GIF")))); // NOI18N
     btnLast.setTooltip(new Tooltip(resourceBundle.getString("last.page")));
-    btnLast.setPrefSize(23, 23);
+    btnLast.setPrefSize(33, 33);
     btnLast.setOnAction(e -> onBtnLastPressed());
     btnLast.setFocusTraversable(false);
 
     txtGoTo.setTooltip(new Tooltip(resourceBundle.getString("go.to.page")));
     txtGoTo.setAlignment(Pos.CENTER);
-    txtGoTo.setPrefSize(40, 23);
+    txtGoTo.setPrefSize(50, 33);
     txtGoTo.setOnAction(e -> onGoToTextChanged());
     txtGoTo.setFocusTraversable(false);
 
     btnActualSize.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/net/sf/jasperreports/view/images/actualsize.GIF")))); // NOI18N
     btnActualSize.setTooltip(new Tooltip(resourceBundle.getString("actual.size")));
-    btnActualSize.setPrefSize(23, 23);
+    btnActualSize.setPrefSize(33, 33);
     btnActualSize.setOnAction(e -> {
         if (((ToggleButton) e.getSource()).isSelected()) {
               onActualSizePressed();
@@ -162,7 +162,7 @@ public class JRPrintPreview extends Stage {
 
     btnFitPage.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/net/sf/jasperreports/view/images/fitpage.GIF")))); // NOI18N
     btnFitPage.setTooltip(new Tooltip(resourceBundle.getString("fit.page")));
-    btnFitPage.setPrefSize(23, 23);
+    btnFitPage.setPrefSize(33, 33);
     btnFitPage.setOnAction(e -> {
       if (((ToggleButton) e.getSource()).isSelected()) {
         onFitPagePressed();
@@ -172,7 +172,7 @@ public class JRPrintPreview extends Stage {
 
     btnFitWidth.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/net/sf/jasperreports/view/images/fitwidth.GIF")))); // NOI18N
     btnFitWidth.setTooltip(new Tooltip(resourceBundle.getString("fit.width")));
-    btnFitWidth.setPrefSize(23, 23);
+    btnFitWidth.setPrefSize(33, 33);
     btnFitWidth.setOnAction(e -> {
       if (((ToggleButton) e.getSource()).isSelected()) {
         onSetFitToWidthPressed();
@@ -185,19 +185,19 @@ public class JRPrintPreview extends Stage {
 
     btnZoomIn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/net/sf/jasperreports/view/images/zoomin.GIF")))); // NOI18N
     btnZoomIn.setTooltip(new Tooltip(resourceBundle.getString("zoom.in")));
-    btnZoomIn.setPrefSize(23, 23);
+    btnZoomIn.setPrefSize(33, 33);
     btnZoomIn.setOnAction(e -> onBtnZoomIn());
     btnZoomIn.setFocusTraversable(false);
 
     btnZoomOut.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/net/sf/jasperreports/view/images/zoomout.GIF")))); // NOI18N
     btnZoomOut.setTooltip(new Tooltip(resourceBundle.getString("zoom.out")));
-    btnZoomOut.setPrefSize(23, 23);
+    btnZoomOut.setPrefSize(33, 33);
     btnZoomOut.setOnAction(e -> onBtnZoomOut());
     btnZoomOut.setFocusTraversable(false);
 
     cmbZoom.setEditable(true);
     cmbZoom.setTooltip(new Tooltip(resourceBundle.getString("zoom.ratio")));
-    cmbZoom.setPrefSize(80, 24);
+    cmbZoom.setPrefSize(90, 34);
     
     for (int zoom : zooms) {
       cmbZoom.getItems().add(zoom + "%");
@@ -207,8 +207,9 @@ public class JRPrintPreview extends Stage {
     cmbZoom.setFocusTraversable(false);
     cmbZoom.setOnAction(e -> onComboBoxZoomChanged());
     cmbZoom.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent e) -> {
-      if (e.getCode() == KeyCode.ENTER)
-        onComboBoxZoomChanged();
+        if (e.getCode() == KeyCode.ENTER) {
+            onComboBoxZoomChanged();
+        }
     });
 
     vBoxPage.setSpacing(SPACING);
@@ -254,7 +255,7 @@ public class JRPrintPreview extends Stage {
 		
     lblStatus.setFont(new Font("Dialog", 10));
     statusBar.setAlignment(Pos.CENTER);
-    statusBar.setMaxHeight(24);
+    statusBar.setMaxHeight(34);
     statusBar.getChildren().add(lblStatus);
 
     VBox root = new VBox();

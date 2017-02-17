@@ -440,7 +440,7 @@ public class PrikazSalaController extends FXMLDocumentController {
 
 //        myController.setScreen(ScreenMap.RACUNI_ZA_NAPLATU, null);
 
-        RacuniZaNaplatuController_V2 racuniPopUp = new RacuniZaNaplatuController_V2();
+        RacuniZaNaplatuController racuniPopUp = new RacuniZaNaplatuController();
         
         Optional<String> result = racuniPopUp.showAndWait();
                 
