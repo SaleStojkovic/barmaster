@@ -9,6 +9,6 @@ package rmaster.models.Artikal;
  *
  * @author Arbor
  */
-public class Artikal_Dodatni extends Child_Abstract {
+public class Opisni extends ArtikalAbstract {
     
 }

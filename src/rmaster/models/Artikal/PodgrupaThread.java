@@ -9,19 +9,20 @@ package rmaster.models.Artikal;
  *
  * @author Arbor
  */
-public class Grupa_Thread implements Runnable {
-
-   public Grupa_Thread(Grupa grupa) {
+public class PodgrupaThread implements Runnable {
+    
+    public PodgrupaThread(Grupa grupa, Podgrupa podgrupa) {
+       this.podgrupa = podgrupa;
        this.grupa = grupa;
-   }
+    }
    
+   private Podgrupa podgrupa;
    private Grupa grupa;
-   
 
    @Override
    public void run() {
-         this.grupa.setAllChildren();
-        rmaster.RMaster.grupeArtikala.add(grupa);
-
+         this.podgrupa.setAllChildren();
+         this.grupa.podgrupe.add(podgrupa);
    }
+   
 }

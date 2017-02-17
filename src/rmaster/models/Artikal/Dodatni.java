@@ -9,8 +9,6 @@ package rmaster.models.Artikal;
  *
  * @author Arbor
  */
-public interface Child_Interface {
-    
-    public void setAllChildren();
+public class Dodatni extends ArtikalAbstract {
     
 }

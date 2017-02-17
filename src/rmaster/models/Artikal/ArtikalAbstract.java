@@ -13,7 +13,7 @@ import rmaster.assets.ModelBase;
  *
  * @author Arbor
  */
-public abstract class Child_Abstract extends ModelBase {
+public abstract class ArtikalAbstract extends ModelBase {
     
     public static String TABLE_NAME = "artikal";
  

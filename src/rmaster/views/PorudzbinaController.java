@@ -52,12 +52,12 @@ import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 import rmaster.assets.Utils;
 import rmaster.assets.RM_Button.RM_Button;
-import rmaster.models.Artikal.Artikal_Dodatni;
-import rmaster.models.Artikal.Artikal_Opisni;
-import rmaster.models.Artikal.Artikal_Prosti;
+import rmaster.models.Artikal.Dodatni;
+import rmaster.models.Artikal.Opisni;
+import rmaster.models.Artikal.Prosti;
 import rmaster.models.Artikal.Podgrupa;
-import rmaster.models.Artikal.Artikal_Slozeni;
-import rmaster.models.Artikal.Child_Abstract;
+import rmaster.models.Artikal.Slozeni;
+import rmaster.models.Artikal.ArtikalAbstract;
 import rmaster.models.Gost;
 import rmaster.models.Artikal.Grupa;
 import rmaster.models.Porudzbina;
@@ -545,9 +545,9 @@ public class PorudzbinaController extends FXMLDocumentController {
             return;
         }
         
-        if (model instanceof Artikal_Slozeni) {
+        if (model instanceof Slozeni) {
             //prikaz slozenog artikla
-            Artikal_Slozeni artikal = (Artikal_Slozeni)model;
+            Slozeni artikal = (Slozeni)model;
             
             prikaziSlozeniArtikal(artikal, offset);
         }
@@ -577,9 +577,9 @@ public class PorudzbinaController extends FXMLDocumentController {
             return;
         }
         
-        if (model instanceof Artikal_Slozeni) {
+        if (model instanceof Slozeni) {
             //todo
-            Artikal_Slozeni artikal = (Artikal_Slozeni)model;
+            Slozeni artikal = (Slozeni)model;
             
             prikaziSlozeniArtikal(artikal, offset);
         }
@@ -623,9 +623,9 @@ public class PorudzbinaController extends FXMLDocumentController {
             return;
         }
         
-        if(model instanceof Artikal_Slozeni) {
+        if(model instanceof Slozeni) {
             //prikaz slozenog artikala
-            prikaziSlozeniArtikal((Artikal_Slozeni)model, offset);
+            prikaziSlozeniArtikal((Slozeni)model, offset);
         }  
     }
     
@@ -664,9 +664,9 @@ public class PorudzbinaController extends FXMLDocumentController {
             return;
         }
         
-        if(model instanceof Artikal_Slozeni) {
+        if(model instanceof Slozeni) {
             //prikaz slozenog artikala
-            prikaziSlozeniArtikal((Artikal_Slozeni)model, offset);
+            prikaziSlozeniArtikal((Slozeni)model, offset);
         } 
     }
     
@@ -869,7 +869,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         artikalNext.setDisable(izabranaGrupa.artikli.size() <= offset + 19);
     }
     
-    public void prikaziSlozeniArtikal(Artikal_Slozeni slozeniArtikal, int offset)
+    public void prikaziSlozeniArtikal(Slozeni slozeniArtikal, int offset)
     {   
         for (int i = 0; i < 12; i++) {
             
@@ -961,26 +961,26 @@ public class PorudzbinaController extends FXMLDocumentController {
         //todo dodati opisni next i dodatni next
     }
     
-    public void dodajAkcijuArtikla(RM_Button dugmeArtikal, Child_Abstract artikal) 
+    public void dodajAkcijuArtikla(RM_Button dugmeArtikal, ArtikalAbstract artikal) 
     {
         dugmeArtikal.setPodatak(artikal);
 
-        if (artikal instanceof Artikal_Slozeni) {
+        if (artikal instanceof Slozeni) {
             
             akcijaZaSlozeniArtikal(dugmeArtikal);
         }
         
-        if (artikal instanceof Artikal_Prosti) {
+        if (artikal instanceof Prosti) {
             
             akcijaZaProstiArtikal(dugmeArtikal);
         }
         
-        if (artikal instanceof Artikal_Dodatni) {
+        if (artikal instanceof Dodatni) {
             
             akcijaZaDodatniArtikal(dugmeArtikal);
         }
         
-        if (artikal instanceof Artikal_Opisni) {
+        if (artikal instanceof Opisni) {
             
             akcijaZaOpisniArtikal(dugmeArtikal);
         }
@@ -993,8 +993,8 @@ public class PorudzbinaController extends FXMLDocumentController {
                                         
                                         RM_Button pressedButton = (RM_Button)event.getSource();
                                         
-                                        Artikal_Slozeni slozeniArtikal = 
-                                                (Artikal_Slozeni)pressedButton.getPodatak();
+                                        Slozeni slozeniArtikal = 
+                                                (Slozeni)pressedButton.getPodatak();
                                         
                                         dodajArtikalUNovuTuru(pressedButton);
                                         
@@ -1371,7 +1371,7 @@ public class PorudzbinaController extends FXMLDocumentController {
         Map<String, String> novaGlavnaStavka = null;
         StavkaTure nova = null;
 
-        Child_Abstract artikal = (Child_Abstract)artikalOpisniDodatni.getPodatak();
+        ArtikalAbstract artikal = (ArtikalAbstract)artikalOpisniDodatni.getPodatak();
         Map<String, String> novaStavkaTure = artikal.toHashMap(true);
 //        novaStavkaTure.put("id", "0");//artikalOpisniDodatni.getId());
 //        novaStavkaTure.put("ARTIKAL_ID", artikalOpisniDodatni.getId());
@@ -1380,11 +1380,11 @@ public class PorudzbinaController extends FXMLDocumentController {
 //        novaStavkaTure.put("dozvoljenPopust", "" + artikalOpisniDodatni.getDozvoljenPopust());
 //        novaStavkaTure.put("stampacID", "" + poslednjaDodataStavka.stampacID);
         
-        if (artikal instanceof Artikal_Opisni) { //artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI) {
+        if (artikal instanceof Opisni) { //artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI) {
             novaStavkaTure.put("naziv", artikal.naziv); // artikalOpisniDodatni.getText());
             novaStavkaTure.put("cena", "0");
             novaStavkaTure.put("cenaJedinicna", "0");
-        } else if (artikal instanceof Artikal_Dodatni) { //artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI) {
+        } else if (artikal instanceof Dodatni) { //artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI) {
             novaStavkaTure.put("naziv", artikal.naziv); // artikalOpisniDodatni.getText());
             novaStavkaTure.put("cena", artikal.cena);// Utils.getStringFromDouble(artikalOpisniDodatni.getCenaJedinicna()));
             novaStavkaTure.put("cenaJedinicna", artikal.cena);// Utils.getStringFromDouble(artikalOpisniDodatni.getCenaJedinicna()));
@@ -1415,9 +1415,9 @@ public class PorudzbinaController extends FXMLDocumentController {
 
         StavkaTure st = new StavkaTure(novaStavkaTure);
         st.setRedniBrojGlavneStavke(poslednjaDodataStavka.getRedniBroj());
-        if (artikal instanceof Artikal_Opisni) { // artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI) {
+        if (artikal instanceof Opisni) { // artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI) {
             poslednjaDodataStavka.dodajKolicinuArtikalOpisni(st);
-        } else if (artikal instanceof Artikal_Dodatni) { //artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI) {
+        } else if (artikal instanceof Dodatni) { //artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI) {
             poslednjaDodataStavka.dodajKolicinuArtikalDodatni(st);
         }
 
@@ -1437,7 +1437,7 @@ public class PorudzbinaController extends FXMLDocumentController {
 
         sakrijSveTabele();
 
-        Child_Abstract artikal = (Child_Abstract)dugme.getPodatak();
+        ArtikalAbstract artikal = (ArtikalAbstract)dugme.getPodatak();
         
         Map<String, String> novaStavkaTure = artikal.toHashMap(true);
         

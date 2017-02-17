@@ -6,24 +6,24 @@
 package rmaster.models.Artikal;
 
 import java.util.HashMap;
-import static rmaster.models.Artikal.Child_Abstract.BAR_CODE;
-import static rmaster.models.Artikal.Child_Abstract.CENA;
-import static rmaster.models.Artikal.Child_Abstract.DOZVOLJEN_POPUST;
-import static rmaster.models.Artikal.Child_Abstract.JEDINICA_MERE;
-import static rmaster.models.Artikal.Child_Abstract.NAZIV;
-import static rmaster.models.Artikal.Child_Abstract.PRIMARY_KEY;
-import static rmaster.models.Artikal.Child_Abstract.PRIORITET;
-import static rmaster.models.Artikal.Child_Abstract.SKRACENI_NAZIV;
-import static rmaster.models.Artikal.Child_Abstract.SLIKA;
-import static rmaster.models.Artikal.Child_Abstract.STAMPAC_ID;
+import static rmaster.models.Artikal.ArtikalAbstract.BAR_CODE;
+import static rmaster.models.Artikal.ArtikalAbstract.CENA;
+import static rmaster.models.Artikal.ArtikalAbstract.DOZVOLJEN_POPUST;
+import static rmaster.models.Artikal.ArtikalAbstract.JEDINICA_MERE;
+import static rmaster.models.Artikal.ArtikalAbstract.NAZIV;
+import static rmaster.models.Artikal.ArtikalAbstract.PRIMARY_KEY;
+import static rmaster.models.Artikal.ArtikalAbstract.PRIORITET;
+import static rmaster.models.Artikal.ArtikalAbstract.SKRACENI_NAZIV;
+import static rmaster.models.Artikal.ArtikalAbstract.SLIKA;
+import static rmaster.models.Artikal.ArtikalAbstract.STAMPAC_ID;
 
 /**
  *
  * @author Arbor
  */
-public class Artikal_Prosti extends Child_Abstract {
+public class Prosti extends ArtikalAbstract {
     
-    public Artikal_Prosti(HashMap<String, String> artikalFrontMap) {
+    public Prosti(HashMap<String, String> artikalFrontMap) {
         this.id = artikalFrontMap.get(PRIMARY_KEY);
         this.barCode = artikalFrontMap.get(BAR_CODE);
         this.cena = artikalFrontMap.get(CENA);
