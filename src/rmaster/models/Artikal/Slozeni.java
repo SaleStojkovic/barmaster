@@ -17,12 +17,12 @@ import rmaster.assets.QueryBuilder.TableJoinTypes;
  *
  * @author Arbor
  */
-public class Artikal_Slozeni extends Child_Abstract implements Child_Interface {
+public class Slozeni extends ArtikalAbstract implements ArtikalInterface {
 
-    public List<Artikal_Opisni> opisniArtikli = new ArrayList<>();
-    public List<Artikal_Dodatni> dodatniArtikli = new ArrayList<>();
+    public List<Opisni> opisniArtikli = new ArrayList<>();
+    public List<Dodatni> dodatniArtikli = new ArrayList<>();
     
-    public Artikal_Slozeni(HashMap<String, String> artikalFrontMap) {
+    public Slozeni(HashMap<String, String> artikalFrontMap) {
         
         this.id = artikalFrontMap.get(PRIMARY_KEY);
         this.barCode = artikalFrontMap.get(BAR_CODE);
@@ -71,7 +71,7 @@ public class Artikal_Slozeni extends Child_Abstract implements Child_Interface {
         List<HashMap<String, String>> listaOpisnih = dbBroker.runQuery(query);
         
         for (HashMap mapaOpisni : listaOpisnih) {
-            Artikal_Opisni noviOpisni = new Artikal_Opisni();
+            Opisni noviOpisni = new Opisni();
             noviOpisni.makeFromHashMap(mapaOpisni);
             
             this.opisniArtikli.add(noviOpisni);
@@ -83,7 +83,7 @@ public class Artikal_Slozeni extends Child_Abstract implements Child_Interface {
         List<HashMap<String, String>> listaDodatnih  = dbBroker.runQuery(query);
 
         for (HashMap mapaDodatni : listaDodatnih) {
-            Artikal_Dodatni noviDodatni = new Artikal_Dodatni();
+            Dodatni noviDodatni = new Dodatni();
             noviDodatni.makeFromHashMap(mapaDodatni);
             
             this.dodatniArtikli.add(noviDodatni);

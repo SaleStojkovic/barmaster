@@ -29,7 +29,7 @@ import rmaster.assets.RM_TableView.RM_TableView;
  *
  * @author Arbor
  */
-public class RacuniZaNaplatuController_V2 extends Dialog {
+public class RacuniZaNaplatuController extends Dialog {
     
     private RM_TableView tabelaSaRacunimaZaNaplatu = new RM_TableView();
 
@@ -38,7 +38,7 @@ public class RacuniZaNaplatuController_V2 extends Dialog {
     private List listRacuni = null;
 
     
-    public RacuniZaNaplatuController_V2()
+    public RacuniZaNaplatuController()
     {
         this.initStyle(StageStyle.UNDECORATED);
         

@@ -20,7 +20,7 @@ import rmaster.assets.QueryBuilder.TableJoinTypes;
  *
  * @author Arbor
  */
-public class Grupa extends ModelBase implements Child_Interface {
+public class Grupa extends ModelBase implements ArtikalInterface {
 
     public static String TABLE_NAME = "grupaartikalafront";
     public static String PRIMARY_KEY = "id";
@@ -41,7 +41,7 @@ public class Grupa extends ModelBase implements Child_Interface {
     
     
     public List<Podgrupa> podgrupe = new ArrayList<>();
-    public List<Child_Abstract> artikli = new ArrayList<>();
+    public List<ArtikalAbstract> artikli = new ArrayList<>();
 
     
     @Override
@@ -114,7 +114,7 @@ public class Grupa extends ModelBase implements Child_Interface {
             
             novaPodgrupa.makeFromHashMap((HashMap)podgrupaMap);
                         
-            Runnable thread = new Podgrupa_Thread(this, novaPodgrupa);
+            Runnable thread = new PodgrupaThread(this, novaPodgrupa);
             
             thread.run();
         }
@@ -203,12 +203,12 @@ public class Grupa extends ModelBase implements Child_Interface {
     private void addChild(String rezultat, HashMap<String, String> artikalMap) {
         
         if (rezultat.equals("PROST")) {
-            Artikal_Prosti noviProst = new Artikal_Prosti(artikalMap);
+            Prosti noviProst = new Prosti(artikalMap);
             this.artikli.add(noviProst);
             return;
         }
 
-        Artikal_Slozeni noviSlozeni = new Artikal_Slozeni(artikalMap);
+        Slozeni noviSlozeni = new Slozeni(artikalMap);
         this.artikli.add(noviSlozeni);
     }
 }

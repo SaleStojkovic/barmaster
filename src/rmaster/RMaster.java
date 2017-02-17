@@ -26,7 +26,7 @@ import rmaster.assets.QueryBuilder.TableJoin;
 import rmaster.assets.QueryBuilder.TableJoinTypes;
 import rmaster.assets.ScreenMap;
 import rmaster.models.Artikal.Podgrupa;
-import rmaster.models.Artikal.Grupa_Thread;
+import rmaster.models.Artikal.GrupaThread;
 import rmaster.models.Artikal.Grupa;
 import rmaster.models.Konobar;
 
@@ -332,7 +332,7 @@ public class RMaster extends Application {
             
             novaGrupa.makeFromHashMap((HashMap)grupa);
            
-            Runnable thread = new Grupa_Thread(novaGrupa);
+            Runnable thread = new GrupaThread(novaGrupa);
             
             thread.run();                             
         }
