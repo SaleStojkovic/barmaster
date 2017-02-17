@@ -451,7 +451,7 @@ public class PrikazSalaController extends FXMLDocumentController {
     
     public void promeniKonobara(ActionEvent event){
         
-        myController.setScreen(ScreenMap.PROMENA_KONOBARA_V2, null);
+        myController.setScreen(ScreenMap.PROMENA_KONOBARA, null);
 
         prikaziStolove();
     }

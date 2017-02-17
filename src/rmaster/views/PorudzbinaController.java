@@ -1838,29 +1838,29 @@ public class PorudzbinaController extends FXMLDocumentController {
             }
         }
 
-//        List<Object> newData = new ArrayList<>();
-//        newData.add(this.porudzbinaTrenutna);
-//        newData.add((Node)event.getSource());
-//        
-//        myController.setScreen(ScreenMap.NAPLATA, newData);
+        List<Object> newData = new ArrayList<>();
+        newData.add(this.porudzbinaTrenutna);
+        newData.add((Node)event.getSource());
+        
+        myController.setScreen(ScreenMap.NAPLATA, newData);
         
         
           //OVO RADI!!! :D
-        String reportFileName = "/rmaster/views/reports/faktura.jrxml";
-             
-        try {
-        Map<String, Object> mapa = new HashMap<>();   
-        JasperReport jasperReport = JasperCompileManager.compileReport(getClass().getResourceAsStream(reportFileName));
-        
-        JasperPrint print = (JasperPrint) JasperFillManager.fillReport(jasperReport, mapa, DBBroker.poveziSaBazom());
-        
-        JRPrintPreview printPreview = new JRPrintPreview(print);
-       
-        printPreview.show();
-        
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        String reportFileName = "/rmaster/views/reports/faktura.jrxml";
+//             
+//        try {
+//        Map<String, Object> mapa = new HashMap<>();   
+//        JasperReport jasperReport = JasperCompileManager.compileReport(getClass().getResourceAsStream(reportFileName));
+//        
+//        JasperPrint print = (JasperPrint) JasperFillManager.fillReport(jasperReport, mapa, DBBroker.poveziSaBazom());
+//        
+//        JRPrintPreview printPreview = new JRPrintPreview(print);
+//       
+//        printPreview.show();
+//        
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         
         
         
