@@ -6,17 +6,12 @@
 package rmaster.models;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import rmaster.assets.DBBroker;
-import rmaster.assets.ModelBase;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 
-/**
- *
- * @author Arbor
- */
-public class SettingsBaza extends ModelBase {
+
+public class SettingsBaza {
 
     public static String TABLE_NAME = "setting";
     public static String PRIMARY_KEY = "id";
@@ -25,27 +20,6 @@ public class SettingsBaza extends ModelBase {
     public static String IME = "name";
     
     public HashMap<String, String> vrednosti = new HashMap<>();
-    
-    @Override
-    public String getPrimaryKeyName() {
-        return PRIMARY_KEY;
-    }
-
-    @Override
-    public String getTableName() {
-        return TABLE_NAME;
-    }
-
-   
-    @Override
-    public void makeFromHashMap(HashMap<String, String> HashMap) {
-        //Nema potrebe za ovim
-    }
-
-    @Override
-    public LinkedHashMap<String, String> toHashMap(boolean includeId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
     public void getAllValues() {
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
