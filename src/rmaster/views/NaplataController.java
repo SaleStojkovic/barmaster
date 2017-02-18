@@ -292,6 +292,15 @@ public class NaplataController extends FXMLDocumentController {
         return uplaceno;
     }
     
+    private double getUplacenoBezFakture() {
+        double uplaceno = 0.;
+        for (NacinPlacanja nacinPlacanja : placanja) {
+            if (nacinPlacanja.getNacinPlacanja() != NacinPlacanja.VrstePlacanja.FAKTURA)
+                uplaceno += nacinPlacanja.getVrednost();
+        }
+        return uplaceno;
+    }
+
     private double getKusur() {
         this.kusur = this.getUplaceno() - this.zaUplatu;
         return (this.kusur>0 ? this.kusur : 0);
@@ -329,7 +338,7 @@ public class NaplataController extends FXMLDocumentController {
     }
     
     public void obradiFakturu(boolean jeFaktura) {
-        if (!jeFaktura && (this.getUplaceno() != 0)) {
+        if (!jeFaktura && (this.getUplacenoBezFakture()!= 0)) {
             
             this.fxID_Faktura.setDisable(true);
             
@@ -383,8 +392,8 @@ public class NaplataController extends FXMLDocumentController {
             Stampa.getInstance().stampajMedjuzbir(porudzbina);
         }
         if (vrstaRacuna == VrstaRacunaZaStampu.FAKTURA) {
-            Stampa.getInstance().stampajFakturu(porudzbina);
             Stampa.getInstance().stampajGotovinskiRacun(porudzbina, placanja);
+            Stampa.getInstance().stampajFakturu(porudzbina);
         }
         if (vrstaRacuna == VrstaRacunaZaStampu.GOTOVINSKI) {
             Stampa.getInstance().stampajGotovinskiRacun(porudzbina, placanja);

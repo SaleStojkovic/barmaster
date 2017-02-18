@@ -1844,26 +1844,6 @@ public class PorudzbinaController extends FXMLDocumentController {
         
         myController.setScreen(ScreenMap.NAPLATA, newData);
         
-        
-          //OVO RADI!!! :D
-//        String reportFileName = "/rmaster/views/reports/faktura.jrxml";
-//             
-//        try {
-//        Map<String, Object> mapa = new HashMap<>();   
-//        JasperReport jasperReport = JasperCompileManager.compileReport(getClass().getResourceAsStream(reportFileName));
-//        
-//        JasperPrint print = (JasperPrint) JasperFillManager.fillReport(jasperReport, mapa, DBBroker.poveziSaBazom());
-//        
-//        JRPrintPreview printPreview = new JRPrintPreview(print);
-//       
-//        printPreview.show();
-//        
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-        
-        
-        
     }
 
     private void izbrisiSveIzTabela() {

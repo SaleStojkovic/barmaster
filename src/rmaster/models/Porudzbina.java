@@ -64,6 +64,10 @@ public class Porudzbina {
         }
     }
     
+    public Date getVremeIzdavanjaRacuna() {
+        return vremeIzdavanjaRacuna;
+    }
+    
     public double getVrednostPorudzbine() {
         double vrednostPorudzbine = 0.;
         for (Tura tura : turePorudzbine) {

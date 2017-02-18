@@ -31,6 +31,12 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import main.jrprintpreview.JRPrintPreview;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -474,6 +480,32 @@ public final class Stampa {
     }
     
     public final void stampajFakturu(Porudzbina porudzbina) {
+          //OVO RADI!!! :D
+        String reportFileName = "/rmaster/views/reports/faktura.jrxml";
+             
+        try {
+            Map<String, Object> mapa = new HashMap<>();  
+            mapa.put("kupacNazivFirme", "Kupac br. 1");
+            mapa.put("kupacAdresaFirme", "Gandijeva bb, 11070 Novi Beograd");
+            mapa.put("kupacPIB", "123456789");
+            mapa.put("porudzbina", porudzbina);
+
+            JasperReport jasperReport = JasperCompileManager.compileReport(getClass().getResourceAsStream(reportFileName));
+
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(porudzbina.getTure().get(0).listStavkeTure);
+            JasperPrint print = (JasperPrint) JasperFillManager.fillReport(jasperReport, mapa, beanColDataSource);
+            //JasperPrint print = (JasperPrint) JasperFillManager.fillReport(jasperReport, mapa, DBBroker.poveziSaBazom());
+
+            JRPrintPreview printPreview = new JRPrintPreview(print);
+
+            printPreview.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        
+        
         //        try {
 //            
 //            JasperReport jasperReport = (JasperReport)JRLoader.loadObject(getClass().getResourceAsStream("reports/faktura.jasper"));
