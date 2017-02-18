@@ -28,6 +28,7 @@ import rmaster.models.Artikal.Podgrupa;
 import rmaster.models.Artikal.GrupaThread;
 import rmaster.models.Artikal.Grupa;
 import rmaster.models.Konobar;
+import rmaster.models.SettingsBaza;
 
 /**
  *
@@ -57,6 +58,7 @@ public class RMaster extends Application {
     public static List<Grupa> grupeArtikala;
     public static Podgrupa favouriteArtikli;
     
+    public final static SettingsBaza settingsBaza = new SettingsBaza();
     
     public static boolean firstLogin = true;
                
@@ -80,6 +82,9 @@ public class RMaster extends Application {
         System.setProperty("javax.xml.transform.TransformerFactory",
                 "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
         
+        //ucitavaju se sve vrednosti iz baze
+        settingsBaza.getAllValues();
+                
         long startTimeT = System.nanoTime();
         System.out.println("Ucitavanja - pocetniEkran - pocetak: " + startTimeT);
         
@@ -383,10 +388,5 @@ public class RMaster extends Application {
             favouriteArtikli.addChild(rezultat, artikalMap);
         }
     }
-    
-    private void compileReports()
-    {
-        
-    }
-    
+   
 }
