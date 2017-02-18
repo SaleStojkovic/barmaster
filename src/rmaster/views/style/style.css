@@ -69,6 +69,49 @@ and open the template in the editor.
     -fx-text-fill: white;
 }
 
+
+.myDialog .tab-pane .tab-header-background 
+{
+    -fx-background-color: -fx-tamno-crna
+}
+
+.myDialog .tab-pane:top .tab-header-area 
+{
+    -fx-background-color: -fx-tamno-crna
+}
+
+.myDialog *.tab .tab-label {
+     -fx-text-fill: white;
+     -fx-font-size: 18px;
+     -fx-font-family: KlavikaBold;
+}
+
+.myDialog .tab-pane {
+  -fx-tab-min-width:120px;
+  -fx-tab-max-width:120px;
+  -fx-tab-min-height:60px;
+  -fx-tab-max-height:60px;
+}
+
+.myDialog *.tab 
+{
+    -fx-background-color: -fx-tamno-crna;
+    -fx-border-color: -fx-siva;
+
+}
+.myDialog *.tab:selected 
+{
+     -fx-background-color: -fx-svetlo-crna;
+     
+}
+
+.myDialog *.tab:selected .tab-label {
+     -fx-text-fill: white;
+     -fx-font-weight: bold;
+     -fx-font-size: 18px;
+     -fx-font-family: KlavikaBold;
+ }
+
 .alphaNumeric{
     -fx-background-color: -fx-siva;
 }
@@ -917,6 +960,28 @@ and open the template in the editor.
 
 #scrollPaneRezervacije > .viewport {
    -fx-background-color: transparent;
+}
+
+#stoA *.toggle-button,
+#stoB *.toggle-button
+{
+    -fx-background-color: -fx-tamno-crna;
+    -fx-border-color: -fx-siva;
+    -fx-border-width: 0.5px;
+    -fx-text-fill: -fx-zuta;
+    -fx-font-size: 16px;
+    -fx-font-family: KlavikaBold; 
+}
+
+#stoA *.toggle-button:selected,
+#stoB *.toggle-button:selected
+{
+    -fx-background-color: -fx-svetlo-crna;
+    -fx-border-color: -fx-siva;
+    -fx-border-width: 0.5px;
+    -fx-text-fill: -fx-zuta;
+    -fx-font-size: 16px;
+    -fx-font-family: KlavikaBold;  
 }
 
 /* kraj sastavljanje rastavljanje */

@@ -262,16 +262,21 @@ public class RezervacijeController extends FXMLDocumentController {
 
         SalePopupController tastatura = new SalePopupController();
         
-        Optional<String> result = tastatura.showAndWait();
+        Optional<HashMap<String, String>> result = tastatura.showAndWait();
         
-        if (result.isPresent()){
-            String noviTekst = result.get();
-            
-            if (!noviTekst.isEmpty()) {
-                izabraniSto.setText(noviTekst);
-               
-            }
+        if (!result.isPresent()){ 
+            return;
         }
+        
+        if (!(result.get() instanceof HashMap))
+        {
+            return;
+        }
+            
+        HashMap<String, String> izabraniStoMap = result.get();
+
+        izabraniSto.setText(izabraniStoMap.get("stoNaziv") + "");
+        
     }
     
     public void pozivanjeNumerickeTastature(MouseEvent event) {

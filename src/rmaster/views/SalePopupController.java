@@ -10,63 +10,46 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
+import javafx.geometry.Side;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TabPane.TabClosingPolicy;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Border;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.StageStyle;
-import javafx.stage.Window;
 import rmaster.RMaster;
-import rmaster.assets.DBBroker;
-import rmaster.assets.FXMLDocumentController;
+import rmaster.assets.RM_Button.RM_Button;
 import static rmaster.views.PrikazSalaController.HALF_HOUR;
 
 
 public class SalePopupController extends Dialog {
-    
-    @FXML
-    private Label response2;
-    
-    @FXML
-    private TextField unetiTekst;
-   
-    @FXML
-    private Button cancelButton;
-    
-    @FXML
-    AnchorPane salaPrikazPane = new AnchorPane();
 
-
-    FXMLDocumentController fxmlController;
+    @FXML
+    private TabPane saleTabPane = new TabPane();
 
     private List<Button> listaRezervacija = new ArrayList<>();
     
-    private List<Map<String, String>> listSale = null;
-
-    private List<Map<String, String>> listStolovi = null;
-
     public SalePopupController() {
         
-        
-        try {
-            this.initStyle(StageStyle.UNDECORATED);
+        this.initStyle(StageStyle.UNDECORATED);
 
         // Set the button types.
         ButtonType odustaniButtonType = new ButtonType("X", ButtonBar.ButtonData.OK_DONE);
@@ -78,96 +61,28 @@ public class SalePopupController extends Dialog {
         
         this.getDialogPane().getStyleClass().add("myDialog");
         
-           
-        VBox vBoxGlavni = new VBox();
+        List<Map<String, String>> sale = RMaster.sveSale;
         
-        response2 = new Label();
+        saleTabPane.setSide(Side.TOP);
+
+        saleTabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
         
-        vBoxGlavni.getChildren().add(response2);
+        for(Map<String, String> salaMap : sale){
+            
+             new Thread() {
+                 @Override
+                 public void start()
+                 {
+                     prikaziSalu(salaMap);
+                 }
+             }.start();
+        }
         
-        this.setHeaderText("Izaberite sto");
-        
-        HBox hBoxDugmiciSaSalama = new HBox();
-        
-            
-        Button prikaziDodatneSale = new Button("« »");
-
-        if (RMaster.saleNaziv.size() < 8) {
-            prikaziDodatneSale.setDisable(true);
-        }
-        else {
-            prikaziDodatneSale.setDisable(false);
-        }
-
-        Iterator it = RMaster.saleNaziv.entrySet().iterator();
-
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            Button newButton = new Button();
-            newButton.setId(pair.getKey().toString());
-            String naziv = pair.getValue().toString();
-            newButton.textProperty().set(naziv);
-            newButton.setPrefWidth(128);
-            newButton.setMinWidth(128);
-            newButton.setPrefHeight(hBoxDugmiciSaSalama.getPrefHeight());
-            newButton.setMinHeight(hBoxDugmiciSaSalama.getPrefHeight());
-
-            // todo smisliti nacin da se ovo premesti u css.style
-            newButton.setStyle(""
-                    + "-fx-border-color: white; "
-                    + "-fx-border-width: 0.75;"
-                    + "-fx-border-radius: 0.2px;"
-                    + "-fx-border-width: 1 1 1 1;"
-                    + "-fx-background-color: -fx-tamno-crna;"
-                    + "-fx-text-fill: white;"
-                    + "-fx-font-family: KlavikaBold;"
-                    + "-fx-font-size: 16px;"
-                    + "");
-
-            newButton.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override public void handle(ActionEvent e) {
-                                     prikaziStolove(
-                                             vBoxGlavni,
-                                             Integer.parseInt(((Button)e.getSource()).getId())
-                                        );
-                                }
-                            });
-            hBoxDugmiciSaSalama.getChildren().add(newButton);
-        }
-            
-            hBoxDugmiciSaSalama.getChildren().add(prikaziDodatneSale);
-            
-            vBoxGlavni.getChildren().add(hBoxDugmiciSaSalama);
-                        
-            Map.Entry<String,String> entry= RMaster.saleNaziv.entrySet().iterator().next();
-            String key = entry.getKey();
-            
-            prikaziStolove(
-                           vBoxGlavni,
-                           Integer.parseInt(key)
-                       );
-            
-            cancelButton = (Button)this.getDialogPane().lookupButton(odustaniButtonType);
-            cancelButton.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override public void handle(ActionEvent e) {
-                                    try {
-                                        cancelAction(e);
-                                    } catch (Exception ex) {
-                                    }
-                                }
-                            });
-
-
-            this.getDialogPane().setContent(vBoxGlavni);
-        }
-        catch (Exception e) {
-            System.out.println("Greska u prikazu sale! - " + e.toString());
-        }
+        this.getDialogPane().setContent(saleTabPane);
     }
     
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        vratiSaleList();
+
     } 
     
     public void cancelAction(ActionEvent event) {
@@ -182,156 +97,200 @@ public class SalePopupController extends Dialog {
             System.out.println("Neuspelo zatvaranje forme - PrikazSalePopupController" + e);
         }
     }
+
     
-    private void vratiSaleList() {
-        try {            
-            String[] imenaArgumenata = {"KonobarID"};
-            String[] vrednostiArgumenata = {RMaster.ulogovaniKonobar.konobarID + ""};
-            listSale = DBBroker.runStoredProcedure("get_SaleOmoguceneKonobaru",
-                    imenaArgumenata,
-                    vrednostiArgumenata);
-        } catch (Exception e) {
-            System.out.println("Greska u pozivu SP get_SaleOmoguceneKonobaru! - " + e.toString());
+    private void prikaziSalu(Map<String, String> salaMap)
+    {
+        Tab newTab = new Tab();
+                
+        newTab.setId(salaMap.get("id"));
+
+        newTab.setText(salaMap.get("naziv"));
+
+        AnchorPane novaSala = new AnchorPane();
+
+        prikaziStoloveSale(novaSala, salaMap.get("id"));
+
+        novaSala.setBackground(getBackground(salaMap.get("slika")));
+
+        newTab.setContent(novaSala);
+
+        saleTabPane.getTabs().add(newTab);
+
+        if (RMaster.trenutnaSalaID == Long.parseLong(salaMap.get("id"))) {        
+            saleTabPane.getSelectionModel().select(newTab);
+        }       
+    }
+    
+     public void prikaziStoloveSale(AnchorPane sala, String salaId) 
+    {
+        List<Map<String, String>> stoloviZaPrikaz = getStoloviBySalaId(salaId);
+            
+        for (Map<String, String> stoMap : stoloviZaPrikaz)
+        {
+            StackPane okvir = this.napraviSto(stoMap);
+            sala.getChildren().add(okvir);
         }
     }
     
-    public void prikaziStolove(
-            VBox vBoxGlavni,
-            int salaID
-    ) 
+     private void setOblikStola(
+            Button sto, 
+            int vrstaStola, 
+            double sirina)
     {
-        salaPrikazPane.getChildren().clear();
+          if (vrstaStola == 2){
+              return;
+          }
+            sto.setPrefSize(sirina, sirina);
+            sto.setShape(new Circle(sirina/2));  
+    }
+     
+    private StackPane napraviSto(Map<String, String> stoMap)
+    {
+        StackPane okvir = new StackPane();
+        int vrstaStola = 0;
+        double x, y, sirina, visina;
+        String naziv = "";
+        double sirinaSale = 1024; 
+        double visinaSale = 768; 
+            
+        RM_Button noviSto = new RM_Button();
         
-        vBoxGlavni.getChildren().remove(salaPrikazPane);
+        x = Double.parseDouble(stoMap.get("x"));
+        x = x * RMaster.sirinaSaleNaEkranu / sirinaSale;
+
+        y = Double.parseDouble(stoMap.get("y"));
+        y = y * RMaster.visinaSaleNaEkranu / visinaSale;
+
+        sirina = Double.parseDouble(stoMap.get("sirina"));
+        sirina = sirina * RMaster.sirinaSaleNaEkranu / sirinaSale;
+        visina = Double.parseDouble(stoMap.get("visina"));
+        visina = visina * RMaster.visinaSaleNaEkranu / visinaSale;
+
+        naziv = stoMap.get("broj");
+
+        noviSto.setId(stoMap.get("id"));
+        noviSto.setPodatak(stoMap.get("broj"));
         
-        salaPrikazPane.setBackground(new Background(RMaster.saleSlike.get("" + salaID)));
-        try {
-            String[] imenaArgumenata = {"GRAFIK_ID"};
-            String[] vrednostiArgumenata = {salaID + ""};
-            listStolovi = fxmlController.runStoredProcedure("get_StoloviZaPrikaz_BySala", 
-                    imenaArgumenata,
-                    vrednostiArgumenata);
-        } catch (Exception e) {
-            System.out.println("Greska u pozivu SP get_SaleOmoguceneKonobaru! - " + e.toString());
+        if (stoMap.get("naziv") != null) {
+            naziv = stoMap.get("naziv");
         }
-        
-        salaPrikazPane.getChildren().clear();
-        
-        try {
-            
-            int vrstaStola = 0;
-            double x, y, sirina, visina;
-            String konobarID;
-            String naziv = "";
-            double sirinaSale = 1024; 
-            double visinaSale = 768; 
-            
-            for(int i = 0; i < listStolovi.size(); i++) {
-                
-                Map<String, String> noviRed = listStolovi.get(i);
-                
-                StackPane okvir = new StackPane();
-                Button b = new Button();
-                
-                x = Double.parseDouble(noviRed.get("x"));
-                x = x * RMaster.sirinaSaleNaEkranu / sirinaSale;
-              
-                y = Double.parseDouble(noviRed.get("y"));
-                y = y * RMaster.visinaSaleNaEkranu / visinaSale;
-               
-                
-                sirina = Double.parseDouble(noviRed.get("sirina"));
-                sirina = sirina * RMaster.sirinaSaleNaEkranu / sirinaSale;
-                visina = Double.parseDouble(noviRed.get("visina"));
-                visina = visina * RMaster.visinaSaleNaEkranu / visinaSale;
 
-                b.setId(noviRed.get("id"));
-                
-                naziv = noviRed.get("broj");
-                
-                if (noviRed.get("naziv") != null) {
-                    naziv = noviRed.get("naziv");
-                }
-                
-                b.setText(naziv);
+        String konobarID = stoMap.get("KONOBAR_ID") + "";
 
-                vrstaStola = Integer.parseInt(noviRed.get("sto_VrstaStolaID"));
+        noviSto.setText(naziv);
+        vrstaStola = Integer.parseInt(stoMap.get("sto_VrstaStolaID"));
 
-                b.setBorder(Border.EMPTY);
-                b.setPrefSize(sirina, visina);
-                okvir.setPrefSize(sirina, visina);
-                okvir.getChildren().add(b);
-                
-                switch (vrstaStola){
-                    case 1:
-                        // Sto u obliku kruga
-                    case 3:
-                        // Sto u obliku elipse
-                        b.setPrefSize(sirina, sirina);
-                        b.setShape(new Circle(sirina/2));
-                        break;
-                    case 2:
-                        break;
-                    default:
-                }
-                
-                Map<String, String> newData = new HashMap<>();
-                
-                newData.put("stoID", noviRed.get("id"));
-                
-                konobarID = noviRed.get("zauzeoKonobarID") + "";
-                
                 if ((!konobarID.equals("null")) && (!konobarID.equals("" + RMaster.ulogovaniKonobar.konobarID))) {
-                    b.getStyleClass().add("stoZauzet");
-                    //b.setDisable(true);
-                } else {
-                    if (konobarID.equals("null"))
-                        b.getStyleClass().add("stoSlobodan");
-                    else
-                        b.getStyleClass().add("stoKonobarov");
+                    noviSto.getStyleClass().add("stoZauzet");
                     
-                    b.setOnAction(new EventHandler<ActionEvent>() {
+                    noviSto.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override public void handle(ActionEvent e) {
-                                            Button b = (Button)e.getSource();
-                                            String izabraniSto = b.getText();
-                                            izaberiSto(izabraniSto);
+                                            RM_Button stoButton = (RM_Button)e.getSource();
+                                            HashMap<String, String> stoMap = new HashMap();
+                                            stoMap.put("stoId", stoButton.getId());
+                                            stoMap.put("stoBroj", stoButton.getPodatak() + "");
+                                            stoMap.put("stoNaziv", stoButton.getText());
+
+                                            izaberiSto(stoMap);
                                         } 
                                     });
+                    
+                } else {
+                    if (konobarID.equals("null")) {
+                        noviSto.getStyleClass().add("stoSlobodan");
+                        
+                    }
+                    else {
+                        noviSto.getStyleClass().add("stoKonobarov");
+                    }
+                    
+                    noviSto.setOnAction(new EventHandler<ActionEvent>() {
+                                        @Override public void handle(ActionEvent e) {
+                                             RM_Button stoButton = (RM_Button)e.getSource();
+                                            HashMap<String, String> stoMap = new HashMap();
+                                            stoMap.put("stoId", stoButton.getId());
+                                            stoMap.put("stoBroj", stoButton.getPodatak() + "");
+                                            stoMap.put("stoNaziv", stoButton.getText());
+
+                                            izaberiSto(stoMap);
+                                        } 
+                                    });
+                    
                 }
-                if ((noviRed.get("RezervacijaDatum") != null)) {
-                    String date_s = noviRed.get("RezervacijaDatum"); 
+                if ((stoMap.get("RezervacijaDatum") != null)) {
+                    
+                    String date_s = stoMap.get("RezervacijaDatum"); 
                     SimpleDateFormat dt = new SimpleDateFormat("yyyyy-MM-dd hh:mm:ss"); 
-                    Date vremeRezervacije = dt.parse(date_s);
+                    try {
+                        Date vremeRezervacije = dt.parse(date_s);
+                        Date vremePolaSataPreRezervacije = new Date();
+                        vremePolaSataPreRezervacije.setTime(vremeRezervacije.getTime() - HALF_HOUR);
 
-                    Date vremePolaSataPreRezervacije = new Date();
-                    vremePolaSataPreRezervacije.setTime(vremeRezervacije.getTime() - HALF_HOUR);
-
-                    Date vreme = new Date();
+                        Date vreme = new Date();
 
                     if (vreme.after(vremePolaSataPreRezervacije) && vreme.before(vremeRezervacije)) {
                         //b.getStyleClass().add("stoRezervisan");
-                        listaRezervacija.add(b);
+                        listaRezervacija.add(noviSto);
                     }
-                       
+                    
+                    } catch (Exception e) {}
+   
                 }
-                
-                AnchorPane.setLeftAnchor(okvir, x);
-                AnchorPane.setTopAnchor(okvir, y);
-                AnchorPane.setRightAnchor(okvir, RMaster.sirinaSaleNaEkranu - x - sirina);
-                AnchorPane.setBottomAnchor(okvir, RMaster.visinaSaleNaEkranu - y - visina);
-                salaPrikazPane.getChildren().add(okvir);
-            }
-            
-            vBoxGlavni.getChildren().add(salaPrikazPane);
+        
+        
+        noviSto.setBorder(Border.EMPTY);
+        noviSto.setPrefSize(sirina, visina);
+        noviSto.setMaxSize(sirina, visina);
+        noviSto.setMinSize(sirina, visina);
+        okvir.setPrefSize(sirina, visina);
+        okvir.getChildren().add(noviSto);
 
-        } catch (Exception e) {
-            System.out.println("Greska u prikazu stolova! - " + e.toString());
-        }
+        this.setOblikStola(noviSto, vrstaStola, sirina);
+
+        AnchorPane.setLeftAnchor(okvir, x);
+        AnchorPane.setTopAnchor(okvir, y);
+        AnchorPane.setRightAnchor(okvir, RMaster.sirinaSaleNaEkranu - x - sirina);
+        AnchorPane.setBottomAnchor(okvir, RMaster.visinaSaleNaEkranu - y - visina);
+        
+        return okvir;   
     }
     
-    
-    public void izaberiSto(String izabraniSto) {
+    public void izaberiSto(HashMap<String, String> izabraniSto) {
         this.setResult(izabraniSto);
         this.close();
+    }
+    
+    public Background getBackground(String slikaURL)
+    {
+        Image image = new Image(
+                            getClass().getResourceAsStream("style/img/" + slikaURL),
+                            1024,
+                            608,
+                            false,
+                            true
+                    );
+                    
+        BackgroundImage newBackgroundImage = new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT
+        );
+             
+        return new Background(newBackgroundImage);
+    }
+    
+    private List<Map<String, String>> getStoloviBySalaId(String salaID)
+    {
+        List<Map<String, String>> listStolovi = new ArrayList<>();
+        for (Map<String, String> noviSto : RMaster.sviStolovi) {
+            if (noviSto.get("GRAFIK_ID").equals(salaID)) {
+                listStolovi.add(noviSto);
+            }
+                
+        }
+        return listStolovi;
     }
 }
