@@ -19,7 +19,7 @@ public class SettingsBaza {
     public static String VREDNOST = "actual";
     public static String IME = "name";
     
-    public HashMap<String, String> vrednosti = new HashMap<>();
+    public static HashMap<String, String> vrednosti = new HashMap<>();
     
     public void getAllValues() {
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
@@ -33,6 +33,10 @@ public class SettingsBaza {
         for (HashMap<String, String> novaMapa : listaRezultata) {
             vrednosti.put(novaMapa.get(IME), novaMapa.get(VREDNOST));
         }
+    }
+    
+    public static String getValue(String key) {
+        return vrednosti.get(key);
     }
     
 }

@@ -43,6 +43,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import rmaster.models.NacinPlacanja;
 import rmaster.models.Porudzbina;
+import rmaster.models.SettingsBaza;
 import rmaster.models.Stampac;
 import rmaster.models.StavkaTure;
 import rmaster.models.Tura;
@@ -488,6 +489,7 @@ public final class Stampa {
             mapa.put("kupacNazivFirme", "Kupac br. 1");
             mapa.put("kupacAdresaFirme", "Gandijeva bb, 11070 Novi Beograd");
             mapa.put("kupacPIB", "123456789");
+            mapa.put("objekatMesto", SettingsBaza.getValue("objekat.mesto"));
             mapa.put("porudzbina", porudzbina);
 
             JasperReport jasperReport = JasperCompileManager.compileReport(getClass().getResourceAsStream(reportFileName));

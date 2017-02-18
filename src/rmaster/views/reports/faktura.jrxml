@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-02-18T13:17:17 -->
+<!-- 2017-02-19T00:27:36 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="faktura" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="539" leftMargin="28" rightMargin="28" topMargin="28" bottomMargin="28" isSummaryWithPageHeaderAndFooter="true" uuid="60e976ba-5b59-4e8b-a3f7-25a3248026f7">
 	<property name="com.jaspersoft.studio.unit." value="cm"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="kupacNazivFirme" class="java.lang.String"/>
 	<parameter name="kupacAdresaFirme" class="java.lang.String"/>
 	<parameter name="kupacPIB" class="java.lang.String"/>
+	<parameter name="objekatMesto" class="java.lang.String"/>
 	<parameter name="porudzbina" class="rmaster.models.Porudzbina"/>
 	<queryString>
 		<![CDATA[]]>
@@ -25,6 +26,15 @@
 	</field>
 	<variable name="countNumber" class="java.lang.Integer" calculation="Count">
 		<variableExpression><![CDATA[Boolean.TRUE]]></variableExpression>
+	</variable>
+	<variable name="sum_iznosPDV" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{cena} * ((100 - $F{procenatPopusta})/100) * 0.2]]></variableExpression>
+	</variable>
+	<variable name="sum_iznosBezPDV" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{cena} * ((100 - $F{procenatPopusta})/100) - ($F{cena} * ((100 - $F{procenatPopusta})/100) * 0.2)]]></variableExpression>
+	</variable>
+	<variable name="sum_iznos" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{cena} * ((100 - $F{procenatPopusta})/100)]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -108,15 +118,15 @@
 				</textElement>
 				<textFieldExpression><![CDATA[new SimpleDateFormat("dd.MM.yyyy.").format(new java.util.Date())]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement x="126" y="87" width="141" height="17" uuid="11aa6d30-13ea-4645-9980-8de1c698cc6a">
 					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font size="12" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Mesto izdavanja:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$P{objekatMesto}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="126" y="104" width="141" height="17" uuid="14567e03-df79-453a-9934-002eba4dabd4">
 					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
@@ -197,7 +207,7 @@
 		</band>
 	</title>
 	<pageHeader>
-		<band height="32" splitType="Stretch">
+		<band height="24" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="2" width="21" height="17" uuid="d54fba69-22f4-4ca0-bb08-7259237b06d4">
 					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
@@ -318,7 +328,7 @@
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="61" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
 		<band height="18" splitType="Stretch">
@@ -329,6 +339,7 @@
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="false"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[String.valueOf($V{countNumber})]]></textFieldExpression>
 			</textField>
@@ -351,7 +362,7 @@
 				</textElement>
 				<text><![CDATA[J.M.]]></text>
 			</staticText>
-			<textField>
+			<textField pattern="#,##0.00">
 				<reportElement x="169" y="0" width="50" height="17" uuid="cadb10cf-0a60-4f7d-9f93-4d3728dc6917">
 					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
 					<property name="com.jaspersoft.studio.unit.width" value="cm"/>
@@ -361,7 +372,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{kolicina}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.00">
 				<reportElement x="219" y="0" width="50" height="17" uuid="64bb0145-c8c3-44ed-86e5-3b3647548b1e">
 					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
 					<property name="com.jaspersoft.studio.unit.width" value="cm"/>
@@ -371,7 +382,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cena}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.00">
 				<reportElement x="269" y="0" width="50" height="17" uuid="b426f038-7612-418a-9c15-509e4e942549">
 					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
 					<property name="com.jaspersoft.studio.unit.width" value="cm"/>
@@ -389,9 +400,9 @@
 				<textElement textAlignment="Right">
 					<font size="10" isBold="false"/>
 				</textElement>
-				<text><![CDATA[20%]]></text>
+				<text><![CDATA[20.00%]]></text>
 			</staticText>
-			<textField>
+			<textField pattern="#,##0.00">
 				<reportElement x="359" y="0" width="60" height="17" uuid="0ab3df7b-3a42-4dbf-a1fa-0c60b0550f24">
 					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
 					<property name="com.jaspersoft.studio.unit.width" value="cm"/>
@@ -401,7 +412,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cena} * ((100 - $F{procenatPopusta})/100) * 0.2]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.00">
 				<reportElement x="419" y="0" width="85" height="17" uuid="ddbbad77-580c-4ee9-abbb-6590e35c4ae0">
 					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
 				</reportElement>
@@ -410,7 +421,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cena} * ((100 - $F{procenatPopusta})/100) - ($F{cena} * ((100 - $F{procenatPopusta})/100) * 0.2)]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.00">
 				<reportElement x="504" y="0" width="60" height="17" uuid="8f5279bf-9ebf-4b41-9c39-e6c793f472ae">
 					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
 					<property name="com.jaspersoft.studio.unit.width" value="cm"/>
@@ -423,7 +434,7 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch"/>
+		<band height="5" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band height="10" splitType="Stretch">
@@ -440,19 +451,6 @@
 				</textElement>
 				<text><![CDATA[Powered by Master Software Solution - www.petcom.rs]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="380" y="0" width="174" height="10" uuid="afcd778e-4323-4f9f-bcde-462af872c7b7"/>
-				<box>
-					<topPen lineWidth="0.4"/>
-					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="0.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="7" isItalic="true"/>
-				</textElement>
-				<text><![CDATA[Strana 1 od 5]]></text>
-			</staticText>
 			<textField evaluationTime="Report" pattern="dd.MM.yyyy HH:mm:ss">
 				<reportElement x="0" y="0" width="179" height="10" uuid="abfdb21f-aa1a-4cb4-9bf6-535bb41acc90"/>
 				<box>
@@ -466,9 +464,54 @@
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="380" y="0" width="100" height="10" uuid="a6672b6a-8b03-4022-8aad-8b75efdd7df1"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="480" y="0" width="84" height="10" uuid="989eda82-1488-40b7-a361-0e779c74778b"/>
+				<textElement textAlignment="Left">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="42" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="359" y="0" width="59" height="17" uuid="f0ccc635-653d-4e6e-bdcf-ec7ba5c10f65">
+					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="cm"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sum_iznosPDV}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="419" y="0" width="84" height="17" uuid="f0ccc635-653d-4e6e-bdcf-ec7ba5c10f65">
+					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="cm"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sum_iznosBezPDV}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="504" y="0" width="59" height="17" uuid="f0ccc635-653d-4e6e-bdcf-ec7ba5c10f65">
+					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="cm"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sum_iznos}]]></textFieldExpression>
+			</textField>
+		</band>
 	</summary>
 </jasperReport>
