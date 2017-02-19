@@ -707,7 +707,6 @@ public final class DBBroker {
         try {
             dbConnection = poveziSaBazom();
             cStmt = dbConnection.prepareCall("{CALL getPorudzbineStola(?)}");
-            //cStmt.setLong("konobarID", rmaster.RMaster.ulogovaniKonobar.konobarID);
             cStmt.setString("stoID", izabraniStoId);
             cStmt.execute();
             rs = cStmt.getResultSet();

@@ -161,11 +161,9 @@ public class StavkaTure {
         stavkaTure.put("procenatPopusta", Utils.getStringFromDouble(this.procenatPopusta));
         stavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(this.cenaJedinicna));        stavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(this.cenaJedinicna));        stavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(this.cenaJedinicna));
         stavkaTure.put("cena", Utils.getStringFromDouble(this.cena));
-        //stavkaTure.put("GlavnaStavkaID", "" + this.getGlavnaStavkaID());
         if (this.getRedniBrojGlavneStavke()!=0)
             stavkaTure.put("redniBrojGlavnaStavka", "" + this.getRedniBrojGlavneStavke());
         stavkaTure.put("dozvoljenPopust", "" + this.dozvoljenPopust);
-        //stavkaTure.put("stampacID", "" + this.stampacID);
         
         return stavkaTure;
     } 

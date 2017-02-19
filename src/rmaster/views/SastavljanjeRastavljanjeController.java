@@ -7,11 +7,13 @@ package rmaster.views;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,16 +22,21 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.ScreenController;
+import rmaster.assets.RM_Button.RM_Button;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Utils;
 import rmaster.models.Gost;
 import rmaster.models.Porudzbina;
+import rmaster.models.StavkaTure;
 import rmaster.models.Sto;
 import rmaster.models.Tura;
 
@@ -59,6 +66,17 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     @FXML
     private Button izaberiStoB;
     
+    @FXML
+    private ScrollPane scrollPaneA;
+    
+    @FXML
+    private ScrollPane scrollPaneB;
+    
+    @FXML
+    private VBox contentA;
+    
+    @FXML
+    private VBox contentB;
     
     @FXML
     private HBox gostiStoA = new HBox();
@@ -66,11 +84,23 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     @FXML
     private HBox gostiStoB = new HBox();
     
+    private ToggleGroup gostiGrupaA = new ToggleGroup();
+    
+    private ToggleGroup gostiGrupaB = new ToggleGroup();
+    
+    private List<Porudzbina> porudzbineStolaA = new ArrayList<>();
+    
+    private List<Porudzbina> porudzbineStolaB = new ArrayList<>();
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        scrollPaneA.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPaneB.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPaneA.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPaneB.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
     }    
     
@@ -113,7 +143,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             
             gostiStoA.getChildren().clear();
             
-            popuniGoste(gostiStoA, izabraniStoMap);
+            popuniGosteA(izabraniStoMap);
             
         }
         
@@ -121,7 +151,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             
             gostiStoB.getChildren().clear();
             
-            popuniGoste(gostiStoB, izabraniStoMap);
+            popuniGosteB(izabraniStoMap);
         }
     }
     
@@ -131,7 +161,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
     }
     
-    public void popuniGoste(HBox gosti, HashMap<String, String> sto) 
+    public void popuniGosteA(HashMap<String, String> sto) 
     {
         Sto izabraniSto = new Sto(sto);
         
@@ -143,7 +173,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             return;
         }
         
-                List<Node> lista = new ArrayList<>();
+        List<Node> lista = new ArrayList<>();
         
         for (Object racun : racuniStola) {
             
@@ -151,32 +181,105 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
 
             String brojNovogGosta = red.get("gost");
 
-//            Porudzbina porudzbinaTrenutna = new Porudzbina(
-//                    new Gost(brojNovogGosta), 
-//                    red.get("id"),
-//                    sto.get("stoNaziv"),
-//                    sto.get("stoBroj")
-//            );
+            Porudzbina porudzbinaGosta = new Porudzbina(
+                    new Gost(brojNovogGosta), 
+                    red.get("id"),
+                    izabraniSto.stoId,
+                    izabraniSto.stoBroj
+            );
+            
+            porudzbineStolaA.add(porudzbinaGosta);
 
             RadioButton noviGostButton = new RadioButton(brojNovogGosta);
 
-            lista.add(prikaziPorudzbinuTaskSetButtonAction(noviGostButton, brojNovogGosta));
+            noviGostButton.setToggleGroup(gostiGrupaA);
+            
+            lista.add(prikaziPorudzbinuTaskSetButtonActionA(noviGostButton, brojNovogGosta));
         } 
         
         ObservableList<Node> listaDugmica = FXCollections.observableArrayList(lista);            
                 
-        gosti.getChildren().addAll(listaDugmica);
+        gostiStoA.getChildren().addAll(listaDugmica);
     }
     
-     private RadioButton prikaziPorudzbinuTaskSetButtonAction(
+    public void popuniGosteB(HashMap<String, String> sto) 
+    {
+        Sto izabraniSto = new Sto(sto);
+        
+        List racuniStola = izabraniSto.getPorudzbineStola();
+                
+        if (racuniStola.isEmpty())
+        {
+            //sta se desava ako nema nijednog gosta
+            return;
+        }
+        
+        List<Node> lista = new ArrayList<>();
+        
+        for (Object racun : racuniStola) {
+            
+            Map<String, String> red = (Map<String, String>) racun;
+
+            String brojNovogGosta = red.get("gost");
+
+            Porudzbina porudzbinaTrenutna = new Porudzbina(
+                    new Gost(brojNovogGosta), 
+                    red.get("id"),
+                    izabraniSto.stoId,
+                    izabraniSto.stoBroj
+            );
+
+            porudzbineStolaB.add(porudzbinaTrenutna);
+            
+            RadioButton noviGostButton = new RadioButton(brojNovogGosta);
+
+            noviGostButton.setToggleGroup(gostiGrupaB);
+            
+            lista.add(prikaziPorudzbinuTaskSetButtonActionB(noviGostButton, brojNovogGosta));
+        } 
+        
+        ObservableList<Node> listaDugmica = FXCollections.observableArrayList(lista);            
+                
+        gostiStoB.getChildren().addAll(listaDugmica);
+    }
+    
+     private RadioButton prikaziPorudzbinuTaskSetButtonActionA(
             RadioButton noviGostButton, 
-            String brojNovogGosta)
+            String brojNovogGosta
+     )
     {
             noviGostButton.getStyleClass().remove("radio-button");
             noviGostButton.getStyleClass().add("toggle-button");
 
-            //ocigledno da ce morati da se stave u toogle grupe
-//            noviGostButton.setToggleGroup(gostiButtonGroup);
+            noviGostButton.setId(brojNovogGosta);
+
+            noviGostButton.setPrefSize(57, 57);
+            
+            noviGostButton.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override public void handle(ActionEvent e) {
+                                    String brojGosta = ((RadioButton)e.getSource()).getId();
+
+                                    for (Porudzbina porudzbina : porudzbineStolaA) {
+                                        String gostId = porudzbina.getGost().getGostID() + "";
+                                        if (gostId.equals(brojGosta)) {
+                                            prikaziPorudzbinu(contentA, porudzbina);
+                                            break;
+                                        }
+                                    }
+                                    
+                                }      
+                            });
+            
+            return noviGostButton;
+    }
+     
+    private RadioButton prikaziPorudzbinuTaskSetButtonActionB(
+            RadioButton noviGostButton, 
+            String brojNovogGosta
+    )
+    {
+            noviGostButton.getStyleClass().remove("radio-button");
+            noviGostButton.getStyleClass().add("toggle-button");
 
             noviGostButton.setId(brojNovogGosta);
 
@@ -185,26 +288,113 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             noviGostButton.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override public void handle(ActionEvent e) {
                                     
-                                    //TODO
-//                                    String gost = ((RadioButton)e.getSource()).getId();
-//                                    Utils.postaviStil_ObrisiZaOstaleKontroleRoditelja(e, stilButtonGrupeSelektovana);
-//
-//                                    for (Porudzbina porudzbina : porudzbineStola) {
-//                                        if (porudzbina.getGost().getGostID() == Long.parseLong(gost)) {
-//                                            porudzbinaTrenutna = porudzbina;
-//                                            prikaziPorudzbinu(porudzbinaTrenutna);
-//                                            novaTura = null;
-//                                            for (Tura tura : porudzbinaTrenutna.getTure()) {
-//                                                if (tura.getTuraID() == 0) {
-//                                                    novaTura = tura;
-//                                                }
-//                                            }
-//                                            break;
-//                                        }
-//                                    }
+                                    String brojGosta = ((RadioButton)e.getSource()).getId();
+                                    
+                                    for (Porudzbina porudzbina : porudzbineStolaB) {
+                                        if (porudzbina.getGost().getGostID() == Long.parseLong(brojGosta)) {
+                                            prikaziPorudzbinu(contentB, porudzbina);
+                                            break;
+                                        }
+                                    }
                                 }
                             });
             
             return noviGostButton;
     }
+    
+   private void prikaziPorudzbinu(VBox content, Porudzbina izabranaPorudzbina)
+   {
+       List<Tura> listaTura = izabranaPorudzbina.getTure();
+              
+       List<RM_Button> listaDugmica = new ArrayList<>();
+       
+       for (Tura novaTura : listaTura) {
+                       
+            RM_Button prebaciCeluTuru = new RM_Button();
+            
+            dodajAkcijuZaPrebaciCeluTuru(prebaciCeluTuru, novaTura);
+            
+            for(StavkaTure novaStavka : novaTura.listStavkeTure)
+            {
+                RM_Button stavka = new RM_Button();
+                
+                dodajAkcijuZaPrebaciStavku(stavka, novaStavka);
+                
+                listaDugmica.add(stavka);
+            } 
+            
+            listaDugmica.add(prebaciCeluTuru);
+       }
+              
+       content.getChildren().addAll(listaDugmica);
+   }
+   
+   private void dodajAkcijuZaPrebaciCeluTuru(RM_Button prebaciCeluTuru, Tura novaTura)
+   {
+       //TODO
+       prebaciCeluTuru.setPrefSize(432, 70);
+            try {
+                String period = Utils.getDateDiff(novaTura.getVremeTure(), new Date(), TimeUnit.MINUTES);
+                prebaciCeluTuru.setText("Prebaci Turu (" + period + ")");
+            } catch (Exception e) {
+                prebaciCeluTuru.setText("Prebaci Turu");
+            }
+            prebaciCeluTuru.setPodatak("" + novaTura.getTuraID());
+            
+            prebaciCeluTuru.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override public void handle(ActionEvent e) {
+                                String turaId = ((RM_Button)e.getSource()).getPodatak() + "";
+                               //TODO
+                            }
+                        }); 
+            
+   }
+   
+   
+   private void dodajAkcijuZaPrebaciStavku(RM_Button dugmeStavka, StavkaTure novaStavka) 
+   {
+      
+        dugmeStavka.setPrefSize(432, 70);
+
+        
+        
+        if (novaStavka.getImaDodatneIliOpisneArtikle()) {
+            
+            VBox box = new VBox();
+                        
+            Label dugmeText = new Label();
+            dugmeText.setText(novaStavka.naziv);
+            box.getChildren().add(dugmeText);
+            
+            for (StavkaTure dodatnaStavka : novaStavka.dodatniArtikli) {
+                Label dodatni = new Label();
+                dodatni.setText("-> " + dodatnaStavka.naziv);
+                box.getChildren().add(dodatni);
+            }
+            
+            for (StavkaTure opisnaStavka : novaStavka.opisniArtikli) {
+                Label opisni = new Label();
+                opisni.setText("* " + opisnaStavka.naziv);
+                box.getChildren().add(opisni);
+            }
+            
+            dugmeStavka.setGraphic(box);
+            dugmeStavka.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+
+        } else {
+            dugmeStavka.setText(novaStavka.naziv);
+        }
+        
+        
+        
+//        System.out.print(dugmeStavka.getStyleClass());
+//        
+//        dugmeStavka.getStyleClass().add("StavkaZaPrebacivanje");
+        
+        dugmeStavka.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override public void handle(ActionEvent e) {
+                               //TODO
+                            }
+                        });
+   }
 }

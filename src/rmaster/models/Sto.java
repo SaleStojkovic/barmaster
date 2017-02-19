@@ -27,11 +27,11 @@ public class Sto {
     
     public Sto(HashMap<String, String> stoMapa)
     {
-        this.stoNaziv = stoMapa.get("stoId");
+        this.stoNaziv = stoMapa.get("stoNaziv");
 
-        this.stoBroj = stoMapa.get("stoNaziv");
+        this.stoBroj = stoMapa.get("stoBroj");
                
-        this.stoId = stoMapa.get("stoBroj");
+        this.stoId = stoMapa.get("stoId");
       
     }
     
@@ -43,7 +43,9 @@ public class Sto {
                 new TableJoin("racun", "stoprikaz", "brojStola", "broj", TableJoinTypes.LEFT_JOIN)
         );
         
-        query.addCriteriaColumns("stoprikaz.broj", "racun.zatvoren", "racun.storniran");
+        query.setSelectColumns("racun.*");
+        
+        query.addCriteriaColumns("stoprikaz.id", "racun.zatvoren", "racun.storniran");
         query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
         query.addOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
         query.addCriteriaValues(this.stoId, "0", "0");
