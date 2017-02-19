@@ -53,8 +53,8 @@ public class RM_TableView extends TableView<Map<String, String>> {
         
             for(SirinaKolone sirina : this.SIRINE_KOLONA) {
                 
-                this.getColumns().get(sirina.BROJ_KOLONE - 1).setVisible(true);
-                this.getColumns().get(sirina.BROJ_KOLONE - 1).setPrefWidth(sirina.SIRINA_KOLONE);
+                this.getColumns().get(sirina.BROJ_KOLONE).setVisible(true);
+                this.getColumns().get(sirina.BROJ_KOLONE).setPrefWidth(sirina.SIRINA_KOLONE);
                 ukupnaSirina += sirina.SIRINA_KOLONE;
             }
         this.setPrefWidth(ukupnaSirina);
@@ -125,7 +125,7 @@ public class RM_TableView extends TableView<Map<String, String>> {
                 this.getItems().add(tableList.get(j));
             }
             
-            this.setFixedCellSize(35);
+            this.setFixedCellSize(30);
             int brojRedova = listaPodataka.size();
             this.setPrefHeight(brojRedova * this.getFixedCellSize() + 3);
             this.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);

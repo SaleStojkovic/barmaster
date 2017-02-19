@@ -31,6 +31,7 @@ public class StavkaTure {
     public double procenatPopusta = 0;
     public double kolicina = 0;
     public String naziv;
+    public String jedinicaMere;
     public long RACUN_ID;
     public long ARTIKAL_ID;
     public long TURA_ID;
@@ -67,6 +68,9 @@ public class StavkaTure {
 
         if (stavkaTure.get("naziv")  != null)
             this.naziv = stavkaTure.get("naziv");
+
+        if (stavkaTure.get("jedinicaMere")  != null)
+            this.jedinicaMere = stavkaTure.get("jedinicaMere");
 
         if (stavkaTure.get("RACUN_ID")  != null)
             this.RACUN_ID = Long.parseLong(stavkaTure.get("RACUN_ID"));
@@ -121,6 +125,10 @@ public class StavkaTure {
         return "" + this.ARTIKAL_ID;
     }
 
+    public String getJedinicaMere(){
+        return this.jedinicaMere;
+    }
+
     public long getStavkaTureId(){
         return this.id;
     }
@@ -152,6 +160,7 @@ public class StavkaTure {
         stavkaTure.put("id", "" + this.getStavkaTureId());
         stavkaTure.put("artikalId", this.getArtikalIDString());
         stavkaTure.put("naziv", this.getNaziv());
+        stavkaTure.put("jedinicaMere", this.getJedinicaMere());
         int intKolicina = (int)this.kolicina;
         if (this.kolicina == intKolicina) {
             stavkaTure.put("kolicina", "x" + intKolicina);
@@ -368,6 +377,7 @@ public class StavkaTure {
         novaGlavnaStavka.put("brojStola", "" + this.getBrojStola());
         novaGlavnaStavka.put("kolicina", "" + this.kolicina);
         novaGlavnaStavka.put("naziv", "" + this.naziv);
+        novaGlavnaStavka.put("jedinicaMere", "" + this.jedinicaMere);
         novaGlavnaStavka.put("cena", "" + this.cena);
         novaGlavnaStavka.put("cenaJedinicna", "" + this.cenaJedinicna);
         novaGlavnaStavka.put("dozvoljenPopust", "" + this.getDozvoljenPopust());
@@ -404,6 +414,7 @@ public class StavkaTure {
             mapaStavka.put("procenatPopusta", "" + this.getProcenatPopusta());
             mapaStavka.put("kolicina", "" + this.getKolicina());
             mapaStavka.put("naziv", this.naziv);
+            //mapaStavka.put("jedinicaMere", this.jedinicaMere);
             mapaStavka.put("RACUN_ID", "" + this.getRacunID());
             mapaStavka.put("ARTIKAL_ID", "" + this.getArtikalID());
             mapaStavka.put("TURA_ID", "" + this.getTuraID());

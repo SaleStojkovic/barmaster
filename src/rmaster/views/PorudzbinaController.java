@@ -222,7 +222,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             
     private List<Porudzbina> porudzbineStola = new ArrayList<Porudzbina>();
     
-    Integer[] sirinaKolonaTabele = {0, 0, 305, 0, 40, 0, 58, 0, 0, 0};
+    Integer[] sirinaKolonaTabele = {0, 0, 0, 305, 0, 40, 0, 58, 0, 0, 0};
     
     List<Map<String, String>> tureTrenutnoIzabranogGosta = new ArrayList<>();
     
@@ -255,9 +255,9 @@ public class PorudzbinaController extends FXMLDocumentController {
             );
             
             ((RM_TableView) novaTabela).setSirineKolona(
-                new SirinaKolone(3, sirinaKolonaTabele[2]),
-                new SirinaKolone(5, sirinaKolonaTabele[4]),
-                new SirinaKolone(7, sirinaKolonaTabele[6])
+                new SirinaKolone(3, sirinaKolonaTabele[3]),
+                new SirinaKolone(5, sirinaKolonaTabele[5]),
+                new SirinaKolone(7, sirinaKolonaTabele[7])
             );
          }
 
@@ -1379,13 +1379,13 @@ public class PorudzbinaController extends FXMLDocumentController {
 //        novaStavkaTure.put("brojStola", "" + poslednjaDodataStavka.getBrojStola());
 //        novaStavkaTure.put("dozvoljenPopust", "" + artikalOpisniDodatni.getDozvoljenPopust());
 //        novaStavkaTure.put("stampacID", "" + poslednjaDodataStavka.stampacID);
+        novaStavkaTure.put("naziv", artikal.naziv); // artikalOpisniDodatni.getText());
+        novaStavkaTure.put("jedinicaMere", artikal.jedinicaMere); // artikalOpisniDodatni.getText());
         
         if (artikal instanceof Opisni) { //artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_OPISNI) {
-            novaStavkaTure.put("naziv", artikal.naziv); // artikalOpisniDodatni.getText());
             novaStavkaTure.put("cena", "0");
             novaStavkaTure.put("cenaJedinicna", "0");
         } else if (artikal instanceof Dodatni) { //artikalOpisniDodatni.getVrstaGrupaIliArtikal() == ARTIKAL_DODATNI) {
-            novaStavkaTure.put("naziv", artikal.naziv); // artikalOpisniDodatni.getText());
             novaStavkaTure.put("cena", artikal.cena);// Utils.getStringFromDouble(artikalOpisniDodatni.getCenaJedinicna()));
             novaStavkaTure.put("cenaJedinicna", artikal.cena);// Utils.getStringFromDouble(artikalOpisniDodatni.getCenaJedinicna()));
         }
@@ -1397,6 +1397,7 @@ public class PorudzbinaController extends FXMLDocumentController {
             novaGlavnaStavka.put("brojStola", "" + poslednjaDodataStavka.getBrojStola());
             novaGlavnaStavka.put("kolicina", "1");
             novaGlavnaStavka.put("naziv", "" + poslednjaDodataStavka.naziv);
+            novaGlavnaStavka.put("jedinicaMere", "" + poslednjaDodataStavka.getJedinicaMere());
             novaGlavnaStavka.put("cena", "" + poslednjaDodataStavka.cenaJedinicna);
             novaGlavnaStavka.put("cenaJedinicna", "" + poslednjaDodataStavka.cenaJedinicna);
             novaGlavnaStavka.put("dozvoljenPopust", "" + poslednjaDodataStavka.getDozvoljenPopust());
