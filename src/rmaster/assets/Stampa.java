@@ -489,7 +489,16 @@ public final class Stampa {
             mapa.put("kupacNazivFirme", "Kupac br. 1");
             mapa.put("kupacAdresaFirme", "Gandijeva bb, 11070 Novi Beograd");
             mapa.put("kupacPIB", "123456789");
+            mapa.put("objekatFirmaNaziv", SettingsBaza.getValue("objekat.naziv"));
+            mapa.put("objekatFirmaAdresa", SettingsBaza.getValue("objekat.adresa"));
+            mapa.put("objekatFirmaPIB", SettingsBaza.getValue("objekat.pib"));
+            mapa.put("objekatFirmaMaticniBroj", SettingsBaza.getValue("objekat.maticni.broj"));
+            mapa.put("objekatFirmaBankaNaziv", SettingsBaza.getValue("objekat.banka"));
+            mapa.put("objekatFirmaBankaRacun", SettingsBaza.getValue("objekat.racun"));
+            mapa.put("objekatFirmaPDV", SettingsBaza.getValue("objekat.updv"));
+            mapa.put("objekatFirmaSifraDelatnosti", SettingsBaza.getValue("objekat.sifra.delatnosti"));
             mapa.put("objekatMesto", SettingsBaza.getValue("objekat.mesto"));
+            mapa.put("objekatMemorandum", SettingsBaza.getValue("putanja.slike") + SettingsBaza.getValue("objekat.memorandum"));
             mapa.put("porudzbina", porudzbina);
 
             JasperReport jasperReport = JasperCompileManager.compileReport(getClass().getResourceAsStream(reportFileName));

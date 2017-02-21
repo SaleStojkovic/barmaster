@@ -7,6 +7,7 @@ package rmaster.models;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,7 @@ public class Porudzbina {
     //private Tura novaTuraPorudzbine;
     private boolean blokirana = false;
 
-    private int brojFakture;
+    private String brojFakture;
     private int brojRacuna;
     private long brojFiskalnogIsecka;
     private int brojStolaID;
@@ -66,6 +67,12 @@ public class Porudzbina {
     
     public Date getVremeIzdavanjaRacuna() {
         return vremeIzdavanjaRacuna;
+    }
+    
+    public String getGodinaIzdavanjaRacuna() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(this.vremeIzdavanjaRacuna);
+        return "" + cal.get(Calendar.YEAR);
     }
     
     public double getVrednostPorudzbine() {
@@ -151,7 +158,7 @@ public class Porudzbina {
                     if (porudzbina.get("id") != null)
                         this.racunID = Long.parseLong(porudzbina.get("id"));
                     if (porudzbina.get("brojFakture") != null)
-                        this.brojFakture = Integer.parseInt(porudzbina.get("brojFakture"));
+                        this.brojFakture = porudzbina.get("brojFakture");
                     if (porudzbina.get("brojRacuna") != null)
                         this.brojRacuna = Integer.parseInt(porudzbina.get("brojRacuna"));
                     if (porudzbina.get("brojFiskalnogIsecka") != null && porudzbina.get("brojFiskalnogIsecka").equals(0))
@@ -243,8 +250,8 @@ public class Porudzbina {
             //java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             long result = 0;
             HashMap<String,String> mapa = new HashMap();
-            if (this.brojFakture!=0)
-                mapa.put("brojFakture", "" + this.brojFakture);
+            if ((this.brojFakture != null) && (!this.brojFakture.equals("")))
+                mapa.put("brojFakture", this.brojFakture);
             mapa.put("brojRacuna", "" + this.brojRacuna);
             if (this.brojFiskalnogIsecka!=0)
                 mapa.put("brojFiskalnogIsecka", "" + this.brojFiskalnogIsecka);
@@ -347,5 +354,14 @@ public class Porudzbina {
     public StalniGost getStalniGost() {
         return this.stalniGost;
     }
+
+    public String getBrojFakture() {
+        return this.brojFakture;
+    }
+    
+    public void setBrojFakture(String brojFakt) {
+        this.brojFakture = brojFakt;
+    }
+
 }
  

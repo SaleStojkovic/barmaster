@@ -7,7 +7,9 @@ package rmaster.views;
 
 import rmaster.assets.Settings;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -437,6 +439,22 @@ public class NaplataController extends FXMLDocumentController {
                 alert.showAndWait();
                 return;
             }
+            
+            if (porudzbina.getBrojFakture()==null || porudzbina.getBrojFakture().equals("")) {
+                String[] imenaArgumenata = {"settingName"};
+                String[] vrednostiArgumenata = {"faktura.broj.sledeci"};
+                int rez = DBBroker.getValueFromFunction("getSledeciRedniBroj", imenaArgumenata, vrednostiArgumenata);
+                this.porudzbina.setBrojFakture("" + rez);
+                HashMap<String,String> h = new HashMap<>();
+                h.put("brojFakture", porudzbina.getBrojFakture());
+                try {
+                    DBBroker.izmeni("racun", "id", "" + porudzbina.getID(), h, Boolean.TRUE);
+                } catch (Exception e) {
+                    
+                }
+                    
+            }
+
             stampajSnimiZatvoriFormu(VrstaRacunaZaStampu.FAKTURA, event);
         }
         
