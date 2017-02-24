@@ -51,60 +51,35 @@ import rmaster.models.StalniGost;
  */
 public class NaplataController extends FXMLDocumentController {
 
-        ScreenController myController; 
+    ScreenController myController; 
      
-    @Override
-    public void setScreenParent(ScreenController screenParent){ 
-        myController = screenParent; 
-    } 
+    @FXML private Label fxID_Total;
+    @FXML private Label fxID_Popust;
+    @FXML private Label fxID_ZaUplatu;
+    @FXML private Label fxID_Uplaceno;
+    @FXML private Label fxID_Kusur;
+    @FXML private Label casovnik;
+    @FXML private Label imeKonobara;
     
-    @FXML
-    private Label fxID_Total;
-    @FXML
-    private Label fxID_Popust;
-    @FXML
-    private Label fxID_ZaUplatu;
-    @FXML
-    private Label fxID_Uplaceno;
-    @FXML
-    private Label fxID_Kusur;
-    @FXML
-    private Label casovnik;
-    @FXML
-    private Label imeKonobara;
+    @FXML private TextField skenerKartice;
     
+    @FXML private VBox fxID_PopustiZaNaplatu1;
+    @FXML private VBox fxID_PopustiZaNaplatu2;
     
-    @FXML
-    private TextField skenerKartice;
+    @FXML private GridPane fxID_NacinPlacanjaGrid;
+    @FXML private ToggleGroup tgVrstaPlacanja;
+    @FXML private ToggleButton fxID_Faktura;
+    @FXML private ToggleButton fxID_Cek;
+    @FXML private ToggleButton fxID_Kartica;
+    @FXML private ToggleButton fxID_Gotovina;
     
-    @FXML
-    private VBox fxID_PopustiZaNaplatu1;
-    @FXML
-    private VBox fxID_PopustiZaNaplatu2;
+    @FXML private Button fxID_Odustani;
+    @FXML private ToggleButton fxID_GotovinskiRacun;
+    @FXML private Button fxID_PorudzbinaMedjuzbir;
+    @FXML private Button fxID_Lojalnost;
+    @FXML private Button fxID_Naplata;
     
-    @FXML
-    private GridPane fxID_NacinPlacanjaGrid;
-    @FXML
-    private ToggleGroup tgVrstaPlacanja;
-    @FXML
-    private ToggleButton fxID_Faktura;
-    @FXML
-    private ToggleButton fxID_Cek;
-    @FXML
-    private ToggleButton fxID_Kartica;
-    @FXML
-    private ToggleButton fxID_Gotovina;
-    
-    @FXML
-    private Button fxID_Odustani;
-    @FXML
-    private Button fxID_PorudzbinaMedjuzbir;
-    @FXML
-    private Button fxID_Lojalnost;
-    @FXML
-    private Button fxID_Naplata;
-    
-    public enum VrstaRacunaZaStampu {FAKTURA, GOTOVINSKI, MEDJUZBIR};
+    public enum VrstaRacunaZaStampu {FISKALNI, FAKTURA, GOTOVINSKI, MEDJUZBIR};
     
     private Porudzbina porudzbina;
     private List<NacinPlacanja> placanja = new ArrayList();
@@ -122,6 +97,7 @@ public class NaplataController extends FXMLDocumentController {
     private String sVrednostKartica = "";
     private String sVrednostGotovina = "";
     private Node roditelj = null;
+
     /**
      * Initializes the controller class.
      */
@@ -154,41 +130,48 @@ public class NaplataController extends FXMLDocumentController {
             placanja.add(new NacinPlacanja(NacinPlacanja.VrstePlacanja.KARTICA));
             aktivnoPlacanje = new NacinPlacanja(NacinPlacanja.VrstePlacanja.GOTOVINA);
             placanja.add(aktivnoPlacanje);
+
+            tgVrstaPlacanja.selectedToggleProperty().addListener(new ChangeListener<Toggle>()
+                {
+                    @Override
+                    public void changed(ObservableValue<? extends Toggle> ov, Toggle t, Toggle t1) {
+                        ToggleButton chk;
+                        if (t1 != null)
+                            chk = (ToggleButton)t1.getToggleGroup().getSelectedToggle();
+                        else
+                            chk = (ToggleButton)t;
+
+                        switch (chk.getId()) {
+                            case "fxID_Faktura":
+                                setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.FAKTURA);
+
+                                List<Object> newData = new ArrayList<>();
+                                newData.add(porudzbina);
+                                newData.add("Faktura");
+
+                                myController.setScreen(ScreenMap.LOJALNOST, newData);
+                                break;
+                            case "fxID_Cek":
+                                setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.CEK);
+                                break;
+                            case "fxID_Kartica":
+                                setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.KARTICA);
+                                break;
+                            case "fxID_Gotovina":
+                                setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.GOTOVINA);
+                                break;
+                        }
+                    }
+                });
+
+            this.tgVrstaPlacanja.selectToggle(fxID_Gotovina);
+            //this.fxID_Gotovina.fire();
         }
         
         for (NacinPlacanja nacinPlacanja : placanja) {
             nacinPlacanja.setVrednostString("");
         }
         
-        tgVrstaPlacanja.selectedToggleProperty().addListener(new ChangeListener<Toggle>()
-            {
-                @Override
-                public void changed(ObservableValue<? extends Toggle> ov, Toggle t, Toggle t1) {
-                    ToggleButton chk;
-                    if (t1 != null)
-                        chk = (ToggleButton)t1.getToggleGroup().getSelectedToggle();
-                    else
-                        chk = (ToggleButton)t;
-
-                    switch (chk.getId()) {
-                        case "fxID_Faktura":
-                            setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.FAKTURA);
-                            
-                            break;
-                        case "fxID_Cek":
-                            setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.CEK);
-                            break;
-                        case "fxID_Kartica":
-                            setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.KARTICA);
-                            break;
-                        case "fxID_Gotovina":
-                            setAktivnoPlacanje(NacinPlacanja.VrstePlacanja.GOTOVINA);
-                            break;
-                    }
-                }
-            });
-        
-        this.fxID_Gotovina.fire();
 
         List<Object> d = (List<Object>)data;
         StalniGost stalniGost = null;
@@ -198,9 +181,9 @@ public class NaplataController extends FXMLDocumentController {
                 porudzbina = (Porudzbina) object;
                 stalniGost = porudzbina.getStalniGost();
             }
-            if (object instanceof StalniGost) {
-               stalniGost = (StalniGost)object;
-            }
+//            if (object instanceof StalniGost) {
+//               stalniGost = (StalniGost)object;
+//            }
             if (object instanceof Node) {
                roditelj = (Node)object;
             }
@@ -208,10 +191,10 @@ public class NaplataController extends FXMLDocumentController {
         this.total = porudzbina.getVrednostPorudzbine();
         this.fxID_Total.setText(Utils.getStringFromDouble(this.total));
         
-        if (stalniGost != null) {
-            porudzbina.setStalniGost(stalniGost);
-            porudzbina.setPopust(Utils.getDoubleFromString(stalniGost.popust));
-        }
+//        if (stalniGost != null) {
+//            porudzbina.setStalniGost(stalniGost);
+//            porudzbina.setPopust(Utils.getDoubleFromString(stalniGost.popust));
+//        }
         
         this.data = data;
 
@@ -219,6 +202,11 @@ public class NaplataController extends FXMLDocumentController {
         
         osveziPrikaz();
     }
+    
+    @Override
+    public void setScreenParent(ScreenController screenParent){ 
+        myController = screenParent; 
+    } 
     
     private void popuniPopuste() {
         List<Map<String, String>> popustiZaNaplatu;
@@ -364,7 +352,12 @@ public class NaplataController extends FXMLDocumentController {
 
     
     public void otvoriLojalnost(ActionEvent event) {
-        myController.setScreen(ScreenMap.LOJALNOST, porudzbina);
+        List<Object> newData = new ArrayList<>();
+        newData.add(porudzbina);
+        newData.add("Gosti");
+        
+        myController.setScreen(ScreenMap.LOJALNOST, newData);
+//        myController.setScreen(ScreenMap.LOJALNOST, porudzbina);
     }
     
     public void medjuzbir(ActionEvent event) {
@@ -390,17 +383,15 @@ public class NaplataController extends FXMLDocumentController {
         // TODO
         // Ovde treba odraditi zatvaranje forme i odlazak na stolove ili LOG-OF
         this.snimi(vrstaRacuna);
-        if (vrstaRacuna == VrstaRacunaZaStampu.MEDJUZBIR) {
+        if (vrstaRacuna == VrstaRacunaZaStampu.FISKALNI) {
+            Stampa.getInstance().stampajFiskalniRacun(porudzbina, placanja);
+        } else if (vrstaRacuna == VrstaRacunaZaStampu.MEDJUZBIR) {
             Stampa.getInstance().stampajMedjuzbir(porudzbina);
+        } else if ((vrstaRacuna == VrstaRacunaZaStampu.FAKTURA) || (vrstaRacuna == VrstaRacunaZaStampu.GOTOVINSKI)) {
+            Stampa.getInstance().stampajFiskalniRacun(porudzbina, placanja);
+            Stampa.getInstance().stampajFakturu(vrstaRacuna, porudzbina);
         }
-        if (vrstaRacuna == VrstaRacunaZaStampu.FAKTURA) {
-            Stampa.getInstance().stampajGotovinskiRacun(porudzbina, placanja);
-            Stampa.getInstance().stampajFakturu(porudzbina);
-        }
-        if (vrstaRacuna == VrstaRacunaZaStampu.GOTOVINSKI) {
-            Stampa.getInstance().stampajGotovinskiRacun(porudzbina, placanja);
-        }
-        
+        this.placanja.clear();
         myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
 
     }
@@ -413,7 +404,11 @@ public class NaplataController extends FXMLDocumentController {
             // - ako nista nije kucano knjizi kao da je uplacen tacan iznos u gotovini
             nacinPlacanjaGotovina.setVrednost(this.zaUplatu);
             //osveziPrikaz();
-            stampajSnimiZatvoriFormu(VrstaRacunaZaStampu.GOTOVINSKI, event);
+            if (this.fxID_GotovinskiRacun.isSelected()) {
+                stampajSnimiZatvoriFormu(VrstaRacunaZaStampu.GOTOVINSKI, event);
+            } else {
+                stampajSnimiZatvoriFormu(VrstaRacunaZaStampu.FISKALNI, event);
+            }
             return;
         }
 
@@ -470,7 +465,11 @@ public class NaplataController extends FXMLDocumentController {
         if (this.kusur>0)
             nacinPlacanjaGotovina.setVrednost(nacinPlacanjaGotovina.getVrednost() - this.kusur);
         
-        stampajSnimiZatvoriFormu(VrstaRacunaZaStampu.GOTOVINSKI, event);
+        if (this.fxID_GotovinskiRacun.isSelected()) {
+            stampajSnimiZatvoriFormu(VrstaRacunaZaStampu.GOTOVINSKI, event);
+        } else {
+            stampajSnimiZatvoriFormu(VrstaRacunaZaStampu.FISKALNI, event);
+        }
     }
 
     public void snimi(VrstaRacunaZaStampu vrstaRacuna) {
@@ -497,6 +496,8 @@ public class NaplataController extends FXMLDocumentController {
 
         }
     }
+    
+    @FXML
     public void backButton(ActionEvent event) {
         String text = this.aktivnoPlacanje.getVrednostString();
         
@@ -541,6 +542,7 @@ public class NaplataController extends FXMLDocumentController {
     @FXML
     public void odustani(ActionEvent event) {
 //        myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
+        this.placanja.clear();
         myController.setScreen(ScreenMap.PORUDZBINA, null);
 //        Button b = (Button)event.getSource(); 
 //        b.getScene().getWindow().hide();

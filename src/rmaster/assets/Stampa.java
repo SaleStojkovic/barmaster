@@ -47,6 +47,7 @@ import rmaster.models.SettingsBaza;
 import rmaster.models.Stampac;
 import rmaster.models.StavkaTure;
 import rmaster.models.Tura;
+import rmaster.views.NaplataController;
 import rmaster.views.NumerickaTastaturaController;
 
 /**
@@ -360,7 +361,7 @@ public final class Stampa {
         
     }
     
-    public final void stampajGotovinskiRacun(Porudzbina porudzbina, List<NacinPlacanja> placanja) {
+    public final void stampajFiskalniRacun(Porudzbina porudzbina, List<NacinPlacanja> placanja) {
         try {
             java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(Settings.getInstance().getFiscalniIzvestajiDnevniIzvestajFormatDatuma());
 
@@ -480,30 +481,52 @@ public final class Stampa {
         return rezultat;
     }
     
-    public final void stampajFakturu(Porudzbina porudzbina) {
+    private final Map<String, Object> pripremiPodatkeZaFakturuIliGotovinskiRacun(NaplataController.VrstaRacunaZaStampu imeIzvestaja, Porudzbina porudzbina) {
+        Map<String, Object> mapa = new HashMap<>();  
+
+        if (imeIzvestaja == NaplataController.VrstaRacunaZaStampu.FAKTURA) {
+            mapa.put("gotovinskiRacun", "false");
+        } else {
+            mapa.put("gotovinskiRacun", "true");
+        }
+        mapa.put("kupacNazivFirme", "Kupac br. 1");
+        mapa.put("kupacAdresaFirme", "Gandijeva bb, 11070 Novi Beograd");
+        mapa.put("kupacPIB", "123456789");
+        mapa.put("objekatFirmaNaziv", SettingsBaza.getValue("objekat.naziv"));
+        mapa.put("objekatFirmaAdresa", SettingsBaza.getValue("objekat.adresa"));
+        mapa.put("objekatFirmaPIB", SettingsBaza.getValue("objekat.pib"));
+        mapa.put("objekatFirmaMaticniBroj", SettingsBaza.getValue("objekat.maticni.broj"));
+        mapa.put("objekatFirmaBankaNaziv", SettingsBaza.getValue("objekat.banka"));
+        mapa.put("objekatFirmaBankaRacun", SettingsBaza.getValue("objekat.racun"));
+        mapa.put("objekatFirmaPDV", SettingsBaza.getValue("objekat.updv"));
+        mapa.put("objekatFirmaSifraDelatnosti", SettingsBaza.getValue("objekat.sifra.delatnosti"));
+        mapa.put("objekatMesto", SettingsBaza.getValue("objekat.mesto"));
+        mapa.put("objekatMemorandum", SettingsBaza.getValue("putanja.slike") + SettingsBaza.getValue("objekat.memorandum"));
+        mapa.put("porudzbina", porudzbina);
+        
+        return mapa;
+    }
+    
+    public final void stampajFakturu(NaplataController.VrstaRacunaZaStampu vrstaRacuna, Porudzbina porudzbina) {
           //OVO RADI!!! :D
         String reportFileName = "/rmaster/views/reports/faktura.jrxml";
              
         try {
-            Map<String, Object> mapa = new HashMap<>();  
-            mapa.put("kupacNazivFirme", "Kupac br. 1");
-            mapa.put("kupacAdresaFirme", "Gandijeva bb, 11070 Novi Beograd");
-            mapa.put("kupacPIB", "123456789");
-            mapa.put("objekatFirmaNaziv", SettingsBaza.getValue("objekat.naziv"));
-            mapa.put("objekatFirmaAdresa", SettingsBaza.getValue("objekat.adresa"));
-            mapa.put("objekatFirmaPIB", SettingsBaza.getValue("objekat.pib"));
-            mapa.put("objekatFirmaMaticniBroj", SettingsBaza.getValue("objekat.maticni.broj"));
-            mapa.put("objekatFirmaBankaNaziv", SettingsBaza.getValue("objekat.banka"));
-            mapa.put("objekatFirmaBankaRacun", SettingsBaza.getValue("objekat.racun"));
-            mapa.put("objekatFirmaPDV", SettingsBaza.getValue("objekat.updv"));
-            mapa.put("objekatFirmaSifraDelatnosti", SettingsBaza.getValue("objekat.sifra.delatnosti"));
-            mapa.put("objekatMesto", SettingsBaza.getValue("objekat.mesto"));
-            mapa.put("objekatMemorandum", SettingsBaza.getValue("putanja.slike") + SettingsBaza.getValue("objekat.memorandum"));
-            mapa.put("porudzbina", porudzbina);
+            Map<String, Object> mapa = pripremiPodatkeZaFakturuIliGotovinskiRacun(vrstaRacuna, porudzbina);
 
             JasperReport jasperReport = JasperCompileManager.compileReport(getClass().getResourceAsStream(reportFileName));
 
-            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(porudzbina.getTure().get(0).listStavkeTure);
+            List<StavkaTure> listStavkeTureZaFakturu = new ArrayList<>();
+            for (Tura tura : porudzbina.getTure()) {
+                for (StavkaTure stavkaTure : tura.listStavkeTure) {
+                    listStavkeTureZaFakturu.add(stavkaTure);
+                    for (StavkaTure stavkaTure1 : stavkaTure.dodatniArtikli) {
+                        listStavkeTureZaFakturu.add(stavkaTure1);
+                    }
+                }
+            }
+            
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(listStavkeTureZaFakturu);
             JasperPrint print = (JasperPrint) JasperFillManager.fillReport(jasperReport, mapa, beanColDataSource);
             //JasperPrint print = (JasperPrint) JasperFillManager.fillReport(jasperReport, mapa, DBBroker.poveziSaBazom());
 

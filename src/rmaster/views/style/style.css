@@ -1044,6 +1044,30 @@ and open the template in the editor.
     -fx-font-size: 18; 
 }
 
+#naplataFooter *.toggle-button
+{
+    -fx-background-color: -fx-tamno-crna;
+    -fx-font-family: KlavikaBold;
+    -fx-text-fill: -fx-zuta;
+    -fx-border-color: -fx-siva;
+    -fx-border-width: 0.5;
+    -fx-font-weight: bold;
+    -fx-font-size: 18;
+    -fx-text-wrap: true;
+}
+
+#naplataFooter *.toggle-button:selected
+{
+    -fx-background-color: -fx-svetlo-crna;
+    -fx-font-family: KlavikaBold;
+    -fx-text-fill: -fx-zuta;
+    -fx-border-color: -fx-siva;
+    -fx-border-width: 0.5;
+    -fx-font-weight: bold;
+    -fx-font-size: 18; 
+    -fx-text-wrap: false;
+}
+
 #naplataLabele 
 {
     -fx-background-color: -fx-siva;

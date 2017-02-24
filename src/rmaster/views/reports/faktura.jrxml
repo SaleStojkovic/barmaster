@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-02-21T17:19:07 -->
+<!-- 2017-02-23T13:43:20 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="faktura" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="539" leftMargin="28" rightMargin="28" topMargin="28" bottomMargin="28" isSummaryWithPageHeaderAndFooter="true" uuid="60e976ba-5b59-4e8b-a3f7-25a3248026f7">
 	<property name="com.jaspersoft.studio.unit." value="cm"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="gotovinskiRacun" class="java.lang.String"/>
 	<parameter name="kupacNazivFirme" class="java.lang.String"/>
 	<parameter name="kupacAdresaFirme" class="java.lang.String"/>
 	<parameter name="kupacPIB" class="java.lang.String"/>
@@ -175,7 +176,9 @@
 				<text><![CDATA[Datum valute:]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="280" y="60" width="271" height="80" uuid="ced12eb9-a0f5-4556-80d6-1105d3c90e51"/>
+				<reportElement x="280" y="60" width="271" height="80" uuid="ced12eb9-a0f5-4556-80d6-1105d3c90e51">
+					<printWhenExpression><![CDATA[$P{gotovinskiRacun}.equals("false")]]></printWhenExpression>
+				</reportElement>
 				<graphicElement>
 					<pen lineStyle="Solid"/>
 				</graphicElement>
@@ -183,6 +186,7 @@
 			<staticText>
 				<reportElement x="280" y="60" width="271" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="52890605-d441-4232-84bb-d84f725ea573">
 					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+					<printWhenExpression><![CDATA[$P{gotovinskiRacun}.equals("false")]]></printWhenExpression>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
@@ -196,6 +200,7 @@
 				<reportElement x="280" y="81" width="271" height="18" uuid="40d42411-537b-4b71-821c-af806c831532">
 					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
 					<property name="com.jaspersoft.studio.unit.width" value="cm"/>
+					<printWhenExpression><![CDATA[$P{gotovinskiRacun}.equals("false")]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
@@ -206,6 +211,7 @@
 				<reportElement x="280" y="101" width="271" height="18" uuid="d30a4d4c-9500-4238-b2d3-aee420113b21">
 					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
 					<property name="com.jaspersoft.studio.unit.width" value="cm"/>
+					<printWhenExpression><![CDATA[$P{gotovinskiRacun}.equals("false")]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
@@ -216,6 +222,7 @@
 				<reportElement x="279" y="121" width="271" height="18" uuid="2be22a24-9cf5-429f-9e7d-e04185ca0ff0">
 					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
 					<property name="com.jaspersoft.studio.unit.width" value="cm"/>
+					<printWhenExpression><![CDATA[$P{gotovinskiRacun}.equals("false")]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>

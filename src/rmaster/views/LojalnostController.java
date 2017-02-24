@@ -36,6 +36,7 @@ import javafx.scene.input.KeyEvent;
 import static java.lang.Math.round;
 import rmaster.ScreenController;
 import static java.lang.Math.round;
+import rmaster.assets.Utils;
 
 /**
  * FXML Controller class
@@ -83,25 +84,47 @@ public class LojalnostController extends FXMLDocumentController {
     
     RadioButton prikaziSve = new RadioButton();
 
+    private String vrstaPrikaza;
 
     public int brojacOffset = 0;
     
     @Override
     public void initData(Object data) {
-        if (data instanceof Porudzbina) {
-                porudzbina = (Porudzbina) data;
+        List<Object> podaci = (List<Object>)data;
+        vrstaPrikaza = "";
+        for (Object object : podaci) {
+            if (object instanceof Porudzbina) {
+                porudzbina = (Porudzbina) object;
+            }
+            if (object instanceof String) {
+                String pom = (String) object;
+                if (pom.equals("Gosti") || pom.equals("Faktura")) {
+                    vrstaPrikaza = (String) object;
+                }
+            }
         }
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
         this.imeKonobara.setText(getUlogovaniKonobarIme());
         
         popuniLojalnostGostiGrupe();
+        ToggleButton dugme = new ToggleButton();
+        if (vrstaPrikaza.equals("Gosti")) {
+            dugme = (ToggleButton)lojalnostGostiGrupe.getChildren().get(0);
+        } else if (vrstaPrikaza.equals("Faktura")) {
+            for (Object objectPom : lojalnostGostiGrupe.getChildren()) {
+                if (objectPom instanceof ToggleButton) {
+                    ToggleButton dugmePom = (ToggleButton) objectPom;
+                    // Ovo "5" je u bazi za "Hotelski Gost" - treba staviti "2" za PREDUZECE
+                    if (dugmePom.getId().equals("2"))
+                        dugme = dugmePom;
+                }
+            }
+        }   
         
-        ToggleButton dugme = (ToggleButton)lojalnostGostiGrupe.getChildren().get(0);
-                
         dugme.fire();
-        
-        dugme.setSelected(true);
+        //headerButtonGroup.selectToggle(dugme);
+        //dugme.setSelected(true);
     }
     
     @Override
@@ -156,10 +179,18 @@ public class LojalnostController extends FXMLDocumentController {
     {
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         query.setTableName("stalnigostigrupa");
-        query.addCriteriaColumns("naziv", "naziv");
-        query.addCriteria(QueryBuilder.IS_NOT_EQUAL, QueryBuilder.IS_NOT_EQUAL);
-        query.addOperators(QueryBuilder.LOGIC_AND);
-        query.addCriteriaValues("PREDUZECE", "NEPOZELJNI GOST");
+        
+        if (vrstaPrikaza.equals("Faktura")) {
+            query.addCriteriaColumns("naziv", "naziv");
+            query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_NOT_EQUAL);
+            query.addOperators(QueryBuilder.LOGIC_AND);
+            query.addCriteriaValues("PREDUZECE", "NEPOZELJNI GOST");
+        } else if (vrstaPrikaza.equals("Gosti")) {
+            query.addCriteriaColumns("naziv", "naziv");
+            query.addCriteria(QueryBuilder.IS_NOT_EQUAL, QueryBuilder.IS_NOT_EQUAL);
+            query.addOperators(QueryBuilder.LOGIC_AND);
+            query.addCriteriaValues("PREDUZECE", "NEPOZELJNI GOST");
+        }
         
         List<Map<String, String>> listaRezultata = runQuery(query);
         
@@ -286,7 +317,7 @@ public class LojalnostController extends FXMLDocumentController {
         List<Object> data = new ArrayList<>();
         
         data.add(porudzbina);
-        
+
         myController.setScreen(ScreenMap.NAPLATA, data);
         
     }
@@ -303,8 +334,11 @@ public class LojalnostController extends FXMLDocumentController {
         
         List<Object> data = new ArrayList<>();
         
+        porudzbina.setStalniGost(izabraniGost);
+        porudzbina.setPopust(Utils.getDoubleFromString(izabraniGost.popust));
+        
         data.add(porudzbina);
-        data.add(izabraniGost);
+        //data.add(izabraniGost);
         
         myController.setScreen(ScreenMap.NAPLATA, data);
     }
