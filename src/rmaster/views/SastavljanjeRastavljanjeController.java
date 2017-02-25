@@ -30,6 +30,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.ScreenController;
 import rmaster.assets.RM_Button.RM_Button;
@@ -85,6 +86,12 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     @FXML
     private HBox gostiStoB = new HBox();
     
+    @FXML
+    private VBox novaTuraA = new VBox();
+    
+    @FXML
+    private VBox novaTuraB = new VBox();
+    
     private ToggleGroup gostiGrupaA = new ToggleGroup();
     
     private ToggleGroup gostiGrupaB = new ToggleGroup();
@@ -92,6 +99,14 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     private List<Porudzbina> porudzbineStolaA = new ArrayList<>();
     
     private List<Porudzbina> porudzbineStolaB = new ArrayList<>();
+    
+    private List<StavkaTure> stavkeZaPromenuA = new ArrayList<>();
+    
+    private List<StavkaTure> stavkeZaPromenuB = new ArrayList<>();
+    
+    private RM_Button labelA = new RM_Button();
+    
+    private RM_Button labelB = new RM_Button();
     
     /**
      * Initializes the controller class.
@@ -103,6 +118,18 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         scrollPaneA.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPaneB.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
+        labelA.setId("novaTuraLabel");
+        labelA.setText("NOVA TURA");
+        labelA.textAlignmentProperty().set(TextAlignment.CENTER);
+        labelA.setPrefSize(432, 20);
+
+        labelB.setId("novaTuraLabel");
+        labelB.setText("NOVA TURA");
+        labelB.textAlignmentProperty().set(TextAlignment.CENTER);
+        labelB.setPrefSize(432, 20);
+        
+        novaTuraB.setId("novaTuraB");
+        novaTuraA.setId("novaTuraA");
     }    
     
     @Override
@@ -112,6 +139,18 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         
         Timeline timeline = this.prikaziCasovnik(casovnik);
         timeline.play();
+        
+        gostiStoA.getChildren().clear();
+        gostiStoB.getChildren().clear();
+        
+        izaberiStoA.setText("Izaberi sto");
+        izaberiStoB.setText("Izaberi sto");
+        
+        contentA.getChildren().clear();
+        contentB.getChildren().clear();
+        
+        novaTuraA.getChildren().clear();
+        novaTuraB.getChildren().clear();
     }
     
     public void nazadNaPrikazSale(ActionEvent event) 
@@ -315,11 +354,15 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                        
             RM_Button prebaciCeluTuru = new RM_Button();
             
+            prebaciCeluTuru.setVrsta(novaTura.listStavkeTure.size());
+            
             dodajAkcijuZaPrebaciCeluTuru(prebaciCeluTuru, novaTura);
             
-            for(StavkaTure novaStavka : novaTura.listStavkeTure)
-            {
+            for(StavkaTure novaStavka : novaTura.listStavkeTure) {
+                
                 RM_Button stavka = new RM_Button();
+                
+                stavka.setVrsta(prebaciCeluTuru);
                 
                 dodajAkcijuZaPrebaciStavku(stavka, novaStavka);
                 
@@ -330,6 +373,15 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
        }
               
        content.getChildren().addAll(listaDugmica);
+       
+       if (content.getId().equals(contentA.getId())) {
+           content.getChildren().add(labelA);
+           content.getChildren().add(novaTuraA);
+           return;
+       }
+       
+       content.getChildren().add(labelB);
+       content.getChildren().add(novaTuraB);
    }
    
    private void dodajAkcijuZaPrebaciCeluTuru(RM_Button prebaciCeluTuru, Tura novaTura)
@@ -342,11 +394,12 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             } catch (Exception e) {
                 prebaciCeluTuru.setText("Prebaci celu turu");
             }
-            prebaciCeluTuru.setPodatak("" + novaTura.getTuraID());
+            prebaciCeluTuru.setPodatak(novaTura);
             
             prebaciCeluTuru.setOnAction(new EventHandler<ActionEvent>() {
                             @Override public void handle(ActionEvent e) {
-                                String turaId = ((RM_Button)e.getSource()).getPodatak() + "";
+                                RM_Button dugme = (RM_Button)e.getSource();
+                                Tura izabranaTura = (Tura)dugme.getPodatak();
                                //TODO
                             }
                         }); 
@@ -437,27 +490,67 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         dugmeStavka.setOnAction(new EventHandler<ActionEvent>() {
                             @Override public void handle(ActionEvent e) {
                                RM_Button izabranaStavka = (RM_Button)e.getSource();
-                               izabranaStavka.getParent();
-                               premestiStavku(
-                                       (StavkaTure)izabranaStavka.getPodatak(),
-                                       (VBox)izabranaStavka.getParent()
-                               );
+                               premestiStavku(izabranaStavka);
                             }
                         });
    }
    
-    private void premestiStavku(StavkaTure izabranaStavka, VBox content) 
+   
+    private void premestiStavku(RM_Button dugme) 
     {
-        if (content.getId().equals(contentA.getId())) {
-            System.out.println(content.getId() + " " + izabranaStavka.naziv);
+        
+        if (contentA.getChildren().isEmpty() || contentB.getChildren().isEmpty()) {
+            return;
+        }
+        
+        StavkaTure izabranaStavka = (StavkaTure)dugme.getPodatak();
+        
+        VBox parent = (VBox)dugme.getParent();
+
+        parent.getChildren().remove(dugme);
+        
+        RM_Button prebaciCeluTuru = (RM_Button)dugme.getVrsta();
+        
+        int brojStavki = (int)prebaciCeluTuru.getVrsta();
+        brojStavki--;
+        prebaciCeluTuru.setVrsta(brojStavki);
+
+        //Uklanja dugme prebaci celu turu ako vise nema stavki u njoj
+        if (brojStavki == 0) {
+            parent.getChildren().remove(prebaciCeluTuru);
+        }
+
+        
+        if (parent.getId().equals(contentA.getId())) {
+            
+            novaTuraB.getChildren().add(dugme);
+            stavkeZaPromenuB.add(izabranaStavka);
+        }
+        
+        if (parent.getId().equals(contentB.getId())) {
+           
+            novaTuraA.getChildren().add(dugme);
+            stavkeZaPromenuA.add(izabranaStavka);
 
         }
         
-        if (content.getId().equals(contentB.getId())) {
-            System.out.println(content.getId() + " " + izabranaStavka.naziv);
+        if (parent.getId().equals(novaTuraA.getId())) {
+            
+            novaTuraB.getChildren().add(dugme);
+            
+            stavkeZaPromenuA.remove(izabranaStavka);
+            stavkeZaPromenuB.add(izabranaStavka);
 
         }
         
-        
+        if (parent.getId().equals(novaTuraB.getId())) {
+            
+            novaTuraA.getChildren().add(dugme);
+            
+            stavkeZaPromenuB.remove(izabranaStavka);
+            stavkeZaPromenuA.add(izabranaStavka);
+
+        }
     }
+
 }
