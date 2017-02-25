@@ -50,14 +50,14 @@
       </Pane>
       <ScrollPane fx:id="scrollPaneA" layoutY="139.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="458.0" prefWidth="440.0">
          <content>
-            <VBox fx:id="contentA" alignment="TOP_CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="434.0">
+            <VBox fx:id="contentA" alignment="TOP_CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefWidth="434.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets></VBox>
          </content></ScrollPane>
       <ScrollPane fx:id="scrollPaneB" layoutX="582.0" layoutY="139.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="458.0" prefWidth="440.0">
          <content>
-            <VBox fx:id="contentB" alignment="TOP_CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="434.0" />
+            <VBox fx:id="contentB" alignment="TOP_CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefWidth="434.0" />
          </content></ScrollPane>
       <Pane layoutX="442.0" layoutY="117.0" prefHeight="480.0" prefWidth="139.0">
          <children>

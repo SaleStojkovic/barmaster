@@ -984,6 +984,38 @@ and open the template in the editor.
     -fx-font-family: KlavikaBold;  
 }
 
+.label.artikal
+{
+    -fx-text-fill: white;
+}
+
+.label.dodatni
+{
+    -fx-text-fill: white;
+}
+
+.label.opisni
+{
+    -fx-text-fill: white;
+}
+
+#stoA > .viewport,
+#stoB > .viewport,
+#scrollPaneB > .viewport,
+#scrollPaneA > .viewport
+{
+   -fx-background-color: transparent;
+   
+}
+
+#stoA,
+#stoB,
+#scrollPaneB,
+#scrollPaneA
+{
+    -fx-background-color: -fx-tamno-crna;
+    -fx-border-color: -fx-siva;
+}
 
 
 /* kraj sastavljanje rastavljanje */

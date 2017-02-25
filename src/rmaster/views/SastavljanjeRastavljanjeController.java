@@ -20,6 +20,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
@@ -248,62 +249,64 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             String brojNovogGosta
      )
     {
-            noviGostButton.getStyleClass().remove("radio-button");
-            noviGostButton.getStyleClass().add("toggle-button");
+        noviGostButton.getStyleClass().remove("radio-button");
+        noviGostButton.getStyleClass().add("toggle-button");
 
-            noviGostButton.setId(brojNovogGosta);
+        noviGostButton.setId(brojNovogGosta);
 
-            noviGostButton.setPrefSize(57, 57);
-            
-            noviGostButton.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override public void handle(ActionEvent e) {
-                                    String brojGosta = ((RadioButton)e.getSource()).getId();
+        noviGostButton.setPrefSize(57, 57);
 
-                                    for (Porudzbina porudzbina : porudzbineStolaA) {
-                                        String gostId = porudzbina.getGost().getGostID() + "";
-                                        if (gostId.equals(brojGosta)) {
-                                            prikaziPorudzbinu(contentA, porudzbina);
-                                            break;
-                                        }
+        noviGostButton.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override public void handle(ActionEvent e) {
+                                String brojGosta = ((RadioButton)e.getSource()).getId();
+
+                                for (Porudzbina porudzbina : porudzbineStolaA) {
+                                    String gostId = porudzbina.getGost().getGostID() + "";
+                                    if (gostId.equals(brojGosta)) {
+                                        prikaziPorudzbinu(contentA, porudzbina);
+                                        break;
                                     }
-                                    
-                                }      
-                            });
-            
-            return noviGostButton;
+                                }
+
+                            }      
+                        });
+
+        return noviGostButton;
     }
      
     private RadioButton prikaziPorudzbinuTaskSetButtonActionB(
             RadioButton noviGostButton, 
             String brojNovogGosta
     )
-    {
-            noviGostButton.getStyleClass().remove("radio-button");
-            noviGostButton.getStyleClass().add("toggle-button");
+    {        
+        noviGostButton.getStyleClass().remove("radio-button");
+        noviGostButton.getStyleClass().add("toggle-button");
 
-            noviGostButton.setId(brojNovogGosta);
+        noviGostButton.setId(brojNovogGosta);
 
-            noviGostButton.setPrefSize(57, 57);
-            
-            noviGostButton.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override public void handle(ActionEvent e) {
-                                    
-                                    String brojGosta = ((RadioButton)e.getSource()).getId();
-                                    
-                                    for (Porudzbina porudzbina : porudzbineStolaB) {
-                                        if (porudzbina.getGost().getGostID() == Long.parseLong(brojGosta)) {
-                                            prikaziPorudzbinu(contentB, porudzbina);
-                                            break;
-                                        }
+        noviGostButton.setPrefSize(57, 57);
+
+        noviGostButton.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override public void handle(ActionEvent e) {
+
+                                String brojGosta = ((RadioButton)e.getSource()).getId();
+
+                                for (Porudzbina porudzbina : porudzbineStolaB) {
+                                    if (porudzbina.getGost().getGostID() == Long.parseLong(brojGosta)) {
+                                        prikaziPorudzbinu(contentB, porudzbina);
+                                        break;
                                     }
                                 }
-                            });
-            
-            return noviGostButton;
+                            }
+                        });
+
+        return noviGostButton;
     }
     
    private void prikaziPorudzbinu(VBox content, Porudzbina izabranaPorudzbina)
    {
+       content.getChildren().clear();
+       
        List<Tura> listaTura = izabranaPorudzbina.getTure();
               
        List<RM_Button> listaDugmica = new ArrayList<>();
@@ -332,12 +335,12 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
    private void dodajAkcijuZaPrebaciCeluTuru(RM_Button prebaciCeluTuru, Tura novaTura)
    {
        //TODO
-       prebaciCeluTuru.setPrefSize(432, 70);
+       prebaciCeluTuru.setPrefSize(432, 50);
             try {
                 String period = Utils.getDateDiff(novaTura.getVremeTure(), new Date(), TimeUnit.MINUTES);
-                prebaciCeluTuru.setText("Prebaci Turu (" + period + ")");
+                prebaciCeluTuru.setText("Prebaci celu turu (" + period + ")");
             } catch (Exception e) {
-                prebaciCeluTuru.setText("Prebaci Turu");
+                prebaciCeluTuru.setText("Prebaci celu turu");
             }
             prebaciCeluTuru.setPodatak("" + novaTura.getTuraID());
             
@@ -354,42 +357,81 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
    private void dodajAkcijuZaPrebaciStavku(RM_Button dugmeStavka, StavkaTure novaStavka) 
    {
       
-        dugmeStavka.setPrefSize(432, 70);
+        dugmeStavka.setPrefWidth(432);
+        
+        dugmeStavka.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                    
+        HBox dugmeContent = new HBox();
+        dugmeContent.setMinHeight(30);
 
+        VBox naziv = new VBox();
+        naziv.setAlignment(Pos.CENTER_LEFT);
         
         
-        if (novaStavka.getImaDodatneIliOpisneArtikle()) {
-            
-            VBox box = new VBox();
-                        
-            Label dugmeText = new Label();
-            dugmeText.setText(novaStavka.naziv);
-            box.getChildren().add(dugmeText);
-            
-            for (StavkaTure dodatnaStavka : novaStavka.dodatniArtikli) {
-                Label dodatni = new Label();
-                dodatni.setText("-> " + dodatnaStavka.naziv);
-                box.getChildren().add(dodatni);
-            }
-            
-            for (StavkaTure opisnaStavka : novaStavka.opisniArtikli) {
-                Label opisni = new Label();
-                opisni.setText("* " + opisnaStavka.naziv);
-                box.getChildren().add(opisni);
-            }
-            
-            dugmeStavka.setGraphic(box);
-            dugmeStavka.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        VBox kolicina = new VBox();
+        kolicina.setAlignment(Pos.CENTER);
+        
+        kolicina.setStyle(
+                "-fx-border-style: solid inside;\n" 
+                + "-fx-border-width: 0 0.4 0 0.4;\n" 
+                + "-fx-border-color: white;"
+        );
 
-        } else {
-            dugmeStavka.setText(novaStavka.naziv);
+        VBox cena = new VBox();
+        cena.setAlignment(Pos.CENTER_RIGHT);
+        
+        naziv.setPrefWidth(310);
+        kolicina.setPrefWidth(41);
+        cena.setPrefWidth(81);
+        
+        Label dugmeText = new Label();
+        dugmeText.wrapTextProperty().setValue(true);
+        dugmeText.getStyleClass().add("artikal");
+        dugmeText.setText(novaStavka.naziv);
+        naziv.getChildren().add(dugmeText);
+        
+        Label kolicinaArtikal = new Label();
+        kolicinaArtikal.getStyleClass().add("artikal"); 
+        kolicinaArtikal.setText(novaStavka.kolicina + "");
+        kolicina.getChildren().add(kolicinaArtikal);
+        
+        Label cenaArtikal = new Label();
+        cenaArtikal.getStyleClass().add("artikal"); 
+        cenaArtikal.setText(novaStavka.getCena() + "din");
+        cena.getChildren().add(cenaArtikal);
+        
+        for (StavkaTure dodatnaStavka : novaStavka.dodatniArtikli) {
+            Label dodatni = new Label();
+            dodatni.wrapTextProperty().setValue(true);
+            dodatni.getStyleClass().add("dodatni");
+            dodatni.setText("-> " + dodatnaStavka.naziv);
+            naziv.getChildren().add(dodatni);
+            
+            Label dodatniKolicina = new Label();
+            dodatniKolicina.getStyleClass().add("dodatni");
+            dodatniKolicina.setText(dodatnaStavka.kolicina + "");
+            kolicina.getChildren().add(dodatniKolicina);
+            
         }
+
+        for (StavkaTure opisnaStavka : novaStavka.opisniArtikli) {
+            Label opisni = new Label();
+            opisni.wrapTextProperty().setValue(true);
+            opisni.getStyleClass().add("opisni");
+            opisni.setText("* " + opisnaStavka.naziv);
+            naziv.getChildren().add(opisni);
+            
+            Label opisniKolicina = new Label();
+            opisniKolicina.getStyleClass().add("dodatni");
+            opisniKolicina.setText(opisnaStavka.kolicina + "");
+            kolicina.getChildren().add(opisniKolicina);
+            
+        }
+
+        dugmeContent.getChildren().addAll(naziv, kolicina, cena);
         
-        
-        
-//        System.out.print(dugmeStavka.getStyleClass());
-//        
-//        dugmeStavka.getStyleClass().add("StavkaZaPrebacivanje");
+        dugmeStavka.setGraphic(dugmeContent);
+
         
         dugmeStavka.setOnAction(new EventHandler<ActionEvent>() {
                             @Override public void handle(ActionEvent e) {

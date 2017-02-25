@@ -6,12 +6,20 @@
 package rmaster.assets.RM_Button;
 
 import javafx.scene.control.Button;
+import javafx.scene.text.TextAlignment;
 
 /**
  *
  * @author Bosko
  */
 public class RM_Button extends Button{
+    
+    public RM_Button(){
+        this.wrapTextProperty().setValue(true);
+        this.textAlignmentProperty().set(TextAlignment.CENTER);
+        this.setCenterShape(true);
+    }
+    
     private Object podatak = "";
     
     private Object vrsta = "";

@@ -168,7 +168,7 @@ public class StavkaTure {
             stavkaTure.put("kolicina", "x" + Utils.getStringFromDouble(this.kolicina));
         }
         stavkaTure.put("procenatPopusta", Utils.getStringFromDouble(this.procenatPopusta));
-        stavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(this.cenaJedinicna));        stavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(this.cenaJedinicna));        stavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(this.cenaJedinicna));
+        stavkaTure.put("cenaJedinicna", Utils.getStringFromDouble(this.cenaJedinicna));
         stavkaTure.put("cena", Utils.getStringFromDouble(this.cena));
         if (this.getRedniBrojGlavneStavke()!=0)
             stavkaTure.put("redniBrojGlavnaStavka", "" + this.getRedniBrojGlavneStavke());
