@@ -432,11 +432,32 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         
         dugmeStavka.setGraphic(dugmeContent);
 
+        dugmeStavka.setPodatak(novaStavka);
         
         dugmeStavka.setOnAction(new EventHandler<ActionEvent>() {
                             @Override public void handle(ActionEvent e) {
-                               //TODO
+                               RM_Button izabranaStavka = (RM_Button)e.getSource();
+                               izabranaStavka.getParent();
+                               premestiStavku(
+                                       (StavkaTure)izabranaStavka.getPodatak(),
+                                       (VBox)izabranaStavka.getParent()
+                               );
                             }
                         });
    }
+   
+    private void premestiStavku(StavkaTure izabranaStavka, VBox content) 
+    {
+        if (content.getId().equals(contentA.getId())) {
+            System.out.println(content.getId() + " " + izabranaStavka.naziv);
+
+        }
+        
+        if (content.getId().equals(contentB.getId())) {
+            System.out.println(content.getId() + " " + izabranaStavka.naziv);
+
+        }
+        
+        
+    }
 }
