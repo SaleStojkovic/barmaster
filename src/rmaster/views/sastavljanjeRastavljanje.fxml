@@ -61,7 +61,7 @@
          </content></ScrollPane>
       <Pane layoutX="442.0" layoutY="117.0" prefHeight="480.0" prefWidth="139.0">
          <children>
-            <Button layoutX="21.0" layoutY="88.0" mnemonicParsing="false" prefHeight="72.0" prefWidth="92.0" text="Sastavi izabrane stavke" textAlignment="CENTER" wrapText="true" />
+            <Button layoutX="21.0" layoutY="88.0" mnemonicParsing="false" prefHeight="72.0" prefWidth="92.0" text="Sastavi izabrane stavke" textAlignment="CENTER" wrapText="true" onAction="#sastaviIzabraneStavke" />
             <Button layoutX="21.0" layoutY="309.0" mnemonicParsing="false" prefHeight="72.0" prefWidth="92.0" text="Poništi sve" />
          </children>
       </Pane>

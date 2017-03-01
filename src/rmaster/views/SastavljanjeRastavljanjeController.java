@@ -27,6 +27,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -105,12 +106,11 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     private RM_Button labelB = new RM_Button();
     
     private List<Tura> tureZaBrisanje = new ArrayList();
+       
+    List<ToggleButton> stavkeZaSastavljanje = new ArrayList<>();
     
-    private List<StavkaTure> stavkeZaSastavljanje = new ArrayList<>();
+    HashMap<String, RM_Button> izabranaPorudzbinaMap = new HashMap();
     
-    private ToggleGroup stavkeA = new ToggleGroup();
-    
-    private ToggleGroup stavkeB = new ToggleGroup();
     
     /**
      * Initializes the controller class.
@@ -372,14 +372,14 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         
         HBox akcije = new HBox();
 
-        RadioButton sastavi = new RadioButton("»«");
-
+        ToggleButton sastavi = new ToggleButton();
+        
+        stavkeZaSastavljanje.add(sastavi);
+        
+        sastavi.setText("»«");
+        
         sastavi.setId(novaStavka.id + "");
-
-        sastavi.getStyleClass().remove("radio-button");
-
-        sastavi.getStyleClass().add("toggle-button");
-
+        
         RM_Button rastavi = new RM_Button();
 
         rastavi.setText("«»");
@@ -401,12 +401,17 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
 
             rastavi.setDisable(false);
             
-            //TODO dodati akciju za rastavi
-
+            rastavi.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override public void handle(ActionEvent e) {
+                            rastaviIzabranuStavku();
+                        }
+                    }); 
         }
 
         RM_Button dugmeStavka = new RM_Button();
 
+        izabranaPorudzbinaMap.put(novaStavka.id + "", dugmeStavka);
+       
         dugmeStavka.setVrsta(prebaciCeluTuru);
 
         dodajAkcijuZaPrebaciStavku(dugmeStavka, novaStavka);
@@ -535,11 +540,15 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         dugmeContent.getChildren().addAll(naziv, kolicina, cena);
    }
    
-   
     private void premestiStavku(RM_Button dugme) 
     {
         
         if (contentA.getChildren().isEmpty() || contentB.getChildren().isEmpty()) {
+            return;
+        }
+        
+        
+        if (dugme.getParent().getParent().getId().equals(contentB.getId())) {
             return;
         }
         
@@ -565,13 +574,138 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     }
 
     
-    private void sastaviIzabraneStavke()
+    public void sastaviIzabraneStavke(ActionEvent event)
+    {
+        //ako nije izabran gost na kome se prebacuje
+        if (contentB.getChildren().isEmpty()) {
+            return;
+        }
+        
+        List<ToggleButton> izabraneStavke = 
+                this.vratiSamoIzabraneStavkeZaSastavljanje();
+            
+        
+        //ako je izabrana samo jedna ili nijedna stavka
+        if (izabraneStavke.size() <= 1) {
+            return;
+        }
+        
+        
+        HashMap<Long, List<RM_Button>> artikliZaSastavljanje = 
+                this.napraviMapuArtikalaKojiSeSastavljaju(izabraneStavke);
+        
+        
+        for (List<RM_Button> listaStavki : artikliZaSastavljanje.values()) {
+            
+            
+            // pravi se nova stavka u contentB
+            RM_Button sastavljenaStavkaDugme = listaStavki.get(0);
+            
+            StavkaTure sastavljenaStavka = (StavkaTure)sastavljenaStavkaDugme.getPodatak();
+                        
+            for (int i = 1; i < listaStavki.size(); i++) {
+                
+                contentA.getChildren().remove(listaStavki.get(i).getParent());
+
+                StavkaTure sledecaStavka = (StavkaTure)listaStavki.get(i).getPodatak();
+                        
+                sastavljenaStavka.kolicina += sledecaStavka.kolicina;
+            }
+            
+            
+            //TODO Razmotriti da li je potrebno da se napravi nova akcija na dugmetu
+            dodajAkcijuZaPrebaciStavku(sastavljenaStavkaDugme, sastavljenaStavka);
+
+//            HB
+            
+            premestiStavku(sastavljenaStavkaDugme);
+                        
+        }
+        
+    }
+    
+    private List vratiSamoIzabraneStavkeZaSastavljanje()
+    {
+        List<ToggleButton> izabraneStavke = new ArrayList();
+        
+        for (ToggleButton dugme : stavkeZaSastavljanje) {
+            
+            if (!dugme.isSelected()) {
+                continue;
+            }
+            
+            dugme.setSelected(false);
+
+            izabraneStavke.add(dugme);
+                    
+        } 
+        
+        return izabraneStavke;
+    }
+    
+    
+    //todo rastaviti ovo na prostije metode
+    private HashMap napraviMapuArtikalaKojiSeSastavljaju(List<ToggleButton> izabraneStavke) 
+    {
+        
+        HashMap<Long, List<RM_Button>> artikliZaSastavljanje = new HashMap();
+        
+        
+        for (int i = 0; i < izabraneStavke.size(); i++) {
+
+            RM_Button stavkaDugme = izabranaPorudzbinaMap.get(
+                    izabraneStavke.get(i).getId()
+            );
+
+            StavkaTure stavka = (StavkaTure)stavkaDugme.getPodatak();
+            
+            for (int j = 0; j < izabraneStavke.size(); j++) {
+                
+                //sprecava uporedjivanje istih indeksa
+                if (j == i) {
+                    continue;
+                }
+                                
+                RM_Button sledecaStavkaDugme = izabranaPorudzbinaMap.get(
+                        izabraneStavke.get(j).getId()
+                );
+                
+                StavkaTure sledecaStavka = (StavkaTure)sledecaStavkaDugme.getPodatak();
+
+                //sastavice se samo barem 2 izabrane stavke
+                if (stavka.ARTIKAL_ID == sledecaStavka.ARTIKAL_ID) {
+                    
+                    if (artikliZaSastavljanje.containsKey(stavka.ARTIKAL_ID)) {
+                        
+                        artikliZaSastavljanje.get(stavka.ARTIKAL_ID).add(stavkaDugme);
+                        continue;
+                    }
+                    
+                    List<RM_Button> novaLista = new ArrayList<>();
+                
+                    novaLista.add(stavkaDugme);
+                    
+                    artikliZaSastavljanje.put(stavka.ARTIKAL_ID, novaLista);
+                    
+                }
+
+            }    
+
+        }
+        
+        return artikliZaSastavljanje;
+    } 
+    
+    //TODO 
+    //OGROMNI TODO, mislim da cu morati da odradim promenu modelBase da 
+    private void sacuvajNovuTuru()
     {
         
     }
     
     private void rastaviIzabranuStavku()
     {
-        
+        //TODO
+        //napraviti dialog za rastavljanje
     }
 }
