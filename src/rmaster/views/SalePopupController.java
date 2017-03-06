@@ -109,8 +109,16 @@ public class SalePopupController extends Dialog {
 
         AnchorPane novaSala = new AnchorPane();
 
-        prikaziStoloveSale(novaSala, salaMap.get("id"));
-
+        new Thread() {
+            
+            @Override
+            public void start()
+            {
+                prikaziStoloveSale(novaSala, salaMap.get("id"));
+            }       
+            
+        }.start();
+        
         novaSala.setBackground(getBackground(salaMap.get("slika")));
 
         newTab.setContent(novaSala);

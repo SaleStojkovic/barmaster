@@ -105,9 +105,11 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             
     private RM_Button labelB = new RM_Button();
     
-    private List<Tura> tureZaBrisanje = new ArrayList();
+    private List<Object> modeliZaBrisanje = new ArrayList();
        
     List<ToggleButton> stavkeZaSastavljanje = new ArrayList<>();
+    
+    List<ToggleButton> stavkeContentB = new ArrayList<>();
     
     HashMap<String, RM_Button> izabranaPorudzbinaMap = new HashMap();
     
@@ -181,7 +183,17 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             
             gostiStoA.getChildren().clear();
             
-            popuniGosteA(izabraniStoMap);
+            contentA.getChildren().clear();
+            
+            new Thread() {
+            
+                @Override
+                public void start()
+                {
+                    popuniGosteA(izabraniStoMap);
+                }
+
+            }.start();
             
         }
         
@@ -189,7 +201,18 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             
             gostiStoB.getChildren().clear();
             
-            popuniGosteB(izabraniStoMap);
+            contentB.getChildren().clear();
+            
+            new Thread() {
+            
+                @Override
+                public void start()
+                {
+                    popuniGosteB(izabraniStoMap);
+                }
+
+            }.start();
+            
         }
     }
     
@@ -381,6 +404,8 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         sastavi.setId(novaStavka.id + "");
         
         RM_Button rastavi = new RM_Button();
+        
+        rastavi.setId(novaStavka.id + "");
 
         rastavi.setText("«»");
 
@@ -402,8 +427,10 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             rastavi.setDisable(false);
             
             rastavi.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override public void handle(ActionEvent e) {
-                            rastaviIzabranuStavku();
+                        @Override public void handle(ActionEvent event) {
+                            RM_Button dugme = (RM_Button)event.getSource();
+                            String id = dugme.getId();
+                            rastaviIzabranuStavku(izabranaPorudzbinaMap.get(id));
                         }
                     }); 
         }
@@ -565,7 +592,9 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         //Uklanja dugme prebaci celu turu ako vise nema stavki u njoj
         if (brojStavki == 0) {
             contentA.getChildren().remove(prebaciCeluTuru);
-            tureZaBrisanje.add((Tura)prebaciCeluTuru.getPodatak());
+            
+            //TODO videti da li je ovo uopste potrebno
+            modeliZaBrisanje.add((Tura)prebaciCeluTuru.getPodatak());
         }
 
         novaTuraB.getChildren().add(dugme.getParent());
@@ -605,18 +634,56 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                         
             for (int i = 1; i < listaStavki.size(); i++) {
                 
-                contentA.getChildren().remove(listaStavki.get(i).getParent());
-
+                RM_Button stavkaZaUklanjanje = listaStavki.get(i);
+                
+                RM_Button prebaciCeluTuru = (RM_Button)stavkaZaUklanjanje.getVrsta();
+                
+                int brojStavki = (int)prebaciCeluTuru.getVrsta();
+                brojStavki--;
+                prebaciCeluTuru.setVrsta(brojStavki);  
+                
+                
+                //Uklanja dugme prebaci celu turu ako vise nema stavki u njoj
+                if (brojStavki == 0) {
+                    contentA.getChildren().remove(prebaciCeluTuru);
+                    modeliZaBrisanje.add(prebaciCeluTuru.getPodatak());
+                }
+                
+                contentA.getChildren().remove(stavkaZaUklanjanje.getParent());
+                
+                modeliZaBrisanje.add(stavkaZaUklanjanje.getParent());
+                
                 StavkaTure sledecaStavka = (StavkaTure)listaStavki.get(i).getPodatak();
                         
                 sastavljenaStavka.kolicina += sledecaStavka.kolicina;
             }
             
-            
-            //TODO Razmotriti da li je potrebno da se napravi nova akcija na dugmetu
             dodajAkcijuZaPrebaciStavku(sastavljenaStavkaDugme, sastavljenaStavka);
 
-//            HB
+            HBox celaStavka = (HBox)sastavljenaStavkaDugme.getParent();
+            
+            for(Node node : celaStavka.getChildren()) {
+                
+                if (node instanceof ToggleButton) {
+                    ToggleButton dugme = (ToggleButton)node;
+                    
+                    stavkeZaSastavljanje.remove(dugme);
+                    
+                    stavkeContentB.add(dugme);
+                }
+                
+                if (node instanceof RM_Button) {
+                    
+                    String id =  node.getId();
+                    
+                    if (id != null && sastavljenaStavka.kolicina > 1) {
+                        RM_Button dugme = (RM_Button)node;
+                        dugme.setDisable(false);
+                    }
+                     
+                }
+                
+            }
             
             premestiStavku(sastavljenaStavkaDugme);
                         
@@ -703,9 +770,19 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         
     }
     
-    private void rastaviIzabranuStavku()
+    private void rastaviIzabranuStavku(RM_Button izabranaStavka)
     {
         //TODO
         //napraviti dialog za rastavljanje
+        
+        
     }
+    
+    private void obrisiModele()
+    {
+        
+    }
+    
+    //TODO sastavljanje/rastavljanje stavki u contentB-u
+    //mislim da bi to bilo dobro napraviti
 }
