@@ -54,6 +54,7 @@ public class PocetniEkranController extends FXMLDocumentController {
         
         RMaster.firstLogin = true;
         RMaster.saleOmoguceneKonobaru.clear();
+        RMaster.saleZabranjeneKonobaru.clear();
     }
     
     @Override
@@ -139,7 +140,9 @@ public class PocetniEkranController extends FXMLDocumentController {
     
     private void kesirajSaleOmoguceneKonobaru()
     {
-        setSaleOmoguceneKonobaru(getUlogovaniKonobar().saleOmoguceneKonobaru());
+        RMaster.ucitajSveSaleZabranjeneKonobaru();
+
+        //setSaleOmoguceneKonobaru(getUlogovaniKonobar().saleOmoguceneKonobaru());
     }
     
     @Override

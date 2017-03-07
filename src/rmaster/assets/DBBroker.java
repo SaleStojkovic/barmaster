@@ -28,12 +28,12 @@ public final class DBBroker {
      */
     private static final String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
     private static final String DB_NAME = "barmaster";
-    private static final String URL = "jdbc:mysql://127.0.0.1:3306/barmaster";
+    private static final String URL = "jdbc:mysql://127.0.0.1:3306/barmaster?dontTrackOpenResources=true";
     private static final String USERNAME = "root";
     
-    private static final String PASSWORD = "burek";
+//    private static final String PASSWORD = "burek";
 //    private static final String PASSWORD = "928374";
-//    private static final String PASSWORD = "";
+    private static final String PASSWORD = "";
     
     private static Connection dbConnection = null;
     
@@ -371,6 +371,7 @@ public final class DBBroker {
     {
         Connection dbConnection = null;
         Statement selectStatement = null;
+        PreparedStatement updateStatement = null;
         ResultSet setRezultata = null;
         List listaRezultata = null;
          
@@ -392,7 +393,7 @@ public final class DBBroker {
             //update query
             if (query.QUERY_TYPE.equals(QueryBuilder.UPDATE)) 
             {
-                PreparedStatement updateStatement = dbConnection.prepareStatement(queryString);
+                updateStatement = dbConnection.prepareStatement(queryString);
                 
                 updateStatement.executeUpdate();   
             }
@@ -405,13 +406,28 @@ public final class DBBroker {
         } finally {
             
             if (setRezultata != null) {
-                try { setRezultata.close(); } catch (SQLException ignore) {}
+                try { 
+                    setRezultata.close();
+                    setRezultata = null;
+                } catch (SQLException ignore) {}
             }
             
             if (selectStatement != null) {
-                try { selectStatement.close(); } catch (SQLException ignore) {}
+                try { 
+                    selectStatement.close();
+                    selectStatement = null;
+                } catch (SQLException ignore) {}
             }
             
+            if (updateStatement != null) {
+                try { 
+                    updateStatement.close();
+                    updateStatement = null;
+                } catch (SQLException ignore) {}
+            }
+            
+            queryString = null;
+
 //            if (dbConnection != null) {
 //                try { dbConnection.close(); } catch (SQLException ignore) {}
 //            }

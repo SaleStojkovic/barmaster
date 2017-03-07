@@ -38,6 +38,7 @@ import rmaster.assets.RM_TableView.RM_TableView;
 import rmaster.assets.RM_TableView.SirinaKolone;
 import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
+import rmaster.assets.Utils;
 import rmaster.models.Rezervacija;
 
 
@@ -92,69 +93,30 @@ public class RezervacijeController extends FXMLDocumentController {
     @FXML
     private Button sortVreme;
     
+    private Timeline timelineCasovnik;
     
-    public RM_TableView tabelaRezervacija = new RM_TableView();
+    public RM_TableView tabelaRezervacija;
             
     public Integer[] sirinaKolonaTabele = {140, 100, 100, 100, 100, 100, 250, 0};
     
     @Override
     public void initData(Object data) {
-        Timeline timeline = this.prikaziCasovnik(casovnik);
-        timeline.play();
+        timelineCasovnik = this.prikaziCasovnik(casovnik);
+        timelineCasovnik.play();
         
         List<Map<String, String>> listaZaPrikaz = getRezervacije();
         
         tabelaRezervacija.izbrisiSveIzTabele();
-        tabelaRezervacija.setSirineKolona(
-                new SirinaKolone(1, sirinaKolonaTabele[0]),
-                new SirinaKolone(2, sirinaKolonaTabele[1]),
-                new SirinaKolone(3, sirinaKolonaTabele[2]),
-                new SirinaKolone(4, sirinaKolonaTabele[3]),
-                new SirinaKolone(5, sirinaKolonaTabele[4]),
-                new SirinaKolone(6, sirinaKolonaTabele[5]),
-                new SirinaKolone(7, sirinaKolonaTabele[6])
-        );
         tabelaRezervacija.setPodaci(
                 listaZaPrikaz
+                
         );
         
 
-        scrollPaneRezervacije.setContent(tabelaRezervacija);
         imeKonobara.setText(getUlogovaniKonobarIme());
         
         this.izbrisiSvaPolja();
         
-        datumPicker.setPromptText("Datum");
-        timePicker.setPromptText("Vreme");
-        izabraniSto.setPromptText("Sto");
-        ime.setPromptText("Ime");
-        napomena.setPromptText("Napomena");
-        telefon.setPromptText("Broj telefona");
-        idRezervacije.setVisible(false);
-        
-        datumPicker.setConverter(new StringConverter<LocalDate>()
-            {
-            private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-            @Override
-            public String toString(LocalDate localDate)
-            {
-                if(localDate == null) {
-                    return "";
-                }
-                return dateTimeFormatter.format(localDate);
-            }
-
-            @Override
-            public LocalDate fromString(String dateString)
-            {
-                if(dateString == null || dateString.trim().isEmpty())
-                {
-                    return null;
-                }
-                return LocalDate.parse(dateString, dateTimeFormatter);
-            }
-        }); 
         
         tabelaRezervacija.getSelectionModel().select(tabelaRezervacija.getItems().size()-1); 
     }
@@ -164,7 +126,51 @@ public class RezervacijeController extends FXMLDocumentController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-               
+        tabelaRezervacija = new RM_TableView();
+        tabelaRezervacija.setSirineKolona(
+                new SirinaKolone(0, sirinaKolonaTabele[0]),
+                new SirinaKolone(1, sirinaKolonaTabele[1]),
+                new SirinaKolone(2, sirinaKolonaTabele[2]),
+                new SirinaKolone(3, sirinaKolonaTabele[3]),
+                new SirinaKolone(4, sirinaKolonaTabele[4]),
+                new SirinaKolone(5, sirinaKolonaTabele[5]),
+                new SirinaKolone(6, sirinaKolonaTabele[6])
+        );
+        scrollPaneRezervacije.setContent(tabelaRezervacija);
+        
+        datumPicker.setPromptText("Datum");
+        timePicker.setPromptText("Vreme");
+        izabraniSto.setPromptText("Sto");
+        ime.setPromptText("Ime");
+        napomena.setPromptText("Napomena");
+        telefon.setPromptText("Broj telefona");
+        idRezervacije.setVisible(false);
+        
+        datumPicker.setConverter(
+            new StringConverter<LocalDate>()
+            {
+                private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
+                @Override
+                public String toString(LocalDate localDate)
+                {
+                    if(localDate == null) {
+                        return "";
+                    }
+                    return dateTimeFormatter.format(localDate);
+                }
+
+                @Override
+                public LocalDate fromString(String dateString)
+                {
+                    if(dateString == null || dateString.trim().isEmpty())
+                    {
+                        return null;
+                    }
+                    return LocalDate.parse(dateString, dateTimeFormatter);
+                }
+            }
+        ); 
     }    
     
     public void nazadNaPrikazSale(ActionEvent event) {
@@ -345,8 +351,8 @@ public class RezervacijeController extends FXMLDocumentController {
         
         if (idRezervacije.getText().isEmpty()) {
             novaRezervacija.save(true);
-            
-            this.initialize(null, null);
+            this.initData(null);
+            //this.initialize(null, null);
             return;
         }
         
@@ -354,8 +360,8 @@ public class RezervacijeController extends FXMLDocumentController {
         novaRezervacija.saveChanges(true);
         
         tabelaRezervacija.getColumns().clear();
-        
-        this.initialize(null, null);
+        this.initData(null);
+        //this.initialize(null, null);
     }
     
     public void promeniRezervaciju(ActionEvent event) {

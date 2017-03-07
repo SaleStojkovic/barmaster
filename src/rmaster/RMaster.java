@@ -49,6 +49,7 @@ public class RMaster extends Application {
     public static double sirinaSaleNaEkranu = 1024;
     
     public static List<Map<String, String>> saleOmoguceneKonobaru = new ArrayList<>();
+    public static List<Map<String, String>> saleZabranjeneKonobaru = new ArrayList<>();
     public static List<Map<String, String>> sveSale = new ArrayList<>();
     public static List<Map<String, String>> sviStolovi = new ArrayList<>();
     
@@ -196,26 +197,35 @@ public class RMaster extends Application {
     public static void main(String[] args) {
         launch(args);
     }
- 
-    public void ucitajSveSale(){
-        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
 
-        query.setTableName("grafik_konobar");
-        
-        List<Map<String, String>> sale = dbBroker.runQuery(query);
+    public void ucitajSveSaleZabranjeneKonobaru(){
+        QueryBuilder queryZabranjeneSale = new QueryBuilder(QueryBuilder.SELECT);
 
-        QueryBuilder query2 = new QueryBuilder(QueryBuilder.SELECT);
+        queryZabranjeneSale.setTableName("grafik_konobar");
+        queryZabranjeneSale.addCriteriaColumns("konobar_id");
+        queryZabranjeneSale.addCriteria(QueryBuilder.IS_EQUAL);
+        queryZabranjeneSale.addCriteriaValues("" + RMaster.ulogovaniKonobar.konobarID);
         
-        query2.setTableName("grafiksale");
+        saleZabranjeneKonobaru = dbBroker.runQuery(queryZabranjeneSale);        
         
-        if (!sale.isEmpty()) {
-            String saleString = query2.makeStringForInCriteriaFromListByParam(sale, "grafik_id");
-            query2.addCriteriaColumns("id");
-            query2.addCriteria(QueryBuilder.IS_NOT_IN);
-            query2.addCriteriaValues(saleString);
+        for (Map<String, String> map : sveSale) {
+            saleOmoguceneKonobaru.add(map);
         }
-
-        sveSale = dbBroker.runQuery(query2);
+        for (Map<String, String> mapZabrana : saleZabranjeneKonobaru) {
+            for (Map<String, String> mapOmogucene : saleOmoguceneKonobaru) {
+                if(mapOmogucene.get("id").equals(mapZabrana.get("grafik_id"))) {
+                    saleOmoguceneKonobaru.remove(mapOmogucene);
+                    break;
+                }
+            }
+        }
+    }
+    public void ucitajSveSale(){
+        QueryBuilder querySveSale = new QueryBuilder(QueryBuilder.SELECT);
+        
+        querySveSale.setTableName("grafiksale");
+        
+        sveSale = dbBroker.runQuery(querySveSale);
     }
     
     public void ucitajSveStolove()
@@ -286,8 +296,8 @@ public class RMaster extends Application {
                 "stonaziv.naziv",
                 "sto.KONOBAR_ID",
                 "sto.blokiran",
-                "rezervacija.datum",
-                "rezervacija.vreme",
+                "rezervacija.datum AS RezervacijaDatum",
+                "rezervacija.vreme AS RezervacijaVreme",
                 "rezervacija.brOsoba"
         );
 
