@@ -791,10 +791,23 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     
     private void rastaviIzabranuStavku(RM_Button izabranaStavka)
     {
-        //TODO
-        //napraviti dialog za rastavljanje
+        //dialog za rastavljanje
+        RastaviStavkuPopupController tastatura = new RastaviStavkuPopupController(
+                (StavkaTure)izabranaStavka.getPodatak()
+        );
         
+        Optional<HashMap<String, String>> result = tastatura.showAndWait();
         
+        if (!result.isPresent()){ 
+            return;
+        }
+        
+        //rezultat je mapa, treba napraviti novu stavku
+        HashMap<String, String> novaStavka = result.get();
+        
+        //Treba promeniti kolicinu izabranoj stavci i napraviti novo dugme u ContentB
+        //Dodati promenjenu stavku u listu
+        //novu stavku u listu za pravljenje novih modela
     }
     
     private void obrisiModele()

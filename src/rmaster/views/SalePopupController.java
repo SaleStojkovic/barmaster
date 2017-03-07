@@ -61,7 +61,7 @@ public class SalePopupController extends Dialog {
         
         this.getDialogPane().getStyleClass().add("myDialog");
         
-        List<Map<String, String>> sale = RMaster.sveSale;
+        List<Map<String, String>> sale = RMaster.saleOmoguceneKonobaru;
         
         saleTabPane.setSide(Side.TOP);
 
