@@ -61,8 +61,8 @@
          </content></ScrollPane>
       <Pane layoutX="442.0" layoutY="117.0" prefHeight="480.0" prefWidth="139.0">
          <children>
-            <Button layoutX="21.0" layoutY="88.0" mnemonicParsing="false" prefHeight="72.0" prefWidth="92.0" text="Sastavi izabrane stavke" textAlignment="CENTER" wrapText="true" onAction="#sastaviIzabraneStavke" />
-            <Button layoutX="21.0" layoutY="309.0" mnemonicParsing="false" prefHeight="72.0" prefWidth="92.0" text="Poništi sve" />
+            <Button layoutX="16.0" layoutY="337.0" mnemonicParsing="false" prefHeight="94.0" prefWidth="107.0" text="Poništi sve" />
+            <Button layoutX="16.0" layoutY="64.0" mnemonicParsing="false" onAction="#sastaviIzabraneStavkeA" prefHeight="94.0" prefWidth="107.0" text="Sastavi izabrane stavke" textAlignment="CENTER" wrapText="true" />
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="56.0" prefHeight="61.0" prefWidth="1024.0">
@@ -85,10 +85,10 @@
       </Pane>
       <Pane layoutX="-1.0" layoutY="597.0" prefHeight="61.0" prefWidth="1024.0">
          <children>
-            <Button layoutX="45.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▼" />
-            <Button layoutX="249.0" layoutY="6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▲" />
-            <Button layoutX="641.0" layoutY="6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▼" />
-            <Button layoutX="846.0" layoutY="6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▲" />
+            <Button layoutX="68.0" layoutY="6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▼" />
+            <Button layoutX="223.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▲" />
+            <Button layoutX="658.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▼" />
+            <Button layoutX="810.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▲" />
          </children>
       </Pane>
       <Pane layoutX="1.0" layoutY="117.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="22.0" prefWidth="1024.0">

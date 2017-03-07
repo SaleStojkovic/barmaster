@@ -100,16 +100,14 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     private List<Porudzbina> porudzbineStolaA = new ArrayList<>();
     
     private List<Porudzbina> porudzbineStolaB = new ArrayList<>();
-    
-    private List<StavkaTure> stavkeZaPromenu = new ArrayList<>();
-            
+                
     private RM_Button labelB = new RM_Button();
     
     private List<Object> modeliZaBrisanje = new ArrayList();
        
-    List<ToggleButton> stavkeZaSastavljanje = new ArrayList<>();
+    List<ToggleButton> stavkeZaSastavljanjeA = new ArrayList<>();
     
-    List<ToggleButton> stavkeContentB = new ArrayList<>();
+    List<ToggleButton> stavkeZaSastavljanjeB = new ArrayList<>();
     
     HashMap<String, RM_Button> izabranaPorudzbinaMap = new HashMap();
     
@@ -349,6 +347,10 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         noviGostButton.setOnAction(new EventHandler<ActionEvent>() {
                             @Override public void handle(ActionEvent e) {
                                 
+                                if (contentB.getChildren().contains(labelB)) {
+                                    return;
+                                }
+                                
                                 contentB.getChildren().add(labelB);
                                 contentB.getChildren().add(novaTuraB);
 
@@ -397,7 +399,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
 
         ToggleButton sastavi = new ToggleButton();
         
-        stavkeZaSastavljanje.add(sastavi);
+        stavkeZaSastavljanjeA.add(sastavi);
         
         sastavi.setText("»«");
         
@@ -578,9 +580,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         if (dugme.getParent().getParent().getId().equals(contentB.getId())) {
             return;
         }
-        
-        StavkaTure izabranaStavka = (StavkaTure)dugme.getPodatak();
-        
+                
         contentA.getChildren().remove(dugme.getParent());
         
         RM_Button prebaciCeluTuru = (RM_Button)dugme.getVrsta();
@@ -598,12 +598,11 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         }
 
         novaTuraB.getChildren().add(dugme.getParent());
-        stavkeZaPromenu.add(izabranaStavka);
-
+        
     }
 
     
-    public void sastaviIzabraneStavke(ActionEvent event)
+    public void sastaviIzabraneStavkeA(ActionEvent event)
     {
         //ako nije izabran gost na kome se prebacuje
         if (contentB.getChildren().isEmpty()) {
@@ -611,7 +610,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         }
         
         List<ToggleButton> izabraneStavke = 
-                this.vratiSamoIzabraneStavkeZaSastavljanje();
+                this.vratiSamoIzabraneStavkeZaSastavljanje(stavkeZaSastavljanjeA);
             
         
         //ako je izabrana samo jedna ili nijedna stavka
@@ -621,11 +620,13 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         
         
         HashMap<Long, List<RM_Button>> artikliZaSastavljanje = 
-                this.napraviMapuArtikalaKojiSeSastavljaju(izabraneStavke);
+                this.napraviMapuArtikalaKojiSeSastavljaju(
+                        izabraneStavke,
+                        izabranaPorudzbinaMap
+                    );
         
         
         for (List<RM_Button> listaStavki : artikliZaSastavljanje.values()) {
-            
             
             // pravi se nova stavka u contentB
             RM_Button sastavljenaStavkaDugme = listaStavki.get(0);
@@ -662,28 +663,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
 
             HBox celaStavka = (HBox)sastavljenaStavkaDugme.getParent();
             
-            for(Node node : celaStavka.getChildren()) {
-                
-                if (node instanceof ToggleButton) {
-                    ToggleButton dugme = (ToggleButton)node;
-                    
-                    stavkeZaSastavljanje.remove(dugme);
-                    
-                    stavkeContentB.add(dugme);
-                }
-                
-                if (node instanceof RM_Button) {
-                    
-                    String id =  node.getId();
-                    
-                    if (id != null && sastavljenaStavka.kolicina > 1) {
-                        RM_Button dugme = (RM_Button)node;
-                        dugme.setDisable(false);
-                    }
-                     
-                }
-                
-            }
+            izbrisiAkcijeIzStavke(celaStavka);
             
             premestiStavku(sastavljenaStavkaDugme);
                         
@@ -691,11 +671,47 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         
     }
     
-    private List vratiSamoIzabraneStavkeZaSastavljanje()
+    private void izbrisiAkcijeIzStavke(HBox celaStavka)
+    {        
+        List<Node> removeList = new ArrayList<>();
+        
+        for(Node node : celaStavka.getChildren()) {
+                
+            if (node instanceof ToggleButton) {
+                ToggleButton dugme = (ToggleButton)node;
+
+                stavkeZaSastavljanjeA.remove(dugme);
+
+                removeList.add(dugme);
+            }
+
+            if (node instanceof RM_Button) {
+
+                RM_Button dugme = (RM_Button) node;
+
+                if (dugme.getText().equals("«»")) {
+
+                    removeList.add(dugme);
+                } 
+
+                else {
+
+                    dugme.setPrefWidth(432);
+
+                }
+
+            }
+                
+        }
+        
+        celaStavka.getChildren().removeAll(removeList);
+    }
+    
+    private List vratiSamoIzabraneStavkeZaSastavljanje(List<ToggleButton> listaStavki)
     {
         List<ToggleButton> izabraneStavke = new ArrayList();
         
-        for (ToggleButton dugme : stavkeZaSastavljanje) {
+        for (ToggleButton dugme : listaStavki) {
             
             if (!dugme.isSelected()) {
                 continue;
@@ -712,7 +728,9 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     
     
     //todo rastaviti ovo na prostije metode
-    private HashMap napraviMapuArtikalaKojiSeSastavljaju(List<ToggleButton> izabraneStavke) 
+    private HashMap napraviMapuArtikalaKojiSeSastavljaju(
+            List<ToggleButton> izabraneStavke,
+            HashMap<String, RM_Button> mapaDugmica) 
     {
         
         HashMap<Long, List<RM_Button>> artikliZaSastavljanje = new HashMap();
@@ -720,7 +738,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         
         for (int i = 0; i < izabraneStavke.size(); i++) {
 
-            RM_Button stavkaDugme = izabranaPorudzbinaMap.get(
+            RM_Button stavkaDugme = mapaDugmica.get(
                     izabraneStavke.get(i).getId()
             );
 
@@ -733,7 +751,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                     continue;
                 }
                                 
-                RM_Button sledecaStavkaDugme = izabranaPorudzbinaMap.get(
+                RM_Button sledecaStavkaDugme = mapaDugmica.get(
                         izabraneStavke.get(j).getId()
                 );
                 
@@ -751,7 +769,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                     List<RM_Button> novaLista = new ArrayList<>();
                 
                     novaLista.add(stavkaDugme);
-                    
+                                        
                     artikliZaSastavljanje.put(stavka.ARTIKAL_ID, novaLista);
                     
                 }
@@ -762,6 +780,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         
         return artikliZaSastavljanje;
     } 
+    
     
     //TODO 
     //OGROMNI TODO, mislim da cu morati da odradim promenu modelBase da 
@@ -783,6 +802,9 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         
     }
     
-    //TODO sastavljanje/rastavljanje stavki u contentB-u
-    //mislim da bi to bilo dobro napraviti
+    private void promeniModele()
+    {
+        
+    }
+    
 }
