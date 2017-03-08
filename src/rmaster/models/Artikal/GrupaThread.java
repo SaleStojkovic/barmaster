@@ -11,16 +11,15 @@ package rmaster.models.Artikal;
  */
 public class GrupaThread implements Runnable {
 
+   private Grupa grupa;
+   
    public GrupaThread(Grupa grupa) {
        this.grupa = grupa;
    }
    
-   private Grupa grupa;
-   
-
    @Override
    public void run() {
-         this.grupa.setAllChildren();
+        this.grupa.setAllChildren();
         rmaster.RMaster.grupeArtikala.add(grupa);
 
    }

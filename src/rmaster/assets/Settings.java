@@ -5,10 +5,12 @@
  */
 package rmaster.assets;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 /**
@@ -24,15 +26,21 @@ public class Settings {
     Properties prop = new Properties();   
     
     protected Settings() { 
-        this.putanjaSettings =  "/Users/Arbor/NetBeansProjects/Settings.conf";
+//        this.putanjaSettings =  "/Users/Arbor/NetBeansProjects/Settings.conf";
 //        this.putanjaSettings =  "C:\\BarMaster\\Settings.conf";
+        this.putanjaSettings =  "putanja.txt";
 //        this.putanjaSettings =  "C:\\BarMaster-Beta\\Settings.conf";
         
         InputStream input = null;
+        BufferedReader reader = null;
 
 	try {
                 input = new FileInputStream(new File(putanjaSettings));
-		// load a properties file
+                reader = new BufferedReader(new InputStreamReader(input));
+                this.putanjaSettings = reader.readLine();
+                input.close();
+		input = new FileInputStream(new File(putanjaSettings));
+                // load a properties file
 		prop.load(input);
                 
 	} catch (IOException ex) {

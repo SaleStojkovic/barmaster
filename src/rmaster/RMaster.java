@@ -86,15 +86,15 @@ public class RMaster extends Application {
         //ucitavaju se sve vrednosti iz baze
         settingsBaza.getAllValues();
                 
-        long startTimeT = System.nanoTime();
-        System.out.println("Ucitavanja - pocetniEkran - pocetak: " + startTimeT);
+        //long startTimeT = System.nanoTime();
+        //System.out.println("Ucitavanja - pocetniEkran - pocetak: " + startTimeT);
         
         mainContainer.loadScreen("pocetniEkran", "views/pocetniEkran.fxml");
         
-        long estimatedTimeT = System.nanoTime() - startTimeT;
+        //long estimatedTimeT = System.nanoTime() - startTimeT;
         
-        System.out.println("Ucitavanja - pocetniEkran - kraj: " + System.nanoTime());
-        System.out.println("Ucitavanja - pocetniEkran: " + estimatedTimeT);
+        //System.out.println("Ucitavanja - pocetniEkran - kraj: " + System.nanoTime());
+        //System.out.println("Ucitavanja - pocetniEkran: " + estimatedTimeT);
                             
         mainContainer.setScreen(ScreenMap.POCETNI_EKRAN, null);
         
@@ -159,23 +159,22 @@ public class RMaster extends Application {
                     continue;
                 }
                     
-                    
-                    startUpTask = new Task<Void>() {
-                        @Override
-                        public Void call() throws Exception {
-                            
-                            long startTimeT = System.nanoTime();
-                            System.out.println("Ucitavanja - " + imeForme + " - pocetak: " + startTimeT);
-                           
-                            mainContainer.loadScreen(imeForme, fxmlPutanja);
-                            
-                            long estimatedTimeT = System.nanoTime() - startTimeT;
-                            System.out.println("Ucitavanja - " + imeForme + " - kraj: " + System.nanoTime());
-                            System.out.println("Ucitavanja - " + imeForme + ": " + estimatedTimeT);
+                startUpTask = new Task<Void>() {
+                    @Override
+                    public Void call() throws Exception {
 
-                            return null;
-                        }
-                    };
+                        long startTimeT = System.nanoTime();
+                        System.out.println("Ucitavanja - " + imeForme + " - pocetak: " + startTimeT);
+
+                        mainContainer.loadScreen(imeForme, fxmlPutanja);
+
+                        long estimatedTimeT = System.nanoTime() - startTimeT;
+                        System.out.println("Ucitavanja - " + imeForme + " - kraj: " + System.nanoTime());
+                        System.out.println("Ucitavanja - " + imeForme + ": " + estimatedTimeT);
+
+                        return null;
+                    }
+                };
 
                 exec.execute(startUpTask);
             }

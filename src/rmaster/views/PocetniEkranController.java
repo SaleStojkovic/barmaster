@@ -6,11 +6,9 @@
 package rmaster.views;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -37,7 +35,7 @@ public class PocetniEkranController extends FXMLDocumentController {
     
     @FXML
     private Label clock;
-   
+    
     ScreenController myController; 
 
     @Override
@@ -49,8 +47,8 @@ public class PocetniEkranController extends FXMLDocumentController {
     public void initData(Object data)
     {
         lozinka.setText("");
-        Timeline timeline = this.prikaziCasovnik(clock);
-        timeline.play();
+        timelineSat = this.prikaziCasovnik(clock);
+        timelineSat.play();
         
         RMaster.firstLogin = true;
         RMaster.saleOmoguceneKonobaru.clear();
@@ -150,6 +148,7 @@ public class PocetniEkranController extends FXMLDocumentController {
     {            
         myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
         RMaster.firstLogin = true;
+        RMaster.saleZabranjeneKonobaru.clear();
         RMaster.saleOmoguceneKonobaru.clear();
     }
 }

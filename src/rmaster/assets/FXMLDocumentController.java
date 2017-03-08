@@ -67,7 +67,9 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
     public static Stage prozor; 
     public static Map<String,Scene> otvoreneForme = new HashMap<>();//FXMLDocumentController> otvoreneForme = new HashMap<>();
     public static Map<String,FXMLDocumentController> otvoreneFormeControllers = new HashMap<>();//FXMLDocumentController> otvoreneForme = new HashMap<>();
-         
+      
+    protected Timeline timelineSat = null;
+    
     ScreenController myController; 
 
     @Override
@@ -311,21 +313,23 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
     public Timeline prikaziCasovnik(
             Label casovnik
     ){
-        Timeline timeline = new Timeline(
-            new KeyFrame(Duration.seconds(0),
-                new EventHandler<ActionEvent>() {
-                    @Override public void handle(ActionEvent actionEvent) {
-                        Calendar time = Calendar.getInstance();
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
-                        casovnik.setText(simpleDateFormat.format(time.getTime()));
+        if (timelineSat == null) {
+            timelineSat = new Timeline(
+                new KeyFrame(Duration.seconds(0),
+                    new EventHandler<ActionEvent>() {
+                        @Override public void handle(ActionEvent actionEvent) {
+                            Calendar time = Calendar.getInstance();
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+                            casovnik.setText(simpleDateFormat.format(time.getTime()));
+                        }
                     }
-                }
-            ),
-            new KeyFrame(Duration.seconds(1))
-        );
-        timeline.setCycleCount(Animation.INDEFINITE);
+                ),
+                new KeyFrame(Duration.seconds(1))
+            );
+            timelineSat.setCycleCount(Animation.INDEFINITE);
+        }
         
-        return timeline;
+        return timelineSat;
     }
     
     /**
