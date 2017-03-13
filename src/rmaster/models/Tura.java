@@ -41,20 +41,24 @@ public class Tura {
                 imenaArgumenata, 
                 vrednostiArgumenata);
         
+        int i = 0;
         for (Map<String, String> noviRed : listaRezultata) {
             if (noviRed.get("GLAVNASTAVKA_ID") == null || noviRed.get("GLAVNASTAVKA_ID").equals("0")) {
                 StavkaTure novaStavka = new StavkaTure(noviRed);
+                novaStavka.setRedniBroj(++i);
                 listStavkeTure.add(novaStavka);
             }
         }
         for (Map<String, String> noviRed : listaRezultata) {
             if (noviRed.get("GLAVNASTAVKA_ID") != null && !noviRed.get("GLAVNASTAVKA_ID").equals("0")) {
                 StavkaTure novaStavka = new StavkaTure(noviRed);
+                StavkaTure glavnaStavka = this.getStavkaTureByStavkaID(novaStavka.getGlavnaStavkaID());
+                novaStavka.setRedniBrojGlavneStavke(glavnaStavka.getRedniBroj());
                 if (novaStavka.cena == 0) {
-                    this.getStavkaTureByStavkaID(novaStavka.getGlavnaStavkaID()).dodajKolicinuArtikalOpisni(novaStavka);
+                    glavnaStavka.dodajKolicinuArtikalOpisni(novaStavka);
                 }
                 else {
-                    this.getStavkaTureByStavkaID(novaStavka.getGlavnaStavkaID()).dodajKolicinuArtikalDodatni(novaStavka);
+                    glavnaStavka.dodajKolicinuArtikalDodatni(novaStavka);
                 }
             }
         }

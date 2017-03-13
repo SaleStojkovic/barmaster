@@ -90,8 +90,8 @@ public class PrikazSalaController extends FXMLDocumentController {
         prikaziSamoSaleOmoguceneKonobaru();
         
         //pokrece se svaki put prilikom otvaranja stranice
-//        listaRezervacija.clear();
-//        prikaziStolove();
+        listaRezervacija.clear();
+        prikaziStolove();
         
         
         imeKonobara.setText(getUlogovaniKonobarIme());
@@ -134,9 +134,9 @@ public class PrikazSalaController extends FXMLDocumentController {
             saleSkriveniTabovi.remove(key);
         }
 
-        if (!RMaster.firstLogin) {
-            return;
-        }
+//        if (!RMaster.firstLogin) {
+//            return;
+//        }
         
         int brojac = 0;
         

@@ -365,8 +365,8 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
     
     public int getRowIndexOfStavka(TableView<Map<String,String>> tabela, StavkaTure stavka) {
         int brojac = 0;
-        int redniBrojKolone_RedniBroj = 6;
-        int redniBrojKolone_RedniBrojGlavneStavke = 5;
+        int redniBrojKolone_RedniBroj = 9;
+        int redniBrojKolone_RedniBrojGlavneStavke = 8;
         
         TableColumn kolonaRB = tabela.getColumns().get(redniBrojKolone_RedniBroj);
         TableColumn kolonaGlavniRB = tabela.getColumns().get(redniBrojKolone_RedniBrojGlavneStavke);
