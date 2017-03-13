@@ -6,8 +6,9 @@
 package rmaster.views;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -37,10 +38,20 @@ public class RastaviStavkuPopupController extends Dialog {
     String kolicinaDodatni;
     
     TextField kolicinaGlavniText = new TextField();
+    
+    HashMap<String, TextField> dodatniArtikliTextField = new HashMap<>();
 
     HashMap<String, String> izabranaStavkaMap = new HashMap<>();
+    
+    HashMap<String, HashMap<String, String>> dodatniArtikli = new HashMap<>();
+    
+    
+    
+    StavkaTure izabranaStavka;
    
     public RastaviStavkuPopupController(StavkaTure izabranaStavka) {
+        
+        this.izabranaStavka = izabranaStavka;
         
         this.setHeaderText("Napravite novu stavku");
                 
@@ -64,7 +75,36 @@ public class RastaviStavkuPopupController extends Dialog {
         
         
         VBox content = new VBox(5);
+
         
+        content.getChildren().addAll(
+                this.glavnaStavkaHbox(izabranaStavka),
+                this.dodatniArtikliHBox(izabranaStavka)
+        );
+
+        this.getDialogPane().setContent(content);
+        
+        this.setResultConverter(dialogButton -> {
+            if (dialogButton == promeniButton) {
+                
+                HashMap<String, Object> rezultati = new HashMap<>();
+                
+                rezultati.put("glavniArtikal", izabranaStavkaMap);
+                
+                rezultati.put("listaDodatnih", dodatniArtikli);
+                
+                return rezultati;
+            }
+            return null;
+        });
+    }
+    
+    public void initialize(URL url, ResourceBundle rb) {
+
+    } 
+    
+    private HBox glavnaStavkaHbox(StavkaTure izabranaStavka) 
+    {
         HBox glavnaStavka = new HBox(10);
         
         Label glavniArtikal = new Label();
@@ -110,45 +150,168 @@ public class RastaviStavkuPopupController extends Dialog {
             kolicinaGlavniContent    
         );
         
-        
-        //TODO
-        //dodati opisne i dodatne artikle 
-        
-        content.getChildren().add(glavnaStavka);
-        
-        
         smanjiKolicinuGlavni.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override public void handle(ActionEvent e) {
-                                            try {
-                                                incrementOrDecrementKolicinaGlavni("D");
-                                            } catch (Exception ex) {
-                                            }
+                                            incrementOrDecrementKolicinaGlavni("D");
                                         }
                                     });
         
         
         povecajKolicinuGlavni.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override public void handle(ActionEvent e) {
-                                    try {
-                                        incrementOrDecrementKolicinaGlavni("I");
-                                    } catch (Exception ex) {
-                                    }
+                                    incrementOrDecrementKolicinaGlavni("I");
+                                    
                                 }
                             });
         
-        this.getDialogPane().setContent(content);
-        
-        this.setResultConverter(dialogButton -> {
-            if (dialogButton == promeniButton) {
-                return izabranaStavkaMap;
-            }
-            return null;
-        });
+        return glavnaStavka;
     }
     
-    public void initialize(URL url, ResourceBundle rb) {
+    private VBox dodatniArtikliHBox(StavkaTure izabranaStavka) 
+    {
+         VBox dodatniArtikalBox = new VBox(5);
+    
+        for(StavkaTure dodatniArtikal : izabranaStavka.dodatniArtikli) {
+        
+            HBox noviSadrzaj = new HBox(10);
+            
+            Label dodatniArtikalLabel = new Label();
 
-    } 
+            dodatniArtikalLabel.setStyle(
+                    "-fx-border-color: white;"
+                    + "-fx-padding: 5 5 5 5;"
+            );
+
+            dodatniArtikalLabel.setPrefSize(150, 115);
+
+            dodatniArtikalLabel.wrapTextProperty().setValue(Boolean.TRUE);
+
+            dodatniArtikalLabel.textAlignmentProperty().set(TextAlignment.LEFT);
+
+            dodatniArtikalLabel.setText(dodatniArtikal.naziv);
+
+            
+            VBox kolicinaDodatniContent = new VBox();
+
+            Button povecajKolicinuDodatni = new Button("▲");
+
+            povecajKolicinuDodatni.setPrefSize(90, 40);
+
+            povecajKolicinuDodatni.setId(dodatniArtikal.id + "");
+            
+            TextField dodatniArtikalField = new TextField();
+            
+            dodatniArtikalField.setPrefSize(90, 30);
+
+            dodatniArtikalField.setText("x" + (int)dodatniArtikal.kolicina);
+            
+            dodatniArtikalField.alignmentProperty().setValue(Pos.CENTER);
+            
+            
+            dodatniArtikliTextField.put(dodatniArtikal.id + "", dodatniArtikalField);
+
+            
+            Button smanjiKolicinuDodatni = new Button("▼");
+            
+            smanjiKolicinuDodatni.setId(dodatniArtikal.id + "");
+
+            smanjiKolicinuDodatni.setPrefSize(90, 40);
+
+            kolicinaDodatniContent.getChildren().addAll(
+                    povecajKolicinuDodatni,
+                    dodatniArtikalField,
+                    smanjiKolicinuDodatni
+            );
+
+            noviSadrzaj.getChildren().addAll(
+                dodatniArtikalLabel,
+                kolicinaDodatniContent    
+            );
+
+            smanjiKolicinuDodatni.setOnAction(new EventHandler<ActionEvent>() {
+                                            @Override public void handle(ActionEvent event) {
+                                                
+                                                Button dugme = (Button)event.getSource();
+                                                
+                                                incrementOrDecrementKolicinaDodatni("D", dugme.getId());
+                                               
+                                            }
+                                        });
+
+
+            povecajKolicinuDodatni.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override public void handle(ActionEvent event) {
+                                        
+                                        Button dugme = (Button)event.getSource();
+
+                                        incrementOrDecrementKolicinaDodatni("I", dugme.getId());
+                                    }
+                                });
+        
+            
+            dodatniArtikalBox.getChildren().add(noviSadrzaj);
+        }
+        
+        return dodatniArtikalBox;
+
+    }
+    
+    private void incrementOrDecrementKolicinaDodatni(String akcija, String dodatniId)
+    {
+        StavkaTure stavkaKojaSeMenja = this.getDodatnaStavkaKojaSeMenja(dodatniId);
+        
+        TextField izabranoPolje = dodatniArtikliTextField.get(dodatniId);
+        
+        String text = izabranoPolje.getText();
+        
+        int kolicina = Integer.parseInt(text.replaceAll("x", ""));
+        
+        if (akcija.equals("I") && kolicina < (int)stavkaKojaSeMenja.kolicina - 1) {
+            
+            kolicina++;
+            
+            izabranoPolje.setText("x" + kolicina);
+            
+            HashMap<String, String> stavkaKojaSeMenjaMap = (HashMap)stavkaKojaSeMenja.dajStavkuTure();
+        
+            stavkaKojaSeMenjaMap.put("kolicina", "x" + kolicina);
+
+            dodatniArtikli.put(dodatniId, stavkaKojaSeMenjaMap);
+        }
+        
+        if (akcija.equals("D") && kolicina > 1) {
+            
+            kolicina--;
+            
+            izabranoPolje.setText("x" + kolicina); 
+            
+            HashMap<String, String> stavkaKojaSeMenjaMap = (HashMap)stavkaKojaSeMenja.dajStavkuTure();
+        
+            stavkaKojaSeMenjaMap.put("kolicina", "x" + kolicina);
+
+            dodatniArtikli.put(dodatniId, stavkaKojaSeMenjaMap);
+        }
+        
+       
+        
+    }
+    
+    private StavkaTure getDodatnaStavkaKojaSeMenja(String dodatniId)
+    {
+        StavkaTure stavkaKojaSeMenja = null;
+        
+        for(StavkaTure dodatnaStavka : this.izabranaStavka.dodatniArtikli) {
+            
+            if ((dodatnaStavka.id + "").equals(dodatniId)) {
+                
+                stavkaKojaSeMenja = dodatnaStavka;
+                break;
+            }
+        }
+        
+        return stavkaKojaSeMenja;
+    }
+    
     
     private void incrementOrDecrementKolicinaGlavni(String akcija) {
         

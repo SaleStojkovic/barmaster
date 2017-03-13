@@ -796,15 +796,22 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                 (StavkaTure)izabranaStavka.getPodatak()
         );
         
-        Optional<HashMap<String, String>> result = tastatura.showAndWait();
+        Optional<HashMap<String, Object>> result = tastatura.showAndWait();
         
         if (!result.isPresent()){ 
             return;
         }
         
         //rezultat je mapa, treba napraviti novu stavku
-        HashMap<String, String> novaStavka = result.get();
+        HashMap<String, Object> rezultatMap = result.get();
         
+        //Glavna Stavka
+        HashMap<String, String> glavnaStavkaZaPromenu = (HashMap)rezultatMap.get("glavniArtikal");
+        
+        //Lista svih dodatnih Artikala
+        HashMap<String, HashMap<String, String>> MapaDodatnihStavki = (HashMap)rezultatMap.get("listaDodatnih");
+        
+
         //Treba promeniti kolicinu izabranoj stavci i napraviti novo dugme u ContentB
         //Dodati promenjenu stavku u listu
         //novu stavku u listu za pravljenje novih modela
