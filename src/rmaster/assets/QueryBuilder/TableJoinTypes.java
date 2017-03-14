@@ -15,4 +15,6 @@ public final class TableJoinTypes {
     
     public static String LEFT_JOIN = "LEFT JOIN";
     
+    public static String RIGHT_JOIN = "RIGHT JOIN";
+    
 }

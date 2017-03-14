@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
@@ -71,8 +70,8 @@ public class PromenaKonobaraController extends FXMLDocumentController {
         sakrijSveStolove();
         
         konobar = RMaster.getUlogovaniKonobar();
-        Timeline timeline = this.prikaziCasovnik(casovnik);
-        timeline.play();
+        timelineSat = this.prikaziCasovnik(casovnik);
+        timelineSat.play();
         this.imeKonobara.setText(getUlogovaniKonobarIme());
         
         prikaziSamoSaleOmoguceneKonobaru();

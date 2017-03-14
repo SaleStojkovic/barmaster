@@ -7,15 +7,12 @@ package rmaster.views;
 
 import rmaster.assets.Settings;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -111,8 +108,8 @@ public class NaplataController extends FXMLDocumentController {
     @Override
     public void initData(Object data) {
         
-        Timeline timeline = this.prikaziCasovnik(casovnik);
-        timeline.play();
+        timelineSat = this.prikaziCasovnik(casovnik);
+        timelineSat.play();
         
         
         //this.fxID_Uplaceno.setText("0.00");
@@ -248,7 +245,12 @@ public class NaplataController extends FXMLDocumentController {
                                     @Override public void handle(ActionEvent e) {
                                         Button hotel = (Button)e.getSource();
                                         // TODO - odraditi crno placanje
-                                        
+                                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                                        alert.setTitle("NaplataController!");
+                                        alert.setHeaderText("Obrada crnog placanja!");
+                                        alert.setContentText("TODO - odraditi crno placanje");
+                                        alert.showAndWait();
+                                                
                                         //popustPorudzbine = Utils.getDoubleFromString(mapaPopusta.get(pop.getId()));
                                         //osveziPrikaz();
                                     }

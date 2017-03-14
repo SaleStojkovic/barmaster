@@ -1347,8 +1347,10 @@ public class PorudzbinaController extends FXMLDocumentController {
             tabelaNovaTuraGosta.setPodaci(
                         novaTura.dajTuru()
                 );
-            tabelaNovaTuraGosta.getSelectionModel().select(novaTura.listStavkeTure.size() - 1);
-            
+            selektovana = novaTura.listStavkeTure.get(novaTura.listStavkeTure.size() - 1);
+            tabelaNovaTuraGosta.getSelectionModel().select(
+                    getRowIndexOfStavka(tabelaNovaTuraGosta, selektovana)
+            );
             prikaziKomponentu(tabelaNovaTuraGosta);
             this.prikaziTotalPopustNaplataTura(novaTura);
         }

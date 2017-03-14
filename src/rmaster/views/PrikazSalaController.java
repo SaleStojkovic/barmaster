@@ -68,8 +68,6 @@ public class PrikazSalaController extends FXMLDocumentController {
     @FXML
     private Label imeKonobara;
     
-    private Timeline timelineCasovnik;
-    
     private List<Button> listaRezervacija = new ArrayList<>();
     
     private Map<String, Tab> saleSkriveniTabovi = new LinkedHashMap<String, Tab>();
@@ -92,14 +90,14 @@ public class PrikazSalaController extends FXMLDocumentController {
         prikaziSamoSaleOmoguceneKonobaru();
         
         //pokrece se svaki put prilikom otvaranja stranice
-//        listaRezervacija.clear();
-//        prikaziStolove();
+        listaRezervacija.clear();
+        prikaziStolove();
         
         
         imeKonobara.setText(getUlogovaniKonobarIme());
         
-        timelineCasovnik = this.prikaziCasovnik(casovnik);
-        timelineCasovnik.play();
+        timelineSat = this.prikaziCasovnik(casovnik);
+        timelineSat.play();
         
         //osvezava stranicu na svakih 60s
         if (timerOsvezi == null) {
@@ -136,9 +134,9 @@ public class PrikazSalaController extends FXMLDocumentController {
             saleSkriveniTabovi.remove(key);
         }
 
-        if (!RMaster.firstLogin) {
-            return;
-        }
+//        if (!RMaster.firstLogin) {
+//            return;
+//        }
         
         int brojac = 0;
         
@@ -154,25 +152,6 @@ public class PrikazSalaController extends FXMLDocumentController {
                     break;
                 }
             }   
-
-            
-
-
-//            prekidac = false;
-//
-//            for (Map<String, String> salaMap : RMaster.saleOmoguceneKonobaru) {
-//                String salaMapId = salaMap.get("id");
-//
-//                if (salaMapId.equals(salaTabId))
-//                {
-//                    prekidac = true;
-//                    break;
-//                }
-//            }   
-//
-//            if (!prekidac) {
-//                saleSkriveniTabovi.put("" + brojac, salaTab);
-//            }
             brojac++;
         }
 
