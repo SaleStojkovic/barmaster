@@ -48,7 +48,7 @@ public class Sto {
         query.addCriteriaColumns("stoprikaz.id", "racun.zatvoren", "racun.storniran");
         query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL);
         query.addOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
-        query.addCriteriaValues(this.stoId, "0", "0");
+        query.addCriteriaValues(this.stoId, QueryBuilder.BIT_0, QueryBuilder.BIT_0);
         
         query.addOrderByColumns("gost");
         query.addOrderByCriterias(QueryBuilder.SORT_ASC);
