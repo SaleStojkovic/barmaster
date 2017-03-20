@@ -270,6 +270,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         if (racuniStola.isEmpty())
         {
             //sta se desava ako nema nijednog gosta
+            //TODO dodati novog gosta
             return;
         }
         

@@ -26,9 +26,9 @@ public class Settings {
     Properties prop = new Properties();   
     
     protected Settings() { 
-//        this.putanjaSettings =  "/Users/Arbor/NetBeansProjects/Settings.conf";
+        this.putanjaSettings =  "/Users/Arbor/NetBeansProjects/Settings.conf";
 //        this.putanjaSettings =  "C:\\BarMaster\\Settings.conf";
-        this.putanjaSettings =  "putanja.txt";
+//        this.putanjaSettings =  "putanja.txt";
 //        this.putanjaSettings =  "C:\\BarMaster-Beta\\Settings.conf";
         
         InputStream input = null;
