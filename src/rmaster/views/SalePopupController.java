@@ -5,6 +5,7 @@
  */
 package rmaster.views;
 
+import rmaster.assets.ImageBroker;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

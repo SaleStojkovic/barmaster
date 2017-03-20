@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rmaster.views;
+package rmaster.assets;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +36,7 @@ public class ImageBroker {
         
         if (image == null) {
             image = new Image(
-                            getClass().getResourceAsStream(imagePath),
+                            imagePath,
                             1024,
                             608,
                             false,

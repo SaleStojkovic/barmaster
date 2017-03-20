@@ -224,7 +224,7 @@ public class QueryBuilder {
         }
 
         if (GROUP_BY != null && !GROUP_BY.isEmpty()) {
-            queryString += "GROUP BY '" + GROUP_BY + "'";
+            queryString += " GROUP BY " + GROUP_BY;
         }
 
         if (!ORDER_BY_COLUMNS.isEmpty()) {

@@ -28,17 +28,13 @@ public class Settings {
     protected Settings() { 
 //        this.putanjaSettings =  "/Users/Arbor/NetBeansProjects/Settings.conf";
 //        this.putanjaSettings =  "C:\\BarMaster\\Settings.conf";
-        this.putanjaSettings =  "putanja.txt";
+        this.putanjaSettings =  "Resources/Settings.conf";
 //        this.putanjaSettings =  "C:\\BarMaster-Beta\\Settings.conf";
         
         InputStream input = null;
         BufferedReader reader = null;
 
 	try {
-                input = new FileInputStream(new File(putanjaSettings));
-                reader = new BufferedReader(new InputStreamReader(input));
-                this.putanjaSettings = reader.readLine();
-                input.close();
 		input = new FileInputStream(new File(putanjaSettings));
                 // load a properties file
 		prop.load(input);

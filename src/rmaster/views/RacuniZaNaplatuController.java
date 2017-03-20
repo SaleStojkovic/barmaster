@@ -40,6 +40,8 @@ public class RacuniZaNaplatuController extends Dialog {
     
     public RacuniZaNaplatuController()
     {
+        this.listRacuni = this.ucitajRacuneZaNaplatu();
+        
         this.initStyle(StageStyle.UNDECORATED);
         
         this.getDialogPane().getStyleClass().add("myDialog");
@@ -51,9 +53,8 @@ public class RacuniZaNaplatuController extends Dialog {
         
         this.getDialogPane().getStylesheets().
                 addAll(this.getClass().getResource("style/style.min.css").toExternalForm());
-        
-        listRacuni = this.ucitajRacuneZaNaplatu();
-        
+       
+
         tabelaSaRacunimaZaNaplatu.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         
         tabelaSaRacunimaZaNaplatu.setPodaci(listRacuni);
@@ -86,7 +87,7 @@ public class RacuniZaNaplatuController extends Dialog {
         this.getDialogPane().setContent(content);
     }
     
-    private List<Map<String, String>> ucitajRacuneZaNaplatu()
+        private List<Map<String, String>> ucitajRacuneZaNaplatu()
     {
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         

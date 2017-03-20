@@ -5,7 +5,6 @@
  */
 package rmaster.assets;
  
-import rmaster.views.ImageBroker;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -404,14 +403,7 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
     public Background getBackground(String slikaURL)
     {
         Image image = ImageBroker.getInstance().getImage(Settings.getInstance().getValueString("sale.slike.putanja") + slikaURL);
-//        Image image = new Image(
-//                            getClass().getResourceAsStream("style/img/" + slikaURL),
-//                            1024,
-//                            608,
-//                            false,
-//                            true
-//                    );
-                    
+          
         BackgroundImage newBackgroundImage = new BackgroundImage(
                 image,
                 BackgroundRepeat.NO_REPEAT,
