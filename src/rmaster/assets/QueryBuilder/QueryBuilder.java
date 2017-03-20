@@ -307,9 +307,20 @@ public class QueryBuilder {
                 }
             }
 
-            queryString += CRITERIA_COLUMNS.get(CRITERIA_COLUMNS.size() - 1)
-                    + CRITERIA.get(CRITERIA.size() - 1)
-                    + CRITERIA_VALUES.get(CRITERIA_COLUMNS.size() - 1);
+            int lastCriteriaIndex = CRITERIA_COLUMNS.size() - 1;
+            if (CRITERIA_VALUES.get(lastCriteriaIndex).equals(BIT_0) || CRITERIA_VALUES.get(lastCriteriaIndex).equals(BIT_1)) {
+                queryString += CRITERIA_COLUMNS.get(lastCriteriaIndex)
+                            + CRITERIA.get(lastCriteriaIndex);
+                    queryString = deleteLastOccurance(queryString, "\'");
+                    queryString += CRITERIA_VALUES.get(lastCriteriaIndex); 
+
+            }            
+            
+            if (!(CRITERIA_VALUES.get(lastCriteriaIndex).equals(BIT_0) || CRITERIA_VALUES.get(lastCriteriaIndex).equals(BIT_1))) {
+                queryString += CRITERIA_COLUMNS.get(lastCriteriaIndex)
+                        + CRITERIA.get(lastCriteriaIndex)
+                        + CRITERIA_VALUES.get(lastCriteriaIndex); 
+            }
 
             if (!CRITERIA.get(CRITERIA.size() - 1).equals(IS_NOT_IN) 
                     && !CRITERIA.get(CRITERIA.size() - 1).equals(IS_IN)) {
