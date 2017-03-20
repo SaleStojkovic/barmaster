@@ -5,17 +5,14 @@
  */
 package rmaster.views;
 
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.animation.Animation;
@@ -24,22 +21,15 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Side;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-import rmaster.assets.FXMLDocumentController;
 import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.RM_Button.RM_Button;
@@ -49,7 +39,7 @@ import rmaster.assets.RM_Button.RM_Button;
  *
  * @author Bosko
  */
-public class PrikazSalaController extends FXMLDocumentController {
+public class PrikazSalaController extends PrikazSalaParentController {
     public static final long HALF_HOUR = 30*60*1000; // in milli-seconds.
     
     ScreenController myController; 
@@ -59,8 +49,6 @@ public class PrikazSalaController extends FXMLDocumentController {
         myController = screenParent; 
     } 
     
-    @FXML
-    private TabPane saleTabPane;
     
     @FXML
     private Label casovnik;
@@ -69,8 +57,6 @@ public class PrikazSalaController extends FXMLDocumentController {
     private Label imeKonobara;
     
     private List<Button> listaRezervacija = new ArrayList<>();
-    
-    private Map<String, Tab> saleSkriveniTabovi = new LinkedHashMap<String, Tab>();
     
     public Timer timerOsvezi;
     
@@ -120,154 +106,155 @@ public class PrikazSalaController extends FXMLDocumentController {
         }
     }
     
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        prikaziSale();
-    }
+//    @Override
+//    public void initialize(URL url, ResourceBundle rb) {
+//        super.initialize(url, rb);
+//    }
 
-    public void prikaziSamoSaleOmoguceneKonobaru()
-    {
-        for (Map.Entry<String, Tab> entry : saleSkriveniTabovi.entrySet()) {
-            String key = entry.getKey();
-            Tab value = entry.getValue();
-            saleTabPane.getTabs().add(Integer.parseInt(key), value);
-            saleSkriveniTabovi.remove(key);
-        }
-
-//        if (!RMaster.firstLogin) {
-//            return;
+//    public void prikaziSamoSaleOmoguceneKonobaru()
+//    {
+//        for (Map.Entry<String, Tab> entry : saleSkriveniTabovi.entrySet()) {
+//            String key = entry.getKey();
+//            Tab value = entry.getValue();
+//            saleTabPane.getTabs().add(Integer.parseInt(key), value);
+//            saleSkriveniTabovi.remove(key);
 //        }
-        
-        int brojac = 0;
-        
-        for (Tab salaTab : saleTabPane.getTabs()) {
-            String salaTabId = salaTab.getId();
-            
-            for (Map<String, String> salaZabranjena : RMaster.saleZabranjeneKonobaru) {
-                String salaZabranjenaId = salaZabranjena.get("grafik_id");
-
-                if (salaZabranjenaId.equals(salaTabId))
-                {
-                    saleSkriveniTabovi.put("" + brojac, salaTab);
-                    break;
-                }
-            }   
-            brojac++;
-        }
-
-        for (Map.Entry<String, Tab> entry : saleSkriveniTabovi.entrySet()) {
-            String key = entry.getKey();
-            Tab tabZaSkrivanje = entry.getValue();
-            saleTabPane.getTabs().remove(tabZaSkrivanje);
-        }
-            
-        RMaster.firstLogin = false;
-    }
+//
+////        if (!RMaster.firstLogin) {
+////            return;
+////        }
+//        
+//        int brojac = 0;
+//        
+//        for (Tab salaTab : saleTabPane.getTabs()) {
+//            String salaTabId = salaTab.getId();
+//            
+//            for (Map<String, String> salaZabranjena : RMaster.saleZabranjeneKonobaru) {
+//                String salaZabranjenaId = salaZabranjena.get("grafik_id");
+//
+//                if (salaZabranjenaId.equals(salaTabId))
+//                {
+//                    saleSkriveniTabovi.put("" + brojac, salaTab);
+//                    break;
+//                }
+//            }   
+//            brojac++;
+//        }
+//
+//        for (Map.Entry<String, Tab> entry : saleSkriveniTabovi.entrySet()) {
+//            String key = entry.getKey();
+//            Tab tabZaSkrivanje = entry.getValue();
+//            saleTabPane.getTabs().remove(tabZaSkrivanje);
+//        }
+//            
+//        RMaster.firstLogin = false;
+//    }
     
-    private void prikaziSale() {
-        List<Map<String, String>> sale = RMaster.sveSale;
-        
-        saleTabPane.setSide(Side.BOTTOM);
-
-        for(Map<String, String> salaMap : sale){
-            
-            new Thread() {
-                @Override
-                public void start() {
-                    prikaziSalu(salaMap);
-                }
-            }.start();
-        
-        }            
-    }
+//    private void prikaziSale() {
+//        List<Map<String, String>> sale = RMaster.sveSale;
+//        
+//        saleTabPane.setSide(Side.BOTTOM);
+//
+//        for(Map<String, String> salaMap : sale){
+//            
+//            new Thread() {
+//                @Override
+//                public void start() {
+//                    prikaziSalu(salaMap);
+//                }
+//            }.start();
+//        
+//        }            
+//    }
     
-    private void prikaziSalu(Map<String, String> salaMap) {
-        Tab newTab = new Tab();
-        newTab.setId(salaMap.get("id"));
-
-        newTab.setText(salaMap.get("naziv"));
-
-        AnchorPane novaSala = new AnchorPane();
-
-        prikaziStoloveSale(novaSala, salaMap.get("id"));
-
-        novaSala.setBackground(getBackground(salaMap.get("slika")));
-
-        newTab.setContent(novaSala);
-
-        saleTabPane.getTabs().add(newTab);
-
-        if (RMaster.trenutnaSalaID == Long.parseLong(salaMap.get("id"))) {        
-            saleTabPane.getSelectionModel().select(newTab);
-        }        
-    }
-   
-    private void prikaziStoloveSale(AnchorPane sala, String salaId) 
-    {
-        List<Map<String, String>> stoloviZaPrikaz = RMaster.getStoloveBySalaId(salaId);
-            
-        for (Map<String, String> stoMap : stoloviZaPrikaz)
-        {
-            StackPane okvir = this.napraviSto(stoMap);
-            sala.getChildren().add(okvir);
-        }
-    }
+//    private void prikaziSalu(Map<String, String> salaMap) {
+//        Tab newTab = new Tab();
+//        newTab.setId(salaMap.get("id"));
+//
+//        newTab.setText(salaMap.get("naziv"));
+//
+//        AnchorPane novaSala = new AnchorPane();
+//
+//        prikaziStoloveSale(novaSala, salaMap.get("id"));
+//
+//        novaSala.setBackground(getBackground(salaMap.get("slika")));
+//
+//        newTab.setContent(novaSala);
+//
+//        saleTabPane.getTabs().add(newTab);
+//
+//        if (RMaster.trenutnaSalaID == Long.parseLong(salaMap.get("id"))) {        
+//            saleTabPane.getSelectionModel().select(newTab);
+//        }        
+//    }
+//   
+//    private void prikaziStoloveSale(AnchorPane sala, String salaId) 
+//    {
+//        List<Map<String, String>> stoloviZaPrikaz = RMaster.getStoloveBySalaId(salaId);
+//            
+//        for (Map<String, String> stoMap : stoloviZaPrikaz)
+//        {
+//            StackPane okvir = this.napraviSto(stoMap);
+//            sala.getChildren().add(okvir);
+//        }
+//    }
     
-    private StackPane napraviSto(Map<String, String> stoMap)
-    {
-        StackPane okvir = new StackPane();
-        
-        int vrstaStola = 0;
-        double x, y, sirina, visina;
-        String naziv = "";
-        
-        RM_Button noviSto = new RM_Button();
-        
-        x = Double.parseDouble(stoMap.get("x"));
-        x = x * RMaster.sirinaSaleNaEkranu / 1024;
-
-        y = Double.parseDouble(stoMap.get("y"));
-        y = y * RMaster.visinaSaleNaEkranu / 768;
-
-        sirina = Double.parseDouble(stoMap.get("sirina"));
-        sirina = sirina * RMaster.sirinaSaleNaEkranu / 1024;
-        visina = Double.parseDouble(stoMap.get("visina"));
-        visina = visina * RMaster.visinaSaleNaEkranu / 768;
-
-        noviSto.setId(stoMap.get("id"));
-        noviSto.setPodatak(stoMap.get("broj"));
-        
-        naziv = stoMap.get("broj");
-
-        if (stoMap.get("naziv") != null) {
-            naziv = stoMap.get("naziv");
-        }
-
-        noviSto.setText(naziv);
-        
-        dodajAkcijuZaSto(noviSto);
-        
-        vrstaStola = Integer.parseInt(stoMap.get("sto_VrstaStolaID"));
-
-        noviSto.setBorder(Border.EMPTY);
-        noviSto.setPrefSize(sirina, visina);
-        noviSto.setMaxSize(sirina, visina);
-        noviSto.setMinSize(sirina, visina);
-        okvir.setPrefSize(sirina, visina);
-        okvir.getChildren().add(noviSto);
-
-        this.setOblikStola(noviSto, vrstaStola, sirina);
-
-        AnchorPane.setLeftAnchor(okvir, x);
-        AnchorPane.setTopAnchor(okvir, y);
-        AnchorPane.setRightAnchor(okvir, RMaster.sirinaSaleNaEkranu - x - sirina);
-        AnchorPane.setBottomAnchor(okvir, RMaster.visinaSaleNaEkranu - y - visina);
-                
-        return okvir;   
-    }
+//    private StackPane napraviSto(Map<String, String> stoMap)
+//    {
+//        StackPane okvir = new StackPane();
+//        
+//        int vrstaStola = 0;
+//        double x, y, sirina, visina;
+//        String naziv = "";
+//        
+//        RM_Button noviSto = new RM_Button();
+//        
+//        x = Double.parseDouble(stoMap.get("x"));
+//        x = x * RMaster.sirinaSaleNaEkranu / 1024;
+//
+//        y = Double.parseDouble(stoMap.get("y"));
+//        y = y * RMaster.visinaSaleNaEkranu / 768;
+//
+//        sirina = Double.parseDouble(stoMap.get("sirina"));
+//        sirina = sirina * RMaster.sirinaSaleNaEkranu / 1024;
+//        visina = Double.parseDouble(stoMap.get("visina"));
+//        visina = visina * RMaster.visinaSaleNaEkranu / 768;
+//
+//        noviSto.setId(stoMap.get("id"));
+//        noviSto.setPodatak(stoMap.get("broj"));
+//        
+//        naziv = stoMap.get("broj");
+//
+//        if (stoMap.get("naziv") != null) {
+//            naziv = stoMap.get("naziv");
+//        }
+//
+//        noviSto.setText(naziv);
+//        
+//        dodajAkcijuZaSto(noviSto);
+//        
+//        vrstaStola = Integer.parseInt(stoMap.get("sto_VrstaStolaID"));
+//
+//        noviSto.setBorder(Border.EMPTY);
+//        noviSto.setPrefSize(sirina, visina);
+//        noviSto.setMaxSize(sirina, visina);
+//        noviSto.setMinSize(sirina, visina);
+//        okvir.setPrefSize(sirina, visina);
+//        okvir.getChildren().add(noviSto);
+//
+//        this.setOblikStola(noviSto, vrstaStola, sirina);
+//
+//        AnchorPane.setLeftAnchor(okvir, x);
+//        AnchorPane.setTopAnchor(okvir, y);
+//        AnchorPane.setRightAnchor(okvir, RMaster.sirinaSaleNaEkranu - x - sirina);
+//        AnchorPane.setBottomAnchor(okvir, RMaster.visinaSaleNaEkranu - y - visina);
+//                
+//        return okvir;   
+//    }
     
-    private void setOblikStola(
-            Button sto, 
+    @Override
+    protected void setOblikStola(
+            ButtonBase sto, 
             int vrstaStola, 
             double sirina)
     {
@@ -278,8 +265,10 @@ public class PrikazSalaController extends FXMLDocumentController {
             sto.setShape(new Circle(sirina/2));  
     }    
     
-    private void dodajAkcijuZaSto(RM_Button sto)
+    @Override
+    protected void dodajAkcijuZaSto(RM_Button sto)
     {
+        //if (sto.getPodatak().)
         sto.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override public void handle(ActionEvent e) {
                                             RM_Button stoButton = (RM_Button)e.getSource();
@@ -326,16 +315,18 @@ public class PrikazSalaController extends FXMLDocumentController {
             String konobarID = stoMap.get("KONOBAR_ID") + "";
             
             if (konobarID.equals("null")) {
-                
                 stoButton.getStyleClass().add("stoSlobodan");
+                dodajAkcijuZaSto(stoButton);
             }
             
             if (konobarID.equals("" + getUlogovaniKonobarID())) {
                 stoButton.getStyleClass().add("stoKonobarov");
+                dodajAkcijuZaSto(stoButton);
             } 
             
             if (!konobarID.equals("" + getUlogovaniKonobarID()) && !konobarID.equals("null")) {
                 stoButton.getStyleClass().add("stoZauzet");
+                ukloniAkcijuZaSto(stoButton);
             } 
   
             if (stoMap.get("RezervacijaDatum") != null) {

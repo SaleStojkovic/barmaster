@@ -120,6 +120,7 @@ public class PocetniEkranController extends FXMLDocumentController {
             
             
             myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
+            timelineSat.stop();
 
             return;
         }

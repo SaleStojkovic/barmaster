@@ -14,8 +14,11 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import javafx.application.Application;
 import javafx.concurrent.Task;
+import javafx.geometry.Side;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.BackgroundImage;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -219,6 +222,7 @@ public class RMaster extends Application {
             }
         }
     }
+    
     public void ucitajSveSale(){
         QueryBuilder querySveSale = new QueryBuilder(QueryBuilder.SELECT);
         
@@ -264,6 +268,7 @@ public class RMaster extends Application {
         
         sviStolovi = dbBroker.runQuery(query);
     }
+    
 
     public List<Map<String, String>> getStoloveBySalaId(String salaId)
     {

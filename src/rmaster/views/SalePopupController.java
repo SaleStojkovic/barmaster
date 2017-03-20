@@ -37,6 +37,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.StageStyle;
 import rmaster.RMaster;
 import rmaster.assets.RM_Button.RM_Button;
+import rmaster.assets.Settings;
 import static rmaster.views.PrikazSalaController.HALF_HOUR;
 
 
@@ -82,7 +83,6 @@ public class SalePopupController extends Dialog {
     }
     
     public void initialize(URL url, ResourceBundle rb) {
-
     } 
     
     public void cancelAction(ActionEvent event) {
@@ -109,6 +109,8 @@ public class SalePopupController extends Dialog {
 
         AnchorPane novaSala = new AnchorPane();
 
+        novaSala.setBackground(getBackground(salaMap.get("slika")));
+        
         new Thread() {
             
             @Override
@@ -119,7 +121,6 @@ public class SalePopupController extends Dialog {
             
         }.start();
         
-        novaSala.setBackground(getBackground(salaMap.get("slika")));
 
         newTab.setContent(novaSala);
 
@@ -189,63 +190,49 @@ public class SalePopupController extends Dialog {
         noviSto.setText(naziv);
         vrstaStola = Integer.parseInt(stoMap.get("sto_VrstaStolaID"));
 
-                if ((!konobarID.equals("null")) && (!konobarID.equals("" + RMaster.ulogovaniKonobar.konobarID))) {
-                    noviSto.getStyleClass().add("stoZauzet");
-                    
-                    noviSto.setOnAction(new EventHandler<ActionEvent>() {
-                                        @Override public void handle(ActionEvent e) {
-                                            RM_Button stoButton = (RM_Button)e.getSource();
-                                            HashMap<String, String> stoMap = new HashMap();
-                                            stoMap.put("stoId", stoButton.getId());
-                                            stoMap.put("stoBroj", stoButton.getPodatak() + "");
-                                            stoMap.put("stoNaziv", stoButton.getText());
-
-                                            izaberiSto(stoMap);
-                                        } 
-                                    });
-                    
-                } else {
-                    if (konobarID.equals("null")) {
-                        noviSto.getStyleClass().add("stoSlobodan");
-                        
-                    }
-                    else {
-                        noviSto.getStyleClass().add("stoKonobarov");
-                    }
-                    
-                    noviSto.setOnAction(new EventHandler<ActionEvent>() {
-                                        @Override public void handle(ActionEvent e) {
-                                             RM_Button stoButton = (RM_Button)e.getSource();
-                                            HashMap<String, String> stoMap = new HashMap();
-                                            stoMap.put("stoId", stoButton.getId());
-                                            stoMap.put("stoBroj", stoButton.getPodatak() + "");
-                                            stoMap.put("stoNaziv", stoButton.getText());
-
-                                            izaberiSto(stoMap);
-                                        } 
-                                    });
-                    
-                }
-                if ((stoMap.get("RezervacijaDatum") != null)) {
-                    
-                    String date_s = stoMap.get("RezervacijaDatum"); 
-                    SimpleDateFormat dt = new SimpleDateFormat("yyyyy-MM-dd hh:mm:ss"); 
-                    try {
-                        Date vremeRezervacije = dt.parse(date_s);
-                        Date vremePolaSataPreRezervacije = new Date();
-                        vremePolaSataPreRezervacije.setTime(vremeRezervacije.getTime() - HALF_HOUR);
-
-                        Date vreme = new Date();
-
-                    if (vreme.after(vremePolaSataPreRezervacije) && vreme.before(vremeRezervacije)) {
-                        //b.getStyleClass().add("stoRezervisan");
-                        listaRezervacija.add(noviSto);
-                    }
-                    
-                    } catch (Exception e) {}
-   
-                }
+        if (konobarID.equals("null")) {
+            noviSto.getStyleClass().add("stoSlobodan");
+        }
+        else {
+            if (konobarID.equals("" + RMaster.ulogovaniKonobar.konobarID)) {
+                noviSto.getStyleClass().add("stoKonobarov");
+            } else {
+                noviSto.getStyleClass().add("stoZauzet");
+            }
+        }
         
+        noviSto.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override public void handle(ActionEvent e) {
+                        RM_Button stoButton = (RM_Button)e.getSource();
+                        HashMap<String, String> stoMap = new HashMap();
+                        stoMap.put("stoId", stoButton.getId());
+                        stoMap.put("stoBroj", stoButton.getPodatak() + "");
+                        stoMap.put("stoNaziv", stoButton.getText());
+
+                        izaberiSto(stoMap);
+                    } 
+                });
+
+        if ((stoMap.get("RezervacijaDatum") != null)) {
+
+            String date_s = stoMap.get("RezervacijaDatum"); 
+            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+            try {
+                Date vremeRezervacije = dt.parse(date_s);
+                Date vremePolaSataPreRezervacije = new Date();
+                vremePolaSataPreRezervacije.setTime(vremeRezervacije.getTime() - HALF_HOUR);
+
+                Date vreme = new Date();
+
+                if (vreme.after(vremePolaSataPreRezervacije) && vreme.before(vremeRezervacije)) {
+                    //b.getStyleClass().add("stoRezervisan");
+                    listaRezervacija.add(noviSto);
+                }
+
+            } catch (Exception e) {}
+
+        }
+
         
         noviSto.setBorder(Border.EMPTY);
         noviSto.setPrefSize(sirina, visina);
@@ -271,13 +258,7 @@ public class SalePopupController extends Dialog {
     
     public Background getBackground(String slikaURL)
     {
-        Image image = new Image(
-                            getClass().getResourceAsStream("style/img/" + slikaURL),
-                            1024,
-                            608,
-                            false,
-                            true
-                    );
+        Image image = ImageBroker.getInstance().getImage(Settings.getInstance().getValueString("sale.slike.putanja") + slikaURL);
                     
         BackgroundImage newBackgroundImage = new BackgroundImage(
                 image,

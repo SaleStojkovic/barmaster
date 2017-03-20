@@ -5,6 +5,7 @@
  */
 package rmaster.assets;
  
+import rmaster.views.ImageBroker;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -29,6 +30,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
@@ -320,6 +323,7 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
                         @Override public void handle(ActionEvent actionEvent) {
                             Calendar time = Calendar.getInstance();
                             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+                            casovnik.setText("");
                             casovnik.setText(simpleDateFormat.format(time.getTime()));
                         }
                     }
@@ -399,13 +403,14 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
     
     public Background getBackground(String slikaURL)
     {
-        Image image = new Image(
-                            getClass().getResourceAsStream("style/img/" + slikaURL),
-                            1024,
-                            608,
-                            false,
-                            true
-                    );
+        Image image = ImageBroker.getInstance().getImage(Settings.getInstance().getValueString("sale.slike.putanja") + slikaURL);
+//        Image image = new Image(
+//                            getClass().getResourceAsStream("style/img/" + slikaURL),
+//                            1024,
+//                            608,
+//                            false,
+//                            true
+//                    );
                     
         BackgroundImage newBackgroundImage = new BackgroundImage(
                 image,
@@ -430,4 +435,5 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
             }
         }
     }
+    
 }

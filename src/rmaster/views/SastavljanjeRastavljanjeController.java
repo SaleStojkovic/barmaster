@@ -160,6 +160,12 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     public void pozivanjePrikazSalePopup(ActionEvent event) {
 
         SalePopupController tastatura = new SalePopupController();
+        tastatura.setWidth(1024.);
+        tastatura.setHeight(768.);
+        tastatura.getDialogPane().setMaxSize(1024., 768.);
+        tastatura.setResizable(false);
+        
+        
         
         Optional<HashMap<String, String>> result = tastatura.showAndWait();
         

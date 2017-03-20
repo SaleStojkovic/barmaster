@@ -13,9 +13,9 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Label;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
@@ -25,7 +25,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
-import rmaster.assets.FXMLDocumentController;
 import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
 import rmaster.models.Konobar;
@@ -35,7 +34,7 @@ import rmaster.models.Konobar;
  *
  * @author Arbor
  */
-public class PromenaKonobaraController extends FXMLDocumentController {
+public class PromenaKonobaraController extends PrikazSalaParentController {
 
         ScreenController myController; 
      
@@ -85,58 +84,60 @@ public class PromenaKonobaraController extends FXMLDocumentController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        List<Map<String, String>> sale = RMaster.sveSale;
-        
-        saleTabPane.setSide(Side.BOTTOM);
-
-        for(Map<String, String> salaMap : sale){
-            
-             new Thread() {
-                 @Override
-                 public void start()
-                 {
-                     prikaziSalu(salaMap);
-                 }
-             }.start();
-        }
+        super.initialize(url, rb);
+//        List<Map<String, String>> sale = RMaster.sveSale;
+//        
+//        saleTabPane.setSide(Side.BOTTOM);
+//
+//        for(Map<String, String> salaMap : sale){
+//            
+//             new Thread() {
+//                 @Override
+//                 public void start()
+//                 {
+//                     prikaziSalu(salaMap);
+//                 }
+//             }.start();
+//        }
     } 
 
-    private void prikaziSalu(Map<String, String> salaMap)
-    {
-        Tab newTab = new Tab();
-        
-        newTab.setId(salaMap.get("id"));
-
-        newTab.setText(salaMap.get("naziv"));
-
-        AnchorPane novaSala = new AnchorPane();
-
-        prikaziStoloveSale(novaSala, salaMap.get("id"));
-
-        novaSala.setBackground(getBackground(salaMap.get("slika")));
-
-        newTab.setContent(novaSala);
-
-        saleTabPane.getTabs().add(newTab);
-
-        if (RMaster.trenutnaSalaID == Long.parseLong(salaMap.get("id"))) {        
-            saleTabPane.getSelectionModel().select(newTab);
-        }       
-    }
+//    private void prikaziSalu(Map<String, String> salaMap)
+//    {
+//        Tab newTab = new Tab();
+//        
+//        newTab.setId(salaMap.get("id"));
+//
+//        newTab.setText(salaMap.get("naziv"));
+//
+//        AnchorPane novaSala = new AnchorPane();
+//
+//        prikaziStoloveSale(novaSala, salaMap.get("id"));
+//
+//        novaSala.setBackground(getBackground(salaMap.get("slika")));
+//
+//        newTab.setContent(novaSala);
+//
+//        saleTabPane.getTabs().add(newTab);
+//
+//        if (RMaster.trenutnaSalaID == Long.parseLong(salaMap.get("id"))) {        
+//            saleTabPane.getSelectionModel().select(newTab);
+//        }       
+//    }
     
-    public void prikaziStoloveSale(AnchorPane sala, String salaId) 
-    {
-        List<Map<String, String>> stoloviZaPrikaz = RMaster.getStoloveBySalaId(salaId);
-            
-        for (Map<String, String> stoMap : stoloviZaPrikaz)
-        {
-            StackPane okvir = this.napraviSto(stoMap);
-            sala.getChildren().add(okvir);
-        }
-    }
+//    public void prikaziStoloveSale(AnchorPane sala, String salaId) 
+//    {
+//        List<Map<String, String>> stoloviZaPrikaz = RMaster.getStoloveBySalaId(salaId);
+//            
+//        for (Map<String, String> stoMap : stoloviZaPrikaz)
+//        {
+//            StackPane okvir = this.napraviSto(stoMap);
+//            sala.getChildren().add(okvir);
+//        }
+//    }
+//    
     
-    
-    private StackPane napraviSto(Map<String, String> stoMap)
+    @Override
+    protected StackPane napraviSto(Map<String, String> stoMap)
     {
         StackPane okvir = new StackPane();
         
@@ -175,7 +176,7 @@ public class PromenaKonobaraController extends FXMLDocumentController {
         okvir.setPrefSize(sirina, visina);
         okvir.getChildren().add(noviSto);
 
-        this.setOblikStola(noviSto, vrstaStola, sirina);
+        setOblikStola(noviSto, vrstaStola, sirina);
 
         AnchorPane.setLeftAnchor(okvir, x);
         AnchorPane.setTopAnchor(okvir, y);
@@ -187,8 +188,9 @@ public class PromenaKonobaraController extends FXMLDocumentController {
         return okvir;   
     }
     
-    private void setOblikStola(
-            ToggleButton sto, 
+    @Override
+    protected void setOblikStola(
+            ButtonBase sto, 
             int vrstaStola, 
             double sirina)
     {
@@ -278,33 +280,6 @@ public class PromenaKonobaraController extends FXMLDocumentController {
     public void nazadNaPrikazSala(ActionEvent event)
     {            
         myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
-    }
-    
-    public void prikaziSamoSaleOmoguceneKonobaru()
-    {
-       
-        boolean prekidac; 
-        
-            for (Tab salaTab : saleTabPane.getTabs()) {
-                
-                String salaTabId = salaTab.getId();
-                
-                prekidac = false;
-                
-                for (Map<String, String> salaMap : RMaster.saleOmoguceneKonobaru) {
-                    
-                    String salaMapId = salaMap.get("id");
-                    
-                    if (salaMapId.equals(salaTabId))
-                    {
-                        prekidac = true;
-                    }
-                }   
-                
-                if (!prekidac) {
-                    saleTabPane.getTabs().remove(salaTab);
-                }
-            }
     }
     
     private void prikaziStolove() 
