@@ -17,7 +17,6 @@ import java.util.ResourceBundle;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -25,12 +24,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.QueryBuilder.QueryBuilder;
@@ -38,7 +35,6 @@ import rmaster.assets.RM_TableView.RM_TableView;
 import rmaster.assets.RM_TableView.SirinaKolone;
 import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
-import rmaster.assets.Utils;
 import rmaster.models.Rezervacija;
 
 
@@ -50,6 +46,9 @@ public class RezervacijeController extends FXMLDocumentController {
     public void setScreenParent(ScreenController screenParent){ 
         myController = screenParent; 
     } 
+   
+    @FXML
+    private ImageView barMasterLogo;
     
     @FXML
     private Label casovnik;
@@ -170,7 +169,9 @@ public class RezervacijeController extends FXMLDocumentController {
                     return LocalDate.parse(dateString, dateTimeFormatter);
                 }
             }
-        ); 
+        );
+        
+        barMasterLogo.setImage(RMaster.logo);
     }    
     
     public void nazadNaPrikazSale(ActionEvent event) {

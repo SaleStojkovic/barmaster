@@ -14,12 +14,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
+import rmaster.assets.Settings;
 import rmaster.models.LoginAction;
 /**
  *
@@ -35,6 +38,12 @@ public class PocetniEkranController extends FXMLDocumentController {
     
     @FXML
     private Label clock;
+    
+    @FXML
+    private ImageView barMasterLogo;
+    
+    @FXML
+    private AnchorPane pocetniEkran;
     
     ScreenController myController; 
 
@@ -55,9 +64,18 @@ public class PocetniEkranController extends FXMLDocumentController {
         RMaster.saleZabranjeneKonobaru.clear();
     }
     
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
+        String pozadina = Settings.getInstance().getValueString("sale.slike.putanja") + "start_screen.jpg" ;  
+
+        pocetniEkran.setStyle("-fx-background-image: url('" 
+                + pozadina + "'); " +
+           "-fx-background-repeat: stretch;" +
+           "-fx-background-size: 1024 768;");
+        
+        barMasterLogo.setImage(RMaster.logo);
     }
     
    public void backButton(ActionEvent event) {

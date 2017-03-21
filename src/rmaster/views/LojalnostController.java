@@ -33,9 +33,9 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import static java.lang.Math.round;
 import rmaster.ScreenController;
 import static java.lang.Math.round;
+import javafx.scene.image.ImageView;
 import rmaster.assets.Utils;
 
 /**
@@ -51,6 +51,9 @@ public class LojalnostController extends FXMLDocumentController {
     public void setScreenParent(ScreenController screenParent){ 
         myController = screenParent; 
     } 
+    
+    @FXML
+    private ImageView barMasterLogo;
     
     @FXML
     private Label casovnik;
@@ -123,8 +126,6 @@ public class LojalnostController extends FXMLDocumentController {
         }   
         
         dugme.fire();
-        //headerButtonGroup.selectToggle(dugme);
-        //dugme.setSelected(true);
     }
     
     @Override
@@ -133,6 +134,8 @@ public class LojalnostController extends FXMLDocumentController {
         lojalnostFlowPane.setOrientation(Orientation.VERTICAL);
         
         popuniSlova();
+        
+        barMasterLogo.setImage(RMaster.logo);
     } 
     
     

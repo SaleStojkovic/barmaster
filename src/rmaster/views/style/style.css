@@ -181,21 +181,8 @@ and open the template in the editor.
     -fx-text-fill: white;
 }
 
-#pocetniEkran {
-    -fx-background-image: url("img/start_screen.jpg");
-    -fx-background-repeat: stretch;
-    -fx-background-size: 1024 768;
-
-}
-
 #pocetniEkranPane {
     -fx-background-color: -fx-zuta;
-}
-
-#barMasterLogo {
-    -fx-background-image: url("img/logo.png");
-    -fx-background-size: 276px, 80px;
-    -fx-background-repeat: no-repeat;
 }
 
 #loginForm {
