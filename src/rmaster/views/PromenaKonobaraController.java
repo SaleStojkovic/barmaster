@@ -73,8 +73,7 @@ public class PromenaKonobaraController extends PrikazSalaParentController {
         sakrijSveStolove();
         
         konobar = RMaster.getUlogovaniKonobar();
-        timelineSat = this.prikaziCasovnik(casovnik);
-        timelineSat.play();
+        RMaster.setClockLabelForUpdate(casovnik);
         this.imeKonobara.setText(getUlogovaniKonobarIme());
         
         prikaziSamoSaleOmoguceneKonobaru();

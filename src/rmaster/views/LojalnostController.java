@@ -106,8 +106,7 @@ public class LojalnostController extends FXMLDocumentController {
                 }
             }
         }
-        Timeline timeline = this.prikaziCasovnik(casovnik);
-        timeline.play();
+        RMaster.setClockLabelForUpdate(casovnik);
         this.imeKonobara.setText(getUlogovaniKonobarIme());
         
         popuniLojalnostGostiGrupe();

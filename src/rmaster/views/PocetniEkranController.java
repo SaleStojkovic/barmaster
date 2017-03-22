@@ -21,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.ScreenController;
+import rmaster.assets.ImageBroker;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Settings;
 import rmaster.models.LoginAction;
@@ -56,9 +57,9 @@ public class PocetniEkranController extends FXMLDocumentController {
     public void initData(Object data)
     {
         lozinka.setText("");
-        timelineSat = this.prikaziCasovnik(clock);
-        timelineSat.play();
-        
+        //timelineSat = this.prikaziCasovnik(clock);
+        //timelineSat.play();
+        RMaster.setClockLabelForUpdate(clock);
         RMaster.firstLogin = true;
         RMaster.saleOmoguceneKonobaru.clear();
         RMaster.saleZabranjeneKonobaru.clear();
@@ -138,7 +139,6 @@ public class PocetniEkranController extends FXMLDocumentController {
             
             
             myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
-            timelineSat.stop();
 
             return;
         }

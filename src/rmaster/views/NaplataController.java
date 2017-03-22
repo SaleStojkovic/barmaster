@@ -112,8 +112,7 @@ public class NaplataController extends FXMLDocumentController {
     @Override
     public void initData(Object data) {
         
-        timelineSat = this.prikaziCasovnik(casovnik);
-        timelineSat.play();
+        RMaster.setClockLabelForUpdate(casovnik);
         
         
         //this.fxID_Uplaceno.setText("0.00");

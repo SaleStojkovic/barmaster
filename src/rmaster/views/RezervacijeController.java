@@ -47,77 +47,44 @@ public class RezervacijeController extends FXMLDocumentController {
         myController = screenParent; 
     } 
    
-    @FXML
-    private ImageView barMasterLogo;
+    @FXML private ImageView barMasterLogo;
     
-    @FXML
-    private Label casovnik;
+    @FXML private Label casovnik;
+    @FXML private Label imeKonobara;
     
-    @FXML
-    private Label imeKonobara;
+    @FXML private ScrollPane scrollPaneRezervacije;
     
-    @FXML
-    private ScrollPane scrollPaneRezervacije;
+    @FXML private TextField ime;
+    @FXML private TextField brOsoba;
+    @FXML private DatePicker datumPicker;
+    @FXML private TextField timePicker;
+    @FXML private TextField izabraniSto;
+    @FXML private TextField idRezervacije;
+    @FXML private TextField telefon;
+    @FXML private TextArea napomena;
     
-    @FXML
-    private TextField ime;
-    
-    @FXML
-    private TextField brOsoba;
-    
-    @FXML 
-    private DatePicker datumPicker;
-    
-    @FXML
-    private TextField timePicker;
-    
-    @FXML
-    private TextField izabraniSto;
-    
-    @FXML
-    private TextField idRezervacije;
-    
-    @FXML
-    private TextField telefon;
-    
-    @FXML
-    private TextArea napomena;
-    
-    @FXML
-    private Button sortIme;
-    
-    @FXML
-    private Button sortDatum;
-        
-    @FXML
-    private Button sortVreme;
-    
-    private Timeline timelineCasovnik;
+    @FXML private Button sortIme;
+    @FXML private Button sortDatum;
+    @FXML private Button sortVreme;
     
     public RM_TableView tabelaRezervacija;
-            
     public Integer[] sirinaKolonaTabele = {140, 100, 100, 100, 100, 100, 250, 0};
     
     @Override
     public void initData(Object data) {
-        timelineCasovnik = this.prikaziCasovnik(casovnik);
-        timelineCasovnik.play();
+        RMaster.setClockLabelForUpdate(casovnik);
         
         List<Map<String, String>> listaZaPrikaz = getRezervacije();
         
         tabelaRezervacija.izbrisiSveIzTabele();
         tabelaRezervacija.setPodaci(
                 listaZaPrikaz
-                
         );
-        
+        tabelaRezervacija.getSelectionModel().select(tabelaRezervacija.getItems().size()-1); 
 
         imeKonobara.setText(getUlogovaniKonobarIme());
-        
         this.izbrisiSvaPolja();
         
-        
-        tabelaRezervacija.getSelectionModel().select(tabelaRezervacija.getItems().size()-1); 
     }
     
     /**
@@ -146,13 +113,11 @@ public class RezervacijeController extends FXMLDocumentController {
         idRezervacije.setVisible(false);
         
         datumPicker.setConverter(
-            new StringConverter<LocalDate>()
-            {
+            new StringConverter<LocalDate>() {
                 private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
                 @Override
-                public String toString(LocalDate localDate)
-                {
+                public String toString(LocalDate localDate) {
                     if(localDate == null) {
                         return "";
                     }
@@ -160,10 +125,8 @@ public class RezervacijeController extends FXMLDocumentController {
                 }
 
                 @Override
-                public LocalDate fromString(String dateString)
-                {
-                    if(dateString == null || dateString.trim().isEmpty())
-                    {
+                public LocalDate fromString(String dateString) {
+                    if(dateString == null || dateString.trim().isEmpty()) {
                         return null;
                     }
                     return LocalDate.parse(dateString, dateTimeFormatter);
@@ -264,13 +227,11 @@ public class RezervacijeController extends FXMLDocumentController {
     }
     
     public void pozivanjePrikazSalePopup(MouseEvent event) {
-        
         izabraniSto.setText("");
 
         SalePopupController tastatura = new SalePopupController();
-        
         Optional<HashMap<String, String>> result = tastatura.showAndWait();
-        
+
         if (!result.isPresent()){ 
             return;
         }
@@ -281,9 +242,7 @@ public class RezervacijeController extends FXMLDocumentController {
         }
             
         HashMap<String, String> izabraniStoMap = result.get();
-
         izabraniSto.setText(izabraniStoMap.get("stoNaziv") + "");
-        
     }
     
     public void pozivanjeNumerickeTastature(MouseEvent event) {

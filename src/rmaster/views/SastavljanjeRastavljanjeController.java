@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
-import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -51,58 +50,38 @@ import rmaster.models.Tura;
  */
 public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
 
-        ScreenController myController; 
+    ScreenController myController; 
      
     @Override
     public void setScreenParent(ScreenController screenParent){ 
         myController = screenParent; 
     } 
     
-    @FXML
-    private ImageView barMasterLogo;
+    @FXML private ImageView barMasterLogo;
     
-    @FXML
-    private Label imeKonobara;
+    @FXML private Label imeKonobara;
     
-    @FXML 
-    private Label casovnik;
+    @FXML private Label casovnik;
     
-    @FXML
-    private Button izaberiStoA;
-   
-    @FXML
-    private Button izaberiStoB;
+    @FXML private Button izaberiStoA;
+    @FXML private Button izaberiStoB;
     
-    @FXML
-    private ScrollPane scrollPaneA;
+    @FXML private ScrollPane scrollPaneA;
+    @FXML private ScrollPane scrollPaneB;
     
-    @FXML
-    private ScrollPane scrollPaneB;
+    @FXML private VBox contentA;
+    @FXML private VBox contentB;
     
-    @FXML
-    private VBox contentA;
+    @FXML private HBox gostiStoA = new HBox();
+    @FXML private HBox gostiStoB = new HBox();
     
-    @FXML
-    private VBox contentB;
-    
-    @FXML
-    private HBox gostiStoA = new HBox();
-    
-    @FXML
-    private HBox gostiStoB = new HBox();
-    
-    @FXML
-    private VBox novaTuraA = new VBox();
-    
-    @FXML
-    private VBox novaTuraB = new VBox();
+    @FXML private VBox novaTuraA = new VBox();
+    @FXML private VBox novaTuraB = new VBox();
     
     private ToggleGroup gostiGrupaA = new ToggleGroup();
-    
     private ToggleGroup gostiGrupaB = new ToggleGroup();
     
     private List<Porudzbina> porudzbineStolaA = new ArrayList<>();
-    
     private List<Porudzbina> porudzbineStolaB = new ArrayList<>();
                 
     private RM_Button labelB = new RM_Button();
@@ -110,7 +89,6 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     private List<Object> modeliZaBrisanje = new ArrayList();
        
     List<ToggleButton> stavkeZaSastavljanjeA = new ArrayList<>();
-    
     List<ToggleButton> stavkeZaSastavljanjeB = new ArrayList<>();
     
     HashMap<String, RM_Button> izabranaPorudzbinaMap = new HashMap();
@@ -141,8 +119,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     {
         imeKonobara.setText(RMaster.ulogovaniKonobar.imeKonobara);
         
-        Timeline timeline = this.prikaziCasovnik(casovnik);
-        timeline.play();
+        RMaster.setClockLabelForUpdate(casovnik);
         
         gostiStoA.getChildren().clear();
         gostiStoB.getChildren().clear();
@@ -193,8 +170,9 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         if (pritisnutoDugme.getId().equals("izaberiStoA")) {
             
             gostiStoA.getChildren().clear();
-            
             contentA.getChildren().clear();
+            porudzbineStolaA.clear();
+            novaTuraA.getChildren().clear();
             
             new Thread() {
             
@@ -211,9 +189,10 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         if (pritisnutoDugme.getId().equals("izaberiStoB")) {
             
             gostiStoB.getChildren().clear();
-            
             contentB.getChildren().clear();
-            
+            porudzbineStolaB.clear();
+            novaTuraB.getChildren().clear();
+
             new Thread() {
             
                 @Override

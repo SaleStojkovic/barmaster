@@ -6,21 +6,30 @@
 package rmaster;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BackgroundImage;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import rmaster.assets.DBBroker;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.QueryBuilder.TableJoin;
@@ -67,7 +76,10 @@ public class RMaster extends Application {
     public final static SettingsBaza settingsBaza = new SettingsBaza();
     
     public static boolean firstLogin = true;
-               
+        
+    private static Label clock = new Label();
+    private static Timeline timelineSat = null;
+
     DBBroker dbBroker = new DBBroker();
     
     public Konobar getUlogovaniKonobar() {
@@ -81,9 +93,41 @@ public class RMaster extends Application {
     public void promeniSalu(long novaSala) {
         trenutnaSalaID = novaSala;
     }
+ 
+    public Timeline prikaziCasovnik(Label casovnik){
+        if (timelineSat == null) {
+            timelineSat = new Timeline(
+                new KeyFrame(Duration.seconds(0),
+                    new EventHandler<ActionEvent>() {
+                        @Override public void handle(ActionEvent actionEvent) {
+                            Calendar time = Calendar.getInstance();
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+                            casovnik.setText("");
+                            casovnik.setText(simpleDateFormat.format(time.getTime()));
+                        }
+                    }
+                ),
+                new KeyFrame(Duration.seconds(1))
+            );
+            timelineSat.setCycleCount(Animation.INDEFINITE);
+        }
+        
+        return timelineSat;
+    }
 
+    public void setClockLabelForUpdate(Label labelaZaSat) {
+        if (timelineSat != null) {
+            timelineSat.stop();
+            timelineSat = null;
+            this.clock = null;
+        }
+        this.clock = labelaZaSat;
+        timelineSat = this.prikaziCasovnik(clock);
+        timelineSat.play();
+    }
     @Override
     public void start(Stage stage) throws Exception {
+
 
         System.setProperty("javax.xml.transform.TransformerFactory",
                 "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");

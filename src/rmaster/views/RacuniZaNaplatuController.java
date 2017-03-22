@@ -24,6 +24,8 @@ import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.QueryBuilder.TableJoin;
 import rmaster.assets.QueryBuilder.TableJoinTypes;
 import rmaster.assets.RM_TableView.RM_TableView;
+import rmaster.assets.RM_TableView.SirinaKolone;
+import rmaster.assets.Settings;
 
 /**
  *
@@ -37,58 +39,53 @@ public class RacuniZaNaplatuController extends Dialog {
     
     private List listRacuni = null;
 
+    public Integer[] sirinaKolonaTabele = {100, 100, 100, 100, 100};
     
-    public RacuniZaNaplatuController()
-    {
+    public RacuniZaNaplatuController() {
         this.listRacuni = this.ucitajRacuneZaNaplatu();
-        
         this.initStyle(StageStyle.UNDECORATED);
-        
         this.getDialogPane().getStyleClass().add("myDialog");
 
         // Set the button types.        
         ButtonType  odustaniButtonType = new ButtonType("X", ButtonBar.ButtonData.OK_DONE);
                 
         this.getDialogPane().getButtonTypes().addAll(odustaniButtonType);
-        
         this.getDialogPane().getStylesheets().
                 addAll(this.getClass().getResource("style/style.min.css").toExternalForm());
-       
+
+        tabelaSaRacunimaZaNaplatu.setSirineKolona(
+                new SirinaKolone(0, sirinaKolonaTabele[0]),
+                new SirinaKolone(1, sirinaKolonaTabele[1]),
+                new SirinaKolone(2, sirinaKolonaTabele[2]),
+                new SirinaKolone(3, sirinaKolonaTabele[3]),
+                new SirinaKolone(4, sirinaKolonaTabele[4])
+        );
 
         tabelaSaRacunimaZaNaplatu.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        
         tabelaSaRacunimaZaNaplatu.setPodaci(listRacuni);
         
         int brojRedova = listRacuni.size();
         
         tabelaSaRacunimaZaNaplatu.setFixedCellSize(30);
-                                
         tabelaSaRacunimaZaNaplatu.setPrefHeight(brojRedova * tabelaSaRacunimaZaNaplatu.getFixedCellSize());
-                
         tabelaSaRacunimaZaNaplatu.setPrefSize(600, 450);
-        
         VBox content = new VBox();
         
         content.setSpacing(10);
         
         Button stampaj = new Button("Štampaj");
-        
         stampaj.setOnAction(new EventHandler<ActionEvent>() {               
                                     @Override public void handle(ActionEvent event) {
-                                        
                                         stampajRacun();
                                     }
                                 });
-        
         stampaj.setPrefSize(200, 50);
 
         content.getChildren().addAll(tabelaSaRacunimaZaNaplatu, stampaj);
-        
         this.getDialogPane().setContent(content);
     }
     
-        private List<Map<String, String>> ucitajRacuneZaNaplatu()
-    {
+    private List<Map<String, String>> ucitajRacuneZaNaplatu() {
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         
         query.addTableJoins(
@@ -99,14 +96,14 @@ public class RacuniZaNaplatuController extends Dialog {
                 "racun.id",
                 "racun.brojStola AS 'Sto'",
                 "SUM(stavkaracuna.cena*((100.0-stavkaracuna.procenatPopusta)/100.0)) AS 'UKUPNO'",
-                "TIME(racun.datum)",
+                "TIME(racun.vremeIzdavanjaRacuna)",
                 "racun.brojFiskalnogIsecka"
         );
         
-        query.addCriteriaColumns("zatvoren", "racun.konobar_id","TIMESTAMPDIFF(HOUR, racun.datum, CURTIME())");
+        query.addCriteriaColumns("zatvoren", "racun.konobar_id","TIMESTAMPDIFF(HOUR, racun.vremeIzdavanjaRacuna, CURTIME())");
         query.addCriteria(QueryBuilder.IS_EQUAL, QueryBuilder.IS_EQUAL, QueryBuilder.IS_LESS_THAN);
         query.addOperators(QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND, QueryBuilder.LOGIC_AND);
-        query.addCriteriaValues("1", rmaster.RMaster.ulogovaniKonobar.konobarID + "", "1");
+        query.addCriteriaValues(QueryBuilder.BIT_1, rmaster.RMaster.ulogovaniKonobar.konobarID + "", Settings.getInstance().getValueString("racun.za.naplatu.izdat.pre.broj.sati"));
         query.GROUP_BY = "racun.id";
         
         DBBroker dbBroker = new DBBroker();
@@ -116,9 +113,8 @@ public class RacuniZaNaplatuController extends Dialog {
         return listaRezultata;
     }
     
-    private void stampajRacun()
-    {
-         try {
+    private void stampajRacun() {
+        try {
             // TODO: GetSelected Racun (id, brojFiskalnog)
             String racunID = "";
             String brojFiskalnogIsecka = "";

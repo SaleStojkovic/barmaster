@@ -86,8 +86,9 @@ public class PrikazSalaController extends PrikazSalaParentController {
                         
         imeKonobara.setText(getUlogovaniKonobarIme());
         
-        timelineSat = this.prikaziCasovnik(casovnik);
-        timelineSat.play();
+//        timelineSat = this.prikaziCasovnik(casovnik);
+//        timelineSat.play();
+        RMaster.setClockLabelForUpdate(casovnik);
         
         //osvezava stranicu na svakih 60s
         if (timerOsvezi == null) {
