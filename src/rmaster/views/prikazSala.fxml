@@ -25,17 +25,13 @@
       <Pane fx:id="header" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="48.0" prefWidth="1024.0">
          <children>
              
-                        <ImageView fitHeight="51.0" fitWidth="256.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../rmaster/views/style/img/logo.png" />
-               </image>
-            </ImageView>
+            <ImageView fx:id="barMasterLogo" fitHeight="51.0" fitWidth="256.0" pickOnBounds="true" preserveRatio="true" />
             
-                        <Pane layoutX="271.0" prefHeight="50.0" prefWidth="335.0">
+            <Pane layoutX="271.0" prefHeight="50.0" prefWidth="335.0">
                 <children>
                     <ImageView fitHeight="30.0" fitWidth="35.0" layoutX="121.0" layoutY="10.0">
                          <image>
-                            <Image url="@../../rmaster/views/style/img/Person.png" />
+                            <Image url="@style/Person.png" />
                         </image>
                     </ImageView>
                   <Label fx:id="imeKonobara" layoutX="156.0" layoutY="11.0" prefHeight="29.0" prefWidth="127.0" />

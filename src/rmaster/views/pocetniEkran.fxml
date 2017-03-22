@@ -5,13 +5,15 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.image.ImageView?>
+
 
 <AnchorPane fx:id="pocetniEkran" prefHeight="768" prefWidth="1024" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.PocetniEkranController">
     <children>
       <Pane fx:id="pocetniEkranPane" layoutX="690.0" prefHeight="768.0" prefWidth="290.0">
           <children>
               
-        <Pane fx:id="barMasterLogo" layoutX="7.0" layoutY="14.0" prefHeight="80.0" prefWidth="276.0" />
+        <ImageView fx:id="barMasterLogo" layoutX="7.0" layoutY="14.0" fitHeight="51.0" fitWidth="256.0" pickOnBounds="true" preserveRatio="true"/>
         <Label fx:id="clock" layoutX="58.0" layoutY="685.0" prefHeight="61.0" prefWidth="175.0" text="" />
         <Pane fx:id="loginForm" layoutX="11.0" layoutY="229.0" prefHeight="428.0" prefWidth="269.0">
          <children>

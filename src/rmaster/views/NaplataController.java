@@ -26,6 +26,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
@@ -50,6 +51,8 @@ public class NaplataController extends FXMLDocumentController {
 
     ScreenController myController; 
      
+    @FXML private ImageView barMasterLogo;
+    
     @FXML private Label fxID_Total;
     @FXML private Label fxID_Popust;
     @FXML private Label fxID_ZaUplatu;
@@ -103,6 +106,7 @@ public class NaplataController extends FXMLDocumentController {
         popuniPopuste();
         popuniHotelGost();
 
+        barMasterLogo.setImage(RMaster.logo);
     } 
     
     @Override

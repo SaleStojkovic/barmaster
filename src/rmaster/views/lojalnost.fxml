@@ -25,11 +25,9 @@
          <children>
             <Pane layoutX="14.0" layoutY="7.0" prefHeight="50.0" prefWidth="329.0">
                <children>
-                  <ImageView fitHeight="51.0" fitWidth="256.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@style/img/logo.png" />
-                     </image>
-                  </ImageView>
+                   
+                  <ImageView fx:id="barMasterLogo" fitHeight="51.0" fitWidth="256.0" pickOnBounds="true" preserveRatio="true"/>
+                     
                </children>
             </Pane>
             <Pane layoutX="589.0" layoutY="5.0" prefHeight="53.0" prefWidth="434.0">
@@ -40,7 +38,7 @@
             </Pane>
             <ImageView fitHeight="30.0" fitWidth="35.0" layoutX="400.0" layoutY="12.0">
                <image>
-                  <Image url="@style/img/Person.png" />
+                  <Image url="@style/Person.png" />
                </image>
             </ImageView>
             <Label fx:id="imeKonobara" layoutX="435.0" layoutY="13.0" prefHeight="29.0" prefWidth="127.0" />

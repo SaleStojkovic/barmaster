@@ -14,11 +14,10 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import javafx.application.Application;
 import javafx.concurrent.Task;
-import javafx.geometry.Side;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BackgroundImage;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -27,6 +26,7 @@ import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.QueryBuilder.TableJoin;
 import rmaster.assets.QueryBuilder.TableJoinTypes;
 import rmaster.assets.ScreenMap;
+import rmaster.assets.Settings;
 import rmaster.models.Artikal.Podgrupa;
 import rmaster.models.Artikal.GrupaThread;
 import rmaster.models.Artikal.Grupa;
@@ -39,6 +39,8 @@ import rmaster.models.SettingsBaza;
  */
 public class RMaster extends Application {
     private Executor exec;
+    
+    public static Image logo;
     
     public String resource;
     public String mainScreen = "views/pocetniEkran.fxml";
@@ -86,18 +88,17 @@ public class RMaster extends Application {
         System.setProperty("javax.xml.transform.TransformerFactory",
                 "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
         
-        //ucitavaju se sve vrednosti iz baze
         settingsBaza.getAllValues();
-                
-        //long startTimeT = System.nanoTime();
-        //System.out.println("Ucitavanja - pocetniEkran - pocetak: " + startTimeT);
         
+        logo = new Image(
+                            Settings.getInstance().getValueString("sale.slike.putanja") + "logo.png",
+                            256,
+                            51,
+                            false,
+                            true
+                    );        
+                        
         mainContainer.loadScreen("pocetniEkran", "views/pocetniEkran.fxml");
-        
-        //long estimatedTimeT = System.nanoTime() - startTimeT;
-        
-        //System.out.println("Ucitavanja - pocetniEkran - kraj: " + System.nanoTime());
-        //System.out.println("Ucitavanja - pocetniEkran: " + estimatedTimeT);
                             
         mainContainer.setScreen(ScreenMap.POCETNI_EKRAN, null);
         

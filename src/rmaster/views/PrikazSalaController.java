@@ -22,23 +22,16 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonBase;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import rmaster.ScreenController;
-import rmaster.assets.DBBroker;
-import static rmaster.assets.FXMLDocumentController.UPOZORENJE_NEISPRAVAN_UNOS_TITLE;
-import rmaster.assets.QueryBuilder.QueryBuilder;
-import rmaster.assets.QueryBuilder.TableJoin;
-import rmaster.assets.QueryBuilder.TableJoinTypes;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.RM_Button.RM_Button;
 
@@ -69,6 +62,10 @@ public class PrikazSalaController extends PrikazSalaParentController {
     public Timer timerOsvezi;
     
     private Timeline timelineRezervacije;
+    
+    @FXML
+    private ImageView barMasterLogo;
+    
     /**
      * Initializes the controller class.
      */
@@ -86,8 +83,7 @@ public class PrikazSalaController extends PrikazSalaParentController {
         //pokrece se svaki put prilikom otvaranja stranice
         listaRezervacija.clear();
         prikaziStolove();
-        
-        
+                        
         imeKonobara.setText(getUlogovaniKonobarIme());
         
         timelineSat = this.prikaziCasovnik(casovnik);
@@ -112,6 +108,8 @@ public class PrikazSalaController extends PrikazSalaParentController {
                 }
                 }, 0, 60000);
         }
+        
+        barMasterLogo.setImage(RMaster.logo);
     }
     
 

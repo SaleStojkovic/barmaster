@@ -21,6 +21,7 @@ import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.StackPane;
@@ -42,6 +43,9 @@ public class PromenaKonobaraController extends PrikazSalaParentController {
     public void setScreenParent(ScreenController screenParent){ 
         myController = screenParent; 
     } 
+    
+    @FXML
+    private ImageView barMasterLogo;
     
     @FXML
     private TabPane saleTabPane;
@@ -85,56 +89,10 @@ public class PromenaKonobaraController extends PrikazSalaParentController {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         super.initialize(url, rb);
-//        List<Map<String, String>> sale = RMaster.sveSale;
-//        
-//        saleTabPane.setSide(Side.BOTTOM);
-//
-//        for(Map<String, String> salaMap : sale){
-//            
-//             new Thread() {
-//                 @Override
-//                 public void start()
-//                 {
-//                     prikaziSalu(salaMap);
-//                 }
-//             }.start();
-//        }
+       
+        barMasterLogo.setImage(RMaster.logo);
     } 
-
-//    private void prikaziSalu(Map<String, String> salaMap)
-//    {
-//        Tab newTab = new Tab();
-//        
-//        newTab.setId(salaMap.get("id"));
-//
-//        newTab.setText(salaMap.get("naziv"));
-//
-//        AnchorPane novaSala = new AnchorPane();
-//
-//        prikaziStoloveSale(novaSala, salaMap.get("id"));
-//
-//        novaSala.setBackground(getBackground(salaMap.get("slika")));
-//
-//        newTab.setContent(novaSala);
-//
-//        saleTabPane.getTabs().add(newTab);
-//
-//        if (RMaster.trenutnaSalaID == Long.parseLong(salaMap.get("id"))) {        
-//            saleTabPane.getSelectionModel().select(newTab);
-//        }       
-//    }
-    
-//    public void prikaziStoloveSale(AnchorPane sala, String salaId) 
-//    {
-//        List<Map<String, String>> stoloviZaPrikaz = RMaster.getStoloveBySalaId(salaId);
-//            
-//        for (Map<String, String> stoMap : stoloviZaPrikaz)
-//        {
-//            StackPane okvir = this.napraviSto(stoMap);
-//            sala.getChildren().add(okvir);
-//        }
-//    }
-//    
+ 
     
     @Override
     protected StackPane napraviSto(Map<String, String> stoMap)

@@ -36,7 +36,7 @@
                                 
                                         <ImageView fitHeight="30.0" fitWidth="35.0" layoutX="644.0" layoutY="10.0">
                                             <image>
-                                                <Image url="@../../rmaster/views/style/img/Person.png" />
+                                                <Image url="@style/Person.png" />
                                             </image>
                                         </ImageView>
                               

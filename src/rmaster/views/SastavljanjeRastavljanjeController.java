@@ -29,6 +29,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
@@ -56,6 +57,9 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     public void setScreenParent(ScreenController screenParent){ 
         myController = screenParent; 
     } 
+    
+    @FXML
+    private ImageView barMasterLogo;
     
     @FXML
     private Label imeKonobara;
@@ -128,6 +132,8 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         labelB.setPrefSize(432, 20);
         
         novaTuraB.setId("novaTuraB");
+        
+        barMasterLogo.setImage(RMaster.logo);
     }    
     
     @Override
@@ -149,6 +155,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         
         novaTuraA.getChildren().clear();
         novaTuraB.getChildren().clear();
+        
     }
     
     public void nazadNaPrikazSale(ActionEvent event) 
