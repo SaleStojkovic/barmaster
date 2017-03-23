@@ -317,47 +317,50 @@ public class RMaster extends Application {
 
     public List<Map<String, String>> getStoloveBySalaId(String salaId)
     {
-        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
-                
-        query.addTableJoins(
-                new TableJoin(
-                        "stoprikaz",
-                        "stonaziv",
-                        "broj",
-                        "broj",
-                        TableJoinTypes.LEFT_JOIN),
-                new TableJoin(
-                        "stoprikaz",
-                        "sto",
-                        "broj",
-                        "broj",
-                        TableJoinTypes.LEFT_JOIN),
-                new TableJoin(
-                        "stoprikaz",
-                        "rezervacija",
-                        "broj",
-                        "brStola",
-                        TableJoinTypes.LEFT_JOIN) 
-        );
-        
-        query.setSelectColumns(
-                "stoprikaz.*", 
-                "stonaziv.naziv",
-                "sto.KONOBAR_ID",
-                "sto.blokiran",
-                "rezervacija.datum AS RezervacijaDatum",
-                "rezervacija.vreme AS RezervacijaVreme",
-                "rezervacija.brOsoba"
-        );
-
-        query.addCriteriaColumns("stoprikaz.GRAFIK_ID");
-        query.addCriteria(QueryBuilder.IS_EQUAL);
-        query.addCriteriaValues(salaId);
-        
-        List<Map<String, String>> listStolovi = dbBroker.runQuery(query);
-
-        
-        return listStolovi;
+        String[] imenaArgumenata = {"sala_ID", "VremeDoRezervacije"};
+        String[] vrednostiArgumenata = {salaId, Settings.getInstance().getValueString("rezervacija.prikaz.vreme.minuta")};
+        return DBBroker.runStoredProcedure("get_StoloviZaPrikaz_BySala", imenaArgumenata, vrednostiArgumenata);
+//        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+//                
+//        query.addTableJoins(
+//                new TableJoin(
+//                        "stoprikaz",
+//                        "stonaziv",
+//                        "broj",
+//                        "broj",
+//                        TableJoinTypes.LEFT_JOIN),
+//                new TableJoin(
+//                        "stoprikaz",
+//                        "sto",
+//                        "broj",
+//                        "broj",
+//                        TableJoinTypes.LEFT_JOIN),
+//                new TableJoin(
+//                        "stoprikaz",
+//                        "rezervacija",
+//                        "broj",
+//                        "brStola",
+//                        TableJoinTypes.LEFT_JOIN) 
+//        );
+//        
+//        query.setSelectColumns(
+//                "stoprikaz.*", 
+//                "stonaziv.naziv",
+//                "sto.KONOBAR_ID",
+//                "sto.blokiran",
+//                "rezervacija.datum AS RezervacijaDatum",
+//                "rezervacija.vreme AS RezervacijaVreme",
+//                "rezervacija.brOsoba"
+//        );
+//
+//        query.addCriteriaColumns("stoprikaz.GRAFIK_ID");
+//        query.addCriteria(QueryBuilder.IS_EQUAL);
+//        query.addCriteriaValues(salaId);
+//        
+//        List<Map<String, String>> listStolovi = dbBroker.runQuery(query);
+//
+//        
+//        return listStolovi;
     }
 
 

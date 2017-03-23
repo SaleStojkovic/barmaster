@@ -68,6 +68,9 @@ public class Porudzbina {
     public Date getVremeIzdavanjaRacuna() {
         return vremeIzdavanjaRacuna;
     }
+    public void setVremeIzdavanjaRacuna(Date vreme) {
+        this.vremeIzdavanjaRacuna = vreme;
+    }
     
     public String getGodinaIzdavanjaRacuna() {
         Calendar cal = Calendar.getInstance();
@@ -236,12 +239,11 @@ public class Porudzbina {
         //this.novaTuraPorudzbine = tura;
     //}
     
-    public void zatvoriRacun(Date vreme) {
+    public void zatvoriRacun() {
         DBBroker db = new DBBroker();
         snimi();
-        db.zatvoriRacunIOslobodiSto(this.racunID, vreme, this.brojStolaBroj);
+        db.zatvoriRacunIOslobodiSto(this);
         this.zatvoren = true;
-        this.vremeIzdavanjaRacuna = vreme;
     }
     
     public void snimi() {
@@ -347,20 +349,28 @@ public class Porudzbina {
             return Utils.getStringFromDouble(0.);
     }
     
+    // Stalni gost
+    public StalniGost getStalniGost() {
+        return this.stalniGost;
+    }
     public void setStalniGost(StalniGost stalniGost) {
         this.stalniGost = stalniGost;
     }
 
-    public StalniGost getStalniGost() {
-        return this.stalniGost;
-    }
-
+    // Broj fakture
     public String getBrojFakture() {
         return this.brojFakture;
     }
-    
     public void setBrojFakture(String brojFakt) {
         this.brojFakture = brojFakt;
+    }
+
+    // Broj racuna
+    public String getBrojRacuna() {
+        return "" + this.brojRacuna;
+    }
+    public void setBrojRacunaBroj(int brojRacunaBroj) {
+        this.brojRacuna = brojRacunaBroj;
     }
 
 }

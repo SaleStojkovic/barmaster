@@ -484,19 +484,18 @@ public class NaplataController extends FXMLDocumentController {
         try {
             //java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             long result = 0;
-            Date vreme = new Date();
+            this.porudzbina.zatvoriRacun();
             for (NacinPlacanja nacinPlacanja : placanja) {
                 if (nacinPlacanja.getVrednost() > 0) {
                     HashMap<String,String> mapa = new HashMap();
                     mapa.put("iznos", "" + nacinPlacanja.getVrednost());
                     mapa.put("nacin", "" + nacinPlacanja.getNacinPlacanjaString());
-                    mapa.put("vreme", "" + Utils.getStringFromDate(vreme));
+                    mapa.put("vreme", "" + this.porudzbina.getVremeIzdavanjaRacuna());
                     mapa.put("RACUN_ID", "" + this.porudzbina.getID());
 
                     result = db.ubaciRed("placanje",mapa, Boolean.FALSE);
                 }
             }
-            this.porudzbina.zatvoriRacun(vreme);
         } catch(Exception e) {
 
         }

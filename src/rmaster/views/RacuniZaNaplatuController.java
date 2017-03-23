@@ -19,13 +19,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
 import rmaster.assets.DBBroker;
-import static rmaster.assets.DBBroker.runStoredProcedure;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.QueryBuilder.TableJoin;
 import rmaster.assets.QueryBuilder.TableJoinTypes;
 import rmaster.assets.RM_TableView.RM_TableView;
 import rmaster.assets.RM_TableView.SirinaKolone;
 import rmaster.assets.Settings;
+import rmaster.assets.Stampa;
+import rmaster.models.Gost;
+import rmaster.models.Porudzbina;
 
 /**
  *
@@ -148,13 +150,16 @@ public class RacuniZaNaplatuController extends Dialog {
                                 }
                        this.close();
                     }
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Greška!");
-                    alert.setHeaderText("Greška pri štampanju gotovinskog računa");
-                    alert.setContentText("Za račun je već odštampan gotovinski račun!");
-                    alert.showAndWait();
                 }
+                Porudzbina porudzbina = new Porudzbina(new Gost(1), racunID, "99999", "99999");
+                Stampa.getInstance().stampajFakturu(NaplataController.VrstaRacunaZaStampu.GOTOVINSKI, porudzbina);
+//                else {
+//                    Alert alert = new Alert(Alert.AlertType.WARNING);
+//                    alert.setTitle("Greška!");
+//                    alert.setHeaderText("Greška pri štampanju gotovinskog računa");
+//                    alert.setContentText("Za račun je već odštampan gotovinski račun!");
+//                    alert.showAndWait();
+//                }
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Greška!");

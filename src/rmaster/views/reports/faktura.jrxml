@@ -73,11 +73,22 @@
 			<textField>
 				<reportElement x="0" y="60" width="180" height="20" uuid="309cd72d-ae7a-47cf-bef9-1a83798bb81d">
 					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+                                        <printWhenExpression><![CDATA[$P{gotovinskiRacun}.equals("false")]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["FAKTURA br: " + $P{porudzbina}.getBrojFakture() + "/" + $P{porudzbina}.getGodinaIzdavanjaRacuna()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="60" width="180" height="20" uuid="309cd72d-ae7a-47cf-bef9-1a83798bb81d">
+					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+                                        <printWhenExpression><![CDATA[$P{gotovinskiRacun}.equals("true")]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["RAČUN br: " + $P{porudzbina}.getBrojRacuna() + "/" + $P{porudzbina}.getGodinaIzdavanjaRacuna()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="80" width="126" height="12" uuid="5bef1d26-52ea-410d-8f89-f795f4f3f4a8">

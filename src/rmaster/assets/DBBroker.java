@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import javafx.scene.control.Alert;
 import rmaster.models.Konobar;
+import rmaster.models.Porudzbina;
  
 /**
  *
@@ -815,21 +816,27 @@ public final class DBBroker {
      * @param stoBroj
      */
     public void zatvoriRacunIOslobodiSto(
-            long RacunID,
-            Date vreme,
-            int izabraniStoBroj) 
+            Porudzbina porudzbina) 
     {
         Connection dbConnection;
         CallableStatement cStmt;
-        
+
         try {
             dbConnection = poveziSaBazom();
-            cStmt = dbConnection.prepareCall("{CALL zatvoriRacunIOslobodiSto(?,?,?)}");
-            cStmt.setLong("racunID", RacunID);
-            cStmt.setTimestamp("vreme", java.sql.Timestamp.valueOf(Utils.getStringFromDate(vreme)));
-            cStmt.setInt("stoBroj", izabraniStoBroj);
+            
+            cStmt = dbConnection.prepareCall("{CALL zatvoriRacunIOslobodiSto(?, ?, ?)}");
+            cStmt.setLong("racunID", porudzbina.getID());
+            cStmt.registerOutParameter("vreme", java.sql.Types.TIMESTAMP);
+            cStmt.registerOutParameter("brojNovogRacuna", java.sql.Types.INTEGER);
             cStmt.execute();
+
             prekiniVezuSaBazom(dbConnection);
+            
+            Date date = new Date(cStmt.getTimestamp("vreme").getTime());
+            porudzbina.setVremeIzdavanjaRacuna(date);
+            
+            porudzbina.setBrojRacunaBroj(cStmt.getInt("brojNovogRacuna"));
+            
         } catch (Exception e) {
             System.out.println("Store procedure \"zatvoriRacunIOslobodiSto\" exec error! - " + e.toString());
         }
