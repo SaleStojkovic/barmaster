@@ -119,6 +119,10 @@ public class Porudzbina {
         popuniPorudzbinuIzBaze();
     }
     
+    public int getBrojStolaBroj() {
+        return this.brojStolaBroj;
+    }
+    
     private void popuniTurePorudzbineIzBaze() {
         String[] imenaArgumenata = {"idRacuna"};
         String[] vrednostiArgumenata = {"" + this.racunID};
@@ -336,6 +340,10 @@ public class Porudzbina {
     public long getID() {
         return this.racunID;
     }
+    public void setID(long id) {
+        this.racunID = id;
+    }
+
     public double getPopustDouble() {
         if (this.stalniGost != null)
             return Utils.getDoubleFromString(this.stalniGost.popust);
