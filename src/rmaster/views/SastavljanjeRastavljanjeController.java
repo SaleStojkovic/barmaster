@@ -758,7 +758,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                     }
                 }
  
-                stavkaZaUklanjanje.setKolicina(0.);
+                
                 modeliZaBrisanje.add(stavkaZaUklanjanje);
                          
                 sastavljenaStavka.setKolicina(sastavljenaStavka.getKolicina() + stavkaZaUklanjanje.getKolicina());
@@ -849,12 +849,12 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
 
             StavkaTure stavka = (StavkaTure)stavkaDugme.getPodatak();
             
-            for (int j = 0; j < izabraneStavke.size(); j++) {
+            for (int j = i+1; j < izabraneStavke.size(); j++) {
                 
                 //sprecava uporedjivanje istih indeksa
-                if (j == i) {
-                    continue;
-                }
+                //if (j == i) {
+                //    continue;
+                //}
                                 
                 RM_Button sledecaStavkaDugme = mapaDugmica.get(
                         izabraneStavke.get(j).getId()
@@ -866,14 +866,16 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                 if (stavka.ARTIKAL_ID == sledecaStavka.ARTIKAL_ID) {
                     
                     if (artikliZaSastavljanje.containsKey(stavka.ARTIKAL_ID)) {
-                        
-                        artikliZaSastavljanje.get(stavka.ARTIKAL_ID).add(stavkaDugme);
+                        if (!artikliZaSastavljanje.get(sledecaStavka.ARTIKAL_ID).contains(sledecaStavkaDugme)) {
+                            artikliZaSastavljanje.get(stavka.ARTIKAL_ID).add(sledecaStavkaDugme);
+                        }
                         continue;
                     }
                     
                     List<RM_Button> novaLista = new ArrayList<>();
                 
                     novaLista.add(stavkaDugme);
+                    novaLista.add(sledecaStavkaDugme);
                                         
                     artikliZaSastavljanje.put(stavka.ARTIKAL_ID, novaLista);
                     
