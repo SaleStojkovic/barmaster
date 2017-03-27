@@ -31,7 +31,7 @@ import rmaster.models.StavkaTure;
  */
 public class RastaviStavkuPopupController extends Dialog {
     
-    int kolicinaGlavni;    
+    double kolicinaGlavni;    
     
     String kolicinaOpisni;
     
@@ -55,7 +55,7 @@ public class RastaviStavkuPopupController extends Dialog {
         
         this.setHeaderText("Napravite novu stavku");
                 
-        kolicinaGlavni =  (int)izabranaStavka.kolicina - 1;
+        kolicinaGlavni =  (double)izabranaStavka.kolicina - 1;
         
         izabranaStavkaMap = (HashMap)izabranaStavka.dajStavkuTure();
         
@@ -78,8 +78,8 @@ public class RastaviStavkuPopupController extends Dialog {
 
         
         content.getChildren().addAll(
-                this.glavnaStavkaHbox(izabranaStavka),
-                this.dodatniArtikliHBox(izabranaStavka)
+                this.glavnaStavkaHbox(izabranaStavka)//,
+               // this.dodatniArtikliHBox(izabranaStavka)
         );
 
         this.getDialogPane().setContent(content);
@@ -87,11 +87,13 @@ public class RastaviStavkuPopupController extends Dialog {
         this.setResultConverter(dialogButton -> {
             if (dialogButton == promeniButton) {
                 
-                HashMap<String, Object> rezultati = new HashMap<>();
+                HashMap<String, String> rezultati = new HashMap<>();
                 
-                rezultati.put("glavniArtikal", izabranaStavkaMap);
+                String kolicina = this.kolicinaGlavniText.getText().replaceAll("x", "");
+                rezultati.put("kolicina", kolicina);
+                //rezultati.put("glavniArtikal", izabranaStavkaMap);
                 
-                rezultati.put("listaDodatnih", dodatniArtikli);
+                //rezultati.put("listaDodatnih", dodatniArtikli);
                 
                 return rezultati;
             }
@@ -317,7 +319,7 @@ public class RastaviStavkuPopupController extends Dialog {
         
         String text = kolicinaGlavniText.getText();
         
-        int kolicina = Integer.parseInt(text.replaceAll("x", ""));
+        double kolicina = Double.parseDouble(text.replaceAll("x", ""));
         
         if (akcija.equals("I") && kolicina < kolicinaGlavni) {
             kolicina++;
@@ -332,7 +334,7 @@ public class RastaviStavkuPopupController extends Dialog {
             kolicinaGlavniText.setText("x" + kolicina); 
         }
 
-        izabranaStavkaMap.put("kolicina", "x" + kolicina);
+        //izabranaStavkaMap.put("kolicina", "x" + kolicina);
     }
     
     

@@ -76,8 +76,8 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     @FXML private HBox gostiStoA = new HBox();
     @FXML private HBox gostiStoB = new HBox();
     
-    @FXML private VBox novaTuraA = new VBox();
-    @FXML private VBox novaTuraB = new VBox();
+    //@FXML private VBox novaTuraA = new VBox();
+    //@FXML private VBox novaTuraB = new VBox();
     
     private ToggleGroup gostiGrupaA = new ToggleGroup();
     private ToggleGroup gostiGrupaB = new ToggleGroup();
@@ -88,6 +88,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     private RM_Button labelB = new RM_Button();
     
     private List<Object> modeliZaBrisanje = new ArrayList();
+    private List<Object> modeliZaUPDATE = new ArrayList();
        
     List<ToggleButton> stavkeZaSastavljanjeA = new ArrayList<>();
     List<ToggleButton> stavkeZaSastavljanjeB = new ArrayList<>();
@@ -108,12 +109,12 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         scrollPaneA.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPaneB.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        labelB.setId("novaTuraLabel");
-        labelB.setText("NOVA TURA");
-        labelB.textAlignmentProperty().set(TextAlignment.CENTER);
-        labelB.setPrefSize(432, 20);
+        //labelB.setId("novaTuraLabel");
+        //labelB.setText("NOVA TURA");
+        //labelB.textAlignmentProperty().set(TextAlignment.CENTER);
+        //labelB.setPrefSize(432, 20);
         
-        novaTuraB.setId("novaTuraB");
+        //novaTuraB.setId("novaTuraB");
         
         barMasterLogo.setImage(RMaster.logo);
     }    
@@ -134,10 +135,10 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         contentA.getChildren().clear();
         contentB.getChildren().clear();
         
-        novaTuraA.getChildren().clear();
-        novaTuraB.getChildren().clear();
-        
-        prebacenaTura = new Tura();
+        //novaTuraA.getChildren().clear();
+        //novaTuraB.getChildren().clear();
+        porudzbinaZaSastavljanje = null;
+        prebacenaTura = null;
     }
     
     public void nazadNaPrikazSale(ActionEvent event) 
@@ -177,7 +178,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             gostiStoA.getChildren().clear();
             contentA.getChildren().clear();
             porudzbineStolaA.clear();
-            novaTuraA.getChildren().clear();
+            //novaTuraA.getChildren().clear();
             
             new Thread() {
             
@@ -196,7 +197,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             gostiStoB.getChildren().clear();
             contentB.getChildren().clear();
             porudzbineStolaB.clear();
-            novaTuraB.getChildren().clear();
+            //novaTuraB.getChildren().clear();
 
             new Thread() {
             
@@ -282,6 +283,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             porudzbineStolaB.add(porudzbinaTrenutna);
             RadioButton noviGostButton = new RadioButton("1");
             noviGostButton.setToggleGroup(gostiGrupaB);
+            porudzbinaZaSastavljanje = porudzbinaTrenutna;
             
             lista.add(prikaziPorudzbinuTaskSetButtonActionB(noviGostButton, "1"));
             //sta se desava ako nema nijednog gosta
@@ -369,19 +371,25 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         noviGostButton.setOnAction(new EventHandler<ActionEvent>() {
                             @Override public void handle(ActionEvent e) {
                                 
-                                if (contentB.getChildren().contains(labelB)) {
-                                    return;
-                                }
+                                //if (contentB.getChildren().contains(labelB)) {
+                                //    return;
+                                //}
                                 
-                                contentB.getChildren().add(labelB);
-                                contentB.getChildren().add(novaTuraB);
+                                //contentB.getChildren().add(labelB);
+                                //contentB.getChildren().add(novaTuraB);
+                                porudzbinaZaSastavljanje = null;
+                                prebacenaTura = null;
+                                
                                 for (Porudzbina porudzbina : porudzbineStolaB) {
                                     if (("" + porudzbina.getGost().getGostID()).equals(((RadioButton)e.getSource()).getId())) {
                                         porudzbinaZaSastavljanje = porudzbina;
                                         break;
                                     }
                                 }
-                                prikaziPorudzbinu(contentB, porudzbinaZaSastavljanje);
+                                if (porudzbinaZaSastavljanje != null) {
+                                    prikaziPorudzbinu(contentB, porudzbinaZaSastavljanje);
+                                    prebacenaTura = new Tura();
+                                }
                             }      
                         });    
 
@@ -399,7 +407,9 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
 
         if (listaTura.isEmpty()) {
             if (izabranaPorudzbina.getID() != porudzbinaZaRastavljanje.getID()) {
-                listaTura.add(prebacenaTura);
+                if ((prebacenaTura != null) && (prebacenaTura.listStavkeTure.size()>0)) {
+                    listaTura.add(prebacenaTura);
+                }
             }
         }
         for (Tura novaTura : listaTura) {
@@ -469,7 +479,8 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                         @Override public void handle(ActionEvent event) {
                             RM_Button dugme = (RM_Button)event.getSource();
                             String id = dugme.getId();
-                            rastaviIzabranuStavku(izabranaPorudzbinaMap.get(id));
+                            //rastaviIzabranuStavku(izabranaPorudzbinaMap.get(id));
+                            rastaviIzabranuStavku(dugme);
                         }
                     }); 
         }
@@ -503,6 +514,9 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
 
         prebaciCeluTuru.setOnAction(new EventHandler<ActionEvent>() {
                         @Override public void handle(ActionEvent e) {
+                            if (prebacenaTura == null) {
+                                return;
+                            }
                             
                             RM_Button dugme = (RM_Button)e.getSource();
                             prebacenaTura = (Tura)dugme.getPodatak();
@@ -510,9 +524,11 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                             porudzbinaZaRastavljanje.getTure().remove(prebacenaTura);
                             porudzbinaZaSastavljanje.getTure().add(prebacenaTura);
                             
-                            prikaziPorudzbinu(contentA, porudzbinaZaRastavljanje);
-                            prikaziPorudzbinu(contentB, porudzbinaZaSastavljanje);
-                           //TODO
+                            //prebacenaTura = new Tura();
+                            
+                            refresh();
+                            
+
                         }
                     }); 
     }
@@ -538,11 +554,9 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                              
                             porudzbinaZaRastavljanje.getTure().add(prebacenaTura);
                             porudzbinaZaSastavljanje.getTure().remove(prebacenaTura);
-                            
-                            prikaziPorudzbinu(contentA, porudzbinaZaRastavljanje);
-                            prikaziPorudzbinu(contentB, porudzbinaZaSastavljanje);
                             prebacenaTura = new Tura();
-                            porudzbinaZaSastavljanje.getTure().add(prebacenaTura);
+                            
+                            refresh();
                            //TODO
                         }
                     }); 
@@ -550,7 +564,9 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
    
    private void dodajAkcijuZaPrebaciStavku(RM_Button dugmeStavka, StavkaTure novaStavka) 
    {
-     
+    
+        double cenaStavke = 0.;
+        
         dugmeStavka.setPrefWidth(312);
         
         dugmeStavka.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
@@ -589,9 +605,10 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         kolicinaArtikal.setText(novaStavka.kolicina + "");
         kolicina.getChildren().add(kolicinaArtikal);
         
+        cenaStavke = novaStavka.getCena();
         Label cenaArtikal = new Label();
         cenaArtikal.getStyleClass().add("artikal"); 
-        cenaArtikal.setText(novaStavka.getCena() + "din");
+        //cenaArtikal.setText(novaStavka.getCena() + "din");
         cena.getChildren().add(cenaArtikal);
         
         for (StavkaTure dodatnaStavka : novaStavka.dodatniArtikli) {
@@ -606,6 +623,8 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             dodatniKolicina.getStyleClass().add("dodatni");
             dodatniKolicina.setText(dodatnaStavka.kolicina + "");
             kolicina.getChildren().add(dodatniKolicina);
+            
+            cenaStavke = cenaStavke + dodatnaStavka.getCena();
             
         }
 
@@ -623,6 +642,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             
         }
        
+        cenaArtikal.setText(cenaStavke + "din");
         
         dugmeStavka.setGraphic(dugmeContent);
 
@@ -640,43 +660,52 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
    
     private void premestiStavku(RM_Button dugme) 
     {
-        
-//        if (contentA.getChildren().isEmpty() || contentB.getChildren().isEmpty()) {
-//            return;
-//        }
-        
-        
         if (dugme.getParent().getParent().getId().equals(contentB.getId())) {
             return;
         }
-                
-        contentA.getChildren().remove(dugme.getParent());
-        
-        RM_Button prebaciCeluTuru = (RM_Button)dugme.getVrsta();
-        
-        int brojStavki = (int)prebaciCeluTuru.getVrsta();
-        brojStavki--;
-        prebaciCeluTuru.setVrsta(brojStavki);
-
-        //Uklanja dugme prebaci celu turu ako vise nema stavki u njoj
-        if (brojStavki == 0) {
-            contentA.getChildren().remove(prebaciCeluTuru);
-            
-            //TODO videti da li je ovo uopste potrebno
-            modeliZaBrisanje.add((Tura)prebaciCeluTuru.getPodatak());
+        if (prebacenaTura == null) {
+            return;
         }
-
-        //novaTuraB.getChildren().add(dugme.getParent());
+                
+        StavkaTure stavkaZaPrebacivanje = (StavkaTure)dugme.getPodatak();
         
-        prebacenaTura.listStavkeTure.add((StavkaTure)dugme.getPodatak());
-        prikaziPorudzbinu(contentB, porudzbinaZaSastavljanje);
+        prebacenaTura.listStavkeTure.add(stavkaZaPrebacivanje);
+        
+        Tura t = null;
+        for (Tura tura : porudzbinaZaRastavljanje.getTure()) {
+            for (StavkaTure stavkaTure : tura.listStavkeTure) {
+                if (stavkaTure.getID() == stavkaZaPrebacivanje.getID()) {
+                    t = tura;
+                    break;
+                }
+            }
+            if (t != null) {
+                break;
+            }
+        }
+        
+        if (t != null) {
+            t.listStavkeTure.remove(stavkaZaPrebacivanje);
+            if (t.listStavkeTure.size() == 0) {
+                porudzbinaZaRastavljanje.getTure().remove(t);
+            }
+        }
+        
+        this.refresh();
     }
 
+    private void refresh() {
+        prikaziPorudzbinu(contentA, porudzbinaZaRastavljanje);
+        prikaziPorudzbinu(contentB, porudzbinaZaSastavljanje);
+
+    }
+    
     
     public void sastaviIzabraneStavkeA(ActionEvent event)
     {
         //ako nije izabran gost na kome se prebacuje
-        if (contentB.getChildren().isEmpty()) {
+        //if (contentB.getChildren().isEmpty()) {
+        if (porudzbinaZaSastavljanje == null) {
             return;
         }
         
@@ -706,28 +735,33 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                         
             for (int i = 1; i < listaStavki.size(); i++) {
                 
-                RM_Button stavkaZaUklanjanje = listaStavki.get(i);
+                RM_Button stavkaZaUklanjanjeDugme = listaStavki.get(i);
+                StavkaTure stavkaZaUklanjanje = (StavkaTure)stavkaZaUklanjanjeDugme.getPodatak();
                 
-                RM_Button prebaciCeluTuru = (RM_Button)stavkaZaUklanjanje.getVrsta();
-                
-                int brojStavki = (int)prebaciCeluTuru.getVrsta();
-                brojStavki--;
-                prebaciCeluTuru.setVrsta(brojStavki);  
-                
-                
-                //Uklanja dugme prebaci celu turu ako vise nema stavki u njoj
-                if (brojStavki == 0) {
-                    contentA.getChildren().remove(prebaciCeluTuru);
-                    modeliZaBrisanje.add(prebaciCeluTuru.getPodatak());
+                Tura t = null;
+                for (Tura tura : porudzbinaZaRastavljanje.getTure()) {
+                    for (StavkaTure stavkaTure : tura.listStavkeTure) {
+                        if (stavkaTure == stavkaZaUklanjanje) {
+                            t = tura;
+                            break;
+                        }
+                    }
+                    if (t != null) {
+                        break;
+                    }
                 }
-                
-                contentA.getChildren().remove(stavkaZaUklanjanje.getParent());
-                
-                modeliZaBrisanje.add(stavkaZaUklanjanje.getParent());
-                
-                StavkaTure sledecaStavka = (StavkaTure)listaStavki.get(i).getPodatak();
-                        
-                sastavljenaStavka.kolicina += sledecaStavka.kolicina;
+                if (t != null) {
+                    t.listStavkeTure.remove(stavkaZaUklanjanje);
+                    if (t.listStavkeTure.size() == 0) {
+                        porudzbinaZaRastavljanje.getTure().remove(t);
+                        modeliZaBrisanje.add(t);
+                    }
+                }
+ 
+                stavkaZaUklanjanje.setKolicina(0.);
+                modeliZaBrisanje.add(stavkaZaUklanjanje);
+                         
+                sastavljenaStavka.setKolicina(sastavljenaStavka.getKolicina() + stavkaZaUklanjanje.getKolicina());
             }
             
             dodajAkcijuZaPrebaciStavku(sastavljenaStavkaDugme, sastavljenaStavka);
@@ -855,24 +889,41 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     private void rastaviIzabranuStavku(RM_Button izabranaStavka)
     {
         //dialog za rastavljanje
+        if (prebacenaTura == null) {
+            return;
+        }
+        
+        StavkaTure stavkaZaRastavljanje = (StavkaTure)izabranaStavka.getPodatak();
         RastaviStavkuPopupController tastatura = new RastaviStavkuPopupController(
-                (StavkaTure)izabranaStavka.getPodatak()
+                stavkaZaRastavljanje
         );
         
-        Optional<HashMap<String, Object>> result = tastatura.showAndWait();
+        Optional<HashMap<String, String>> result = tastatura.showAndWait();
         
         if (!result.isPresent()){ 
             return;
         }
         
         //rezultat je mapa, treba napraviti novu stavku
-        HashMap<String, Object> rezultatMap = result.get();
+        HashMap<String, String> rezultatMap = result.get();
+        double kolicina = Double.parseDouble(rezultatMap.get("kolicina"));
+        
+        StavkaTure novaStavka = stavkaZaRastavljanje.getClone();
+        stavkaZaRastavljanje.setKolicina(stavkaZaRastavljanje.getKolicina() - kolicina);
+        novaStavka.setKolicina(kolicina);
+        
+        prebacenaTura.addStavkaTure(novaStavka);
+        
+        // OVDE TREBA VODITI RACUNA - ovo treba da ide sa UPDATE da se promeni u bazi kolicina
+        modeliZaUPDATE.add(stavkaZaRastavljanje);
+        
+        this.refresh();
         
         //Glavna Stavka
-        HashMap<String, String> glavnaStavkaZaPromenu = (HashMap)rezultatMap.get("glavniArtikal");
+        //HashMap<String, String> glavnaStavkaZaPromenu = (HashMap)rezultatMap.get("glavniArtikal");
         
         //Lista svih dodatnih Artikala
-        HashMap<String, HashMap<String, String>> MapaDodatnihStavki = (HashMap)rezultatMap.get("listaDodatnih");
+        //HashMap<String, HashMap<String, String>> MapaDodatnihStavki = (HashMap)rezultatMap.get("listaDodatnih");
         
 
         //Treba promeniti kolicinu izabranoj stavci i napraviti novo dugme u ContentB
@@ -918,6 +969,20 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                     }
 
                     for (StavkaTure stavkaTure : tura.listStavkeTure) {
+                        boolean pronadjenaStavka = false;
+                        for (Tura turaZaRastavljanje : porudzbinaZaRastavljanje.getTure()) {
+                            for (StavkaTure stavkaTureZaRastavljanje : turaZaRastavljanje.listStavkeTure) {
+                                if (stavkaTureZaRastavljanje.getID() == stavkaTure.getID()) {
+                                    stavkaTureZaRastavljanje.snimi();
+                                    stavkaTure.setID(0);
+                                    pronadjenaStavka = true;
+                                    break;
+                                }
+                            }
+                            if (pronadjenaStavka) {
+                                break;
+                            }
+                        }
                         stavkaTure.setRacunID(porudzbinaZaSastavljanje.getID());
                         stavkaTure.setTuraID(tura.getTuraID());
                         stavkaTure.snimi();
@@ -925,6 +990,9 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                 }
             }
             nazadNaPrikazSale(null);
+            
+            
+            // Odraditi brisanje iz modeliZaBrisanje ako je kolicina==0 ili brojStavkiTure==0, a ako nije onda UPDATE modeliZaUPDATE
         } catch (Exception e) {
         }
     }
