@@ -70,23 +70,22 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     @FXML private ScrollPane scrollPaneA;
     @FXML private ScrollPane scrollPaneB;
     
+    @FXML private ScrollPane stoA;
+    @FXML private ScrollPane stoB;
+    
     @FXML private VBox contentA;
     @FXML private VBox contentB;
     
     @FXML private HBox gostiStoA = new HBox();
     @FXML private HBox gostiStoB = new HBox();
     
-    //@FXML private VBox novaTuraA = new VBox();
-    //@FXML private VBox novaTuraB = new VBox();
     
     private ToggleGroup gostiGrupaA = new ToggleGroup();
     private ToggleGroup gostiGrupaB = new ToggleGroup();
     
     private List<Porudzbina> porudzbineStolaA = new ArrayList<>();
     private List<Porudzbina> porudzbineStolaB = new ArrayList<>();
-                
-    private RM_Button labelB = new RM_Button();
-    
+                    
     private List<Object> modeliZaBrisanje = new ArrayList();
     private List<Object> modeliZaUPDATE = new ArrayList();
        
@@ -108,13 +107,6 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         scrollPaneB.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPaneA.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPaneB.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-
-        //labelB.setId("novaTuraLabel");
-        //labelB.setText("NOVA TURA");
-        //labelB.textAlignmentProperty().set(TextAlignment.CENTER);
-        //labelB.setPrefSize(432, 20);
-        
-        //novaTuraB.setId("novaTuraB");
         
         barMasterLogo.setImage(RMaster.logo);
     }    
@@ -185,8 +177,6 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         tastatura.setHeight(768.);
         tastatura.getDialogPane().setMaxSize(1024., 768.);
         tastatura.setResizable(false);
-        
-        
         
         Optional<HashMap<String, String>> result = tastatura.showAndWait();
         
@@ -403,12 +393,6 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         noviGostButton.setOnAction(new EventHandler<ActionEvent>() {
                             @Override public void handle(ActionEvent e) {
                                 
-                                //if (contentB.getChildren().contains(labelB)) {
-                                //    return;
-                                //}
-                                
-                                //contentB.getChildren().add(labelB);
-                                //contentB.getChildren().add(novaTuraB);
                                 porudzbinaZaSastavljanje = null;
                                 prebacenaTura = null;
                                 
@@ -445,24 +429,45 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                 }
             }
         }
+        
         for (Tura novaTura : listaTura) {
+            
+            //popunjava panel porudzbinom za rastavljanje
             if (izabranaPorudzbina.getID() == porudzbinaZaRastavljanje.getID()) {
+                
                 RM_Button prebaciCeluTuru = new RM_Button();
+                
                 prebaciCeluTuru.setVrsta(novaTura.listStavkeTure.size());
+                
                 dodajAkcijuZaPrebaciCeluTuru(prebaciCeluTuru, novaTura);
+                
                 for(StavkaTure novaStavka : novaTura.listStavkeTure) {
-                    HBox stavka = dodajAkcijeNaStavkuTure(prebaciCeluTuru, novaStavka);
+                    
+                    HBox stavka = dodajAkcijeNaStavkuTure(prebaciCeluTuru, novaStavka, true);
+                    
                     listaDugmica.add(stavka);
+                    
                 } 
+                
                 listaDugmica.add(prebaciCeluTuru);
+                
+            //popunjava panel novom turom koja se sastavlja  
             } else {
+                
                 RM_Button vratiCeluTuru = new RM_Button();
+                
                 vratiCeluTuru.setVrsta(novaTura.listStavkeTure.size());
+                
+                //Saša - mislim da nam ovo ne treba 28.03.2017
                 dodajAkcijuZaVratiCeluTuru(vratiCeluTuru, novaTura);
+                
                 for(StavkaTure novaStavka : novaTura.listStavkeTure) {
-                    HBox stavka = dodajAkcijeNaStavkuTure(vratiCeluTuru, novaStavka);
+                    
+                    HBox stavka = dodajAkcijeNaStavkuTure(vratiCeluTuru, novaStavka, false);
+                    
                     listaDugmica.add(stavka);
                 } 
+                
                 listaDugmica.add(vratiCeluTuru);
             }
         }
@@ -471,64 +476,81 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
 
     }
    
-   private HBox dodajAkcijeNaStavkuTure(RM_Button prebaciCeluTuru, StavkaTure novaStavka)
-   {
+   private HBox dodajAkcijeNaStavkuTure(
+           RM_Button prebaciCeluTuru, 
+           StavkaTure novaStavka,
+           boolean dodajAkcijuZaPremesti)
+   {              
         HBox stavka = new HBox();
         
-        HBox akcije = new HBox();
-
+        RM_Button dugmeStavka = new RM_Button();
+        
+        dodajAkcijuZaPrebaciStavku(
+                dugmeStavka, 
+                novaStavka, 
+                dodajAkcijuZaPremesti
+        );
+        
+        dugmeStavka.setVrsta(prebaciCeluTuru);
+        
         ToggleButton sastavi = new ToggleButton();
         
-        stavkeZaSastavljanjeA.add(sastavi);
-        
-        sastavi.setText("»«");
-        
-        sastavi.setId(novaStavka.id + "");
+        sastavi.setPrefWidth(60);
+
+        sastavi.setDisable(true);
         
         RM_Button rastavi = new RM_Button();
         
-        rastavi.setId(novaStavka.id + "");
-        rastavi.setPodatak(novaStavka);
-
-        rastavi.setText("«»");
-
-        akcije.getChildren().addAll(sastavi, rastavi);
-
-        akcije.setMinHeight(30);
+        rastavi.setPrefWidth(60);
 
         rastavi.setDisable(true);
-
-        sastavi.setPrefWidth(60);
+        
         sastavi.setMaxHeight(Double.MAX_VALUE);
 
-        rastavi.setPrefWidth(60);
         rastavi.setMaxHeight(Double.MAX_VALUE);
+        
+        //dodaje akcije za sastavi i rastavi samo ako nije slozena stavka
+        if (!novaStavka.getImaDodatneIliOpisneArtikle() && dodajAkcijuZaPremesti) {
+        
+            sastavi.setDisable(false);
 
+            stavkeZaSastavljanjeA.add(sastavi);
 
-        if (novaStavka.kolicina > 1) {
+            sastavi.setText("»«");
+
+            sastavi.setId(novaStavka.id + "");
 
             rastavi.setDisable(false);
+
+            rastavi.setId(novaStavka.id + "");
+            rastavi.setPodatak(novaStavka);
+
+            rastavi.setText("«»");
+
+            rastavi.setDisable(true);
+
+            if (novaStavka.kolicina > 1) {
+
+                rastavi.setDisable(false);
+
+                rastavi.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override public void handle(ActionEvent event) {
+
+                                RM_Button dugme = (RM_Button)event.getSource();
+
+                                StavkaTure stavka = (StavkaTure)dugme.getPodatak();
+
+                                rastaviIzabranuStavku(stavka);
+
+                                blokirajSve(true);
+                            }
+                        }); 
+            }
             
-            rastavi.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override public void handle(ActionEvent event) {
-                            RM_Button dugme = (RM_Button)event.getSource();
-                            StavkaTure stavka = (StavkaTure)dugme.getPodatak();
-                            rastaviIzabranuStavku(stavka);
-                            blokirajSve(true);
-                        }
-                    }); 
         }
-
-        RM_Button dugmeStavka = new RM_Button();
-
-        izabranaPorudzbinaMap.put(novaStavka.id + "", dugmeStavka);
-       
-        dugmeStavka.setVrsta(prebaciCeluTuru);
-
-        dodajAkcijuZaPrebaciStavku(dugmeStavka, novaStavka);
-
+        
         stavka.getChildren().addAll(dugmeStavka, sastavi, rastavi);
-                
+        
         return stavka;
    }
    
@@ -579,28 +601,30 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
 
         vratiCeluTuru.setPodatak(novaTura);
 
-        vratiCeluTuru.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override public void handle(ActionEvent e) {
-                            RM_Button dugme = (RM_Button)e.getSource();
-                            prebacenaTura = (Tura)dugme.getPodatak();
-                            prebacenaTura.setBrojStolaBroj(porudzbinaZaRastavljanje.getBrojStolaBroj()); 
-                            porudzbinaZaRastavljanje.getTure().add(prebacenaTura);
-                            porudzbinaZaSastavljanje.getTure().remove(prebacenaTura);
-                            prebacenaTura = new Tura();
-                            
-                            
-                            refresh();
-                           //TODO
-                        }
-                    }); 
+//        vratiCeluTuru.setOnAction(new EventHandler<ActionEvent>() {
+//                        @Override public void handle(ActionEvent e) {
+//                            RM_Button dugme = (RM_Button)e.getSource();
+//                            prebacenaTura = (Tura)dugme.getPodatak();
+//                            prebacenaTura.setBrojStolaBroj(porudzbinaZaRastavljanje.getBrojStolaBroj()); 
+//                            porudzbinaZaRastavljanje.getTure().add(prebacenaTura);
+//                            porudzbinaZaSastavljanje.getTure().remove(prebacenaTura);
+//                            prebacenaTura = new Tura();
+//                            
+//                            
+//                            refresh();
+//                           //TODO
+//                        }
+//                    }); 
     }
    
-   private void dodajAkcijuZaPrebaciStavku(RM_Button dugmeStavka, StavkaTure novaStavka) 
+   private void dodajAkcijuZaPrebaciStavku(
+           RM_Button dugmeStavka, 
+           StavkaTure novaStavka,
+           boolean dodajAkcijuZaPremestanje) 
    {
     
         double cenaStavke = 0.;
         
-        dugmeStavka.setPrefWidth(312);
         
         dugmeStavka.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
                     
@@ -623,10 +647,6 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         VBox cena = new VBox();
         cena.setAlignment(Pos.CENTER_RIGHT);
         
-        naziv.setPrefWidth(210);
-        kolicina.setPrefWidth(41);
-        cena.setPrefWidth(81);
-        
         Label dugmeText = new Label();
         dugmeText.wrapTextProperty().setValue(true);
         dugmeText.getStyleClass().add("artikal");
@@ -641,7 +661,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         cenaStavke = novaStavka.getCena();
         Label cenaArtikal = new Label();
         cenaArtikal.getStyleClass().add("artikal"); 
-        //cenaArtikal.setText(novaStavka.getCena() + "din");
+        cenaArtikal.setText(novaStavka.getCena() + "din");
         cena.getChildren().add(cenaArtikal);
         
         for (StavkaTure dodatnaStavka : novaStavka.dodatniArtikli) {
@@ -657,11 +677,15 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             dodatniKolicina.setText(dodatnaStavka.kolicina + "");
             kolicina.getChildren().add(dodatniKolicina);
             
-            cenaStavke = cenaStavke + dodatnaStavka.getCena();
-            
+            Label dodatniCena = new Label();
+            dodatniCena.getStyleClass().add("dodatni");
+            dodatniCena.setText(dodatnaStavka.cena + "din");
+            cena.getChildren().add(dodatniCena);
+
         }
 
         for (StavkaTure opisnaStavka : novaStavka.opisniArtikli) {
+            
             Label opisni = new Label();
             opisni.wrapTextProperty().setValue(true);
             opisni.getStyleClass().add("opisni");
@@ -669,25 +693,36 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             naziv.getChildren().add(opisni);
             
             Label opisniKolicina = new Label();
-            opisniKolicina.getStyleClass().add("dodatni");
+            opisniKolicina.getStyleClass().add("opisni");
             opisniKolicina.setText(opisnaStavka.kolicina + "");
             kolicina.getChildren().add(opisniKolicina);
             
+            //ovo samo da bi bilo poravnato
+            Label opisniCena = new Label();
+            opisniCena.getStyleClass().add("dodatni");
+            opisniCena.setText("");
+            cena.getChildren().add(opisniCena);
         }
        
-        cenaArtikal.setText(cenaStavke + "din");
-        
         dugmeStavka.setGraphic(dugmeContent);
 
         dugmeStavka.setPodatak(novaStavka);
         
-        dugmeStavka.setOnAction(new EventHandler<ActionEvent>() {
-                            @Override public void handle(ActionEvent e) {
-                               RM_Button izabranaStavka = (RM_Button)e.getSource();
-                               premestiStavku((StavkaTure)izabranaStavka.getPodatak());
-                               blokirajSve(true);
-                            }
-                        });
+        dugmeStavka.setPrefWidth(312);
+        naziv.setPrefWidth(210);
+        kolicina.setPrefWidth(41);
+        cena.setPrefWidth(81);
+           
+        if (dodajAkcijuZaPremestanje) {
+
+            dugmeStavka.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override public void handle(ActionEvent e) {
+                                   RM_Button izabranaStavka = (RM_Button)e.getSource();
+                                   premestiStavku((StavkaTure)izabranaStavka.getPodatak());
+                                   blokirajSve(true);
+                                }
+                            });
+        }
 
         dugmeContent.getChildren().addAll(naziv, kolicina, cena);
    }
@@ -715,7 +750,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         
         if (t != null) {
             t.listStavkeTure.remove(stavkaZaPrebacivanje);
-            if (t.listStavkeTure.size() == 0) {
+            if (t.listStavkeTure.isEmpty()) {
                 porudzbinaZaRastavljanje.getTure().remove(t);
                 modeliZaBrisanje.add(t);
             }
@@ -782,7 +817,7 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                 }
                 if (t != null) {
                     t.listStavkeTure.remove(stavkaZaUklanjanje);
-                    if (t.listStavkeTure.size() == 0) {
+                    if (t.listStavkeTure.isEmpty()) {
                         porudzbinaZaRastavljanje.getTure().remove(t);
                         modeliZaBrisanje.add(t);
                     }
@@ -799,42 +834,6 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
             blokirajSve(true);
         }
         
-    }
-    
-    private void izbrisiAkcijeIzStavke(HBox celaStavka)
-    {        
-        List<Node> removeList = new ArrayList<>();
-        
-        for(Node node : celaStavka.getChildren()) {
-                
-            if (node instanceof ToggleButton) {
-                ToggleButton dugme = (ToggleButton)node;
-
-                stavkeZaSastavljanjeA.remove(dugme);
-
-                removeList.add(dugme);
-            }
-
-            if (node instanceof RM_Button) {
-
-                RM_Button dugme = (RM_Button) node;
-
-                if (dugme.getText().equals("«»")) {
-
-                    removeList.add(dugme);
-                } 
-
-                else {
-
-                    dugme.setPrefWidth(432);
-
-                }
-
-            }
-                
-        }
-        
-        celaStavka.getChildren().removeAll(removeList);
     }
     
     private List vratiSamoIzabraneStavkeZaSastavljanje(List<ToggleButton> listaStavki)
@@ -1046,6 +1045,12 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
     }
     
     private void blokirajSve(boolean blokiraj) {
+        
+        //ako nista nije izabrano ne blokirati
+        if (porudzbinaZaSastavljanje == null) {
+            return;
+        }
+        
         izaberiStoA.setDisable(blokiraj);
         izaberiStoB.setDisable(blokiraj);
         
@@ -1054,14 +1059,46 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
         
     }
     
+    public void pomeriScrollDownA() {
+        scrollPaneA.setVvalue((scrollPaneA.getVvalue() + 0.5 ) * 1);
+    }
+    
+    public void pomeriScrollUpA() {
+        scrollPaneA.setVvalue((scrollPaneA.getVvalue() - 0.5 ) * 1);
+    }
+    
+    public void pomeriScrollDownB() {
+        scrollPaneB.setVvalue((scrollPaneA.getVvalue() + 0.5 ) * 1);
+    }
+    
+    public void pomeriScrollUpB() {
+        scrollPaneB.setVvalue((scrollPaneA.getVvalue() - 0.5 ) * 1);
+    }
+    
+    public void toggleGostiA() {
+                
+        if (stoA.getHvalue() == 1) {
+            stoA.setHvalue(0);
+            return;
+        }
+        stoA.setHvalue((stoA.getHvalue() + 0.5 ) * 1);
+    }
+    
+    public void toggleGostiB() {
+                
+        if (stoB.getHvalue() == 1) {
+            stoB.setHvalue(0);
+            return;
+        }
+        stoB.setHvalue((stoB.getHvalue() + 0.5 ) * 1);
+    }
 }
 
 
 
 /*
 TODO
-1. Obrisati dugmice za sast/rast za slozene stavke
-7. disable prebacivanje nazad
+
 10. Ako stignes i mozes napravi mi dijalog za meni, a ja cu da mu odradim logiku
     (pretpostavljam da ulaz treba da mu bude ukupan racun, a mozda i ne treba... )
 
@@ -1073,4 +1110,6 @@ ODRADJENO:
 6. obrisiModele() - Bosko - ODRADIO
 9. Implementirati ODUSTANI dugme - OVO POZVATI I U INIT_DATA - BOSKO - ODRADIO
 8. promeniti natpis na Nova tura - ODRADIO
+1. Obrisati dugmice za sast/rast za slozene stavke - ODRADIO
+7. disable prebacivanje nazad - ODRADIO
 */

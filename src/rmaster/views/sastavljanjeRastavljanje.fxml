@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -17,7 +12,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="sastavljanjeRastavljanjeGlavni" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.SastavljanjeRastavljanjeController">
+<AnchorPane fx:id="sastavljanjeRastavljanjeGlavni" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rmaster.views.SastavljanjeRastavljanjeController">
    <children>
       <HBox fx:id="header" prefHeight="54.0" prefWidth="1024.0">
          <children>
@@ -76,8 +71,8 @@
                   <HBox fx:id="gostiStoA" maxHeight="-Infinity" minHeight="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="61.0" />
                </content>
             </ScrollPane>
-            <Button layoutX="350.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="92.0" text="« »" />
-            <Button layoutX="584.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="92.0" text="« »" />
+            <Button layoutX="350.0" mnemonicParsing="false" onAction="#toggleGostiA" prefHeight="61.0" prefWidth="92.0" text="« »" />
+            <Button layoutX="584.0" mnemonicParsing="false" onAction="#toggleGostiB" prefHeight="61.0" prefWidth="92.0" text="« »" />
             <ScrollPane fx:id="stoB" hbarPolicy="NEVER" layoutX="677.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="61.0" prefWidth="256.0" vbarPolicy="NEVER">
                <content>
                   <HBox fx:id="gostiStoB" maxHeight="-Infinity" minHeight="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="61.0" />
@@ -88,10 +83,10 @@
       </Pane>
       <Pane layoutX="-1.0" layoutY="597.0" prefHeight="61.0" prefWidth="1024.0">
          <children>
-            <Button layoutX="68.0" layoutY="6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▼" />
-            <Button layoutX="223.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▲" />
-            <Button layoutX="658.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▼" />
-            <Button layoutX="810.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="127.0" text="▲" />
+            <Button layoutX="68.0" layoutY="6.0" mnemonicParsing="false" onAction="#pomeriScrollDownA" prefHeight="50.0" prefWidth="127.0" text="▼" />
+            <Button layoutX="223.0" layoutY="5.0" mnemonicParsing="false" onAction="#pomeriScrollUpA" prefHeight="50.0" prefWidth="127.0" text="▲" />
+            <Button layoutX="658.0" layoutY="5.0" mnemonicParsing="false" onAction="#pomeriScrollDownB" prefHeight="50.0" prefWidth="127.0" text="▼" />
+            <Button layoutX="810.0" layoutY="5.0" mnemonicParsing="false" onAction="#pomeriScrollUpB" prefHeight="50.0" prefWidth="127.0" text="▲" />
          </children>
       </Pane>
       <Pane layoutX="1.0" layoutY="117.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="22.0" prefWidth="1024.0">
