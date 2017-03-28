@@ -1475,6 +1475,7 @@ public class PorudzbinaController extends FXMLDocumentController {
     private void dodajStavkuUNovuTuru(Map<String, String> novaStavka) {
         if (novaTura == null) {
             novaTura = new Tura();
+            novaTura.setBrojStolaBroj(porudzbinaTrenutna.getBrojStolaBroj());
             porudzbinaTrenutna.getTure().add(novaTura);
             //porudzbinaTrenutna.setNovaTuraPorudzbine(novaTura);
             

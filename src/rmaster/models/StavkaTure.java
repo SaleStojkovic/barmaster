@@ -443,4 +443,15 @@ public class StavkaTure {
 
         }
     }
+    
+    public void destroy() {
+        DBBroker db = new DBBroker();
+        if (this.id != 0) {
+            try {
+                db.izbrisi("stavkaracuna", "id", "" + this.id, Boolean.FALSE);
+            } catch (Exception e) {
+            }
+        }
+    }
+
 }

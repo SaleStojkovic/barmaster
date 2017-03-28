@@ -8,6 +8,7 @@ package rmaster.models;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import rmaster.assets.DBBroker;
@@ -24,7 +25,8 @@ public class Tura {
     private long gostID = 0;
     public int redniBrojStavke = 0;
     public Date datum;
-    
+    private int brojStolaBroj = 0;
+    private long racunID = 0;
     public Tura () {
     }
     public Tura (
@@ -62,6 +64,10 @@ public class Tura {
                 }
             }
         }
+    }
+    
+    public void setBrojStolaBroj(int brojStola) {
+        this.brojStolaBroj = brojStola;
     }
     
     public void setPopust(double popust) {
@@ -161,8 +167,10 @@ public class Tura {
     }
     public Tura getClone(long turaID) {
         Tura novaTura = new Tura("" + turaID, new Date());
-        //Tura novaTura = new Tura();
+        
         novaTura.turaID = 0;
+        novaTura.setBrojStolaBroj(this.brojStolaBroj);
+        
         for (StavkaTure stavkaTure : listStavkeTure) {
             stavkaTure.id = 0;
             for (StavkaTure stavkaTure1 : stavkaTure.dodatniArtikli) {
@@ -177,6 +185,56 @@ public class Tura {
 
     public Date getVremeTure() {
         return this.datum;
+    }
+    
+    public void setRacunID (long racunID) {
+        this.racunID = racunID;
+    }
+    
+    public void destroy() {
+        DBBroker db = new DBBroker();
+        if (this.turaID != 0) {
+            try {
+                db.izbrisi("tura", "id", "" + this.turaID, Boolean.FALSE);
+            } catch (Exception e) {
+            }
+        }
+    }
+    
+    public void snimi() {
+        DBBroker db = new DBBroker();
+        long result = 0;
+        HashMap<String,String> mapaTura = new HashMap();
+        
+        try {
+            mapaTura.put("brojStola", "" + this.brojStolaBroj);
+            if (this.datum == null) {
+                this.datum = new Date();
+            }
+            mapaTura.put("datum", Utils.getStringFromDate(this.datum));
+            mapaTura.put("pripremljena", "false");
+            mapaTura.put("uPripremi", "false");
+            mapaTura.put("RACUN_ID", "" + this.racunID);
+            if (this.getTuraID() != 0)
+                db.izmeni("tura", "id", "" + this.getTuraID(), mapaTura, false);
+            else {
+                String[] imenaArgumenata = {"settingName"};
+                String[] vrednostiArgumenata = {"tura.broj.sledeci"};
+                int rez = DBBroker.getValueFromFunction("getSledeciRedniBroj", imenaArgumenata, vrednostiArgumenata);
+                mapaTura.put("brojTure", "" + rez);
+                result = db.ubaciRed("tura", mapaTura, false);
+                this.turaID = result;
+            }
+
+            for (StavkaTure stavkaTure : this.listStavkeTure) {
+                stavkaTure.setRacunID(this.racunID);
+                stavkaTure.setTuraID(this.getTuraID());
+                stavkaTure.snimi();
+            }
+        } catch(Exception e) {
+
+        }
+
     }
 
 }

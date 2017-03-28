@@ -141,6 +141,7 @@ public class Porudzbina {
                     System.out.println("Neuspela konverzija stringa u datum za vreme ture!");
                 }
                 Tura turaModel = new Tura(turaId, datumD);
+                turaModel.setBrojStolaBroj(this.getBrojStolaBroj());
         
                 this.turePorudzbine.add(turaModel);
         }
@@ -306,31 +307,9 @@ public class Porudzbina {
             }
 
             for (Tura tura : turePorudzbine) {
-                HashMap<String,String> mapaTura = new HashMap();
-                mapaTura.put("brojStola", "" + this.brojStolaBroj);
-                if (tura.datum == null) {
-                    tura.datum = new Date();
-                }
-                mapaTura.put("datum", Utils.getStringFromDate(tura.datum));
-                mapaTura.put("pripremljena", "false");
-                mapaTura.put("uPripremi", "false");
-                mapaTura.put("RACUN_ID", "" + this.racunID);
-                if (tura.getTuraID() != 0)
-                    db.izmeni("tura", "id", "" + tura.getTuraID(), mapaTura, blokirana);
-                else {
-                    String[] imenaArgumenata = {"settingName"};
-                    String[] vrednostiArgumenata = {"tura.broj.sledeci"};
-                    int rez = DBBroker.getValueFromFunction("getSledeciRedniBroj", imenaArgumenata, vrednostiArgumenata);
-                    mapaTura.put("brojTure", "" + rez);
-                    result = db.ubaciRed("tura", mapaTura, blokirana);
-                    tura.turaID = result;
-                }
-
-                for (StavkaTure stavkaTure : tura.listStavkeTure) {
-                    stavkaTure.setRacunID(this.racunID);
-                    stavkaTure.setTuraID(tura.getTuraID());
-                    stavkaTure.snimi();
-                }
+                tura.setBrojStolaBroj(this.brojStolaBroj);
+                tura.setRacunID(this.racunID);
+                tura.snimi();
             }
         } catch(Exception e) {
 
@@ -344,6 +323,9 @@ public class Porudzbina {
         this.racunID = id;
     }
 
+    public int getStoID() {
+        return this.brojStolaID;
+    }
     public double getPopustDouble() {
         if (this.stalniGost != null)
             return Utils.getDoubleFromString(this.stalniGost.popust);
