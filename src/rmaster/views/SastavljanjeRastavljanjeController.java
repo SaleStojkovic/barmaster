@@ -422,10 +422,12 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
 
         List<Node> listaDugmica = new ArrayList<>();
 
-        if (izabranaPorudzbina.getID() != porudzbinaZaRastavljanje.getID()) {
-            if (!listaTura.contains(prebacenaTura)) {
-                if ((prebacenaTura != null) && (prebacenaTura.listStavkeTure.size()>0)) {
-                    listaTura.add(prebacenaTura);
+        if (prebacenaTura != null) {
+            if (izabranaPorudzbina.getID() != porudzbinaZaRastavljanje.getID()) {
+                if (!listaTura.contains(prebacenaTura)) {
+                    if ((prebacenaTura != null) && (prebacenaTura.listStavkeTure.size()>0)) {
+                        listaTura.add(prebacenaTura);
+                    }
                 }
             }
         }

@@ -35,6 +35,7 @@ import rmaster.assets.RM_TableView.SirinaKolone;
 import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
 import rmaster.models.Rezervacija;
+import rmaster.models.StalniGost;
 
 
 public class RezervacijeController extends FXMLDocumentController {
@@ -83,11 +84,12 @@ public class RezervacijeController extends FXMLDocumentController {
 
         imeKonobara.setText(getUlogovaniKonobarIme());
         this.izbrisiSvaPolja();
-        
     }
     
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -113,7 +115,7 @@ public class RezervacijeController extends FXMLDocumentController {
         
         datumPicker.setConverter(
             new StringConverter<LocalDate>() {
-                private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
                 @Override
                 public String toString(LocalDate localDate) {
@@ -145,6 +147,10 @@ public class RezervacijeController extends FXMLDocumentController {
         
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         query.setTableName(Rezervacija.TABLE_NAME);
+        
+        
+        String rezerv = query.toQueryString();
+        rezerv = rezerv.replace(";", " WHERE vreme BETWEEN DATE_SUB(NOW(), INTERVAL 1 HOUR) AND DATE_ADD(NOW(), INTERVAL 24 HOUR);");
         
         List<HashMap<String,String>> listaRezervacija = runQuery(query);
         List<Map<String, String>> listaZaPrikaz = new ArrayList<>(); 
@@ -413,6 +419,7 @@ public class RezervacijeController extends FXMLDocumentController {
         scrollPaneRezervacije.setVvalue((scrollPaneRezervacije.getVvalue() - 0.5 ) * 1);
     }
     
+    @Override
     public void odjava(ActionEvent event)
     {            
             myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
