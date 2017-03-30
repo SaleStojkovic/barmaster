@@ -119,9 +119,9 @@ public class RMaster extends Application {
         if (timelineSat != null) {
             timelineSat.stop();
             timelineSat = null;
-            this.clock = null;
+            clock = null;
         }
-        this.clock = labelaZaSat;
+        clock = labelaZaSat;
         timelineSat = this.prikaziCasovnik(clock);
         timelineSat.play();
     }
@@ -176,7 +176,7 @@ public class RMaster extends Application {
             
         }.start();
         
-        dbBroker.prekiniVezuSaBazom();
+        //dbBroker.prekiniVezuSaBazom();
     }
 
     private void initializeForms() throws Exception
@@ -212,13 +212,13 @@ public class RMaster extends Application {
                     public Void call() throws Exception {
 
                         long startTimeT = System.nanoTime();
-                        System.out.println("Ucitavanja - " + imeForme + " - pocetak: " + startTimeT);
+                        //System.out.println("Ucitavanja - " + imeForme + " - pocetak: " + startTimeT);
 
                         mainContainer.loadScreen(imeForme, fxmlPutanja);
 
                         long estimatedTimeT = System.nanoTime() - startTimeT;
-                        System.out.println("Ucitavanja - " + imeForme + " - kraj: " + System.nanoTime());
-                        System.out.println("Ucitavanja - " + imeForme + ": " + estimatedTimeT);
+                        //System.out.println("Ucitavanja - " + imeForme + " - kraj: " + System.nanoTime());
+                        System.out.println("Ucitavanje - " + imeForme + ": " + estimatedTimeT);
 
                         return null;
                     }

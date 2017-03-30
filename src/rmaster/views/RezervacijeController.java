@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -114,7 +113,7 @@ public class RezervacijeController extends FXMLDocumentController {
         
         datumPicker.setConverter(
             new StringConverter<LocalDate>() {
-                private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
                 @Override
                 public String toString(LocalDate localDate) {
@@ -365,7 +364,8 @@ public class RezervacijeController extends FXMLDocumentController {
         
         izabranaRezervacija.delete(true);
         
-        this.initialize(null, null);
+        //this.initialize(null, null);
+        this.initData(null);
     }
     
     public void izbrisiSvaPolja() {

@@ -32,9 +32,9 @@ public final class DBBroker {
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/barmaster?dontTrackOpenResources=true";
     private static final String USERNAME = "root";
     
-    private static final String PASSWORD = "burek";
+//    private static final String PASSWORD = "burek";
 //    private static final String PASSWORD = "928374";
-//    private static final String PASSWORD = "";
+    private static final String PASSWORD = "";
     
     private static Connection dbConnection = null;
     
@@ -442,12 +442,12 @@ public final class DBBroker {
     /**
      * 
      * @param query
-     * @param otvorenaKonekcija
+     * @param ostaviOtvorenuKonekciju
      * @return 
      */
     public List runQuery(
             QueryBuilder query,
-            Boolean otvorenaKonekcija
+            Boolean ostaviOtvorenuKonekciju
     ) 
     {
         Connection dbConnection = null;
@@ -493,7 +493,7 @@ public final class DBBroker {
                 try { selectStatement.close(); } catch (SQLException ignore) {}
             }
             
-            if (dbConnection != null && !otvorenaKonekcija) {
+            if (dbConnection != null && !ostaviOtvorenuKonekciju) {
                 try { dbConnection.close(); } catch (SQLException ignore) {}
             }
             
@@ -592,7 +592,9 @@ public final class DBBroker {
             }
             
             if (dbConnection != null) {
-                try { dbConnection.close(); } catch (SQLException ignore) {}
+// BOSKO ISKLJUCIO DA NE ZATVARA KONEKCIJU
+// CESTO JAVLJA GRESKU PRILIKOM STARTA APP
+//                try { dbConnection.close(); } catch (SQLException ignore) {}
             }
         } 
         
@@ -707,7 +709,7 @@ public final class DBBroker {
             }
             
             if (dbConnection != null) {
-                try { dbConnection.close(); } catch (SQLException ignore) {}
+//                try { dbConnection.close(); } catch (SQLException ignore) {}
             }
         } 
         
@@ -744,7 +746,7 @@ public final class DBBroker {
             }
             
             if (dbConnection != null) {
-                try { dbConnection.close(); } catch (SQLException ignore) {}
+//                try { dbConnection.close(); } catch (SQLException ignore) {}
             }
             
         }
@@ -830,7 +832,7 @@ public final class DBBroker {
             cStmt.registerOutParameter("brojNovogRacuna", java.sql.Types.INTEGER);
             cStmt.execute();
 
-            prekiniVezuSaBazom(dbConnection);
+//            prekiniVezuSaBazom(dbConnection);
             
             Date date = new Date(cStmt.getTimestamp("vreme").getTime());
             porudzbina.setVremeIzdavanjaRacuna(date);

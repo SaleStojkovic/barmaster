@@ -31,6 +31,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
+import org.exolab.castor.types.Time;
 import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.RM_Button.RM_Button;
@@ -352,10 +353,11 @@ public class PrikazSalaController extends PrikazSalaParentController {
             Map<String, String> stoMap
     ) {
         try {
-                String date_s = stoMap.get("RezervacijaDatum"); 
-                SimpleDateFormat dt = new SimpleDateFormat("yyyyy-MM-dd hh:mm:ss"); 
-                Date vremeRezervacije = dt.parse(date_s);
-
+                String date_s = stoMap.get("RezervacijaDatum");
+                String time_s = stoMap.get("RezervacijaVreme");
+                SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+                Date vremeRezervacije = dt.parse(date_s + " " + time_s);
+                
                 Date vremePolaSataPreRezervacije = new Date();
                 vremePolaSataPreRezervacije.setTime(vremeRezervacije.getTime() - HALF_HOUR);
 

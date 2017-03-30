@@ -227,15 +227,15 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
     /**
      * 
      * @param query
-     * @param ostaviKonekciju
+     * @param ostaviOtvorenuKonekciju
      * @return 
      */
-    public List runQuery(QueryBuilder query, Boolean ostaviKonekciju) 
+    public List runQuery(QueryBuilder query, Boolean ostaviOtvorenuKonekciju) 
     {
         List<Map<String, String>> listaRezultata = null;
          
          try{
-            listaRezultata = DBBroker.runQuery(query, ostaviKonekciju);
+            listaRezultata = DBBroker.runQuery(query, ostaviOtvorenuKonekciju);
         
         } catch (Exception e) {
             System.out.println(e);
