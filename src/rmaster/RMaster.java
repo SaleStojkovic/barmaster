@@ -82,6 +82,9 @@ public class RMaster extends Application {
 
     DBBroker dbBroker = new DBBroker();
     
+//    long startTimeAPP;
+//    long estimatedTimeAPP;
+    
     public Konobar getUlogovaniKonobar() {
         return ulogovaniKonobar;
     }
@@ -127,7 +130,9 @@ public class RMaster extends Application {
     }
     @Override
     public void start(Stage stage) throws Exception {
-
+//        startTimeAPP = System.nanoTime();
+//        System.out.println("Ucitavanja - pocetak: " + startTimeAPP);
+//
 
         System.setProperty("javax.xml.transform.TransformerFactory",
                 "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
@@ -175,7 +180,11 @@ public class RMaster extends Application {
             }
             
         }.start();
-        
+
+//        estimatedTimeAPP = System.nanoTime() - startTimeAPP;
+//        System.out.println("Ucitavanja - kraj: " + System.nanoTime());
+//        System.out.println("Ucitavanje: " + estimatedTimeAPP);
+//        
         //dbBroker.prekiniVezuSaBazom();
     }
 
@@ -212,12 +221,12 @@ public class RMaster extends Application {
                     public Void call() throws Exception {
 
                         long startTimeT = System.nanoTime();
-                        //System.out.println("Ucitavanja - " + imeForme + " - pocetak: " + startTimeT);
+//                        System.out.println("Ucitavanja - " + imeForme + " - pocetak: " + startTimeT);
 
                         mainContainer.loadScreen(imeForme, fxmlPutanja);
 
                         long estimatedTimeT = System.nanoTime() - startTimeT;
-                        //System.out.println("Ucitavanja - " + imeForme + " - kraj: " + System.nanoTime());
+//                        System.out.println("Ucitavanja - " + imeForme + " - kraj: " + System.nanoTime());
                         System.out.println("Ucitavanje - " + imeForme + ": " + estimatedTimeT);
 
                         return null;

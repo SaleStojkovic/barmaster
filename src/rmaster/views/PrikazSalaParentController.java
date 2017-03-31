@@ -7,27 +7,23 @@ package rmaster.views;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.StackPane;
 import rmaster.ScreenController;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.RM_Button.RM_Button;
-import rmaster.assets.ScreenMap;
 
 /**
  *
@@ -65,14 +61,13 @@ public abstract class PrikazSalaParentController extends FXMLDocumentController 
     
     
     
-    private void prikaziSale() {
+    protected void prikaziSale() {
         List<Map<String, String>> sale = new ArrayList<>();
         for (Map<String, String> map : RMaster.sveSale) {
             sale.add(map);
         }
         
         saleTabPane.setSide(Side.BOTTOM);
-
 
         Task<List> prikaziSaluTask = new Task<List>() {
             @Override
@@ -95,8 +90,8 @@ public abstract class PrikazSalaParentController extends FXMLDocumentController 
                 }    
             }
         );
+        
         new Thread(prikaziSaluTask).start();
-        //exec.execute(prikaziSaluTask);
     }
 
 
@@ -198,15 +193,6 @@ public abstract class PrikazSalaParentController extends FXMLDocumentController 
         }
 
         noviSto.setText(naziv);
-        
-//        if (stoMap.get("KONOBAR_ID").equals("null")) {
-//            dodajAkcijuZaSto(noviSto);
-//        }
-//        else {
-//            if (stoMap.get("KONOBAR_ID").equals("" + RMaster.getUlogovaniKonobar().konobarID)) {
-//                dodajAkcijuZaSto(noviSto);
-//            }
-//        }
         
         vrstaStola = Integer.parseInt(stoMap.get("sto_VrstaStolaID"));
 

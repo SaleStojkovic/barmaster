@@ -29,12 +29,12 @@ public final class DBBroker {
      */
     private static final String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
     private static final String DB_NAME = "barmaster";
-    private static final String URL = "jdbc:mysql://127.0.0.1:3306/barmaster?dontTrackOpenResources=true";
+    private static final String URL = "jdbc:mysql://127.0.0.1:3306/" + DB_NAME + "?dontTrackOpenResources=true";
     private static final String USERNAME = "root";
     
-//    private static final String PASSWORD = "burek";
+    private static final String PASSWORD = "burek";
 //    private static final String PASSWORD = "928374";
-    private static final String PASSWORD = "";
+//    private static final String PASSWORD = "";
     
     private static Connection dbConnection = null;
     

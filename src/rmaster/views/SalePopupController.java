@@ -36,10 +36,11 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.stage.StageStyle;
+import org.apache.poi.ss.formula.functions.CalendarFieldFunction;
 import rmaster.RMaster;
 import rmaster.assets.RM_Button.RM_Button;
 import rmaster.assets.Settings;
-import static rmaster.views.PrikazSalaController.HALF_HOUR;
+import static rmaster.views.PrikazSalaController.VREME_PRIKAZIVANJA_PRE_REZERVACIJE;
 
 
 public class SalePopupController extends Dialog {
@@ -220,13 +221,13 @@ public class SalePopupController extends Dialog {
             SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
             try {
                 Date vremeRezervacije = dt.parse(date_s);
+                
                 Date vremePolaSataPreRezervacije = new Date();
-                vremePolaSataPreRezervacije.setTime(vremeRezervacije.getTime() - HALF_HOUR);
+                vremePolaSataPreRezervacije.setTime(vremeRezervacije.getTime() - VREME_PRIKAZIVANJA_PRE_REZERVACIJE);
 
                 Date vreme = new Date();
 
                 if (vreme.after(vremePolaSataPreRezervacije) && vreme.before(vremeRezervacije)) {
-                    //b.getStyleClass().add("stoRezervisan");
                     listaRezervacija.add(noviSto);
                 }
 

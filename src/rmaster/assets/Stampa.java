@@ -704,7 +704,7 @@ public final class Stampa {
                         "Unesite menadžersku šifru!", 
                         "Unesite menadžersku šifru!", 
                         false, 
-                        null
+                        ""
                 );
                 Optional<String> result = tastatura.showAndWait();
 

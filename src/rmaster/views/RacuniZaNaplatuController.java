@@ -129,7 +129,7 @@ public class RacuniZaNaplatuController extends Dialog {
                             "Unesite broj fiskalnog isečka",
                             "Broj fiskalnog isečka",
                             false, 
-                            null
+                            ""
                     );
                     Optional<String> result = tastatura.showAndWait();
 

@@ -148,11 +148,12 @@ public class RezervacijeController extends FXMLDocumentController {
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
         query.setTableName(Rezervacija.TABLE_NAME);
         
-        
-        String rezerv = query.toQueryString();
-        rezerv = rezerv.replace(";", " WHERE vreme BETWEEN DATE_SUB(NOW(), INTERVAL 1 HOUR) AND DATE_ADD(NOW(), INTERVAL 24 HOUR);");
-        
-        List<HashMap<String,String>> listaRezervacija = runQuery(query);
+        String args[] = {};
+        String values[] = {};
+
+        List<HashMap<String,String>> listaRezervacija;
+        listaRezervacija = runStoredProcedure("getRezervacijeAktuelne", args, values);
+
         List<Map<String, String>> listaZaPrikaz = new ArrayList<>(); 
         
         for(HashMap<String, String> rezervacijaMapa : listaRezervacija) {
@@ -235,6 +236,11 @@ public class RezervacijeController extends FXMLDocumentController {
         izabraniSto.setText("");
 
         SalePopupController tastatura = new SalePopupController();
+        tastatura.setWidth(1024.);
+        tastatura.setHeight(768.);
+        tastatura.getDialogPane().setMaxSize(1024., 768.);
+        tastatura.setResizable(false);
+        
         Optional<HashMap<String, String>> result = tastatura.showAndWait();
 
         if (!result.isPresent()){ 

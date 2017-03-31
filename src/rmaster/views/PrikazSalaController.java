@@ -5,6 +5,7 @@
  */
 package rmaster.views;
 
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.animation.Animation;
@@ -31,10 +33,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-import org.exolab.castor.types.Time;
 import rmaster.ScreenController;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.RM_Button.RM_Button;
+import rmaster.models.SettingsBaza;
 
 /**
  * FXML Controller class
@@ -42,9 +44,9 @@ import rmaster.assets.RM_Button.RM_Button;
  * @author Bosko
  */
 public class PrikazSalaController extends PrikazSalaParentController {
-    public static final long HALF_HOUR = 30*60*1000; // in milli-seconds.
+    public static long VREME_PRIKAZIVANJA_PRE_REZERVACIJE; // in milli-seconds.
     
-    ScreenController myController; 
+    //ScreenController myController; 
      
     @Override
     public void setScreenParent(ScreenController screenParent){ 
@@ -58,7 +60,7 @@ public class PrikazSalaController extends PrikazSalaParentController {
     @FXML
     private Label imeKonobara;
     
-    private List<Button> listaRezervacija = new ArrayList<>();
+    private final List<Button> listaRezervacija = new ArrayList<>();
     
     public Timer timerOsvezi;
     
@@ -87,8 +89,6 @@ public class PrikazSalaController extends PrikazSalaParentController {
                         
         imeKonobara.setText(getUlogovaniKonobarIme());
         
-//        timelineSat = this.prikaziCasovnik(casovnik);
-//        timelineSat.play();
         RMaster.setClockLabelForUpdate(casovnik);
         
         //osvezava stranicu na svakih 60s
@@ -116,152 +116,12 @@ public class PrikazSalaController extends PrikazSalaParentController {
     
 
     
-//    @Override
-//    public void initialize(URL url, ResourceBundle rb) {
-//        super.initialize(url, rb);
-//    }
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        super.initialize(url, rb);
+        VREME_PRIKAZIVANJA_PRE_REZERVACIJE = Long.parseLong(SettingsBaza.getValue("trajanje.rezervacije")) * 60 * 1000;
+    }
 
-//    public void prikaziSamoSaleOmoguceneKonobaru()
-//    {
-//        for (Map.Entry<String, Tab> entry : saleSkriveniTabovi.entrySet()) {
-//            String key = entry.getKey();
-//            Tab value = entry.getValue();
-//            saleTabPane.getTabs().add(Integer.parseInt(key), value);
-//            saleSkriveniTabovi.remove(key);
-//        }
-//
-////        if (!RMaster.firstLogin) {
-////            return;
-////        }
-//        
-//        int brojac = 0;
-//        
-//        for (Tab salaTab : saleTabPane.getTabs()) {
-//            String salaTabId = salaTab.getId();
-//            
-//            for (Map<String, String> salaZabranjena : RMaster.saleZabranjeneKonobaru) {
-//                String salaZabranjenaId = salaZabranjena.get("grafik_id");
-//
-//                if (salaZabranjenaId.equals(salaTabId))
-//                {
-//                    saleSkriveniTabovi.put("" + brojac, salaTab);
-//                    break;
-//                }
-//            }   
-//            brojac++;
-//        }
-//
-//        for (Map.Entry<String, Tab> entry : saleSkriveniTabovi.entrySet()) {
-//            String key = entry.getKey();
-//            Tab tabZaSkrivanje = entry.getValue();
-//            saleTabPane.getTabs().remove(tabZaSkrivanje);
-//        }
-//            
-//        RMaster.firstLogin = false;
-//    }
-    
-//    private void prikaziSale() {
-//        List<Map<String, String>> sale = RMaster.sveSale;
-//        
-//        saleTabPane.setSide(Side.BOTTOM);
-//
-//        for(Map<String, String> salaMap : sale){
-//            
-//            new Thread() {
-//                @Override
-//                public void start() {
-//                    prikaziSalu(salaMap);
-//                }
-//            }.start();
-//        
-//        }            
-//    }
-    
-//    private void prikaziSalu(Map<String, String> salaMap) {
-//        Tab newTab = new Tab();
-//        newTab.setId(salaMap.get("id"));
-//
-//        newTab.setText(salaMap.get("naziv"));
-//
-//        AnchorPane novaSala = new AnchorPane();
-//
-//        prikaziStoloveSale(novaSala, salaMap.get("id"));
-//
-//        novaSala.setBackground(getBackground(salaMap.get("slika")));
-//
-//        newTab.setContent(novaSala);
-//
-//        saleTabPane.getTabs().add(newTab);
-//
-//        if (RMaster.trenutnaSalaID == Long.parseLong(salaMap.get("id"))) {        
-//            saleTabPane.getSelectionModel().select(newTab);
-//        }        
-//    }
-//   
-//    private void prikaziStoloveSale(AnchorPane sala, String salaId) 
-//    {
-//        List<Map<String, String>> stoloviZaPrikaz = RMaster.getStoloveBySalaId(salaId);
-//            
-//        for (Map<String, String> stoMap : stoloviZaPrikaz)
-//        {
-//            StackPane okvir = this.napraviSto(stoMap);
-//            sala.getChildren().add(okvir);
-//        }
-//    }
-    
-//    private StackPane napraviSto(Map<String, String> stoMap)
-//    {
-//        StackPane okvir = new StackPane();
-//        
-//        int vrstaStola = 0;
-//        double x, y, sirina, visina;
-//        String naziv = "";
-//        
-//        RM_Button noviSto = new RM_Button();
-//        
-//        x = Double.parseDouble(stoMap.get("x"));
-//        x = x * RMaster.sirinaSaleNaEkranu / 1024;
-//
-//        y = Double.parseDouble(stoMap.get("y"));
-//        y = y * RMaster.visinaSaleNaEkranu / 768;
-//
-//        sirina = Double.parseDouble(stoMap.get("sirina"));
-//        sirina = sirina * RMaster.sirinaSaleNaEkranu / 1024;
-//        visina = Double.parseDouble(stoMap.get("visina"));
-//        visina = visina * RMaster.visinaSaleNaEkranu / 768;
-//
-//        noviSto.setId(stoMap.get("id"));
-//        noviSto.setPodatak(stoMap.get("broj"));
-//        
-//        naziv = stoMap.get("broj");
-//
-//        if (stoMap.get("naziv") != null) {
-//            naziv = stoMap.get("naziv");
-//        }
-//
-//        noviSto.setText(naziv);
-//        
-//        dodajAkcijuZaSto(noviSto);
-//        
-//        vrstaStola = Integer.parseInt(stoMap.get("sto_VrstaStolaID"));
-//
-//        noviSto.setBorder(Border.EMPTY);
-//        noviSto.setPrefSize(sirina, visina);
-//        noviSto.setMaxSize(sirina, visina);
-//        noviSto.setMinSize(sirina, visina);
-//        okvir.setPrefSize(sirina, visina);
-//        okvir.getChildren().add(noviSto);
-//
-//        this.setOblikStola(noviSto, vrstaStola, sirina);
-//
-//        AnchorPane.setLeftAnchor(okvir, x);
-//        AnchorPane.setTopAnchor(okvir, y);
-//        AnchorPane.setRightAnchor(okvir, RMaster.sirinaSaleNaEkranu - x - sirina);
-//        AnchorPane.setBottomAnchor(okvir, RMaster.visinaSaleNaEkranu - y - visina);
-//                
-//        return okvir;   
-//    }
-    
     @Override
     protected void setOblikStola(
             ButtonBase sto, 
@@ -278,7 +138,6 @@ public class PrikazSalaController extends PrikazSalaParentController {
     @Override
     protected void dodajAkcijuZaSto(RM_Button sto)
     {
-        //if (sto.getPodatak().)
         sto.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override public void handle(ActionEvent e) {
                                             RM_Button stoButton = (RM_Button)e.getSource();
@@ -294,16 +153,18 @@ public class PrikazSalaController extends PrikazSalaParentController {
     
     private List<RM_Button> vratiListuStoButtonBySalaId(String salaId) {
         
-         List<RM_Button> listaStolova = new ArrayList<>();
+        List<RM_Button> listaStolova = new ArrayList<>();
         
         for(Tab sala : saleTabPane.getTabs()) {
-            AnchorPane salaAnchorPane = (AnchorPane) sala.getContent();
-            
-            for (Node node : salaAnchorPane.getChildren()){
-                StackPane okvir = (StackPane) node;
+            if (sala.getId().equals(salaId)) {
+                AnchorPane salaAnchorPane = (AnchorPane) sala.getContent();
 
-                listaStolova.add((RM_Button) okvir.getChildren().get(0));
-                
+                for (Node node : salaAnchorPane.getChildren()){
+                    StackPane okvir = (StackPane) node;
+
+                    listaStolova.add((RM_Button) okvir.getChildren().get(0));
+
+                }
             }
         }
         return listaStolova;
@@ -340,11 +201,10 @@ public class PrikazSalaController extends PrikazSalaParentController {
             } 
   
             if (stoMap.get("RezervacijaDatum") != null) {
-                
                 dodajRezervaciju(stoButton, stoMap);
-
             }
-  
+            
+            break;
         }
     }
     
@@ -359,7 +219,7 @@ public class PrikazSalaController extends PrikazSalaParentController {
                 Date vremeRezervacije = dt.parse(date_s + " " + time_s);
                 
                 Date vremePolaSataPreRezervacije = new Date();
-                vremePolaSataPreRezervacije.setTime(vremeRezervacije.getTime() - HALF_HOUR);
+                vremePolaSataPreRezervacije.setTime(vremeRezervacije.getTime() - VREME_PRIKAZIVANJA_PRE_REZERVACIJE);
 
                 Date vreme = new Date();
 
@@ -398,6 +258,9 @@ public class PrikazSalaController extends PrikazSalaParentController {
             );
             
         }
+
+//        System.out.println("Ucitavanja - prikaziStolove - kraj: " + System.nanoTime());
+
     }
     
     public Timeline prikaziRezervacije() 
