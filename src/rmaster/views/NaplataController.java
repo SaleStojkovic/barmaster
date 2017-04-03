@@ -8,10 +8,10 @@ package rmaster.views;
 import rmaster.assets.Settings;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -181,20 +181,13 @@ public class NaplataController extends FXMLDocumentController {
                 porudzbina = (Porudzbina) object;
                 stalniGost = porudzbina.getStalniGost();
             }
-//            if (object instanceof StalniGost) {
-//               stalniGost = (StalniGost)object;
-//            }
+
             if (object instanceof Node) {
                roditelj = (Node)object;
             }
         }
         this.total = porudzbina.getVrednostPorudzbine();
         this.fxID_Total.setText(Utils.getStringFromDouble(this.total));
-        
-//        if (stalniGost != null) {
-//            porudzbina.setStalniGost(stalniGost);
-//            porudzbina.setPopust(Utils.getDoubleFromString(stalniGost.popust));
-//        }
         
         this.data = data;
 
@@ -253,9 +246,7 @@ public class NaplataController extends FXMLDocumentController {
                                         alert.setHeaderText("Obrada crnog placanja!");
                                         alert.setContentText("TODO - odraditi crno placanje");
                                         alert.showAndWait();
-                                                
-                                        //popustPorudzbine = Utils.getDoubleFromString(mapaPopusta.get(pop.getId()));
-                                        //osveziPrikaz();
+                                      
                                     }
                                 });
             this.fxID_NacinPlacanjaGrid.add(hotelGostButton, brojac/4, brojac%4);
@@ -362,7 +353,6 @@ public class NaplataController extends FXMLDocumentController {
         newData.add("Gosti");
         
         myController.setScreen(ScreenMap.LOJALNOST, newData);
-//        myController.setScreen(ScreenMap.LOJALNOST, porudzbina);
     }
     
     public void medjuzbir(ActionEvent event) {
@@ -482,7 +472,6 @@ public class NaplataController extends FXMLDocumentController {
         // ovde treba odraditi snimanje placanja, moguce da treba vise razlicitih snimanja
         DBBroker db = new DBBroker();
         try {
-            //java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             long result = 0;
             this.porudzbina.zatvoriRacun();
             for (NacinPlacanja nacinPlacanja : placanja) {
@@ -545,11 +534,8 @@ public class NaplataController extends FXMLDocumentController {
 
     @FXML
     public void odustani(ActionEvent event) {
-//        myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
         this.placanja.clear();
         myController.setScreen(ScreenMap.PORUDZBINA, null);
-//        Button b = (Button)event.getSource(); 
-//        b.getScene().getWindow().hide();
     }
     
     public void keyListener(KeyEvent keyEvent) 
@@ -605,5 +591,18 @@ public class NaplataController extends FXMLDocumentController {
     public void odjava(ActionEvent event)
     {            
         myController.setScreen(ScreenMap.POCETNI_EKRAN, null);
+    }
+    
+    public void otvoriMeniPopUp(ActionEvent event)
+    {
+        MeniPopUpController meniPopUp = new MeniPopUpController();
+        
+        Optional<String> result = meniPopUp.showAndWait();
+
+        if (result.isPresent()){
+            //TODO
+        }
+        
+        
     }
 }

@@ -90,9 +90,7 @@ public class NumerickaTastaturaController extends Dialog {
         
         
         this.setHeaderText(headerText);
-        
-        //unetiTekst.setPromptText(promptText);
-        
+                
 
         if (isPasswordField) {
             unetiTekst = new PasswordField();

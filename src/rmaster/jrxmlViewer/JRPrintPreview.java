@@ -1,4 +1,4 @@
-package main.jrprintpreview;
+package rmaster.jrxmlViewer;
 
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
