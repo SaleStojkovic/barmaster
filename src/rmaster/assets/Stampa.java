@@ -435,7 +435,7 @@ public final class Stampa {
             timer.schedule(
                 new TimerTask() {
                     long start = System.nanoTime();
-                    long PET_SEKUNDI = 25000000000l;
+                    long PET_SEKUNDI = 5000000000L;
                     String putanja = Settings.getInstance().getValueString("fiskal.putanja.fromFP") + imeFajla;
                     String porudzbinaID = "" + porudzbina.getID();
 

@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
-<fx:root prefHeight="448.0" prefWidth="495.0" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="448.0" prefWidth="495.0" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button layoutX="275.0" layoutY="143.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="7" />
-      <Button layoutX="275.0" layoutY="213.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="4" />
-      <Button layoutX="415.0" layoutY="143.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="9" />
-      <Button layoutX="345.0" layoutY="143.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="8" />
-      <Button layoutX="345.0" layoutY="213.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="5" />
-      <Button layoutX="415.0" layoutY="213.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="6" />
-      <Button layoutX="275.0" layoutY="283.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="1" />
-      <Button layoutX="345.0" layoutY="283.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="2" />
-      <Button layoutX="415.0" layoutY="283.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="3" />
-      <Button layoutX="415.0" layoutY="353.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" text="«" />
-      <Button layoutX="345.0" layoutY="353.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="," />
-      <Button layoutX="275.0" layoutY="353.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="0" />
-      <TextField fx:id="kol" layoutX="344.0" layoutY="11.0" prefHeight="27.0" prefWidth="139.0" />
-      <ListView layoutX="11.0" layoutY="11.0" prefHeight="380.0" prefWidth="254.0" />
-      <TextField fx:id="cena" layoutX="344.0" layoutY="49.0" prefHeight="27.0" prefWidth="139.0" />
-      <TextField fx:id="ukupno" layoutX="344.0" layoutY="87.0" prefHeight="27.0" prefWidth="139.0" />
+      <Button fx:id="fxID_7" layoutX="275.0" layoutY="143.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="7" />
+      <Button fx:id="fxID_4" layoutX="275.0" layoutY="213.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="4" />
+      <Button fx:id="fxID_9" layoutX="415.0" layoutY="143.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="9" />
+      <Button fx:id="fxID_8" layoutX="345.0" layoutY="143.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="8" />
+      <Button fx:id="fxID_5" layoutX="345.0" layoutY="213.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="5" />
+      <Button fx:id="fxID_6" layoutX="415.0" layoutY="213.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="6" />
+      <Button fx:id="fxID_1" layoutX="275.0" layoutY="283.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="1" />
+      <Button fx:id="fxID_2" layoutX="345.0" layoutY="283.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="2" />
+      <Button fx:id="fxID_3" layoutX="415.0" layoutY="283.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="3" />
+      <Button fx:id="fxID_Back" layoutX="415.0" layoutY="353.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="«" />
+      <Button fx:id="fxID_Tacka" layoutX="345.0" layoutY="353.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="." />
+      <Button fx:id="fxID_0" layoutX="275.0" layoutY="353.0" mnemonicParsing="false" onAction="#numberKeyPressed" prefHeight="70.0" prefWidth="70.0" text="0" />
+      <TextField fx:id="fxID_Kolicina" layoutX="344.0" layoutY="11.0" prefHeight="27.0" prefWidth="139.0" />
+      <ListView fx:id="fxID_MeniList" layoutX="11.0" layoutY="11.0" prefHeight="380.0" prefWidth="254.0" />
+      <TextField fx:id="fxID_Cena" layoutX="344.0" layoutY="49.0" prefHeight="27.0" prefWidth="139.0" />
+      <TextField fx:id="fxID_Ukupno" layoutX="344.0" layoutY="87.0" prefHeight="27.0" prefWidth="139.0" />
       <Label layoutX="274.0" layoutY="16.0" prefHeight="17.0" prefWidth="54.0" text="Količina" />
       <Label layoutX="274.0" layoutY="54.0" prefHeight="17.0" prefWidth="54.0" text="Cena" />
       <Label layoutX="274.0" layoutY="92.0" prefHeight="17.0" prefWidth="54.0" text="Ukupno" />

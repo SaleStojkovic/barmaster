@@ -197,7 +197,7 @@ public class RMaster extends Application {
         Field[] fields = cls.getDeclaredFields();
         
         exec = Executors.newCachedThreadPool(runnable -> {
-            Thread t = new Thread(runnable);
+            Thread t = new Thread(runnable, "forme");
             t.setDaemon(true);
             return t ;
         });

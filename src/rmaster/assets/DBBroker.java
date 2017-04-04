@@ -1,5 +1,6 @@
 package rmaster.assets;
  
+import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -16,9 +17,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.control.Alert;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import rmaster.models.Konobar;
 import rmaster.models.Porudzbina;
- 
+
 /**
  *
  * @author Sasa Stojkovic       
@@ -32,13 +37,24 @@ public final class DBBroker {
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/" + DB_NAME + "?dontTrackOpenResources=true";
     private static final String USERNAME = "root";
     
-    private static final String PASSWORD = "burek";
+//    private static final String PASSWORD = "burek";
 //    private static final String PASSWORD = "928374";
-//    private static final String PASSWORD = "";
+    private static final String PASSWORD = "";
     
     private static Connection dbConnection = null;
     
+//    private MysqlConnectionPoolDataSource ds;
+    
     public DBBroker() {
+        // TREBA DA PREPRAVIMO DA RADI SA Database POOL-om
+//        try {
+//            ds = new MysqlConnectionPoolDataSource();
+//            ds.setURL(URL);
+//            ds.setUser(USERNAME);
+//            ds.setPassword(PASSWORD);
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
     }
     /**
      * 
