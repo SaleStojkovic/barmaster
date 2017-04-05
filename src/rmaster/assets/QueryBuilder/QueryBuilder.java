@@ -332,8 +332,13 @@ public class QueryBuilder {
             queryString += " WHERE ";
 
             queryString += CRITERIA_COLUMNS.get(0) 
-                    + CRITERIA.get(0)
-                    + CRITERIA_VALUES.get(0);
+                    + CRITERIA.get(0);
+            
+            if (CRITERIA_VALUES.get(0).equals(BIT_0) || CRITERIA_VALUES.get(0).equals(BIT_1)) {
+                queryString = deleteLastOccurance(queryString, "\'");
+            }
+            
+            queryString += CRITERIA_VALUES.get(0);
 
             if (!CRITERIA.get(CRITERIA.size() - 1).equals(IS_NOT_IN)
                     && !CRITERIA.get(CRITERIA.size() - 1).equals(IS_IN)) {

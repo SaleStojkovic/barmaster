@@ -508,13 +508,9 @@ public final class Stampa {
     }
     
     public final void stampajFakturu(NaplataController.VrstaRacunaZaStampu vrstaRacuna, Porudzbina porudzbina) {
-          //OVO RADI!!! :D
-        String reportFileName = "/rmaster/views/reports/faktura.jrxml";
              
         try {
             Map<String, Object> mapa = pripremiPodatkeZaFakturuIliGotovinskiRacun(vrstaRacuna, porudzbina);
-
-            JasperReport jasperReport = JasperCompileManager.compileReport(getClass().getResourceAsStream(reportFileName));
 
             List<StavkaTure> listStavkeTureZaFakturu = new ArrayList<>();
             for (Tura tura : porudzbina.getTure()) {
@@ -527,8 +523,7 @@ public final class Stampa {
             }
             
             JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(listStavkeTureZaFakturu);
-            JasperPrint print = (JasperPrint) JasperFillManager.fillReport(jasperReport, mapa, beanColDataSource);
-            //JasperPrint print = (JasperPrint) JasperFillManager.fillReport(jasperReport, mapa, DBBroker.poveziSaBazom());
+            JasperPrint print = (JasperPrint) JasperFillManager.fillReport(rmaster.RMaster.faktura, mapa, beanColDataSource);
 
             JRPrintPreview printPreview = new JRPrintPreview(print);
 

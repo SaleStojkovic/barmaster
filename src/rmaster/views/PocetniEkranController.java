@@ -18,6 +18,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.ScreenController;
@@ -57,8 +59,7 @@ public class PocetniEkranController extends FXMLDocumentController {
     public void initData(Object data)
     {
         lozinka.setText("");
-        //timelineSat = this.prikaziCasovnik(clock);
-        //timelineSat.play();
+        
         RMaster.setClockLabelForUpdate(clock);
         RMaster.firstLogin = true;
         RMaster.saleOmoguceneKonobaru.clear();
@@ -129,11 +130,18 @@ public class PocetniEkranController extends FXMLDocumentController {
             setUlogovaniKonobar(konobar);
                     
             kesirajSaleOmoguceneKonobaru();
-
+            
             new Thread(){
                 @Override
                 public void start(){
                    RMaster.ucitajSveArtikle();  
+                }
+            }.start();
+            
+            new Thread(){
+                @Override
+                public void start(){
+                   kompajlirajFakturu(); 
                 }
             }.start();
             
@@ -159,7 +167,6 @@ public class PocetniEkranController extends FXMLDocumentController {
     {
         RMaster.ucitajSveSaleZabranjeneKonobaru();
 
-        //setSaleOmoguceneKonobaru(getUlogovaniKonobar().saleOmoguceneKonobaru());
     }
     
     @Override
@@ -169,5 +176,22 @@ public class PocetniEkranController extends FXMLDocumentController {
         RMaster.firstLogin = true;
         RMaster.saleZabranjeneKonobaru.clear();
         RMaster.saleOmoguceneKonobaru.clear();
+    }
+    
+    public void kompajlirajFakturu() {
+        
+        if (rmaster.RMaster.faktura == null) {
+            
+            String reportFileName = "/rmaster/views/reports/faktura.jrxml";
+            
+            try {
+            
+                rmaster.RMaster.faktura = JasperCompileManager.compileReport(getClass().getResourceAsStream(reportFileName));
+            
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        
+        }
     }
 }

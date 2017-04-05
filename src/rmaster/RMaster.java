@@ -30,6 +30,7 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import net.sf.jasperreports.engine.JasperReport;
 import rmaster.assets.DBBroker;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.QueryBuilder.TableJoin;
@@ -67,6 +68,8 @@ public class RMaster extends Application {
     public static List<Map<String, String>> sveSale = new ArrayList<>();
     public static List<Map<String, String>> sviStolovi = new ArrayList<>();
     
+    public static JasperReport faktura = null;
+    
     public static Group root = new Group(); 
     public static ScreenController mainContainer = new ScreenController(); 
 
@@ -80,10 +83,8 @@ public class RMaster extends Application {
     private static Label clock = new Label();
     private static Timeline timelineSat = null;
 
-    DBBroker dbBroker = new DBBroker();
     
-//    long startTimeAPP;
-//    long estimatedTimeAPP;
+    DBBroker dbBroker = new DBBroker();
     
     public Konobar getUlogovaniKonobar() {
         return ulogovaniKonobar;
@@ -130,10 +131,7 @@ public class RMaster extends Application {
     }
     @Override
     public void start(Stage stage) throws Exception {
-//        startTimeAPP = System.nanoTime();
-//        System.out.println("Ucitavanja - pocetak: " + startTimeAPP);
-//
-
+        
         System.setProperty("javax.xml.transform.TransformerFactory",
                 "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
         
