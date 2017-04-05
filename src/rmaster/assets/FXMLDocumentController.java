@@ -334,16 +334,6 @@ public abstract class FXMLDocumentController implements Initializable, Controlle
         
         return timelineSat;
     }
-//    
-//    public void setLogo(Pane pane)
-//    {        
-//        String logo = Settings.getInstance().getValueString("sale.slike.putanja") + "logo.png" ;  
-//        
-//        pane.setStyle("-fx-background-image: url('" 
-//                + logo + "'); " +
-//           "-fx-background-repeat: no-repeat; " +
-//           "-fx-background-size: 256px, 51px;");
-//    }
     
     /**
      * 

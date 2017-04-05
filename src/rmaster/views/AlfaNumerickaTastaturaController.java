@@ -30,9 +30,7 @@ import javafx.stage.StageStyle;
  */
 public class AlfaNumerickaTastaturaController extends Dialog {
 
-    
-//    public char[] specijalniKarakteri = {'š','ć','č','đ','ž'};
-    
+        
     public String qwerty = "qwertyuiopšđ";
     
     public String asdf = "asdfghjklčćž";

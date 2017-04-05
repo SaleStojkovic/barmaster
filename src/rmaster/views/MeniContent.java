@@ -7,6 +7,10 @@ package rmaster.views;
 
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -14,9 +18,19 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.StageStyle;
+import javafx.util.Callback;
+import rmaster.assets.DBBroker;
+import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.Utils;
 
 /**
@@ -25,7 +39,9 @@ import rmaster.assets.Utils;
  */
 public class MeniContent extends Pane{
     
-    @FXML private ListView fxID_MeniList;
+    DBBroker dbBroker = new DBBroker();
+
+    @FXML private ListView<Map<String, String>> fxID_MeniList;
     
     @FXML private TextField fxID_Kolicina;
     private String kolicina;
@@ -91,11 +107,21 @@ public class MeniContent extends Pane{
             }
         });
         
+        fxID_MeniList.setCellFactory(lv -> new ListCell<Map<String, String>>() {
+            @Override
+            public void updateItem(Map<String, String> novaMapa, boolean empty) {
+                super.updateItem(novaMapa, empty) ;
+                setText(empty ? null : novaMapa.get("naziv"));
+            }
+        }); 
+        
         kolicina = "";
         cena = "";
         ukupno = "";
         
         osveziPolja();
+        
+        popuniMenije();
         
         Platform.runLater(() -> fxID_Kolicina.requestFocus());
 
@@ -231,4 +257,95 @@ public class MeniContent extends Pane{
         fxID_Ukupno.setText(Utils.getStringFromDouble(Utils.getDoubleFromString(ukupno.equals("")?"0":ukupno)));
     }
     
+    public void popuniMenije() {
+        
+        fxID_MeniList.getItems().clear();
+        
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+        
+        query.setTableName("meni");
+        
+        query.addCriteriaColumns("blokiran");
+        query.addCriteria(QueryBuilder.IS_EQUAL);
+        query.addCriteriaValues(QueryBuilder.BIT_0);
+        
+        List<HashMap<String, String>> listaRezultata = dbBroker.runQuery(query);
+        
+        for(HashMap<String, String> novaMapa : listaRezultata) {
+            
+            fxID_MeniList.getItems().add(novaMapa);
+        }
+        
+    }
+    
+    
+    public void napraviNoviMeni(ActionEvent event) {
+        
+        ButtonType sacuvaj = new ButtonType("Sačuvaj", ButtonBar.ButtonData.OK_DONE);
+            
+        Dialog dialog = new Dialog();      
+        
+        dialog.getDialogPane().getButtonTypes().add(sacuvaj);
+
+        HBox box = new HBox();
+        
+        Label label = new Label("Naziv menija: ");
+        
+        TextField text = new TextField();
+
+        box.getChildren().addAll(label, text);
+
+        dialog.getDialogPane().setContent(box);
+
+        dialog.getDialogPane().getStylesheets().
+                addAll(this.getClass().getResource("style/style.css").toExternalForm());
+
+        dialog.getDialogPane().getStyleClass().add("myDialog");
+        dialog.initStyle(StageStyle.UNDECORATED);
+
+        dialog.setHeaderText("Unos novog menija.");
+        dialog.setTitle("");
+            
+        dialog.setResultConverter(new Callback<ButtonType, String>() {
+        @Override
+        public String call(ButtonType b) {
+
+                if (b == sacuvaj) {
+
+                    return text.getText();
+                }
+
+                return null;
+            }
+        });
+                
+        Optional<String> result = dialog.showAndWait();
+        
+        if (result.isPresent()) {
+
+            sacuvajMeni(result.get());
+        }
+
+    }
+    
+    public void sacuvajMeni(String naziv) {
+         
+        HashMap<String, String> noviMeni = new HashMap<>();
+
+        //TODO razmisliti da li postoji bolji nacin
+        noviMeni.put("naziv, blokiran", naziv + "', b'0");
+        
+        try {
+            dbBroker.ubaci(
+                            "meni", 
+                            noviMeni,
+                            true
+                    );
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        popuniMenije();
+        
+    }
 }
