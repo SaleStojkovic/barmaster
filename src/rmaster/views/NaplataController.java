@@ -574,7 +574,6 @@ public class NaplataController extends FXMLDocumentController {
                 return;
             }
             
-            System.out.print(hotelGost + " Ima ga");
             //ovde se sad radi sta vec ako postoji
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Naplata!");
