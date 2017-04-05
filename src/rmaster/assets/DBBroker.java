@@ -1,10 +1,8 @@
 package rmaster.assets;
  
-import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -17,13 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.control.Alert;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 import rmaster.models.Konobar;
 import rmaster.models.Porudzbina;
-
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.mchange.v2.c3p0.PooledDataSource;
 /**
  *
  * @author Sasa Stojkovic       
@@ -40,94 +35,102 @@ public final class DBBroker {
 //    private static final String PASSWORD = "burek";
 //    private static final String PASSWORD = "928374";
     private static final String PASSWORD = "";
+//    private static Connection dbConnection = null;
     
-    private static Connection dbConnection = null;
-    
-//    private MysqlConnectionPoolDataSource ds;
+    private static ComboPooledDataSource dataSource = null;
+    private static PooledDataSource pds = null;
+    private static int brojKonekcija = 0;
     
     public DBBroker() {
-        // TREBA DA PREPRAVIMO DA RADI SA Database POOL-om
-//        try {
-//            ds = new MysqlConnectionPoolDataSource();
-//            ds.setURL(URL);
-//            ds.setUser(USERNAME);
-//            ds.setPassword(PASSWORD);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
+        if (dataSource == null) {
+            try {
+                dataSource = new ComboPooledDataSource(); 
+
+                dataSource.setDriverClass(DATABASE_DRIVER); 
+                dataSource.setJdbcUrl(URL); 
+                dataSource.setUser(USERNAME); 
+                dataSource.setPassword(PASSWORD); 
+
+                dataSource.setMinPoolSize(3); 
+                dataSource.setAcquireIncrement(3); 
+                dataSource.setMaxPoolSize(12);
+                
+                pds = (PooledDataSource) dataSource;
+                brojKonekcija = pds.getNumConnectionsAllUsers();
+                
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
     }
     /**
      * 
      * @return Connection
      */
     public static Connection poveziSaBazom() {
-        
+        Connection con = null;
         try {
-            if (dbConnection != null && !dbConnection.isClosed()) {
-                return dbConnection;
+            con = dataSource.getConnection();
+            if (pds.getNumConnectionsAllUsers() > brojKonekcija) {
+                brojKonekcija = pds.getNumConnectionsAllUsers();
+                System.out.println("Broj busy konekcija - all users: " + pds.getNumBusyConnectionsAllUsers());
+                System.out.println("Broj konekcija - all users: " + brojKonekcija);
             }
-        } catch (SQLException e) {
+       } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        
-        try {
-            Class.forName(DATABASE_DRIVER);
-        } catch (ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-        try {
-            dbConnection = DriverManager.getConnection(
-                    URL, 
-                    USERNAME,
-                    PASSWORD
-            );
-        } catch (SQLException e) {
-                System.out.println(e.getMessage());
-        }
-
-        
-        return dbConnection;
+        return con;
     }
 
-    /**
-     * 
-     * @throws Exception 
-     */
-    public void prekiniVezuSaBazom() throws Exception {
-        try {
-            if (dbConnection != null)
-                dbConnection.close();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        dbConnection = null;
-    }
-    
     /**
      * 
      * @param connection
      * @throws Exception 
      */
-    public void prekiniVezuSaBazom(Connection connection) throws Exception {
+    public static Connection zatvoriVezuSaBazom(Connection connection) {
         try {
             connection.close();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException ignore) {
+        } finally {
+            connection = null;
         }
         
-        try {
-            dbConnection.close();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        dbConnection = null;
- 
+        return connection;
+        
     }
     
+    public Statement zatvoriStatement(Statement statement) {
+        try {
+            statement.close();
+        } catch (SQLException ignore) {
+        } finally {
+            statement = null;
+        }
+        
+        return statement;
+    }
+    
+    public static CallableStatement zatvoriCallableStatement(CallableStatement statement) {
+        try {
+            statement.close();
+        } catch (SQLException ignore) {
+        } finally {
+            statement = null;
+        }
+        
+        return statement;
+    }
+
+    public static PreparedStatement zatvoriPreparedStatement(PreparedStatement statement) {
+        try {
+            statement.close();
+        } catch (SQLException ignore) {
+        } finally {
+            statement = null;
+        }
+        
+        return statement;
+    }
     /**
      * 
      * @param imeTabele
@@ -140,7 +143,7 @@ public final class DBBroker {
             HashMap<String, String> elementi,
             Boolean zatvoriKonekciju
     ) throws Exception {
-         Connection dbConnection = null;
+        Connection dbConnection = null;
       
         PreparedStatement insertStatement = null;
          
@@ -178,17 +181,12 @@ public final class DBBroker {
                 
  
         } finally {
-            if (insertStatement != null) {
-                try { insertStatement.close(); } catch (SQLException ignore) {}
-            }
-            if (dbConnection != null && zatvoriKonekciju) {
-                try { dbConnection.close(); } catch (SQLException ignore) {}
-            }
+            insertStatement = zatvoriPreparedStatement(insertStatement);
             
-           
+            dbConnection = zatvoriVezuSaBazom(dbConnection);
         }
- 
     }
+
      
     /**
      * 
@@ -233,36 +231,30 @@ public final class DBBroker {
         insertTableSQL += insertValues;
                   
         try {
-                dbConnection = poveziSaBazom();
-                
-                insertStatement = dbConnection.prepareStatement(
-                        insertTableSQL,
-                        Statement.RETURN_GENERATED_KEYS
-                );
-                insertStatement.executeUpdate();
+            dbConnection = poveziSaBazom();
 
-                try (ResultSet generatedKeys = insertStatement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        result = generatedKeys.getLong(1);
-                    }
-                    else {
-                        throw new SQLException("Creating user failed, no ID obtained.");
-                    }
+            insertStatement = dbConnection.prepareStatement(
+                    insertTableSQL,
+                    Statement.RETURN_GENERATED_KEYS
+            );
+            insertStatement.executeUpdate();
+
+            try (ResultSet generatedKeys = insertStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    result = generatedKeys.getLong(1);
                 }
+                else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
 
         } catch (SQLException e) {
-                System.out.println(e.getMessage());
-                dbConnection.rollback();
-
+            System.out.println(e.getMessage());
+            dbConnection.rollback();
         } finally {
-                if (insertStatement != null) {
-                    try { insertStatement.close(); } catch (SQLException ignore) {}
-                }
-                if (dbConnection != null && zatvoriKonekciju) {
-                    try { dbConnection.close(); } catch (SQLException ignore) {}
-                }
+            insertStatement = zatvoriPreparedStatement(insertStatement);
+            dbConnection = zatvoriVezuSaBazom(dbConnection);
         }
-        
         return result;
     }
 
@@ -296,41 +288,30 @@ public final class DBBroker {
          
              
         try {
-                dbConnection = poveziSaBazom();
-                
-                updateStatement = dbConnection.prepareStatement(updateTableSQL);
-                int brojac = 1;
+            dbConnection = poveziSaBazom();
 
+            updateStatement = dbConnection.prepareStatement(updateTableSQL);
+            int brojac = 1;
 
+            for (HashMap.Entry<String, String> element : elementi.entrySet()) {
+                if (element.getValue().equals("true"))
+                    updateStatement.setBoolean(brojac, true);
+                if (element.getValue().equals("false"))
+                    updateStatement.setBoolean(brojac, false);
+                else
+                    updateStatement.setString(brojac, element.getValue());
+                brojac++;
+            } 
 
-                for (HashMap.Entry<String, String> element : elementi.entrySet()) {
-                    if (element.getValue().equals("true"))
-                        updateStatement.setBoolean(brojac, true);
-                    if (element.getValue().equals("false"))
-                        updateStatement.setBoolean(brojac, false);
-                    else
-                        updateStatement.setString(brojac, element.getValue());
-                    brojac++;
-                } 
-                
-                updateStatement.setString(brojac, uslovnaVrednost);
-                updateStatement.executeUpdate();
-                
-            } catch (SQLException e) {
+            updateStatement.setString(brojac, uslovnaVrednost);
+            updateStatement.executeUpdate();
 
-                    System.out.println(e.getMessage());
-                    dbConnection.rollback();
-
-            } finally {
-            
-        
-                if (updateStatement != null) {
-                    try { updateStatement.close(); } catch (SQLException ignore) {}
-                }
-                if (dbConnection != null && zatvoriKonekciju) {
-                    try { dbConnection.close(); } catch (SQLException ignore) {}
-                }
- 
+        } catch (SQLException e) {
+                System.out.println(e.getMessage());
+                dbConnection.rollback();
+        } finally {
+            updateStatement = zatvoriPreparedStatement(updateStatement);
+            dbConnection = zatvoriVezuSaBazom(dbConnection);
         }
     }
      
@@ -367,14 +348,8 @@ public final class DBBroker {
                 dbConnection.rollback();
  
         } finally {
-            
-        
-                if (deleteStatement != null) {
-                    try { deleteStatement.close(); } catch (SQLException ignore) {}
-                }
-                if (dbConnection != null && zatvoriKonekciju) {
-                    try { dbConnection.close(); } catch (SQLException ignore) {}
-                }
+            deleteStatement = zatvoriPreparedStatement(deleteStatement);
+            dbConnection = zatvoriVezuSaBazom(dbConnection);
         }
     }
      
@@ -430,26 +405,16 @@ public final class DBBroker {
             }
             
             if (selectStatement != null) {
-                try { 
-                    selectStatement.close();
-                    selectStatement = null;
-                } catch (SQLException ignore) {}
+                selectStatement = zatvoriStatement(selectStatement);
             }
             
             if (updateStatement != null) {
-                try { 
-                    updateStatement.close();
-                    updateStatement = null;
-                } catch (SQLException ignore) {}
+                updateStatement = zatvoriPreparedStatement(updateStatement);
             }
             
             queryString = null;
-
-//            if (dbConnection != null) {
-//                try { dbConnection.close(); } catch (SQLException ignore) {}
-//            }
             
-           
+            dbConnection = zatvoriVezuSaBazom(dbConnection);
         }
  
         return listaRezultata; 
@@ -505,15 +470,9 @@ public final class DBBroker {
                 try { setRezultata.close(); } catch (SQLException ignore) {}
             }
             
-            if (selectStatement != null) {
-                try { selectStatement.close(); } catch (SQLException ignore) {}
-            }
+            selectStatement = zatvoriStatement(selectStatement);
             
-            if (dbConnection != null && !ostaviOtvorenuKonekciju) {
-                try { dbConnection.close(); } catch (SQLException ignore) {}
-            }
-            
-           
+            dbConnection = zatvoriVezuSaBazom(dbConnection);
         }
  
         return listaRezultata; 
@@ -546,7 +505,7 @@ public final class DBBroker {
         } catch (Exception e) {
             System.out.println(e);
         }
-        
+
         return listaRezultata;
     }
     
@@ -603,15 +562,9 @@ public final class DBBroker {
                 try { rs.close(); } catch (SQLException ignore) {}
             }
             
-            if (cStmt != null) {
-                try { cStmt.close(); } catch (SQLException ignore) {}
-            }
-            
-            if (dbConnection != null) {
-// BOSKO ISKLJUCIO DA NE ZATVARA KONEKCIJU
-// CESTO JAVLJA GRESKU PRILIKOM STARTA APP
-//                try { dbConnection.close(); } catch (SQLException ignore) {}
-            }
+            cStmt = zatvoriCallableStatement(cStmt);
+                        
+            dbConnection = zatvoriVezuSaBazom(dbConnection);
         } 
         
         return listaRezultata;   
@@ -670,13 +623,9 @@ public final class DBBroker {
                 try { rs.close(); } catch (SQLException ignore) {}
             }
             
-            if (cStmt != null) {
-                try { cStmt.close(); } catch (SQLException ignore) {}
-            }
+            cStmt = zatvoriCallableStatement(cStmt);
             
-            if (dbConnection != null) {
-                try { dbConnection.close(); } catch (SQLException ignore) {}
-            }
+            dbConnection = zatvoriVezuSaBazom(dbConnection);
         } 
         
         return rez;   
@@ -690,7 +639,7 @@ public final class DBBroker {
      * @param vrednostArgumentaSP
      * @return 
      */
-    public static List getRecordSetIzStoreProcedureZaParametar(
+    public List getRecordSetIzStoreProcedureZaParametar(
             String imeStoreProcedure, 
             String imeArgumentaSP,
             String vrednostArgumentaSP) 
@@ -720,13 +669,9 @@ public final class DBBroker {
                 try { rs.close(); } catch (SQLException ignore) {}
             }
             
-            if (cStmt != null) {
-                try { cStmt.close(); } catch (SQLException ignore) {}
-            }
+            cStmt = zatvoriCallableStatement(cStmt);
             
-            if (dbConnection != null) {
-//                try { dbConnection.close(); } catch (SQLException ignore) {}
-            }
+            dbConnection = zatvoriVezuSaBazom(dbConnection);
         } 
         
         return listaRezultata;
@@ -757,13 +702,9 @@ public final class DBBroker {
                 try { rs.close(); } catch (SQLException ignore) {}
             }
             
-            if (cStmt != null) {
-                try { cStmt.close(); } catch (SQLException ignore) {}
-            }
+            cStmt = zatvoriCallableStatement(cStmt);
             
-            if (dbConnection != null) {
-//                try { dbConnection.close(); } catch (SQLException ignore) {}
-            }
+            dbConnection = zatvoriVezuSaBazom(dbConnection);
             
         }
             
@@ -836,8 +777,8 @@ public final class DBBroker {
     public void zatvoriRacunIOslobodiSto(
             Porudzbina porudzbina) 
     {
-        Connection dbConnection;
-        CallableStatement cStmt;
+        Connection dbConnection = null;
+        CallableStatement cStmt = null;
 
         try {
             dbConnection = poveziSaBazom();
@@ -848,15 +789,13 @@ public final class DBBroker {
             cStmt.registerOutParameter("brojNovogRacuna", java.sql.Types.INTEGER);
             cStmt.execute();
 
-//            prekiniVezuSaBazom(dbConnection);
-            
-            Date date = new Date(cStmt.getTimestamp("vreme").getTime());
-            porudzbina.setVremeIzdavanjaRacuna(date);
-            
+            porudzbina.setVremeIzdavanjaRacuna(new Date(cStmt.getTimestamp("vreme").getTime()));
             porudzbina.setBrojRacunaBroj(cStmt.getInt("brojNovogRacuna"));
-            
-        } catch (Exception e) {
+       } catch (Exception e) {
             System.out.println("Store procedure \"zatvoriRacunIOslobodiSto\" exec error! - " + e.toString());
+        } finally {
+            cStmt = zatvoriCallableStatement(cStmt);
+            dbConnection = zatvoriVezuSaBazom(dbConnection);
         }
     }
     
