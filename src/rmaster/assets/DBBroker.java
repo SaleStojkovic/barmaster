@@ -19,6 +19,7 @@ import rmaster.models.Konobar;
 import rmaster.models.Porudzbina;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.mchange.v2.c3p0.PooledDataSource;
+import org.olap4j.PreparedOlapStatement;
 /**
  *
  * @author Sasa Stojkovic       
@@ -32,13 +33,13 @@ public final class DBBroker {
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/" + DB_NAME + "?dontTrackOpenResources=true";
     private static final String USERNAME = "root";
     
-    private static final String PASSWORD = "burek";
+//    private static final String PASSWORD = "burek";
 //    private static final String PASSWORD = "928374";
-//    private static final String PASSWORD = "";
+    private static final String PASSWORD = "";
     
     private static ComboPooledDataSource dataSource = null;
-    private static PooledDataSource pds = null;
-    private static int brojKonekcija = 0;
+//    private static PooledDataSource pds = null;
+//    private static int brojKonekcija = 0;
     
     public DBBroker() {
         if (dataSource == null) {
@@ -50,12 +51,13 @@ public final class DBBroker {
                 dataSource.setUser(USERNAME); 
                 dataSource.setPassword(PASSWORD); 
 
+                
                 dataSource.setMinPoolSize(3); 
                 dataSource.setAcquireIncrement(3); 
                 dataSource.setMaxPoolSize(12);
                 
-                pds = (PooledDataSource) dataSource;
-                brojKonekcija = pds.getNumConnectionsAllUsers();
+//                pds = (PooledDataSource) dataSource;
+//                brojKonekcija = pds.getNumConnectionsAllUsers();
                 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -70,11 +72,11 @@ public final class DBBroker {
         Connection con = null;
         try {
             con = dataSource.getConnection();
-            if (pds.getNumConnectionsAllUsers() > brojKonekcija) {
-                brojKonekcija = pds.getNumConnectionsAllUsers();
-                System.out.println("Broj busy konekcija - all users: " + pds.getNumBusyConnectionsAllUsers());
-                System.out.println("Broj konekcija - all users: " + brojKonekcija);
-            }
+//            if (pds.getNumConnectionsAllUsers() > brojKonekcija) {
+//                brojKonekcija = pds.getNumConnectionsAllUsers();
+//                System.out.println("Broj busy konekcija - all users: " + pds.getNumBusyConnectionsAllUsers());
+//                System.out.println("Broj konekcija - all users: " + brojKonekcija);
+//            }
        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -98,7 +100,7 @@ public final class DBBroker {
         
     }
     
-    public Statement zatvoriStatement(Statement statement) {
+    public static Statement zatvoriStatement(Statement statement) {
         try {
             statement.close();
         } catch (SQLException ignore) {
@@ -110,25 +112,27 @@ public final class DBBroker {
     }
     
     public static CallableStatement zatvoriCallableStatement(CallableStatement statement) {
-        try {
-            statement.close();
-        } catch (SQLException ignore) {
-        } finally {
-            statement = null;
-        }
-        
-        return statement;
+        return (CallableStatement) zatvoriStatement(statement);
+//        try {
+//            statement.close();
+//        } catch (SQLException ignore) {
+//        } finally {
+//            statement = null;
+//        }
+//        
+//        return statement;
     }
 
     public static PreparedStatement zatvoriPreparedStatement(PreparedStatement statement) {
-        try {
-            statement.close();
-        } catch (SQLException ignore) {
-        } finally {
-            statement = null;
-        }
-        
-        return statement;
+        return (PreparedStatement) zatvoriStatement(statement);
+//        try {
+//            statement.close();
+//        } catch (SQLException ignore) {
+//        } finally {
+//            statement = null;
+//        }
+//        
+//        return statement;
     }
     /**
      * 

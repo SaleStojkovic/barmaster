@@ -67,6 +67,8 @@ public class RezervacijeController extends FXMLDocumentController {
     @FXML private Button sortDatum;
     @FXML private Button sortVreme;
     
+    @FXML private Button idSacuvajRezervaciju;
+
     public RM_TableView tabelaRezervacija;
     public Integer[] sirinaKolonaTabele = {140, 100, 100, 100, 100, 100, 250, 0};
     
@@ -347,6 +349,8 @@ public class RezervacijeController extends FXMLDocumentController {
         timePicker.setText(odabranaRezervacija.get(Rezervacija.VREME));
         
         idRezervacije.setText(odabranaRezervacija.get(Rezervacija.PRIMARY_KEY));
+        
+        idSacuvajRezervaciju.setText("Sačuvaj rezervaciju");
     }
     
     public void izbrisiRezervaciju(ActionEvent event) {
@@ -389,6 +393,7 @@ public class RezervacijeController extends FXMLDocumentController {
         izabraniSto.setText("");
         timePicker.setText("00:00");
         idRezervacije.setText("");
+        idSacuvajRezervaciju.setText("Upiši novu rezervaciju");
     }
     
     

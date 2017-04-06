@@ -137,17 +137,17 @@ public class PocetniEkranController extends FXMLDocumentController {
                    RMaster.ucitajSveArtikle();  
                 }
             }.start();
-            
+
             new Thread(){
                 @Override
                 public void start(){
-                   kompajlirajFakturu(); 
+                    kompajlirajFakturu(); 
                 }
             }.start();
             
             
             myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
-
+            
             return;
         }
         

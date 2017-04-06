@@ -25,7 +25,7 @@
             <Pane layoutX="589.0" prefHeight="58.0" prefWidth="434.0">
                <children>
                   <Label fx:id="casovnik" layoutX="16.0" layoutY="7.0" prefHeight="36.0" prefWidth="146.0" />
-                  <Button fx:id="odjava" layoutX="301.0" mnemonicParsing="false" onAction="#odjava" prefHeight="50.0" prefWidth="133.0" text="Odjava" />
+                  <Button fx:id="odjava" layoutX="301.0" mnemonicParsing="false" onAction="#odjava" prefHeight="51.0" prefWidth="133.0" text="Odjava" />
                </children>
             </Pane>
             <ImageView fitHeight="30.0" fitWidth="35.0" layoutX="400.0" layoutY="12.0">
@@ -38,33 +38,46 @@
       </Pane>
       <Pane fx:id="glavnaFormaRezervacija" layoutY="51.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="658.0" prefWidth="1024.0">
          <children>
-            <ScrollPane fx:id="scrollPaneRezervacije" hbarPolicy="NEVER" layoutX="1.0" layoutY="39.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="398.0" prefWidth="895.0" vbarPolicy="NEVER" />
-            <Button layoutX="896.0" layoutY="39.0" mnemonicParsing="false" onAction="#pomeriScrollUp" prefHeight="58.0" prefWidth="127.0" text="▲" />
-            <Button layoutX="896.0" layoutY="379.0" mnemonicParsing="false" onAction="#pomeriScrollDown" prefHeight="58.0" prefWidth="127.0" text="▼" />
-            <Button layoutX="896.0" layoutY="140.0" mnemonicParsing="false" onAction="#promeniRezervaciju" prefHeight="78.0" prefWidth="127.0" text="Promeni" />
-            <Button layoutX="896.0" layoutY="251.0" mnemonicParsing="false" onAction="#izbrisiRezervaciju" prefHeight="78.0" prefWidth="127.0" text="Izbriši" />
-            <Button fx:id="sortIme" layoutX="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#sortTabelu" prefHeight="41.0" prefWidth="140.0" text="Ime ↓" />
+            <Button fx:id="sortIme" layoutX="1.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#sortTabelu" prefHeight="41.0" prefWidth="143.0" text="Ime ↓" />
             <Button fx:id="sortDatum" layoutX="144.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#sortTabelu" prefHeight="41.0" prefWidth="100.0" text="Datum ↓" />
             <Button fx:id="sortVreme" layoutX="244.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#sortTabelu" prefHeight="41.0" prefWidth="100.0" text="Vreme ↓" />
             <Button layoutX="344.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="41.0" prefWidth="100.0" text="Broj stola" />
             <Button layoutX="444.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="41.0" prefWidth="100.0" text="Broj osoba" />
-            <Button layoutX="644.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="41.0" prefWidth="250.0" text="Napomena" />
             <Button layoutX="544.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="41.0" prefWidth="100.0" text="Telefon" />
-            <TextField fx:id="ime" layoutX="23.0" layoutY="581.0" onMouseClicked="#pozivanjeAlfaNumerickeTastature" prefHeight="36.0" prefWidth="186.0" />
-            <Label layoutX="23.0" layoutY="555.0" text="Ime:" />
-            <DatePicker fx:id="datumPicker" layoutX="23.0" layoutY="485.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0" prefWidth="186.0" />
+            <Button layoutX="644.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="41.0" prefWidth="252.0" text="Napomena" />
+
+            <ScrollPane fx:id="scrollPaneRezervacije" hbarPolicy="NEVER" layoutX="1.0" layoutY="41.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="398.0" prefWidth="895.0" vbarPolicy="NEVER" />
+
+            <Button layoutX="896.0" layoutY="41.0" mnemonicParsing="false" onAction="#pomeriScrollUp" prefHeight="58.0" prefWidth="127.0" text="▲" />
+            <Button layoutX="896.0" layoutY="379.0" mnemonicParsing="false" onAction="#pomeriScrollDown" prefHeight="58.0" prefWidth="127.0" text="▼" />
+            
+            <Button layoutX="896.0" layoutY="160.0" mnemonicParsing="false" onAction="#promeniRezervaciju" prefHeight="80.0" prefWidth="127.0" text="Promeni" />
+            <Button layoutX="896.0" layoutY="240.0" mnemonicParsing="false" onAction="#izbrisiRezervaciju" prefHeight="80.0" prefWidth="127.0" text="Izbriši" />
+            
             <Label layoutX="23.0" layoutY="460.0" text="Datum:" />
+            <DatePicker fx:id="datumPicker" layoutX="23.0" layoutY="485.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0" prefWidth="186.0" />
+
+            <Label layoutX="234.0" layoutY="460.0" text="Vreme:" />
             <TextField fx:id="timePicker" layoutX="234.0" layoutY="485.0" onMouseClicked="#pozivanjeTimePicker" prefHeight="36.0" prefWidth="186.0" />
-            <Label layoutX="234.0" layoutY="461.0" text="Vreme:" />
-            <Label layoutX="235.0" layoutY="555.0" text="Sto:" />
-            <TextField fx:id="brOsoba" layoutX="452.0" layoutY="485.0" onMouseClicked="#pozivanjeNumerickeTastature" prefHeight="36.0" prefWidth="86.0" />
+
             <Label layoutX="452.0" layoutY="460.0" text="Broj osoba:" />
-            <TextField fx:id="telefon" layoutX="452.0" layoutY="582.0" onMouseClicked="#pozivanjeNumerickeTastature" prefHeight="36.0" prefWidth="186.0" />
-            <Label layoutX="452.0" layoutY="556.0" text="Telefon:" />
-            <TextArea fx:id="napomena" layoutX="661.0" layoutY="487.0" onMouseClicked="#pozivanjeAlfaNumerickeTastature" prefHeight="129.0" prefWidth="200.0" />
-            <Label layoutX="661.0" layoutY="461.0" text="Napomena:" />
-            <Button layoutX="896.0" layoutY="595.0" mnemonicParsing="false" onAction="#sacuvajRezervaciju" prefHeight="65.0" prefWidth="127.0" text="Sačuvaj" />
+            <TextField fx:id="brOsoba" layoutX="452.0" layoutY="485.0" onMouseClicked="#pozivanjeNumerickeTastature" prefHeight="36.0" prefWidth="86.0" />
+
+
+            <Label layoutX="23.0" layoutY="555.0" text="Ime:" />
+            <TextField fx:id="ime" layoutX="23.0" layoutY="581.0" onMouseClicked="#pozivanjeAlfaNumerickeTastature" prefHeight="36.0" prefWidth="186.0" />
+
+            <Label layoutX="234.0" layoutY="555.0" text="Sto:" />
             <TextField fx:id="izabraniSto" layoutX="234.0" layoutY="581.0" onMouseClicked="#pozivanjePrikazSalePopup" prefHeight="36.0" prefWidth="186.0" />
+
+            <Label layoutX="452.0" layoutY="555.0" text="Telefon:" />
+            <TextField fx:id="telefon" layoutX="452.0" layoutY="581.0" onMouseClicked="#pozivanjeNumerickeTastature" prefHeight="36.0" prefWidth="186.0" />
+
+            
+            <Label layoutX="661.0" layoutY="460.0" text="Napomena:" />
+            <TextArea fx:id="napomena" layoutX="661.0" layoutY="485.0" onMouseClicked="#pozivanjeAlfaNumerickeTastature" prefHeight="129.0" prefWidth="200.0" />
+
+            <Button fx:id="idSacuvajRezervaciju" layoutX="896.0" layoutY="595.0" mnemonicParsing="false" onAction="#sacuvajRezervaciju" prefHeight="65.0" prefWidth="127.0" text="Sačuvaj" />
             <TextField fx:id="idRezervacije" layoutX="761.0" layoutY="441.0" />
             <Button layoutX="896.0" layoutY="490.0" mnemonicParsing="false" onAction="#izbrisiSvaPolja" prefHeight="65.0" prefWidth="127.0" text="Izbriši sva polja" />
          </children>
