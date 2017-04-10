@@ -143,7 +143,7 @@ public class PocetniEkranController extends FXMLDocumentController {
             pokreniServisZaFakturu();
 
             myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
-
+            
             return;
         }
         
