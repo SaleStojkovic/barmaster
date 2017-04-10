@@ -7,6 +7,7 @@ package rmaster.views;
 
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +16,10 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -25,6 +28,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.StageStyle;
@@ -32,6 +37,7 @@ import javafx.util.Callback;
 import rmaster.assets.DBBroker;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.assets.Utils;
+import rmaster.models.Porudzbina;
 
 /**
  *
@@ -52,12 +58,17 @@ public class MeniContent extends Pane{
     @FXML private TextField fxID_Ukupno;
     private String ukupno;
     
+    private Porudzbina porudzbina;
     
     private String textFieldFocus = "";
     
-
-    public MeniContent() {
+    @FXML public HBox fxID_footer;
+    
+    public MeniContent(Porudzbina porudzbina) {
+        
         super();
+        this.porudzbina = porudzbina;
+        
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("meniContent.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -71,6 +82,8 @@ public class MeniContent extends Pane{
     
     private void initialilize()
     {
+        fxID_footer.setSpacing(20);
+        
         fxID_Kolicina.focusedProperty().addListener(new ChangeListener<Boolean>()
         {
             @Override
@@ -127,19 +140,15 @@ public class MeniContent extends Pane{
 
     }
    
-    
-    
-    public void numberKeyPressed(ActionEvent event) throws Exception {
+    public void dodajTekst(String akcija) {
         
-        Button pritisnutTaster = (Button)event.getSource();
-                
         if (textFieldFocus.isEmpty()) {
             return;
         }
         
         if (textFieldFocus.equals(fxID_Kolicina.getId())) {
             // Obrada ako se unosi u polje Kolicina
-            if (pritisnutTaster.getId().equals("fxID_Back")) {
+            if (akcija.equals("back")) {
                 if (kolicina.length()>0) {
                     int indeksTacke = kolicina.indexOf(".");
                     if (indeksTacke == kolicina.length()-1) {
@@ -152,16 +161,16 @@ public class MeniContent extends Pane{
             } else {
                 int indeksTacke = kolicina.indexOf(".");
                 if (indeksTacke == -1) { 
-                    kolicina += pritisnutTaster.getText();
+                    kolicina += akcija;
                 } else if (kolicina.length()-indeksTacke <= 2) {
-                    kolicina += pritisnutTaster.getText();
+                    kolicina += akcija;
                 }
             }
         }
         
         if (textFieldFocus.equals(fxID_Cena.getId())) {
             // Obrada ako se unosi u polje Cena
-            if (pritisnutTaster.getId().equals("fxID_Back")) {
+            if (akcija.equals("back")) {
                 if (cena.length()>0) {
                     int indeksTacke = cena.indexOf(".");
                     if (indeksTacke == cena.length()-1) {
@@ -174,16 +183,16 @@ public class MeniContent extends Pane{
             } else {
                 int indeksTacke = cena.indexOf(".");
                 if (indeksTacke == -1) { 
-                    cena += pritisnutTaster.getText();
+                    cena += akcija;
                 } else if (cena.length()-indeksTacke <= 2) {
-                    cena += pritisnutTaster.getText();
+                    cena += akcija;
                 }
             }
         }
         
         if (textFieldFocus.equals(fxID_Ukupno.getId())) {
             // Obrada ako se unosi u polje Ukupno
-            if (pritisnutTaster.getId().equals("fxID_Back")) {
+            if (akcija.equals("back")) {
                 if (ukupno.length()>0) {
                     int indeksTacke = ukupno.indexOf(".");
                     if (indeksTacke == ukupno.length()-1) {
@@ -196,15 +205,31 @@ public class MeniContent extends Pane{
             } else {
                 int indeksTacke = ukupno.indexOf(".");
                 if (indeksTacke == -1) { 
-                    ukupno += pritisnutTaster.getText();
+                    ukupno += akcija;
                 } else if (ukupno.length()-indeksTacke <= 2) {
-                    ukupno += pritisnutTaster.getText();
+                    ukupno += akcija;
                 }
             }
         }
 
         proracunajPolja();
         osveziPolja();
+    }
+    
+    
+    public void numberKeyPressed(ActionEvent event) throws Exception {
+        
+        Button pritisnutTaster = (Button)event.getSource();
+           
+        String akcija = pritisnutTaster.getText();
+        
+        if (pritisnutTaster.getId().equals("fxID_Back")) {
+            
+            akcija = "back";
+        
+        }
+        
+        dodajTekst(akcija);
     }
     
     private void proracunajPolja() {
@@ -348,4 +373,118 @@ public class MeniContent extends Pane{
         popuniMenije();
         
     }
+    
+    public boolean snimiMenipromet() {
+       
+        if (fxID_MeniList.getSelectionModel().getSelectedItem() ==  null) {
+            
+            prikaziUpozorenje();
+            
+            return false;
+        } 
+        
+        Date datum = new Date();
+        
+        Map<String, String> izabraniMeni = fxID_MeniList.getSelectionModel().getSelectedItem();
+       
+        HashMap<String, String> noviMenipromet = new HashMap();
+        
+        noviMenipromet.put("cena", cena);
+        noviMenipromet.put("datum", Utils.getStringFromDate(datum));
+        noviMenipromet.put("kolicina", kolicina);
+        noviMenipromet.put("naziv", izabraniMeni.get("naziv"));
+        noviMenipromet.put("RACUN_ID", porudzbina.getID() + "");
+        noviMenipromet.put("MENI_ID", izabraniMeni.get("id"));
+        
+        try {
+            
+            dbBroker.ubaci(
+                            "menipromet", 
+                            noviMenipromet,
+                            true
+                    );
+            
+            //dialog koji prikazuje snimljeni meni
+            prikaziSnimljeniMenipromet(noviMenipromet);
+            
+            return true;
+            
+        } catch(Exception e) {
+            
+            e.printStackTrace();
+            return false;
+        
+        }
+        
+
+    }
+    
+    
+    public void prikaziUpozorenje() {
+        
+        ButtonType ok = new ButtonType("U redu", ButtonBar.ButtonData.CANCEL_CLOSE);
+            
+        Alert alert = new Alert(
+                Alert.AlertType.WARNING,
+                "Morate izabrati meni!", 
+                ok
+        );        
+                
+        alert.getDialogPane().getStylesheets().
+                addAll(this.getClass().getResource("style/style.css").toExternalForm());
+
+        alert.getDialogPane().getStyleClass().add("myDialog");
+        alert.initStyle(StageStyle.UNDECORATED);
+
+        alert.setTitle("Upozorenje!");
+            
+        alert.showAndWait();
+    }
+    
+    public void prikaziSnimljeniMenipromet(HashMap<String, String> meniPromet) {
+        
+        ButtonType ok = new ButtonType("U redu", ButtonBar.ButtonData.CANCEL_CLOSE);
+            
+        String text = "Podaci o meniju: \n";
+        text += "Naziv: " +  meniPromet.get("naziv") + "\n";
+        text += "Količina: " + kolicina + "\n";
+        text += "Cena: " + cena + "\n";
+        text += "Ukupno: " + ukupno + "\n";
+        
+        Alert alert = new Alert(
+                Alert.AlertType.INFORMATION,
+                text, 
+                ok
+        );        
+                
+        alert.getDialogPane().getStylesheets().
+                addAll(this.getClass().getResource("style/style.css").toExternalForm());
+
+        alert.getDialogPane().getStyleClass().add("myDialog");
+        alert.initStyle(StageStyle.UNDECORATED);
+
+        alert.setTitle("Info");
+            
+        alert.showAndWait();
+    }
+    
+    public void keyboardPressed(KeyEvent ke) {
+        
+        if (ke.getCode() == KeyCode.BACK_SPACE) {
+            dodajTekst("back");
+            return;
+        }
+        
+        char digit = ke.getText().charAt(0);
+        
+        if (!Character.isDigit(digit)) {
+            return;
+        }
+       
+        textFieldFocus = ((TextField) ke.getSource()).getId();
+        
+        dodajTekst(digit + "");
+        
+    }
+    
 }

@@ -9,6 +9,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.CountDownLatch;
+import javafx.application.Platform;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -19,11 +23,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperReport;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.ScreenController;
-import rmaster.assets.ImageBroker;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Settings;
 import rmaster.models.LoginAction;
@@ -138,14 +140,8 @@ public class PocetniEkranController extends FXMLDocumentController {
                 }
             }.start();
             
-            new Thread(){
-                @Override
-                public void start(){
-                   kompajlirajFakturu(); 
-                }
-            }.start();
-            
-            
+            pokreniServisZaFakturu();
+
             myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
 
             return;
@@ -194,4 +190,40 @@ public class PocetniEkranController extends FXMLDocumentController {
         
         }
     }
+    
+    public void pokreniServisZaFakturu() {
+        
+        Service<Void> service = new Service<Void>() {
+            
+        @Override
+        protected Task<Void> createTask() {
+            return new Task<Void>() {           
+                @Override
+                protected Void call() throws Exception {
+                    //Background work                       
+                    final CountDownLatch latch = new CountDownLatch(1);
+                    Platform.runLater(new Runnable() {                          
+                        @Override
+                        public void run() {
+                            try{
+                               
+                               kompajlirajFakturu();
+                                
+                            }finally{
+                                latch.countDown();
+                            }
+                        }
+                    });
+                    latch.await();                      
+
+                    return null;
+                }
+            };
+        }
+    };
+        
+    service.start();
+    
+    }
+    
 }

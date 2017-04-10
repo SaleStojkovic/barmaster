@@ -594,12 +594,14 @@ public class NaplataController extends FXMLDocumentController {
     
     public void otvoriMeniPopUp(ActionEvent event)
     {
-        MeniPopUpController meniPopUp = new MeniPopUpController();
+        MeniPopUpController meniPopUp = new MeniPopUpController(porudzbina);
         
         Optional<String> result = meniPopUp.showAndWait();
 
         if (result.isPresent()){
-            //TODO
+            
+            //TODO sta se ovde sad desava???
+        
         }
         
         
