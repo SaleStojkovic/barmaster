@@ -12,12 +12,15 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -30,6 +33,7 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
 import rmaster.assets.DBBroker;
 import rmaster.assets.QueryBuilder.QueryBuilder;
@@ -179,6 +183,10 @@ public class RMaster extends Application {
             
         }.start();
 
+        
+        pokreniServisZaFakturu();
+
+
     }
 
     private void initializeForms() throws Exception
@@ -215,7 +223,12 @@ public class RMaster extends Application {
 
                         long startTimeT = System.nanoTime();
 
-                        mainContainer.loadScreen(imeForme, fxmlPutanja);
+                        try {
+                            mainContainer.loadScreen(imeForme, fxmlPutanja);
+                        } catch (Exception e) {
+                            System.out.println("GRESKA -> " + imeForme);
+                            e.printStackTrace();
+                        }
 
                         long estimatedTimeT = System.nanoTime() - startTimeT;
                         System.out.println("Ucitavanje - " + imeForme + ": " + estimatedTimeT);
@@ -451,4 +464,53 @@ public class RMaster extends Application {
         }
     }
    
+    public void kompajlirajFakturu() {
+        
+        if (rmaster.RMaster.faktura == null) {
+            
+            String reportFileName = "/rmaster/views/reports/faktura.jrxml";
+            
+            try {
+            
+                rmaster.RMaster.faktura = JasperCompileManager.compileReport(getClass().getResourceAsStream(reportFileName));
+            
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        
+        }
+    }
+    
+    public void pokreniServisZaFakturu() {
+        
+        Service<Void> service = new Service<Void>() {
+            
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {           
+                    @Override
+                    protected Void call() throws Exception {
+                        //Background work                       
+                        final CountDownLatch latch = new CountDownLatch(1);
+                        Platform.runLater(new Runnable() {                          
+                            @Override
+                            public void run() {
+                                try{
+                                    kompajlirajFakturu();
+                                }finally{
+                                    latch.countDown();
+                                }
+                            }
+                        });
+                        latch.await();                      
+
+                        return null;
+                    }
+                };
+            }
+        };
+
+        service.start();
+    }
+    
 }

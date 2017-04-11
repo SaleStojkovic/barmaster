@@ -140,8 +140,6 @@ public class PocetniEkranController extends FXMLDocumentController {
                 }
             }.start();
             
-            pokreniServisZaFakturu();
-
             myController.setScreen(ScreenMap.PRIKAZ_SALA, null);
             
             return;
@@ -172,58 +170,5 @@ public class PocetniEkranController extends FXMLDocumentController {
         RMaster.firstLogin = true;
         RMaster.saleZabranjeneKonobaru.clear();
         RMaster.saleOmoguceneKonobaru.clear();
-    }
-    
-    public void kompajlirajFakturu() {
-        
-        if (rmaster.RMaster.faktura == null) {
-            
-            String reportFileName = "/rmaster/views/reports/faktura.jrxml";
-            
-            try {
-            
-                rmaster.RMaster.faktura = JasperCompileManager.compileReport(getClass().getResourceAsStream(reportFileName));
-            
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        
-        }
-    }
-    
-    public void pokreniServisZaFakturu() {
-        
-        Service<Void> service = new Service<Void>() {
-            
-        @Override
-        protected Task<Void> createTask() {
-            return new Task<Void>() {           
-                @Override
-                protected Void call() throws Exception {
-                    //Background work                       
-                    final CountDownLatch latch = new CountDownLatch(1);
-                    Platform.runLater(new Runnable() {                          
-                        @Override
-                        public void run() {
-                            try{
-                               
-                               kompajlirajFakturu();
-                                
-                            }finally{
-                                latch.countDown();
-                            }
-                        }
-                    });
-                    latch.await();                      
-
-                    return null;
-                }
-            };
-        }
-    };
-        
-    service.start();
-    
-    }
-    
+    }  
 }

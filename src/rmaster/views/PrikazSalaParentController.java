@@ -69,29 +69,42 @@ public abstract class PrikazSalaParentController extends FXMLDocumentController 
         
         saleTabPane.setSide(Side.BOTTOM);
 
-        Task<List> prikaziSaluTask = new Task<List>() {
-            @Override
-            public List call() throws Exception {
-               prikaziSalu(sale.get(0));
-               sale.remove(0);
-               return null;
-            }
-        };
-            
-        prikaziSaluTask.setOnSucceeded(e -> {
-                for(Map<String, String> salaMap : sale){
+        if (sale.size()>0) {
+            Task<List> prikaziSaluTask = new Task<List>() {
+                @Override
+                public List call() throws Exception {
+                    try {
+                        prikaziSalu(sale.get(0));
+                    } catch (Exception e) {
+                        System.out.println("GRESKA -> PrikazSalaParent -> prikaziSalu(" + sale.get(0) + ")");
+                        e.printStackTrace();
+                    } finally {
+                    }
+                    sale.remove(0);
+                    return null;
+                }
+            };
 
-                    new Thread() {
-                        @Override
-                        public void start() {
-                            prikaziSalu(salaMap);
-                        }
-                    }.start();
-                }    
-            }
-        );
-        
-        new Thread(prikaziSaluTask).start();
+            prikaziSaluTask.setOnSucceeded(e -> {
+                    for(Map<String, String> salaMap : sale){
+
+                        new Thread() {
+                            @Override
+                            public void start() {
+                                try {
+                                    prikaziSalu(salaMap);
+                                } catch (Exception e) {
+                                    System.out.println("GRESKA -> PrikazSalaParent -> prikaziSalu(" + salaMap.get("naziv") + ")");
+                                    e.printStackTrace();
+                                }
+                            }
+                        }.start();
+                    }    
+                }
+            );
+
+            new Thread(prikaziSaluTask).start();
+        }
     }
 
 
