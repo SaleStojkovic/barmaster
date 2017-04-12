@@ -64,6 +64,8 @@ public class MeniContent extends Pane{
     
     @FXML public HBox fxID_footer;
     
+    private String id = "";
+
     public MeniContent(Porudzbina porudzbina) {
         
         super();
@@ -123,18 +125,35 @@ public class MeniContent extends Pane{
         fxID_MeniList.setCellFactory(lv -> new ListCell<Map<String, String>>() {
             @Override
             public void updateItem(Map<String, String> novaMapa, boolean empty) {
-                super.updateItem(novaMapa, empty) ;
+                super.updateItem(novaMapa, empty);
                 setText(empty ? null : novaMapa.get("naziv"));
             }
         }); 
+
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+        query.setTableName("menipromet");
+        query.addCriteriaColumns("RACUN_ID");
+        query.addCriteria(QueryBuilder.IS_EQUAL);
+        query.addCriteriaValues("" + porudzbina.getID());
         
+        DBBroker dbBroker = new DBBroker();
+        List rezultat = dbBroker.runQuery(query);
+
         kolicina = "";
         cena = "";
         ukupno = "";
-        
-        osveziPolja();
+
+        if (rezultat.size() > 0) {
+            Map<String,String> mapa = (Map<String,String>)rezultat.get(0);
+            kolicina = mapa.get("kolicina");
+            cena = mapa.get("cena");
+            ukupno = Utils.getStringFromDouble(Utils.getDoubleFromString(kolicina) * Utils.getDoubleFromString(cena));
+            id = mapa.get("id");
+         }
         
         popuniMenije();
+        
+        osveziPolja();
         
         Platform.runLater(() -> fxID_Kolicina.requestFocus());
 
@@ -287,20 +306,21 @@ public class MeniContent extends Pane{
         fxID_MeniList.getItems().clear();
         
         QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
-        
         query.setTableName("meni");
-        
         query.addCriteriaColumns("blokiran");
         query.addCriteria(QueryBuilder.IS_EQUAL);
         query.addCriteriaValues(QueryBuilder.BIT_0);
+        query.addOrderByColumns("naziv");
+        query.addOrderByCriterias(QueryBuilder.SORT_ASC);
         
         List<HashMap<String, String>> listaRezultata = dbBroker.runQuery(query);
         
         for(HashMap<String, String> novaMapa : listaRezultata) {
-            
             fxID_MeniList.getItems().add(novaMapa);
+            if (novaMapa.get("id").equals(id)) {
+                fxID_MeniList.getSelectionModel().select(novaMapa);
+            }
         }
-        
     }
     
     
@@ -332,14 +352,11 @@ public class MeniContent extends Pane{
         dialog.setTitle("");
             
         dialog.setResultConverter(new Callback<ButtonType, String>() {
-        @Override
-        public String call(ButtonType b) {
-
+            @Override
+            public String call(ButtonType b) {
                 if (b == sacuvaj) {
-
                     return text.getText();
                 }
-
                 return null;
             }
         });
@@ -358,7 +375,9 @@ public class MeniContent extends Pane{
         HashMap<String, String> noviMeni = new HashMap<>();
 
         //TODO razmisliti da li postoji bolji nacin
-        noviMeni.put("naziv, blokiran", naziv + "', b'0");
+//        noviMeni.put("naziv, blokiran", naziv + "', b'0");
+        noviMeni.put("naziv", naziv);
+        noviMeni.put("blokiran", "BIT_0");
         
         try {
             dbBroker.ubaci(
@@ -390,19 +409,22 @@ public class MeniContent extends Pane{
         HashMap<String, String> noviMenipromet = new HashMap();
         
         noviMenipromet.put("cena", cena);
-        noviMenipromet.put("datum", Utils.getStringFromDate(datum));
+        //noviMenipromet.put("datum", Utils.getStringFromDate(datum));
         noviMenipromet.put("kolicina", kolicina);
         noviMenipromet.put("naziv", izabraniMeni.get("naziv"));
         noviMenipromet.put("RACUN_ID", porudzbina.getID() + "");
         noviMenipromet.put("MENI_ID", izabraniMeni.get("id"));
         
         try {
-            
-            dbBroker.ubaci(
-                            "menipromet", 
-                            noviMenipromet,
-                            true
-                    );
+            if (id.equals("")) {
+                dbBroker.ubaci(
+                                "menipromet", 
+                                noviMenipromet,
+                                true
+                        );
+            } else {
+                dbBroker.izmeni("menipromet", "id", id, noviMenipromet, Boolean.TRUE);
+            }
             
             //dialog koji prikazuje snimljeni meni
             prikaziSnimljeniMenipromet(noviMenipromet);
@@ -446,10 +468,10 @@ public class MeniContent extends Pane{
         ButtonType ok = new ButtonType("U redu", ButtonBar.ButtonData.CANCEL_CLOSE);
             
         String text = "Podaci o meniju: \n";
-        text += "Naziv: " +  meniPromet.get("naziv") + "\n";
-        text += "Količina: " + kolicina + "\n";
-        text += "Cena: " + cena + "\n";
-        text += "Ukupno: " + ukupno + "\n";
+        text += "\tNaziv: " +  meniPromet.get("naziv") + "\n";
+        text += "\tKoličina: " + meniPromet.get("kolicina") + "\n";
+        text += "\tCena: " + meniPromet.get("cena") + "\n";
+        text += "\tUkupno: " + Utils.getStringFromDouble(Utils.getDoubleFromString(meniPromet.get("kolicina")) * Utils.getDoubleFromString(meniPromet.get("cena"))) + "\n";
         
         Alert alert = new Alert(
                 Alert.AlertType.INFORMATION,

@@ -155,7 +155,13 @@ public final class DBBroker {
         
         
         for (HashMap.Entry<String, String> element : elementi.entrySet()) {
-            insertValues += "'" + element.getValue() + "',";
+            if (element.getValue().equals("BIT_0")) {
+                insertValues += QueryBuilder.BIT_0 + "',";
+            } else if (element.getValue().equals("BIT_1")) {
+                insertValues += QueryBuilder.BIT_1 + "',";
+            } else {
+                insertValues += "'" + element.getValue() + "',";
+            }
             insertTableSQL += element.getKey() + ",";
         }
         insertTableSQL = insertTableSQL.substring(0, insertTableSQL.length()-1);

@@ -601,6 +601,8 @@ public class NaplataController extends FXMLDocumentController {
         if (result.isPresent()){
             
             //TODO sta se ovde sad desava???
+            // Ovde nekako treba da zapamti da je napravljen MENI_PROMET i kada se poziva stampa da to posalje na stampu
+            // Mozda moze popUp da vrati mapu, a mozda i iz baze da se pokupi
         
         }
         

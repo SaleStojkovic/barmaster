@@ -5,19 +5,9 @@
  */
 package rmaster.models;
 
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import rmaster.assets.ModelBase;
-import static rmaster.models.Rezervacija.BROJ_OSOBA;
-import static rmaster.models.Rezervacija.BROJ_STOLA;
-import static rmaster.models.Rezervacija.DATUM;
-import static rmaster.models.Rezervacija.IME;
-import static rmaster.models.Rezervacija.NAPOMENA;
-import static rmaster.models.Rezervacija.PRIMARY_KEY;
-import static rmaster.models.Rezervacija.TABLE_NAME;
-import static rmaster.models.Rezervacija.TELEFON;
-import static rmaster.models.Rezervacija.VREME;
 
 /**
  *
