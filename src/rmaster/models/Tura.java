@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import rmaster.assets.DBBroker;
+import rmaster.assets.RM_Datetime;
 import rmaster.assets.Utils;
 
 /**
@@ -209,7 +210,9 @@ public class Tura {
         try {
             mapaTura.put("brojStola", "" + this.brojStolaBroj);
             if (this.datum == null) {
-                this.datum = new Date();
+                RM_Datetime rmDatum = new RM_Datetime();
+                
+                this.datum = rmDatum.getDate();
             }
             mapaTura.put("datum", Utils.getStringFromDate(this.datum));
             mapaTura.put("pripremljena", "false");

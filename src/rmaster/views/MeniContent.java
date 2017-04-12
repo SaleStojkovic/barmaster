@@ -36,6 +36,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import rmaster.assets.DBBroker;
 import rmaster.assets.QueryBuilder.QueryBuilder;
+import rmaster.assets.RM_Datetime;
 import rmaster.assets.Utils;
 import rmaster.models.Porudzbina;
 
@@ -402,7 +403,9 @@ public class MeniContent extends Pane{
             return false;
         } 
         
-        Date datum = new Date();
+        RM_Datetime rmDate = new RM_Datetime();
+        
+        Date datum = rmDate.getDate();
         
         Map<String, String> izabraniMeni = fxID_MeniList.getSelectionModel().getSelectedItem();
        

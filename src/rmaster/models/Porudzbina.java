@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import rmaster.assets.DBBroker;
 import rmaster.assets.QueryBuilder.QueryBuilder;
+import rmaster.assets.RM_Datetime;
 import rmaster.assets.Utils;
 
 /**
@@ -134,13 +135,10 @@ public class Porudzbina {
         for (Map<String, String> tura : tureJednogGosta) {
                 String turaId = tura.get("id");
                 String datum = tura.get("datum");
-                Date datumD = new Date();
-                try {
-                    datumD = Utils.getDateFromString(datum);
-                } catch (ParseException e) {
-                    System.out.println("Neuspela konverzija stringa u datum za vreme ture!");
-                }
-                Tura turaModel = new Tura(turaId, datumD);
+ 
+                RM_Datetime datumD = new RM_Datetime(datum);
+
+                Tura turaModel = new Tura(turaId, datumD.getDate());
                 turaModel.setBrojStolaBroj(this.getBrojStolaBroj());
         
                 this.turePorudzbine.add(turaModel);
@@ -158,64 +156,104 @@ public class Porudzbina {
         query.addCriteria(QueryBuilder.IS_EQUAL);
         query.addCriteriaValues(this.racunID + "");
         
-        try {
-            List podaci = new DBBroker().runQuery(query);
+        List podaci = new DBBroker().runQuery(query);
             if (!podaci.isEmpty()) {
+                
                 Map<String,String>  porudzbina = (Map<String, String>)podaci.get(0);
+                
                 if (porudzbina != null) {
-                    if (porudzbina.get("id") != null)
+                    
+                    if (porudzbina.get("id") != null) {
+                        
                         this.racunID = Long.parseLong(porudzbina.get("id"));
-                    if (porudzbina.get("brojFakture") != null)
+                    }
+                    if (porudzbina.get("brojFakture") != null) {
+                        
                         this.brojFakture = porudzbina.get("brojFakture");
-                    if (porudzbina.get("brojRacuna") != null)
+                    }
+                    if (porudzbina.get("brojRacuna") != null) {
+                        
                         this.brojRacuna = Integer.parseInt(porudzbina.get("brojRacuna"));
-                    if (porudzbina.get("brojFiskalnogIsecka") != null && porudzbina.get("brojFiskalnogIsecka").equals(0))
+                    }
+                    
+                    if (porudzbina.get("brojFiskalnogIsecka") != null && porudzbina.get("brojFiskalnogIsecka").equals(0)) {
+                        
                         this.brojFiskalnogIsecka = Long.parseLong(porudzbina.get("brojFiskalnogIsecka"));
-                    if (porudzbina.get("brojStola") != null)
-                        //this.brojStolaID = Integer.parseInt(porudzbina.get("brojStola"));
+                    }
+                    
+                    if (porudzbina.get("brojStola") != null) {
+                        
                         this.brojStolaBroj = Integer.parseInt(porudzbina.get("brojStola"));
-                    if (porudzbina.get("crnoPlacanje") != null)
+                    }
+                    
+                    if (porudzbina.get("crnoPlacanje") != null) { 
+                        
                         this.crnoPlacanje = porudzbina.get("crnoPlacanje");
-                    if (porudzbina.get("datum") != null)
-                        try {
-                            this.datum = Utils.getDateFromString(porudzbina.get("datum"));
-                        } catch (ParseException e) {
-                            System.out.println("Neuspelo pretvaranje stringa u datum za kreiranje porudzbine - datum!");
-                        }
-                    if (porudzbina.get("fiskalniOdstampan") != null)
+                    }
+                    
+                    if (porudzbina.get("datum") != null) {
+                        
+                        RM_Datetime date = new RM_Datetime(porudzbina.get("datum"));
+                       
+                        this.datum = date.getDate();
+                    }
+                        
+                    if (porudzbina.get("fiskalniOdstampan") != null) {
+                        
                         this.fiskalniOdstampan = Boolean.parseBoolean(porudzbina.get("fiskalniOdstampan"));
-                    if (porudzbina.get("oznakaSobe") != null)
+                    }
+                    
+                    if (porudzbina.get("oznakaSobe") != null) {
+                        
                         this.oznakaSobe = porudzbina.get("oznakaSobe");
-                    if (porudzbina.get("popust") != null)
+                    }
+                    if (porudzbina.get("popust") != null) {
+                        
                         this.popust = Double.parseDouble(porudzbina.get("popust"));
-                    if (porudzbina.get("storniran") != null)
+                    }
+                    
+                    if (porudzbina.get("storniran") != null) {
                         this.storniran = Boolean.parseBoolean(porudzbina.get("storniran"));
-                    if (porudzbina.get("zatvoren") != null)
+                    }
+                   
+                    if (porudzbina.get("zatvoren") != null) { 
+                       
                         this.zatvoren = Boolean.parseBoolean(porudzbina.get("zatvoren"));
-                    if (porudzbina.get("KASA_ID") != null)
+                    }
+                    if (porudzbina.get("KASA_ID") != null) { 
+                     
                         this.KASA_ID = Long.parseLong(porudzbina.get("KASA_ID"));
-                    if (porudzbina.get("KONOBAR_ID") != null)
+                    }
+                    
+                    if (porudzbina.get("KONOBAR_ID") != null) {
+                        
                         this.KONOBAR_ID = Long.parseLong(porudzbina.get("KONOBAR_ID"));
+                    }
+                    
                     if (porudzbina.get("STALNIGOST_ID") != null && !porudzbina.get("STALNIGOST_ID").equals("0")) {
-                        //this.STALNIGOST_ID = Long.parseLong(porudzbina.get("STALNIGOST_ID"));
+                        
                         this.stalniGost = new StalniGost();
                         this.stalniGost.getInstance(porudzbina.get("STALNIGOST_ID"));
                     }
-                    if (porudzbina.get("gost") != null)
+                    
+                    if (porudzbina.get("gost") != null) {
                         this.gostInt = Integer.parseInt(porudzbina.get("gost"));
-                    if (porudzbina.get("vremeIzdavanjaRacuna") != null)
-                        try {
-                            this.vremeIzdavanjaRacuna = Utils.getDateFromString(porudzbina.get("vremeIzdavanjaRacuna"));
-                        } catch (ParseException e) {
-                            System.out.println("Neuspelo pretvaranje stringa u datum za kreiranje porudzbine - vremeIzdavanjaRacuna!");
-                        }
+                    }
+                    
+                    if (porudzbina.get("vremeIzdavanjaRacuna") != null) {
+                        
+                        RM_Datetime date = new RM_Datetime(porudzbina.get("vremeIzdavanjaRacuna"));
+                       
+                        this.vremeIzdavanjaRacuna = date.getDate();
+                       
+                    }
+                       
                 }
-                } else {
-                    System.out.println("Greska pri formiranju Porudzbine!");
+                
+            } else {
+                System.out.println("Greska pri formiranju Porudzbine!");
             }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+
         // TODO: Pokupi stavke racuna, treba voditi racuna u kojoj je turi, za svaku novu kreirati novu Tura, i dodati StavkaTure u Tura
         popuniTurePorudzbineIzBaze();
     }
@@ -240,10 +278,6 @@ public class Porudzbina {
         this.blokirana = blokiranaPoruzbina;
     }
     
-    //public void setNovaTuraPorudzbine(Tura tura) {
-        //this.novaTuraPorudzbine = tura;
-    //}
-    
     public void zatvoriRacun() {
         DBBroker db = new DBBroker();
         snimi();
@@ -266,8 +300,14 @@ public class Porudzbina {
             mapa.put("brojStola", "" + this.brojStolaBroj);
             if (this.crnoPlacanje!=null && !(this.crnoPlacanje.equals("") || this.crnoPlacanje.equals("0") || this.crnoPlacanje.equals("null")))
                 mapa.put("crnoPlacanje", "" + this.crnoPlacanje);
-            if (this.datum == null)
-                this.datum = new Date();
+            
+            if (this.datum == null) {
+                
+                RM_Datetime rmDatum = new RM_Datetime();
+              
+                this.datum = rmDatum.getDate();
+            }
+            
             mapa.put("datum", Utils.getStringFromDate(this.datum));
             mapa.put("fiskalniOdstampan", "" + this.fiskalniOdstampan);
     //        mapa.put("fiskalniOdstampan", "" + (this.fiskalniOdstampan ? "1" : "0"));

@@ -36,6 +36,7 @@ import rmaster.assets.FXMLDocumentController;
 import rmaster.ScreenController;
 import rmaster.assets.DBBroker;
 import rmaster.assets.RM_Button.RM_Button;
+import rmaster.assets.RM_Datetime;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Utils;
 import rmaster.models.Gost;
@@ -997,7 +998,10 @@ public class SastavljanjeRastavljanjeController extends FXMLDocumentController {
                         HashMap<String,String> mapaTura = new HashMap();
                         mapaTura.put("brojStola", "" + porudzbinaZaSastavljanje.getBrojStolaBroj());
                         if (tura.datum == null) {
-                            tura.datum = new Date();
+                            
+                            RM_Datetime rmDatum = new RM_Datetime();
+                            
+                            tura.datum = rmDatum.getDate();
                         }
                         mapaTura.put("datum", Utils.getStringFromDate(tura.datum));
                         mapaTura.put("pripremljena", "false");

@@ -33,9 +33,9 @@ public final class DBBroker {
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/" + DB_NAME + "?dontTrackOpenResources=true";
     private static final String USERNAME = "root";
     
-//    private static final String PASSWORD = "burek";
+    private static final String PASSWORD = "burek";
 //    private static final String PASSWORD = "928374";
-    private static final String PASSWORD = "";
+//    private static final String PASSWORD = "";
     
     private static ComboPooledDataSource dataSource = null;
 //    private static PooledDataSource pds = null;
@@ -56,9 +56,6 @@ public final class DBBroker {
                 dataSource.setAcquireIncrement(3); 
                 dataSource.setMaxPoolSize(12);
                 
-//                pds = (PooledDataSource) dataSource;
-//                brojKonekcija = pds.getNumConnectionsAllUsers();
-                
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -72,11 +69,6 @@ public final class DBBroker {
         Connection con = null;
         try {
             con = dataSource.getConnection();
-//            if (pds.getNumConnectionsAllUsers() > brojKonekcija) {
-//                brojKonekcija = pds.getNumConnectionsAllUsers();
-//                System.out.println("Broj busy konekcija - all users: " + pds.getNumBusyConnectionsAllUsers());
-//                System.out.println("Broj konekcija - all users: " + brojKonekcija);
-//            }
        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -113,26 +105,10 @@ public final class DBBroker {
     
     public static CallableStatement zatvoriCallableStatement(CallableStatement statement) {
         return (CallableStatement) zatvoriStatement(statement);
-//        try {
-//            statement.close();
-//        } catch (SQLException ignore) {
-//        } finally {
-//            statement = null;
-//        }
-//        
-//        return statement;
     }
 
     public static PreparedStatement zatvoriPreparedStatement(PreparedStatement statement) {
         return (PreparedStatement) zatvoriStatement(statement);
-//        try {
-//            statement.close();
-//        } catch (SQLException ignore) {
-//        } finally {
-//            statement = null;
-//        }
-//        
-//        return statement;
     }
     /**
      * 

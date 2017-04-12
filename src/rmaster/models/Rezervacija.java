@@ -89,7 +89,6 @@ public final class Rezervacija extends ModelBase {
     {
         LinkedHashMap<String, String> rezervacijaMap = new LinkedHashMap();
         rezervacijaMap.put(IME, this.ime);
-        //rezervacijaMap.put(DATUM, this.datum + " " + this.vreme + ":00");
         rezervacijaMap.put(VREME, this.datum + " " + this.vreme + ":00");
         rezervacijaMap.put(BROJ_STOLA, this.brStola);
         rezervacijaMap.put(BROJ_OSOBA, this.brOsoba);
