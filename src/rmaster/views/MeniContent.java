@@ -7,8 +7,8 @@ package rmaster.views;
 
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,7 +16,6 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -36,7 +35,6 @@ import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import rmaster.assets.DBBroker;
 import rmaster.assets.QueryBuilder.QueryBuilder;
-import rmaster.assets.RM_Datetime;
 import rmaster.assets.Utils;
 import rmaster.models.Porudzbina;
 
@@ -67,10 +65,13 @@ public class MeniContent extends Pane{
     
     private String id = "";
 
-    public MeniContent(Porudzbina porudzbina) {
+    private HashMap<String,String> meniPromet = null;
+    
+    public MeniContent(Porudzbina porudzbina, HashMap<String,String> meniPromet) {
         
         super();
         this.porudzbina = porudzbina;
+        this.meniPromet = meniPromet;
         
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("meniContent.fxml"));
         fxmlLoader.setRoot(this);
@@ -131,25 +132,15 @@ public class MeniContent extends Pane{
             }
         }); 
 
-        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
-        query.setTableName("menipromet");
-        query.addCriteriaColumns("RACUN_ID");
-        query.addCriteria(QueryBuilder.IS_EQUAL);
-        query.addCriteriaValues("" + porudzbina.getID());
-        
-        DBBroker dbBroker = new DBBroker();
-        List rezultat = dbBroker.runQuery(query);
-
         kolicina = "";
         cena = "";
         ukupno = "";
 
-        if (rezultat.size() > 0) {
-            Map<String,String> mapa = (Map<String,String>)rezultat.get(0);
-            kolicina = mapa.get("kolicina");
-            cena = mapa.get("cena");
+        if (meniPromet != null) {
+            kolicina = meniPromet.get("kolicina");
+            cena = meniPromet.get("cena");
             ukupno = Utils.getStringFromDouble(Utils.getDoubleFromString(kolicina) * Utils.getDoubleFromString(cena));
-            id = mapa.get("id");
+            id = meniPromet.get("id");
          }
         
         popuniMenije();
@@ -236,6 +227,10 @@ public class MeniContent extends Pane{
         osveziPolja();
     }
     
+    
+    public HashMap<String,String> getMeniPromet() {
+        return meniPromet;
+    }
     
     public void numberKeyPressed(ActionEvent event) throws Exception {
         
@@ -409,28 +404,31 @@ public class MeniContent extends Pane{
         
         Map<String, String> izabraniMeni = fxID_MeniList.getSelectionModel().getSelectedItem();
        
-        HashMap<String, String> noviMenipromet = new HashMap();
-        
-        noviMenipromet.put("cena", cena);
+        if (meniPromet == null) {
+            meniPromet = new HashMap<>();
+        } else {
+            meniPromet.clear();
+        }
+        meniPromet.put("cena", cena);
         //noviMenipromet.put("datum", Utils.getStringFromDate(datum));
-        noviMenipromet.put("kolicina", kolicina);
-        noviMenipromet.put("naziv", izabraniMeni.get("naziv"));
-        noviMenipromet.put("RACUN_ID", porudzbina.getID() + "");
-        noviMenipromet.put("MENI_ID", izabraniMeni.get("id"));
+        meniPromet.put("kolicina", kolicina);
+        meniPromet.put("naziv", izabraniMeni.get("naziv"));
+        meniPromet.put("RACUN_ID", porudzbina.getID() + "");
+        meniPromet.put("MENI_ID", izabraniMeni.get("id"));
         
         try {
             if (id.equals("")) {
                 dbBroker.ubaci(
                                 "menipromet", 
-                                noviMenipromet,
+                                meniPromet,
                                 true
                         );
             } else {
-                dbBroker.izmeni("menipromet", "id", id, noviMenipromet, Boolean.TRUE);
+                dbBroker.izmeni("menipromet", "id", id, meniPromet, Boolean.TRUE);
             }
             
             //dialog koji prikazuje snimljeni meni
-            prikaziSnimljeniMenipromet(noviMenipromet);
+            prikaziSnimljeniMenipromet(meniPromet);
             
             return true;
             

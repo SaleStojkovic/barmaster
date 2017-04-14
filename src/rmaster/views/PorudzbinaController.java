@@ -259,24 +259,20 @@ public class PorudzbinaController extends FXMLDocumentController {
         
     @Override
     public void initData(Object data) {
+        
         if (data != null) {
-            HashMap<String, String> stoMap = (HashMap) data;
-
-            izabraniStoId = stoMap.get("stoId");
-
-            izabraniStoBroj = stoMap.get("stoBroj");
-
-            izabraniStoNaziv = stoMap.get("stoNaziv");
-
-            imeKonobara.setText(getUlogovaniKonobarIme());
-
-            izabraniSto.setText("Sto: " + izabraniStoNaziv);
-
+            this.prikazGostiju.getChildren().clear();
             this.porudzbineStola.clear();
             this.porudzbinaTrenutna = null;
             this.novaTura = null;
-
-            this.prikazGostiju.getChildren().clear();
+            sakrijSveTabele();
+            imeKonobara.setText(getUlogovaniKonobarIme());
+            
+            HashMap<String, String> stoMap = (HashMap) data;
+            izabraniStoId = stoMap.get("stoId");
+            izabraniStoBroj = stoMap.get("stoBroj");
+            izabraniStoNaziv = stoMap.get("stoNaziv");
+            izabraniSto.setText("Sto: " + izabraniStoNaziv);
 
             this.total.setText("0.00");
 

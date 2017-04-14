@@ -1,5 +1,6 @@
 package rmaster.views;
 
+import java.util.HashMap;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -12,7 +13,7 @@ import rmaster.models.Porudzbina;
 
 public class MeniPopUpController extends Dialog {
     
-    public MeniPopUpController(Porudzbina porudzbina) {
+    public MeniPopUpController(Porudzbina porudzbina, HashMap<String,String> meniPromet) {
         
         Button potvrdi = new Button("Potvrdi");
         potvrdi.setPrefSize(140, 50);
@@ -25,7 +26,7 @@ public class MeniPopUpController extends Dialog {
                 addAll(this.getClass().getResource("style/style.css").toExternalForm());
         this.getDialogPane().getStyleClass().add("myDialog");
         
-        MeniContent content = new MeniContent(porudzbina);
+        MeniContent content = new MeniContent(porudzbina, meniPromet);
         content.fxID_footer.getChildren().addAll(otkazi, potvrdi);
         
         this.getDialogPane().setContent(content);
@@ -33,7 +34,7 @@ public class MeniPopUpController extends Dialog {
         potvrdi.setOnAction(new EventHandler<ActionEvent>() {
                             @Override public void handle(ActionEvent e) {
                                 if (content.snimiMenipromet()) {
-                                   vratiRezultat();
+                                   vratiRezultat(content.getMeniPromet());
                                }
                             }
         });
@@ -53,11 +54,10 @@ public class MeniPopUpController extends Dialog {
         }
     }
     
-    private void vratiRezultat() {
+    private void vratiRezultat(HashMap<String,String> meni) {
         
         this.setResultConverter(button -> {
-            //sta ovde treba da vrati??
-            return null;
+            return meni;
         });
         this.getDialogPane().getScene().getWindow().hide();
         

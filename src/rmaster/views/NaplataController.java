@@ -41,6 +41,8 @@ import rmaster.assets.Utils;
 import rmaster.models.NacinPlacanja;
 import rmaster.models.Porudzbina;
 import rmaster.models.StalniGost;
+import rmaster.models.StavkaTure;
+import rmaster.models.Tura;
 
 /**
  * FXML Controller class
@@ -97,6 +99,8 @@ public class NaplataController extends FXMLDocumentController {
     private String sVrednostKartica = "";
     private String sVrednostGotovina = "";
     private Node roditelj = null;
+    
+    private HashMap<String, String> meniPromet = null;
 
     /**
      * Initializes the controller class.
@@ -193,6 +197,8 @@ public class NaplataController extends FXMLDocumentController {
 
         this.skenerKartice.setText("");
         
+        meniPromet = popuniMeniPromet();
+        
         osveziPrikaz();
     }
     
@@ -200,6 +206,23 @@ public class NaplataController extends FXMLDocumentController {
     public void setScreenParent(ScreenController screenParent){ 
         myController = screenParent; 
     } 
+    
+    private HashMap<String,String> popuniMeniPromet() {
+        HashMap<String,String> mapa = null;
+        QueryBuilder query = new QueryBuilder(QueryBuilder.SELECT);
+        query.setTableName("menipromet");
+        query.addCriteriaColumns("RACUN_ID");
+        query.addCriteria(QueryBuilder.IS_EQUAL);
+        query.addCriteriaValues("" + porudzbina.getID());
+        
+        DBBroker dbBroker = new DBBroker();
+        List rezultat = dbBroker.runQuery(query);
+        if (rezultat.size() > 0) {
+            mapa = (HashMap<String,String>)rezultat.get(0);
+        }
+        return mapa;
+        
+    }
     
     private void popuniPopuste() {
         List<Map<String, String>> popustiZaNaplatu;
@@ -377,7 +400,43 @@ public class NaplataController extends FXMLDocumentController {
     private void stampajSnimiZatvoriFormu(VrstaRacunaZaStampu vrstaRacuna, ActionEvent event) {
         // TODO
         // Ovde treba odraditi zatvaranje forme i odlazak na stolove ili LOG-OF
+        if (meniPromet != null) {
+            double suma = 0;
+            double zaPlacanje = Utils.getDoubleFromString(meniPromet.get("kolicina"))
+                                * Utils.getDoubleFromString(meniPromet.get("cena"));
+            for (NacinPlacanja nacinPlacanja : placanja) {
+                suma += nacinPlacanja.getVrednost();
+            }
+            
+            if (suma != zaPlacanje) {
+                for (NacinPlacanja nacinPlacanja : placanja) {
+                    if (nacinPlacanja.getNacinPlacanja() == NacinPlacanja.VrstePlacanja.GOTOVINA) {
+                        nacinPlacanja.setVrednost(nacinPlacanja.getVrednost() + zaPlacanje - suma);
+                    }
+                }
+            }
+        }
         this.snimi(vrstaRacuna);
+        if (meniPromet != null) {
+            Tura t = this.porudzbina.getTure().get(0);
+            this.porudzbina.getTure().clear();
+            
+            StavkaTure stavka = t.listStavkeTure.get(0).getClone();
+            stavka.kolicina = Utils.getDoubleFromString(meniPromet.get("kolicina"));
+            stavka.cenaJedinicna = Utils.getDoubleFromString(meniPromet.get("cena"));
+            stavka.cena = stavka.kolicina * stavka.cenaJedinicna;
+            stavka.naziv = meniPromet.get("naziv");
+            stavka.jeDodatni = false;
+            stavka.jeOpisni = false;
+            stavka.dozvoljenPopust = false;
+            stavka.dodatniArtikli.clear();
+            stavka.opisniArtikli.clear();
+
+            t.listStavkeTure.clear();
+            t.listStavkeTure.add(stavka);
+            
+            this.porudzbina.getTure().add(t);
+        }
         if (vrstaRacuna == VrstaRacunaZaStampu.FISKALNI) {
             Stampa.getInstance().stampajFiskalniRacun(porudzbina, placanja);
         } else if (vrstaRacuna == VrstaRacunaZaStampu.MEDJUZBIR) {
@@ -479,7 +538,7 @@ public class NaplataController extends FXMLDocumentController {
                     HashMap<String,String> mapa = new HashMap();
                     mapa.put("iznos", "" + nacinPlacanja.getVrednost());
                     mapa.put("nacin", "" + nacinPlacanja.getNacinPlacanjaString());
-                    mapa.put("vreme", "" + this.porudzbina.getVremeIzdavanjaRacuna());
+                    mapa.put("vreme", "" + Utils.getStringFromDate(this.porudzbina.getVremeIzdavanjaRacuna()));
                     mapa.put("RACUN_ID", "" + this.porudzbina.getID());
 
                     result = db.ubaciRed("placanje",mapa, Boolean.FALSE);
@@ -594,15 +653,16 @@ public class NaplataController extends FXMLDocumentController {
     
     public void otvoriMeniPopUp(ActionEvent event)
     {
-        MeniPopUpController meniPopUp = new MeniPopUpController(porudzbina);
+        MeniPopUpController meniPopUp = new MeniPopUpController(porudzbina, meniPromet);
         
-        Optional<String> result = meniPopUp.showAndWait();
+        Optional<HashMap<String,String>> result = meniPopUp.showAndWait();
 
         if (result.isPresent()){
-            
+            meniPromet = result.get();
             //TODO sta se ovde sad desava???
-            // Ovde nekako treba da zapamti da je napravljen MENI_PROMET i kada se poziva stampa da to posalje na stampu
-            // Mozda moze popUp da vrati mapu, a mozda i iz baze da se pokupi
+            // Sale,  ovo mi ne radi.  Treba nekako iz popUp-a da pokupi mapu koja je spremna...
+            // Nije mi jasno zasto si pravio posebno MeniPopUpController i MeniContent?
+            // Deluje mi da bi mnogo lakse bilo da je jedan dijalog u pitanju.
         
         }
         
