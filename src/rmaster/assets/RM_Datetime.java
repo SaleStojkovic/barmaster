@@ -53,13 +53,15 @@ public class RM_Datetime {
         String query = "SELECT current_timestamp;";
         
         Connection dbConnection = DBBroker.poveziSaBazom();
-
         Statement selectStatement = dbConnection.createStatement();
-
         setRezultata = selectStatement.executeQuery(query);
-
+        setRezultata.next();
         dateString = setRezultata.getString(1);
 
+        setRezultata.close();
+        selectStatement = DBBroker.zatvoriStatement(selectStatement);
+        dbConnection = DBBroker.zatvoriVezuSaBazom(dbConnection);
+        
         return dateString;
     }
 }

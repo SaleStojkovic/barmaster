@@ -403,9 +403,9 @@ public class MeniContent extends Pane{
             return false;
         } 
         
-        RM_Datetime rmDate = new RM_Datetime();
-        
-        Date datum = rmDate.getDate();
+//        RM_Datetime rmDate = new RM_Datetime();
+//        
+//        Date datum = rmDate.getDate();
         
         Map<String, String> izabraniMeni = fxID_MeniList.getSelectionModel().getSelectedItem();
        
