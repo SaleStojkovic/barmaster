@@ -370,8 +370,6 @@ public class MeniContent extends Pane{
          
         HashMap<String, String> noviMeni = new HashMap<>();
 
-        //TODO razmisliti da li postoji bolji nacin
-//        noviMeni.put("naziv, blokiran", naziv + "', b'0");
         noviMeni.put("naziv", naziv);
         noviMeni.put("blokiran", "BIT_0");
         
@@ -509,5 +507,6 @@ public class MeniContent extends Pane{
         dodajTekst(digit + "");
         
     }
+    
     
 }

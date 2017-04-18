@@ -33,9 +33,9 @@ public final class DBBroker {
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/" + DB_NAME + "?dontTrackOpenResources=true";
     private static final String USERNAME = "root";
     
-//    private static final String PASSWORD = "burek";
+    private static final String PASSWORD = "burek";
 //    private static final String PASSWORD = "928374";
-    private static final String PASSWORD = "";
+//    private static final String PASSWORD = "";
     
     private static ComboPooledDataSource dataSource = null;
 //    private static PooledDataSource pds = null;

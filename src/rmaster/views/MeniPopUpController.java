@@ -15,7 +15,7 @@ public class MeniPopUpController extends Dialog {
     
     public MeniPopUpController(Porudzbina porudzbina, HashMap<String,String> meniPromet) {
         
-        Button potvrdi = new Button("Potvrdi");
+        Button potvrdi = new Button("Potvrdi");    
         potvrdi.setPrefSize(140, 50);
         
         Button otkazi = new Button("Otkaži");
@@ -56,9 +56,8 @@ public class MeniPopUpController extends Dialog {
     
     private void vratiRezultat(HashMap<String,String> meni) {
         
-        this.setResultConverter(button -> {
-            return meni;
-        });
+        this.setResult(meni);
+        
         this.getDialogPane().getScene().getWindow().hide();
         
     }
