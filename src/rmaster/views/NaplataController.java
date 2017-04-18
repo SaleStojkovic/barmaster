@@ -662,9 +662,7 @@ public class NaplataController extends FXMLDocumentController {
             
             
             //TODO sta se ovde sad desava???
-            // Sale,  ovo mi ne radi.  Treba nekako iz popUp-a da pokupi mapu koja je spremna...
-            // Nije mi jasno zasto si pravio posebno MeniPopUpController i MeniContent?
-            // Deluje mi da bi mnogo lakse bilo da je jedan dijalog u pitanju.
+            //Bole, vraca sada mapu! :)
         
         }
         
