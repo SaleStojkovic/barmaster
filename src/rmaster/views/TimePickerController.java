@@ -52,9 +52,6 @@ public class TimePickerController extends Dialog  {
        
         this.initStyle(StageStyle.UNDECORATED);
         
-        // Set the icon (must be included in the project).
-        //dialog.setGraphic(new ImageView(this.getClass().getResource("login.png").toString()));
-
         // Set the button types.
         ButtonType potvrdiButtonType = new ButtonType("✓", ButtonBar.ButtonData.OK_DONE);
         ButtonType odustaniButtonType = new ButtonType("X", ButtonBar.ButtonData.OK_DONE);

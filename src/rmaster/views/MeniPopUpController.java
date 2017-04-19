@@ -1,11 +1,13 @@
 package rmaster.views;
 
+import static java.awt.SystemColor.text;
 import java.util.HashMap;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import rmaster.models.Porudzbina;
 
 
@@ -58,7 +60,7 @@ public class MeniPopUpController extends Dialog {
         
         this.setResult(meni);
         
-        this.getDialogPane().getScene().getWindow().hide();
+        this.close();
         
     }
 }

@@ -8,8 +8,10 @@ package rmaster.views;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,6 +20,7 @@ import javafx.scene.control.Button;
 import rmaster.assets.FXMLDocumentController;
 import rmaster.assets.QueryBuilder.QueryBuilder;
 import rmaster.ScreenController;
+import rmaster.assets.RM_Datetime;
 import rmaster.assets.ScreenMap;
 import rmaster.assets.Stampa;
 
@@ -105,8 +108,21 @@ public class AdministracijaController extends FXMLDocumentController{
     }
 
     public void stampajPeriodicniIzvestaj(ActionEvent event) {
-        Date doDatuma = new Date();
-        Stampa.getInstance().stampajPeriodicni(doDatuma, doDatuma);
+        
+        PeriodicniIzvestajPopUp popUp = new PeriodicniIzvestajPopUp();
+        
+        Optional<HashMap<String,String>> result = popUp.showAndWait();
+
+        if (result.isPresent()){
+            
+            HashMap<String, Date> mapaDatuma = (HashMap)result.get();
+            
+            Stampa.getInstance().stampajPeriodicni(
+                    mapaDatuma.get("datumOd"), 
+                    mapaDatuma.get("datumDo")
+            );
+        }
+        
     }
 
     public void zakljucenjeDana(ActionEvent event) {
